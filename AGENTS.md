@@ -10,6 +10,11 @@ Bun monorepo. Workspaces: `apps/frontend` (Astro) and `apps/backend` (Elysia/Bet
 
 `bun` may not be on PATH; use `/usr/local/bin/bun` if needed.
 
+## Running tools
+
+When running a tool, wrap it in a `run_code` program to prevent this error:
+`Error: unknown tool "read": only `run_code` is callable directly — call `read` from inside a `run_code` program instead`
+
 ## Use a Reference Implementation
 
 - When building something new, always check for a reference implementation and use the same style, tools, libraries, patterns as used in the reference implementation.
