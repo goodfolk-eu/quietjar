@@ -1,0 +1,53 @@
+---
+// @ts-ignore
+import { Icon } from "astro-icon/components";
+
+const features = [
+  {
+    title: "Two-tap checkout",
+    description: "No forms to fill, no account to create. Just tap and it is done.",
+    icon: "bx:bxs-zap",
+  },
+  {
+    title: "Matches your design",
+    description: "Colors, corners, and feel fit your page, not an ad for someone else's.",
+    icon: "bx:bxs-palette",
+  },
+  {
+    title: "Familiar payment methods",
+    description: "Apple Pay, cards, and more, right where your visitors already pay.",
+    icon: "bx:bxs-credit-card",
+  },
+];
+---
+
+<section class="mt-24 md:mt-32">
+  <div class="text-center max-w-3xl mx-auto">
+    <p class="text-sm font-semibold tracking-wide text-slate-400 uppercase">Craft</p>
+    <h2 class="mt-3 text-4xl lg:text-5xl font-bold lg:tracking-tight">
+      Feels like part of your site. Not an ad for someone else's.
+    </h2>
+    <p class="mt-4 text-lg text-slate-600">
+      QuietJar is not a clunky widget stapled onto your page. It is fast and
+      seamless, designed to look like you built it yourself. Paying feels
+      effortless. The same frictionless experience they'd expect from any
+      well-made checkout.
+    </p>
+  </div>
+
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 mt-14 gap-10">
+    {
+      features.map((item) => (
+        <div class="flex gap-4 items-start">
+          <div class="mt-1 bg-black rounded-full p-2 w-8 h-8 shrink-0">
+            <Icon class="text-white" name={item.icon} />
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg">{item.title}</h3>
+            <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

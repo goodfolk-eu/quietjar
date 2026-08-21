@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "bun-types"
+    ],
+    "lib": [
+      "ESNext"
+    ],
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src"
+  ]
+}

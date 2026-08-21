@@ -1,0 +1,28 @@
+{
+  "name": "@quietjar/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "latest",
+    "@elysiajs/eden": "latest",
+    "@libsql/client": "latest",
+    "@libsql/kysely-libsql": "^0.4.1",
+    "better-auth": "latest",
+    "elysia": "latest",
+    "nodemailer": "^9.0.5"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^8.0.1",
+    "bun-types": "latest"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./eden": "./src/index.ts"
+  }
+}

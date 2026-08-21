@@ -1,0 +1,88 @@
+---
+import Container from "@/components/container.astro";
+import AuthModal from "@/components/auth/auth-modal.astro";
+
+const navLinks = [
+  { title: "Features", path: "/#features" },
+  { title: "How it works", path: "/#how" },
+  { title: "Pricing", path: "/#pricing" },
+  { title: "FAQ", path: "/#faq" },
+];
+---
+
+<Container>
+  <header id="qj-header" class="flex items-center justify-between my-5">
+    <a href="/" class="text-lg font-bold text-slate-800">
+      <span class="font-bold text-slate-800">Quiet</span><span class="font-normal text-slate-500">jar</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
+      {navLinks.map((link) => (
+        <a href={link.path} class="px-3 py-2 text-gray-600 hover:text-gray-900">{link.title}</a>
+      ))}
+    </nav>
+
+    <div class="hidden md:flex items-center gap-4">
+      <div id="qj-auth-buttons" class="flex items-center gap-4">
+        <button type="button" id="qj-nav-login"
+          class="text-gray-700 hover:text-gray-900 cursor-pointer">Log in</button>
+        <button type="button" id="qj-nav-signup"
+          class="rounded-sm px-5 py-2.5 bg-black text-white hover:bg-gray-800 transition cursor-pointer">Add to your site</button>
+      </div>
+      <a id="qj-nav-dashboard" href="/dashboard"
+        class="hidden rounded-sm px-5 py-2.5 bg-black text-white hover:bg-gray-800 transition">Dashboard</a>
+    </div>
+
+    <button id="qj-mobile-toggle" type="button"
+      class="md:hidden p-2 text-gray-700 cursor-pointer" aria-label="Menu" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </header>
+
+  <div id="qj-mobile-menu" class="hidden md:hidden pb-4">
+    <nav class="flex flex-col gap-1" aria-label="Mobile">
+      {navLinks.map((link) => (
+        <a href={link.path} class="px-3 py-2 text-gray-600 hover:text-gray-900">{link.title}</a>
+      ))}
+    </nav>
+    <div class="flex gap-3 mt-3">
+      <div id="qj-auth-buttons-mobile" class="flex items-center gap-3">
+        <button type="button" id="qj-nav-login-mobile"
+          class="px-4 py-2 border-2 border-black text-black hover:bg-gray-100 rounded-sm text-center transition cursor-pointer">Log in</button>
+        <button type="button" id="qj-nav-signup-mobile"
+          class="px-4 py-2 bg-black text-white hover:bg-gray-800 rounded-sm text-center transition cursor-pointer">Add to your site</button>
+      </div>
+      <a id="qj-nav-dashboard-mobile" href="/dashboard"
+        class="hidden px-4 py-2 bg-black text-white hover:bg-gray-800 rounded-sm text-center transition">Dashboard</a>
+    </div>
+  </div>
+</Container>
+
+<AuthModal />
+
+<script>
+import { authClient } from "../../lib/api";
+
+const loginBtns = [document.getElementById("qj-nav-login"), document.getElementById("qj-nav-login-mobile")];
+const signupBtns = [document.getElementById("qj-nav-signup"), document.getElementById("qj-nav-signup-mobile")];
+const authDesk = [document.getElementById("qj-auth-buttons"), document.getElementById("qj-auth-buttons-mobile")];
+const dashDesk = [document.getElementById("qj-nav-dashboard"), document.getElementById("qj-nav-dashboard-mobile")];
+
+function setSignedIn(signedIn: boolean) {
+  authDesk.forEach((el) => el?.classList.toggle("hidden", signedIn));
+  dashDesk.forEach((el) => el?.classList.toggle("hidden", !signedIn));
+}
+
+authClient.getSession().then(({ data }) => setSignedIn(Boolean(data?.user)));
+
+loginBtns.forEach((b) => b?.addEventListener("click", () => window.__quietjarAuthOpen?.("login")));
+signupBtns.forEach((b) => b?.addEventListener("click", () => window.__quietjarAuthOpen?.("signup")));
+
+const toggle = document.getElementById("qj-mobile-toggle")!;
+const menu = document.getElementById("qj-mobile-menu")!;
+toggle.addEventListener("click", () => {
+  const willOpen = menu.classList.contains("hidden");
+  menu.classList.toggle("hidden");
+  toggle.setAttribute("aria-expanded", String(willOpen));
+});
+</script>

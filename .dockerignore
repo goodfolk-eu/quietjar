@@ -1,0 +1,12 @@
+.git
+node_modules
+**/node_modules
+apps/frontend
+apps/backend/*.db
+apps/backend/*.db-*
+*.log
+.env
+.env.*
+!.env.example
+dist
+.astro

@@ -1,0 +1,38 @@
+---
+import Footer from "@/components/footer.astro";
+import Navbar from "@/components/navbar/navbar.astro";
+import "@fontsource-variable/inter/index.css";
+import "@fontsource-variable/bricolage-grotesque";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "", description = "A donation button that lives on your own site, so your supporters can pay without leaving your page." } = Astro.props;
+
+const makeTitle = title ? `${title} | QuietJar` : "QuietJar - Accept support without sending people away";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{makeTitle}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <Navbar />
+    <slot />
+    <Footer />
+    <style is:global>
+      img {
+        content-visibility: auto;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+---
+import { authClient } from "../../lib/api";
+---
+
+<!-- BetterAuth email-OTP sign-in modal. 
+     Both "Log in" and "Sign up" open this; passwordless OTP auto-creates
+     the user on first successful verification. On success -> /dashboard. -->
+<div id="qj-auth-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
+  <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl relative">
+    <button
+      id="qj-auth-close"
+      type="button"
+      aria-label="Close"
+      class="absolute right-4 top-4 text-slate-400 hover:text-slate-700 text-2xl leading-none cursor-pointer">&times;</button>
+
+    <h2 id="qj-auth-title" class="text-2xl font-bold text-gray-900">Sign in to QuietJar</h2>
+    <p class="mt-1 text-sm text-slate-500">
+      Enter your email and we will send you a one-time code. New emails are auto-registered.
+    </p>
+
+    <form id="qj-auth-form" class="mt-5">
+      <label for="qj-auth-email" class="block text-sm font-medium text-gray-700">Email</label>
+      <input
+        id="qj-auth-email"
+        name="email"
+        type="email"
+        required
+        placeholder="you@example.com"
+        class="mt-1 w-full px-4 py-3 border-2 rounded-md placeholder:text-gray-400 outline-hidden focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
+      />
+      <div id="qj-code-row" class="hidden mt-4">
+        <label for="qj-auth-code" class="block text-sm font-medium text-gray-700">One-time code</label>
+        <input
+          id="qj-auth-code"
+          name="code"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          placeholder="6-digit code"
+          class="mt-1 w-full px-4 py-3 border-2 rounded-md placeholder:text-gray-400 outline-hidden focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
+        />
+      </div>
+
+      <p id="qj-auth-status" class="mt-3 text-sm text-red-500 min-h-[1.25rem]"></p>
+
+      <div class="mt-4 flex gap-3">
+        <button
+          id="qj-send-code"
+          type="submit"
+          class="w-full rounded-sm px-5 py-2.5 bg-black text-white hover:bg-gray-800 transition cursor-pointer">
+          Send code
+        </button>
+        <button
+          id="qj-sign-in"
+          type="button"
+          class="hidden w-full rounded-sm px-5 py-2.5 bg-black text-white hover:bg-gray-800 transition cursor-pointer">
+          Sign in
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+import { authClient } from "../../lib/api";
+
+const overlay = document.getElementById("qj-auth-overlay")!;
+const title = document.getElementById("qj-auth-title")!;
+const form = document.getElementById("qj-auth-form") as HTMLFormElement;
+const emailInput = document.getElementById("qj-auth-email") as HTMLInputElement;
+const codeInput = document.getElementById("qj-auth-code") as HTMLInputElement;
+const codeRow = document.getElementById("qj-code-row")!;
+const sendBtn = document.getElementById("qj-send-code") as HTMLButtonElement;
+const signInBtn = document.getElementById("qj-sign-in") as HTMLButtonElement;
+const statusEl = document.getElementById("qj-auth-status")!;
+const closeBtn = document.getElementById("qj-auth-close") as HTMLButtonElement;
+
+let capturedEmail = "";
+
+function open(mode: "login" | "signup" | string) {
+  title.textContent = mode === "signup" ? "Add QuietJar to your site" : "Sign in to QuietJar";
+  codeRow.classList.add("hidden");
+  sendBtn.classList.remove("hidden");
+  sendBtn.classList.add("w-full");
+  signInBtn.classList.add("hidden");
+  statusEl.textContent = "";
+  emailInput.value = "";
+  codeInput.value = "";
+  overlay.classList.remove("hidden");
+  overlay.classList.add("flex");
+  setTimeout(() => emailInput.focus(), 0);
+}
+function close() {
+  overlay.classList.add("hidden");
+  overlay.classList.remove("flex");
+}
+window.__quietjarAuthOpen = open;
+
+closeBtn.addEventListener("click", close);
+overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+
+sendBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = emailInput.value.trim();
+  if (!email) { statusEl.textContent = "Please enter your email."; return; }
+  statusEl.classList.remove("text-red-500","text-green-600");
+  statusEl.classList.add("text-green-600");
+  statusEl.textContent = "Sending code...";
+  const { error } = await authClient.emailOtp.sendVerificationOtp({ email, type: "sign-in" });
+  if (error) {
+    statusEl.classList.remove("text-green-600");
+    statusEl.classList.add("text-red-500");
+    statusEl.textContent = error.message ?? JSON.stringify(error);
+    return;
+  }
+  capturedEmail = email;
+  statusEl.textContent = "Code sent. Check your inbox (logged to backend console when no SMTP is set).";
+  codeRow.classList.remove("hidden");
+  sendBtn.classList.add("hidden");
+  sendBtn.classList.remove("w-full");
+  signInBtn.classList.remove("hidden");
+  setTimeout(() => codeInput.focus(), 0);
+});
+
+signInBtn.addEventListener("click", async () => {
+  const code = codeInput.value.trim();
+  if (!code) { statusEl.textContent = "Enter the code we sent you."; return; }
+  statusEl.classList.remove("text-red-500","text-green-600");
+  statusEl.classList.add("text-green-600");
+  statusEl.textContent = "Verifying...";
+  const { data, error } = await authClient.signIn.emailOtp({
+    email: capturedEmail,
+    otp: code,
+    name: capturedEmail.split("@")[0],
+  });
+  if (error) {
+    statusEl.classList.remove("text-green-600");
+    statusEl.classList.add("text-red-500");
+    statusEl.textContent = error.message ?? JSON.stringify(error);
+    return;
+  }
+  statusEl.textContent = "Signed in! Redirecting to your dashboard...";
+  window.location.href = "/dashboard";
+});
+
+form.addEventListener("submit", (e) => e.preventDefault());
+</script>

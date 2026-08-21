@@ -63,3 +63,8 @@ desktop.ini
 .eslintcache
 tmp/
 temp/
+# Bun workspace tooling & local caches
+.bun-cache/
+.bun-tmp/
+.tools/
+bun.lockb

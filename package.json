@@ -1,0 +1,19 @@
+{
+  "name": "quietjar",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "bun run dev:backend & bun run dev:frontend",
+    "dev:backend": "bun --cwd apps/backend dev",
+    "dev:frontend": "bun --cwd apps/frontend dev"
+  },
+  "overrides": {
+    "@libsql/client": "0.8.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
