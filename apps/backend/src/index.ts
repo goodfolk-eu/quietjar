@@ -1,9 +1,8 @@
-import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
+import { Elysia } from "elysia";
 import { auth } from "./auth";
 
-const frontendOrigin =
-  process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
+const frontendOrigin = process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
 
 export const app = new Elysia()
   .use(

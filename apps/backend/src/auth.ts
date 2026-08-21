@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
+import type { Dialect } from "kysely";
 import { libsqlDialect } from "./db";
 import { sendEmail } from "./email";
 
@@ -8,11 +9,7 @@ import { sendEmail } from "./email";
  * "Magic Container" URL. Set via PUBLIC_BACKEND_URL or PUBLIC_APP_URL.
  */
 function resolveBaseUrl(): string {
-  return (
-    process.env.PUBLIC_BACKEND_URL ??
-    process.env.PUBLIC_APP_URL ??
-    "http://localhost:3000"
-  );
+  return process.env.PUBLIC_BACKEND_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:3000";
 }
 
 /**
@@ -40,7 +37,7 @@ export const auth = betterAuth({
 
   // BunnyDB — a libsql database reached over HTTP.
   database: {
-    dialect: libsqlDialect as any,
+    dialect: libsqlDialect as Dialect,
     type: "sqlite",
     debugLogs: process.env.NODE_ENV === "development",
   },
@@ -53,14 +50,12 @@ export const auth = betterAuth({
     emailOTP({
       // Numeric code, emailed via SMTP (see email.ts).
       async sendVerificationOTP({ email, otp, type }) {
-        const subject =
-          type === "sign-in"
-            ? "Your Quietjar sign-in code"
-            : type === "email-verification"
-              ? "Verify your email"
-              : type === "forget-password"
-                ? "Reset your password"
-                : "Change your email";
+        const subjects: Record<string, string> = {
+          "sign-in": "Your Quietjar sign-in code",
+          "email-verification": "Verify your email",
+          "forget-password": "Reset your password",
+        };
+        const subject = subjects[type] ?? "Change your email";
 
         await sendEmail(
           email,

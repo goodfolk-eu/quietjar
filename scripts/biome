@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+# Resolve and run the Biome binary for the current platform directly,
+# bypassing the node npm-bin shim. This avoids picking the wrong
+# native package when the ambient node architecture differs (e.g.
+# an x64 node under Rosetta with an arm64 Biome install).
+
+set -e
+
+DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+
+case "$(uname -s)" in
+  Darwin)  platform="darwin" ;;
+  Linux)   platform="linux" ;;
+  MINGW*|MSYS*|CYGWIN*) platform="win32" ;;
+  *)       platform="$(uname -s | tr '[:upper:]' '[:lower:]')" ;;
+esac
+
+case "$(uname -m)" in
+  x86_64|amd64)     arch="x64" ;;
+  aarch64|arm64)    arch="arm64" ;;
+  *)                arch="$(uname -m)" ;;
+esac
+
+exe="biome"
+if [ "$platform" = "win32" ]; then exe="biome.exe"; fi
+
+binary="$DIR/node_modules/@biomejs/cli-${platform}-${arch}/${exe}"
+if [ ! -x "$binary" ]; then
+  # Fall back to the standard npm bin, which resolves the platform package
+  # when the ambient node architecture matches.
+  exec "$DIR/node_modules/.bin/biome" "$@"
+fi
+
+exec "$binary" "$@"

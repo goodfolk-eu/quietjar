@@ -12,7 +12,7 @@ Bun monorepo. Workspaces: `apps/frontend` (Astro) and `apps/backend` (Elysia/Bet
 
 ## Running tools
 
-When running a tool, wrap it in a `run_code` program to prevent this error:
+When running a tool, wrap it in a `run_code` program to prevent this type of error:
 `Error: unknown tool "read": only `run_code` is callable directly — call `read` from inside a `run_code` program instead`
 
 ## Use a Reference Implementation

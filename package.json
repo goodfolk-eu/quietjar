@@ -8,12 +8,17 @@
   "scripts": {
     "dev": "bun run dev:backend & bun run dev:frontend",
     "dev:backend": "bun --cwd apps/backend dev",
-    "dev:frontend": "bun --cwd apps/frontend dev"
+    "dev:frontend": "bun --cwd apps/frontend dev",
+    "lint": "./scripts/biome check .",
+    "lint:fix": "./scripts/biome check --write .",
+    "format": "./scripts/biome format --write .",
+    "format:check": "./scripts/biome format ."
   },
   "overrides": {
     "@libsql/client": "0.8.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.10",
     "typescript": "^5.7.3"
   }
 }

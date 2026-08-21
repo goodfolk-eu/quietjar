@@ -10,9 +10,14 @@ interface Props {
   description?: string;
 }
 
-const { title = "", description = "A donation button that lives on your own site, so your supporters can pay without leaving your page." } = Astro.props;
+const {
+  title = "",
+  description = "A donation button that lives on your own site, so your supporters can pay without leaving your page.",
+} = Astro.props;
 
-const makeTitle = title ? `${title} | QuietJar` : "QuietJar - Accept support without sending people away";
+const makeTitle = title
+  ? `${title} | QuietJar`
+  : "QuietJar - Accept support without sending people away";
 ---
 
 <!doctype html>

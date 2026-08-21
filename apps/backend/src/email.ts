@@ -1,5 +1,5 @@
-import { createTransport } from "nodemailer";
 import type { SendMailOptions } from "nodemailer";
+import { createTransport } from "nodemailer";
 
 export interface SmtpConfig {
   host: string;
@@ -46,7 +46,9 @@ const transport = config
 export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
   if (!transport || !config) {
     // No SMTP configured — surface the email so local testing still works.
-    console.warn(`[email:SMTP-not-configured] To: ${to} | Subject: ${subject} | Body: ${html.replace(/<[^>]*>/g, " ")}`);
+    console.warn(
+      `[email:SMTP-not-configured] To: ${to} | Subject: ${subject} | Body: ${html.replace(/<[^>]*>/g, " ")}`,
+    );
     return;
   }
   const mail: SendMailOptions = {
