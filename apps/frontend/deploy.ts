@@ -30,14 +30,6 @@ const MIME_TYPES: Record<string, string> = {
   ".map": "application/json",
 };
 
-function cacheControl(key: string): string {
-  // Hashed build assets change when their content changes, so cache long.
-  if (key.startsWith("_astro/") && !key.endsWith(".html")) {
-    return "public, max-age=31536000, immutable";
-  }
-  return "public, max-age=0, must-revalidate";
-}
-
 function assertEnv(name: string): string {
   const value = Bun.env[name];
   if (!value) {
@@ -93,7 +85,6 @@ async function uploadAll(
     const file = Bun.file(path);
     await s3.write(key, file, {
       type: MIME_TYPES[extname(key).toLowerCase()] ?? "application/octet-stream",
-      headers: { "Cache-Control": cacheControl(key) },
     });
     console.log(`  uploaded  ${key}`);
   }
@@ -124,8 +115,8 @@ async function deleteStale(s3: Bun.S3Client, localKeys: Set<string>): Promise<nu
   let continuation: string | undefined;
   do {
     const page = await s3.list({ prefix: "", continuationToken: continuation });
-    for (const object of page.contents) {
-      if (object.size > 0) {
+    for (const object of page.contents ?? []) {
+      if (typeof object.size === "number" && object.size > 0) {
         remoteKeys.push(object.key);
       }
     }
@@ -167,7 +158,7 @@ async function main(): Promise<void> {
     console.log("Dry run. Files that would be uploaded:");
     for (const { key } of uploads) {
       console.log(
-        `  ${key}  [${MIME_TYPES[extname(key).toLowerCase()] ?? "application/octet-stream"}]  ${cacheControl(key)}`,
+        `  ${key}  [${MIME_TYPES[extname(key).toLowerCase()] ?? "application/octet-stream"}]`,
       );
     }
     console.log(`Dry run complete: ${uploads.length} files ready.`);

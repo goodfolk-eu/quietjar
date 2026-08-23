@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "typecheck": "astro check && tsc --noEmit",
+    "build": "bun run typecheck && astro build",
     "deploy": "bun deploy.ts",
     "preview": "astro preview",
     "astro": "astro"
@@ -24,5 +25,8 @@
     "better-auth": "^1.7.1",
     "tailwindcss": "^4.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/bun": "^1.4.0"
+  }
 }

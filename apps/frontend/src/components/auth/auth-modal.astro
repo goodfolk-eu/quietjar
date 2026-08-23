@@ -1,5 +1,4 @@
 ---
-import { authClient } from "../../lib/api";
 ---
 
 <!-- BetterAuth email-OTP sign-in modal. 
@@ -127,7 +126,7 @@ signInBtn.addEventListener("click", async () => {
   statusEl.classList.remove("text-red-500","text-green-600");
   statusEl.classList.add("text-green-600");
   statusEl.textContent = "Verifying...";
-  const { data, error } = await authClient.signIn.emailOtp({
+  const { error } = await authClient.signIn.emailOtp({
     email: capturedEmail,
     otp: code,
     name: capturedEmail.split("@")[0],
