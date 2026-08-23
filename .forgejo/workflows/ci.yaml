@@ -23,8 +23,8 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Typecheck backend
-        run: bun run --cwd apps/backend typecheck
+      - name: Build backend
+        run: bun run --cwd apps/backend build
 
       - name: Build frontend
         run: bun run --cwd apps/frontend build
