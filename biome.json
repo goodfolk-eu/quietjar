@@ -9,6 +9,7 @@
     "ignoreUnknown": false,
     "includes": [
       "apps/**/src/**/*.{ts,tsx,js,jsx,astro}",
+      "apps/frontend/deploy.ts",
       "**/*.config.ts",
       "astro.config.mjs",
       "tsconfig*.json",
