@@ -1,61 +1,71 @@
-import type { SendMailOptions } from "nodemailer";
-import { createTransport } from "nodemailer";
+interface ScwEmailConfig {
+  accessKey: string;
+  secretKey: string;
+  projectId: string;
+  region: string;
+  from: { name: string; email: string };
+}
 
-export interface SmtpConfig {
-  host: string;
-  port: number;
-  secure: boolean;
-  user: string;
-  pass: string;
-  from: string;
+/** Parse "Quietjar <no-reply@quietjar.com>" into a name + email pair. */
+function parseFrom(raw: string): { name: string; email: string } {
+  const match = raw.match(/^(.*?)\s*<([^>]+)>$/);
+  if (match) return { name: match[1].trim(), email: match[2].trim() };
+  return { name: "", email: raw.trim() };
 }
 
 /**
- * Build an SMTP config from environment variables. See ".env.example".
- * Returns undefined when SMTP is not configured — callers can then fall
- * back to logging the OTP (handy for local development without a mail server).
+ * Build a Scaleway Transactional Email (TEM) REST config from environment
+ * variables. Returns undefined when TEM is not configured — callers can then
+ * fall back to logging the OTP (handy for local development).
+ *
+ * Uses the TEM REST API over HTTPS instead of SMTP, because Bunny Magic
+ * Containers blocks outbound SMTP ports (25/465/587/2525).
  */
-export function smtpFromEnv(): SmtpConfig | undefined {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+export function scwEmailFromEnv(): ScwEmailConfig | undefined {
+  const accessKey = process.env.SCALEWAY_ACCESS_KEY;
+  const secretKey = process.env.SCALEWAY_SECRET_KEY;
+  const projectId = process.env.SCALEWAY_PROJECT_ID;
   const from = process.env.SMTP_FROM;
-  if (!host || !from) return undefined;
+  if (!accessKey || !secretKey || !projectId || !from) return undefined;
   return {
-    host,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: (process.env.SMTP_SECURE ?? "false") === "true",
-    user: user ?? "",
-    pass: pass ?? "",
-    from,
+    accessKey,
+    secretKey,
+    projectId,
+    region: process.env.SCALEWAY_TEM_REGION ?? "fr-par",
+    from: parseFrom(from),
   };
 }
 
-const config = smtpFromEnv();
+const config = scwEmailFromEnv();
 
-const transport = config
-  ? createTransport({
-      host: config.host,
-      port: config.port,
-      secure: config.secure,
-      auth: config.user ? { user: config.user, pass: config.pass } : undefined,
-    })
-  : null;
-
-/** Send an email. Async-returns once nodemailer has accepted delivery. */
+/** Send an email via the Scaleway TEM REST API. */
 export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
-  if (!transport || !config) {
-    // No SMTP configured — surface the email so local testing still works.
+  if (!config) {
+    // No TEM configured — surface the email so local testing still works.
     console.warn(
-      `[email:SMTP-not-configured] To: ${to} | Subject: ${subject} | Body: ${html.replace(/<[^>]*>/g, " ")}`,
+      `[email:SCW-TEM-not-configured] To: ${to} | Subject: ${subject} | Body: ${html.replace(/<[^>]*>/g, " ")}`,
     );
     return;
   }
-  const mail: SendMailOptions = {
-    from: config.from,
-    to,
-    subject,
-    html,
-  };
-  await transport.sendMail(mail);
+  const res = await fetch(
+    `https://api.scaleway.com/transactional-email/v1alpha1/regions/${config.region}/emails`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Token": config.secretKey,
+        "X-Auth-Access-Key": config.accessKey,
+      },
+      body: JSON.stringify({
+        from: config.from,
+        to: [{ email: to }],
+        subject,
+        html,
+        project_id: config.projectId,
+      }),
+    },
+  );
+  if (!res.ok) {
+    throw new Error(`Scaleway TEM send failed: HTTP ${res.status} ${await res.text()}`);
+  }
 }

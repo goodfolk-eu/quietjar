@@ -1,7 +1,8 @@
 .git
 node_modules
 **/node_modules
-apps/frontend
+apps/frontend/*
+!apps/frontend/package.json
 apps/backend/*.db
 apps/backend/*.db-*
 *.log
