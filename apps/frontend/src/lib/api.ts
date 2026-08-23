@@ -13,8 +13,15 @@ export const API_ORIGIN =
   (import.meta.env.PUBLIC_FRONTEND_URL as string | undefined) ??
   (typeof window !== "undefined" ? window.location.origin : "http://localhost:4321");
 
-/** Typed Elysia API client (Eden treaty). */
-export const api = treaty<App>(API_ORIGIN);
+/**
+ * Typed Elysia API client (Eden treaty). Wraps fetch to send cookies
+ * cross-origin; the auth session lives on api.quietjar.com.
+ */
+export const api = treaty<App>(API_ORIGIN, {
+  // Send cookies cross-origin; the auth session lives on api.quietjar.com.
+  fetcher: ((input: RequestInfo | URL, init?: RequestInit) =>
+    fetch(input, { ...init, credentials: "include" })) as typeof fetch,
+});
 
 /** Typed BetterAuth client for the passwordless email-OTP flow. */
 export const authClient = createAuthClient({
