@@ -1,4 +1,6 @@
+import { readFileSync } from "node:fs";
 import { unlink } from "node:fs/promises";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const BACKEND_DIR = fileURLToPath(new URL(".", import.meta.url));
@@ -155,8 +157,22 @@ const MANAGED_ENV_NAMES = [
 ];
 
 function envVarsFromDotenv(): Array<{ name: string; value: string }> {
+  // Read production values straight from .env so .env.development (loaded by
+  // Bun during `bun deploy`) never overrides them on a prod deploy.
+  const file: { [key: string]: string } = {};
+  try {
+    const text = readFileSync(join(BACKEND_DIR, ".env"), "utf8");
+    for (const line of text.split("\n")) {
+      const match = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+      if (!match) continue;
+      const value = match[2].replace(/^["']|["']$/g, "").trim();
+      if (value) file[match[1]] = value;
+    }
+  } catch {
+    // Fall back to Bun.env if the file cannot be read.
+  }
   return MANAGED_ENV_NAMES.flatMap((name) => {
-    const value = Bun.env[name];
+    const value = file[name] ?? Bun.env[name];
     return value === undefined ? [] : [{ name, value }];
   });
 }

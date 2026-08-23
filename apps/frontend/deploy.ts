@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { extname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -5,6 +6,31 @@ import { fileURLToPath } from "node:url";
 const FRONTEND_DIR = fileURLToPath(new URL(".", import.meta.url));
 const DIST_DIR = join(FRONTEND_DIR, "dist");
 const SKIP_BUILD = process.argv.includes("--skip-build");
+
+// Build-time public vars are read from .env so .env.development (loaded by Bun
+// while deploy.ts runs) never leaks localhost URLs into a production build.
+const PUBLIC_VAR_NAMES = ["PUBLIC_API_URL", "PUBLIC_FRONTEND_URL"];
+
+function productionEnv(): Record<string, string> {
+  const dotenv: { [key: string]: string } = {};
+  try {
+    const text = readFileSync(join(FRONTEND_DIR, ".env"), "utf8");
+    for (const line of text.split("\n")) {
+      const match = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+      if (!match) continue;
+      const value = match[2].replace(/^["']|["']$/g, "").trim();
+      if (value) dotenv[match[1]] = value;
+    }
+  } catch {
+    // Fall back to inherited env if the file cannot be read.
+  }
+  const env: Record<string, string> = { ...process.env, NODE_ENV: "production" };
+  for (const name of PUBLIC_VAR_NAMES) {
+    const value = dotenv[name] ?? process.env[name];
+    if (value !== undefined) env[name] = value;
+  }
+  return env;
+}
 
 const MIME_TYPES: Record<string, string> = {
   ".html": "text/html",
@@ -45,8 +71,11 @@ async function runBuild(): Promise<void> {
   }
   console.log("Building frontend with astro...");
   // Spawn the running bun binary so the build works even when bun is not on PATH.
+  // Force production mode and the PUBLIC_* values from .env so .env.development
+  // never leaks localhost URLs into the build.
   const { exitCode } = Bun.spawnSync([process.execPath, "run", "build"], {
     cwd: FRONTEND_DIR,
+    env: productionEnv(),
     stdout: "inherit",
     stderr: "inherit",
   });
