@@ -19,5 +19,7 @@ export function onAuthStateChange(listener: (signedIn: boolean) => void): () => 
 }
 
 export function emitAuthStateChange(signedIn: boolean): void {
-  listeners.forEach((l) => l(signedIn));
+  for (const l of listeners) {
+    l(signedIn);
+  }
 }

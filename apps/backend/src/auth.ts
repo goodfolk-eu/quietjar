@@ -12,7 +12,6 @@ import { sendEmail } from "./email";
  * server-side on the dashboard.
  */
 const AUTH_MARKER = "qj_auth_marker";
-const AUTH_MARKER_ATTRS = "Path=/; Max-Age=31536000; SameSite=Lax";
 
 /**
  * The public origin of the BACKEND. In production this is the Bunny
