@@ -1,0 +1,128 @@
+{
+  "hero": {
+    "eyebrow": "A donation button that lives on your site",
+    "title": "Let people support you without leaving your site.",
+    "description": "Every time you send a customer off to a separate donation page, most of them never arrive. QuietJar lives right on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place. Fewer clicks means more of them actually follow through.",
+    "ctaPrimary": "Add it to your site",
+    "ctaSecondary": "See it in action",
+    "subtext": "No monthly fee. You only pay a small share when you get paid."
+  },
+  "features": {
+    "eyebrow": "Why it works",
+    "title": "The redirect is where you lose them.",
+    "oldWayTitle": "The old way",
+    "oldWaySubtitle": "Send them away. Lose them on the way.",
+    "oldWaySteps": [
+      "Visitor reads your page",
+      "Clicks your \"tip\" link",
+      "New tab opens on someone else's site",
+      "Slow load, unfamiliar page, distraction, closed tab",
+      "They never make it to \"thank you\""
+    ],
+    "withTitle": "With QuietJar",
+    "withSubtitle": "They stay right where they are.",
+    "withSteps": [
+      "Visitor reads your page",
+      "Tap the button, pay right there",
+      "\"Thank you.\" No redirect, no drop-off."
+    ],
+    "closing": "The supporter never leaves, and far more of them make it all the way to \"thank you.\""
+  },
+  "logos": {
+    "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
+    "methods": ["Apple Pay", "Visa", "Mastercard", "American Express", "Card"]
+  },
+  "polite": {
+    "eyebrow": "Built to respect your audience",
+    "title": "It knows when to step back.",
+    "description": "Once someone has supported you, QuietJar quietly leaves them alone for a while. It does not nag the people who already gave. Your biggest supporters get thanked, not pestered. That is what keeps them coming back.",
+    "note": "Your fans get thanked for giving, never chased for giving again.",
+    "feelLabel": "What it feels like to your most loyal supporter",
+    "feelSteps": [
+      "Supports you once",
+      "A quiet \"thank you\"",
+      "QuietJar steps back and stops asking",
+      "Comes back later to support you again"
+    ]
+  },
+  "craft": {
+    "eyebrow": "Craft",
+    "title": "Feels like part of your site. Not an ad for someone else's.",
+    "description": "QuietJar is not a clunky widget stapled onto your page. It is fast and seamless, designed to look like you built it yourself. Paying feels effortless. The same frictionless experience they'd expect from any well-made checkout.",
+    "features": [
+      {
+        "title": "Two-tap checkout",
+        "description": "No forms to fill, no account to create. Just tap and it is done.",
+        "icon": "bx:bxs-zap"
+      },
+      {
+        "title": "Matches your design",
+        "description": "Colors, corners, and feel fit your page, not an ad for someone else's.",
+        "icon": "bx:bxs-palette"
+      },
+      {
+        "title": "Familiar payment methods",
+        "description": "Apple Pay, cards, and more, right where your visitors already pay.",
+        "icon": "bx:bxs-credit-card"
+      }
+    ]
+  },
+  "pricing": {
+    "eyebrow": "Pricing",
+    "title": "We only win when you do.",
+    "description": "No monthly fee. No plans to compare. QuietJar takes a small share of what you actually receive. So it costs you nothing until it is earning you something. Your incentives and ours point the same direction. Get more of your supporters to follow through.",
+    "planLabel": "Simple",
+    "planPrice": "Free",
+    "planPriceNote": "to start, forever",
+    "planFeatures": [
+      "No monthly fee. No plans to compare.",
+      "Pay a small percentage only when someone supports you.",
+      "Your incentives and ours point the same direction."
+    ],
+    "cta": "Add it to your site"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Questions, answered.",
+    "items": [
+      {
+        "q": "What is QuietJar?",
+        "a": "A small, polished donate button you drop onto your own website, so your supporters can pay without leaving your page."
+      },
+      {
+        "q": "Do I need a separate account or page for my visitors?",
+        "a": "No. The button works right on your site. There is an optional hosted page for people who prefer one, but you do not need it."
+      },
+      {
+        "q": "How is this different from the donation tools I already know?",
+        "a": "Most tools send your visitors over to someone else's page. QuietJar keeps them on yours. Fewer steps, no drop-off, more of them actually follow through."
+      },
+      {
+        "q": "Will it slow down my site?",
+        "a": "No. QuietJar is built to be fast. It loads lightly and does not weigh your page down."
+      },
+      {
+        "q": "What does it cost?",
+        "a": "There is no monthly fee and no plans to compare. QuietJar takes a small share of what you actually receive, so it costs you nothing until it earns you something."
+      },
+      {
+        "q": "What payment methods can my supporters use?",
+        "a": "The ones people actually reach for. Apple Pay, cards, and other common options, right where they already pay. Paying feels effortless."
+      },
+      {
+        "q": "What happens after someone supports me?",
+        "a": "QuietJar steps back. It stops pestering people who have already given, so your biggest supporters get thanked instead of nagged."
+      },
+      {
+        "q": "How do I add it to my site?",
+        "a": "Paste a small piece of code, pick your design, and it is live. It takes minutes, and it fits the look of your page."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Stop losing supporters on the way to the checkout.",
+    "description": "Add the button to your site in minutes. No monthly fee. No redirects. Just a quiet, polished way for your people to support you.",
+    "primary": "Add it to your site",
+    "secondary": "Questions?"
+  }
+}

@@ -1,20 +1,24 @@
 ---
 import Container from "@/components/container.astro";
+import { dictionary } from "@/i18n/t";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const dashboard = copy.dashboard;
 ---
 
-<DashboardLayout title="Dashboard">
+<DashboardLayout title={dashboard.title}>
   <Container>
     <main class="py-10">
       <div class="flex items-center justify-between">
-        <h1 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">Dashboard</h1>
+        <h1 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">{dashboard.title}</h1>
         <button
           id="qj-sign-out"
           type="button"
-          class="rounded-sm px-4 py-2 border-2 border-black text-black hover:bg-black hover:text-white transition cursor-pointer">Sign out</button>
+          class="rounded-sm px-4 py-2 border-2 border-black text-black hover:bg-black hover:text-white transition cursor-pointer">{dashboard.signOut}</button>
       </div>
 
-      Nothing here yet, check back soon!
+      {dashboard.empty}
     </main>
   </Container>
 </DashboardLayout>

@@ -1,36 +1,20 @@
 ---
 import { Icon } from "astro-icon/components";
+import { dictionary } from "@/i18n/t";
 
-const features = [
-  {
-    title: "Two-tap checkout",
-    description: "No forms to fill, no account to create. Just tap and it is done.",
-    icon: "bx:bxs-zap",
-  },
-  {
-    title: "Matches your design",
-    description: "Colors, corners, and feel fit your page, not an ad for someone else's.",
-    icon: "bx:bxs-palette",
-  },
-  {
-    title: "Familiar payment methods",
-    description: "Apple Pay, cards, and more, right where your visitors already pay.",
-    icon: "bx:bxs-credit-card",
-  },
-];
+const copy = dictionary(Astro.currentLocale ?? "en");
+const craft = copy.craft;
+const features = craft.features;
 ---
 
 <section class="mt-24 md:mt-32">
   <div class="text-center max-w-3xl mx-auto">
-    <p class="text-sm font-semibold tracking-wide text-slate-400 uppercase">Craft</p>
+    <p class="text-sm font-semibold tracking-wide text-slate-600 uppercase">{craft.eyebrow}</p>
     <h2 class="mt-3 text-4xl lg:text-5xl font-bold lg:tracking-tight">
-      Feels like part of your site. Not an ad for someone else's.
+      {craft.title}
     </h2>
     <p class="mt-4 text-lg text-slate-600">
-      QuietJar is not a clunky widget stapled onto your page. It is fast and
-      seamless, designed to look like you built it yourself. Paying feels
-      effortless. The same frictionless experience they'd expect from any
-      well-made checkout.
+      {craft.description}
     </p>
   </div>
 
@@ -43,7 +27,7 @@ const features = [
           </div>
           <div>
             <h3 class="font-semibold text-lg">{item.title}</h3>
-            <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+            <p class="text-slate-600 mt-2 leading-relaxed">{item.description}</p>
           </div>
         </div>
       ))

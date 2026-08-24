@@ -1,6 +1,16 @@
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
+import robotsTxt from "astro-robots-txt";
+import { llmMarkdown } from "./src/integrations/llm-markdown.ts";
+import { sitemapIndexLastmod } from "./src/integrations/sitemap-index-lastmod.js";
+import {
+  buildLastmodMap,
+  authoredLastmod,
+  buildChunkLastmods,
+} from "./src/lib/sitemap-lastmod.js";
+import { defaultLocale, locales } from "./src/i18n/config.ts";
 
 /**
  * Backend origin forwarded to in local dev.
@@ -8,6 +18,8 @@ import icon from "astro-icon";
  * same-origin (avoids cross-site cookie + CORS pain during development).
  */
 const BACKEND_ORIGIN = process.env.BACKEND_URL ?? "http://localhost:3000";
+
+const site = process.env.PUBLIC_FRONTEND_URL ?? "https://quietjar.com";
 
 // Minimal Vite plugin that forwards /api requests to the backend during dev.
 const apiProxy = () => ({
@@ -45,10 +57,66 @@ const apiProxy = () => ({
   },
 });
 
+const lastmodMap = buildLastmodMap();
+
+const AI_USER_AGENTS = [
+  "GPTBot",
+  "ClaudeBot",
+  "anthropic-ai",
+  "Google-Extended",
+  "PerplexityBot",
+  "ChatGPT-User",
+  "CCBot",
+  "Applebot-Extended",
+];
+
+const integrations = [
+  icon(),
+  llmMarkdown({
+    siteName: "QuietJar",
+    description:
+      "A donation button that lives on your own site, so your supporters can pay without leaving your page.",
+  }),
+  sitemap({
+    changefreq: "weekly",
+    priority: 0.7,
+    i18n: {
+      defaultLocale,
+      locales: Object.fromEntries(locales.map((l) => [l, l])),
+    },
+    serialize: (item) => {
+      const path = new URL(item.url).pathname;
+      const authored = authoredLastmod(path, lastmodMap);
+      if (authored) item.lastmod = authored;
+      return item;
+    },
+    filter: (page) => !page.includes("/dashboard") && !page.includes("/api/"),
+  }),
+  sitemapIndexLastmod({ chunkLastmods: buildChunkLastmods(lastmodMap) }),
+  robotsTxt({
+    host: true,
+    policy: [
+      { userAgent: "*", disallow: ["/dashboard/", "/api/"] },
+      // Each AI agent gets its own group, which overrides the wildcard group
+      // above, so the dashboard/api disallow must be repeated here.
+      ...AI_USER_AGENTS.map((agent) => ({
+        userAgent: agent,
+        allow: "/",
+        disallow: ["/dashboard/", "/api/"],
+      })),
+    ],
+  }),
+];
+
 export default defineConfig({
   output: "static",
-  site: "http://localhost:4321",
-  integrations: [icon()],
+  site,
+  integrations,
+  i18n: {
+    defaultLocale,
+    locales: [...locales],
+    routing: { prefixDefaultLocale: false, redirectToDefaultLocale: false },
+  },
   server: {
     port: 4321,
     host: true,

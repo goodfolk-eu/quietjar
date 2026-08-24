@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "defaultTitle": "QuietJar - Accept support without sending people away",
+    "defaultDescription": "A donation button that lives on your own site, so your supporters can pay without leaving your page."
+  },
+  "nav": {
+    "links": [
+      { "title": "Features", "path": "/#features" },
+      { "title": "How it works", "path": "/#how" },
+      { "title": "Pricing", "path": "/#pricing" },
+      { "title": "FAQ", "path": "/#faq" }
+    ],
+    "login": "Log in",
+    "signup": "Add to your site",
+    "dashboard": "Dashboard",
+    "menu": "Menu",
+    "primary": "Primary",
+    "mobile": "Mobile"
+  },
+  "footer": {
+    "copyright": "Copyleft © {year} QuietJar · A quiet way to accept support.",
+    "subtext": "No monthly fee. A small share only when you get paid."
+  },
+  "auth": {
+    "title": "Sign in to QuietJar",
+    "titleSignup": "Add QuietJar to your site",
+    "subtitle": "Enter your email and we will send you a one-time code. New emails are auto-registered.",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "code": "One-time code",
+    "codePlaceholder": "6-digit code",
+    "sendCode": "Send code",
+    "signIn": "Sign in",
+    "close": "Close",
+    "messages": {
+      "enterEmail": "Please enter your email.",
+      "sending": "Sending code...",
+      "codeSent": "Code sent. Check your inbox.",
+      "enterCode": "Enter the code we sent you.",
+      "verifying": "Verifying...",
+      "signedIn": "Signed in! Redirecting to your dashboard..."
+    }
+  }
+}

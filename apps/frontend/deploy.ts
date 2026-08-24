@@ -52,6 +52,7 @@ const MIME_TYPES: Record<string, string> = {
   ".otf": "font/otf",
   ".txt": "text/plain",
   ".xml": "application/xml",
+  ".md": "text/markdown",
   ".webmanifest": "application/manifest+json",
   ".map": "application/json",
 };

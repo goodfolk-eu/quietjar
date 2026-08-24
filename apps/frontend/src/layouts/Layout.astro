@@ -1,6 +1,7 @@
 ---
 import Footer from "@/components/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
+import { dictionary } from "@/i18n/t";
 import "@fontsource-variable/inter/index.css";
 import "@fontsource-variable/bricolage-grotesque";
 import "../styles/global.css";
@@ -10,18 +11,27 @@ interface Props {
   description?: string;
 }
 
-const {
-  title = "",
-  description = "A donation button that lives on your own site, so your supporters can pay without leaving your page.",
-} = Astro.props;
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
 
-const makeTitle = title
-  ? `${title} | QuietJar`
-  : "QuietJar - Accept support without sending people away";
+const { title = copy.meta.defaultTitle, description = copy.meta.defaultDescription } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://quietjar.com");
+const canonical = new URL(Astro.url.pathname, siteUrl);
+
+const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "QuietJar",
+  url: canonical.origin,
+  description: copy.meta.defaultDescription,
+};
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -29,10 +39,20 @@ const makeTitle = title
     <meta name="generator" content={Astro.generator} />
     <title>{makeTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="QuietJar" />
+    <meta property="og:title" content={makeTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body>
     <Navbar />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
     <style is:global>
       img {

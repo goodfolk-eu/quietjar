@@ -1,24 +1,27 @@
 ---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const cta = copy.cta;
 ---
 
 <section class="mt-24 md:mt-32">
   <div
     class="bg-black p-8 md:px-20 md:py-20 mx-auto max-w-5xl rounded-lg flex flex-col items-center text-center">
     <h2 class="text-white text-4xl md:text-6xl tracking-tight">
-      Stop losing supporters on the way to the checkout.
+      {cta.title}
     </h2>
     <p class="text-slate-400 mt-4 text-lg md:text-xl max-w-2xl">
-      Add the button to your site in minutes. No monthly fee. No redirects.
-      Just a quiet, polished way for your people to support you.
+      {cta.description}
     </p>
     <div class="flex mt-8 flex-col sm:flex-row gap-3">
       <button type="button" data-auth-mode="signup"
         class="rounded-sm text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-100 px-6 py-3 bg-white text-black hover:bg-gray-100 border-2 border-transparent cursor-pointer">
-        Add it to your site
+        {cta.primary}
       </button>
       <a href="#faq"
         class="rounded-sm text-center transition focus-visible:ring-2 ring-offset-2 ring-gray-100 px-6 py-3 bg-transparent text-white border-2 border-white hover:bg-white/10 cursor-pointer">
-        Questions?
+        {cta.secondary}
       </a>
     </div>
   </div>
