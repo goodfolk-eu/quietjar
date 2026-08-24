@@ -21,6 +21,10 @@ const BACKEND_ORIGIN = process.env.BACKEND_URL ?? "http://localhost:3000";
 
 const site = process.env.PUBLIC_FRONTEND_URL ?? "https://quietjar.com";
 
+// Origin the browser talks to for /api calls. Cross-origin in production
+// (api.quietjar.com), same-origin in dev via the apiProxy.
+const apiOrigin = process.env.PUBLIC_API_URL ?? "https://api.quietjar.com";
+
 // Minimal Vite plugin that forwards /api requests to the backend during dev.
 const apiProxy = () => ({
   name: "quietjar-api-proxy",
@@ -116,6 +120,24 @@ export default defineConfig({
     defaultLocale,
     locales: [...locales],
     routing: { prefixDefaultLocale: false, redirectToDefaultLocale: false },
+  },
+  security: {
+    csp: {
+      algorithm: "SHA-256",
+      directives: [
+        "default-src 'none'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "connect-src 'self' " + apiOrigin,
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-src 'none'",
+        "media-src 'none'",
+        "worker-src 'none'",
+        "upgrade-insecure-requests",
+      ],
+    },
   },
   server: {
     port: 4321,
