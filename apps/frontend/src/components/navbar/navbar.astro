@@ -61,7 +61,7 @@ const navLinks = [
 <AuthModal />
 
 <script>
-import { authClient } from "../../lib/api";
+import { hasSessionCookie, onAuthStateChange } from "../../lib/session";
 
 const loginBtns = [document.getElementById("qj-nav-login"), document.getElementById("qj-nav-login-mobile")];
 const signupBtns = [document.getElementById("qj-nav-signup"), document.getElementById("qj-nav-signup-mobile")];
@@ -73,7 +73,8 @@ function setSignedIn(signedIn: boolean) {
   dashDesk.forEach((el) => el?.classList.toggle("hidden", !signedIn));
 }
 
-authClient.getSession().then(({ data }) => setSignedIn(Boolean(data?.user)));
+setSignedIn(hasSessionCookie());
+onAuthStateChange(setSignedIn);
 
 loginBtns.forEach((b) => b?.addEventListener("click", () => window.__quietjarAuthOpen?.("login")));
 signupBtns.forEach((b) => b?.addEventListener("click", () => window.__quietjarAuthOpen?.("signup")));

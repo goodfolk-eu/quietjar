@@ -61,6 +61,7 @@
 
 <script>
 import { authClient } from "../../lib/api";
+import { emitAuthStateChange } from "../../lib/session";
 
 const overlay = document.getElementById("qj-auth-overlay")!;
 const title = document.getElementById("qj-auth-title")!;
@@ -138,6 +139,7 @@ signInBtn.addEventListener("click", async () => {
     return;
   }
   statusEl.textContent = "Signed in! Redirecting to your dashboard...";
+  emitAuthStateChange(true);
   window.location.href = "/dashboard";
 });
 

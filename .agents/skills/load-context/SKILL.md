@@ -36,7 +36,7 @@ The product is EU-domiciled and built on European rails and hosting (EU payments
 
 ## Naming
 
-Working name in progress. Current frontrunner is **Nummari** (sector-clear, recommended for formal EUIPO/BOIP trademark clearance in classes 36 and 42). Other candidates explored include Dennora, Quietjar, Inlay, and Grato. "Jar"/"tip"-type words are avoided as they're generic to the category and cap the brand at low-value transactions. Naming is **not final**.
+Quietjar.com
 
 ## Voice & tone
 

@@ -1,8 +1,18 @@
 import { betterAuth } from "better-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { emailOTP } from "better-auth/plugins";
 import type { Dialect } from "kysely";
 import { libsqlDialect } from "./db";
 import { sendEmail } from "./email";
+
+/**
+ * Non-httpOnly marker cookie used by the static homepage to decide whether to
+ * show "Log in" or "Dashboard" without a backend call. The real httpOnly
+ * session token stays invisible to JS; this is a UI hint only, validated
+ * server-side on the dashboard.
+ */
+const AUTH_MARKER = "qj_auth_marker";
+const AUTH_MARKER_ATTRS = "Path=/; Max-Age=31536000; SameSite=Lax";
 
 /**
  * The public origin of the BACKEND. In production this is the Bunny
@@ -68,4 +78,17 @@ export const auth = betterAuth({
       allowedAttempts: 3,
     }),
   ],
+
+  // Toggle the readable marker cookie so the static homepage can show the right
+  // button without a backend call. Validated server-side on the dashboard.
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-in/email-otp") {
+        ctx.setCookie(AUTH_MARKER, "1", { maxAge: 31536000, path: "/", sameSite: "lax" });
+      }
+      if (ctx.path === "/sign-out") {
+        ctx.setCookie(AUTH_MARKER, "", { maxAge: 0, path: "/", sameSite: "lax" });
+      }
+    }),
+  },
 });
