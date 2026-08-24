@@ -10,8 +10,29 @@ import { sendEmail } from "./email";
  * show "Log in" or "Dashboard" without a backend call. The real httpOnly
  * session token stays invisible to JS; this is a UI hint only, validated
  * server-side on the dashboard.
+ *
+ * The cookie must be scoped to the FRONTEND origin (the parent domain of the
+ * API) so the homepage can read it. The API lives on api.quietjar.com while
+ * the homepage is served from quietjar.com; without an explicit Domain the
+ * cookie would be host-only to api.quietjar.com and invisible to the page.
  */
 const AUTH_MARKER = "qj_auth_marker";
+
+/**
+ * Cookie attributes for the auth marker. On a real https host the cookie is
+ * scoped to the frontend's parent domain (first-party for the homepage) and
+ * marked Secure. Local dev runs everything same-origin via the Astro proxy,
+ * so no Domain is set.
+ */
+function markerCookieAttrs(): { domain?: string; secure: boolean; sameSite: "lax"; path: "/" } {
+  const frontendUrl = process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
+  const host = new URL(frontendUrl).host;
+  const isHttps = new URL(frontendUrl).protocol === "https:";
+  if (!isHttps) {
+    return { secure: false, sameSite: "lax", path: "/" };
+  }
+  return { domain: host, secure: true, sameSite: "lax", path: "/" };
+}
 
 /**
  * The public origin of the BACKEND. In production this is the Bunny
@@ -83,10 +104,10 @@ export const auth = betterAuth({
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path === "/sign-in/email-otp") {
-        ctx.setCookie(AUTH_MARKER, "1", { maxAge: 31536000, path: "/", sameSite: "lax" });
+        ctx.setCookie(AUTH_MARKER, "1", markerCookieAttrs());
       }
       if (ctx.path === "/sign-out") {
-        ctx.setCookie(AUTH_MARKER, "", { maxAge: 0, path: "/", sameSite: "lax" });
+        ctx.setCookie(AUTH_MARKER, "", { ...markerCookieAttrs(), maxAge: 0 });
       }
     }),
   },

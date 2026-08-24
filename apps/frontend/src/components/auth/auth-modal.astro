@@ -113,7 +113,7 @@ sendBtn.addEventListener("click", async (e) => {
     return;
   }
   capturedEmail = email;
-  statusEl.textContent = "Code sent. Check your inbox (logged to backend console when no SMTP is set).";
+  statusEl.textContent = "Code sent. Check your inbox.";
   codeRow.classList.remove("hidden");
   sendBtn.classList.add("hidden");
   sendBtn.classList.remove("w-full");
