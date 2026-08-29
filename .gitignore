@@ -68,3 +68,5 @@ temp/
 .bun-tmp/
 .tools/
 bun.lockb
+
+pnpm-lock.yaml

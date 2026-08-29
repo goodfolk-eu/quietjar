@@ -18,7 +18,7 @@
     "mobile": "Mobile"
   },
   "footer": {
-    "copyright": "Copyleft © {year} QuietJar · A quiet way to accept support.",
+    "copyright": "Copyright © {year} QuietJar · A quiet way to accept support.",
     "subtext": "No monthly fee. A small share only when you get paid."
   },
   "auth": {

@@ -47,4 +47,4 @@ apps/
 
 ## License
 
-Copyleft.
+...
