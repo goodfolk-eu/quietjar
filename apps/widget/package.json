@@ -1,0 +1,16 @@
+{
+  "name": "@quietjar/widget",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun dev.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "bun run typecheck && bun build src/index.ts --target=browser --format=iife --outfile=dist/widget.js --minify",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@happy-dom/global-registrator": "^20.11.15",
+    "bun-types": "latest"
+  }
+}

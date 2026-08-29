@@ -11,6 +11,7 @@
       "apps/**/src/**/*.{ts,tsx,js,jsx,astro}",
       "apps/frontend/deploy.ts",
       "apps/backend/deploy.ts",
+      "apps/widget/dev.ts",
       "**/*.config.ts",
       "astro.config.mjs",
       "tsconfig*.json",

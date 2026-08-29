@@ -1,0 +1,11 @@
+{
+  "labels": {
+    "headline": "Support this site"
+  },
+  "style": {
+    "color": "#0f172a"
+  },
+  "position": {
+    "corner": "bottom-right"
+  }
+}

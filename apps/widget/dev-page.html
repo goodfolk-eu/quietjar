@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QuietJar widget test page</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, sans-serif;
+        color: #0f172a;
+        background: #f8fafc;
+      }
+      main {
+        max-width: 42rem;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
+      }
+      pre {
+        padding: 1rem;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>QuietJar widget</h1>
+      <p>The floating icon in the corner is the widget. It is visual only for now.</p>
+      <p>Config is set on <code>window.QuietJar</code> in <code>dev-config.json</code>:</p>
+      <pre><code>window.QuietJar = __CONFIG_PRETTY__;</code></pre>
+      <p>Edit <code>dev-config.json</code>, <code>dev-page.html</code>, or anything in <code>src/</code> and the page reloads automatically.</p>
+    </main>
+    <script>
+      window.QuietJar = __CONFIG_RAW__;
+    </script>
+    <script src="/widget.js"></script>
+    <script>
+      const reload = new EventSource("/__reload");
+      reload.addEventListener("reload", () => location.reload());
+      reload.addEventListener("build-error", (e) => {
+        let message = "Widget build failed";
+        try {
+          message = JSON.parse(e.data).message;
+        } catch {}
+        let el = document.getElementById("quietjar-build-error");
+        if (!el) {
+          el = document.createElement("div");
+          el.id = "quietjar-build-error";
+          el.style.cssText =
+            "position:fixed;inset:0;padding:24px;background:rgba(127,29,29,.95);color:#fff;" +
+            "font-family:ui-monospace,monospace;font-size:13px;line-height:1.5;white-space:pre-wrap;" +
+            "overflow:auto;z-index:2147483647;";
+          document.body.append(el);
+        }
+        el.textContent = message;
+      });
+    </script>
+  </body>
+</html>
