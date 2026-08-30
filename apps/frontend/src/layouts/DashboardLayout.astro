@@ -16,7 +16,6 @@ const copy = dictionary(locale);
 const { title = copy.meta.defaultTitle, description = copy.meta.defaultDescription } = Astro.props;
 
 const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
-
 ---
 
 <!doctype html>
