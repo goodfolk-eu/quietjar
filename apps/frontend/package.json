@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "typecheck": "astro check && tsc --noEmit",
-    "build": "bun run typecheck && astro build",
+    "build:embed": "cd ../widget && bun run typecheck && bun run bundle -- --outfile=../frontend/public/js/latest/widget.js",
+    "build": "bun run build:embed && bun run typecheck && astro build",
     "deploy": "bun deploy.ts",
     "preview": "astro preview",
     "astro": "astro"
@@ -19,6 +20,7 @@
     "@iconify-json/bx": "^1.2.2",
     "@iconify-json/simple-icons": "^1.2.28",
     "@quietjar/backend": "workspace:*",
+    "@quietjar/widget": "workspace:*",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.0",
     "apexcharts": "7",

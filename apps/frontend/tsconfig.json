@@ -18,6 +18,7 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "public/js"
   ]
 }

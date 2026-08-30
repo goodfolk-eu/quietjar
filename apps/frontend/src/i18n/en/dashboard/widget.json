@@ -1,5 +1,31 @@
 {
   "widget": {
-    "title": "Widget"
+    "title": "Widget",
+    "intro": "Style the donation button and copy the snippet into your own site.",
+    "settings": "Settings",
+    "position": "Position",
+    "positionHint": "The corner the button sits in.",
+    "corners": {
+      "topLeft": "Top left",
+      "topRight": "Top right",
+      "bottomLeft": "Bottom left",
+      "bottomRight": "Bottom right"
+    },
+    "color": "Color",
+    "colorHint": "Pick a preset or enter your own hex value.",
+    "customColor": "Custom color",
+    "hexValue": "Hex value",
+    "headline": "Headline",
+    "headlineHint": "Used as the button label for screen readers and as its tooltip.",
+    "preview": "Preview",
+    "previewHint": "A mock page showing where the button lands.",
+    "previewUrl": "your-site.com",
+    "generate": "Generate widget",
+    "embedTitle": "Your widget snippet",
+    "embedIntro": "Paste this just before the closing body tag on every page that should show the button.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Copy failed",
+    "close": "Close"
   }
 }

@@ -7,6 +7,17 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
+function widgetCss(host: HTMLElement): string {
+  const root = host.shadowRoot;
+  const adopted = root?.adoptedStyleSheets ?? [];
+  if (adopted.length > 0) {
+    return adopted
+      .flatMap((sheet) => Array.from(sheet.cssRules, (rule) => rule.cssText))
+      .join("\n");
+  }
+  return root?.querySelector("style")?.textContent ?? "";
+}
+
 describe("mountWidget", () => {
   test("mounts into a selector target", () => {
     const container = document.createElement("div");
@@ -46,15 +57,13 @@ describe("mountWidget", () => {
   test("applies the configured color to the stylesheet", () => {
     const host = mountWidget(resolveConfig({ style: { color: "#123abc" } }));
 
-    const style = host.shadowRoot?.querySelector("style");
-    expect(style?.textContent).toContain("#123abc");
+    expect(widgetCss(host)).toContain("#123abc");
   });
 
   test("uses the default color when none is configured", () => {
     const host = mountWidget(resolveConfig(undefined));
 
-    const style = host.shadowRoot?.querySelector("style");
-    expect(style?.textContent).toContain(DEFAULT_COLOR);
+    expect(widgetCss(host)).toContain(DEFAULT_COLOR);
   });
 
   test("sets the headline as the button label", () => {
@@ -75,6 +84,30 @@ describe("mountWidget", () => {
     const second = mountWidget(resolveConfig(undefined));
     expect(second).toBe(first);
     expect(document.querySelectorAll("[data-quietjar-host]")).toHaveLength(1);
+  });
+
+  test("mounts separate hosts into separate containers", () => {
+    const first = document.createElement("div");
+    const second = document.createElement("div");
+    document.body.append(first, second);
+
+    const firstHost = mountWidget(resolveConfig({ mount: { target: first } }));
+    const secondHost = mountWidget(resolveConfig({ mount: { target: second } }));
+
+    expect(secondHost).not.toBe(firstHost);
+    expect(first.querySelector("[data-quietjar-host]")).toBe(firstHost);
+    expect(second.querySelector("[data-quietjar-host]")).toBe(secondHost);
+  });
+
+  test("reuses the existing host when remounting into the same container", () => {
+    const container = document.createElement("div");
+    document.body.append(container);
+
+    const first = mountWidget(resolveConfig({ mount: { target: container } }));
+    const second = mountWidget(resolveConfig({ mount: { target: container } }));
+
+    expect(second).toBe(first);
+    expect(container.querySelectorAll("[data-quietjar-host]")).toHaveLength(1);
   });
 
   test("renders a heart icon in the button", () => {

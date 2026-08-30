@@ -112,6 +112,27 @@ const integrations = [
   }),
 ];
 
+/**
+ * Preline's per-plugin bundles (`preline/plugins/*`) export nothing — they
+ * self-init on window load and assign to `window.HS*`. Its package.json
+ * `sideEffects` list omits those dist files, so Vite marks them side-effect-free
+ * and Rollup drops the bare imports, silently shipping no JS. Re-resolve them
+ * ahead of `vite:resolve` and flag them as side-effectful.
+ *
+ * Without this, importing the `preline` barrel is the only thing that works, and
+ * that barrel is one 376 kB pre-bundled chunk (apexcharts, datatables, dropzone,
+ * ...) that cannot be tree-shaken.
+ */
+const prelineSideEffects = () => ({
+  name: "quietjar-preline-side-effects",
+  enforce: "pre",
+  async resolveId(source, importer, options) {
+    if (!source.startsWith("preline/plugins/")) return null;
+    const resolved = await this.resolve(source, importer, { ...options, skipSelf: true });
+    return resolved ? { ...resolved, moduleSideEffects: true } : null;
+  },
+});
+
 export default defineConfig({
   output: "static",
   site,
@@ -144,6 +165,6 @@ export default defineConfig({
     host: true,
   },
   vite: {
-    plugins: [tailwindcss(), apiProxy()],
+    plugins: [tailwindcss(), apiProxy(), prelineSideEffects()],
   },
 });

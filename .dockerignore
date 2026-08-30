@@ -11,3 +11,5 @@ apps/backend/*.db-*
 !.env.example
 dist
 .astro
+apps/widget/*
+!apps/widget/package.json

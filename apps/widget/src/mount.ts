@@ -5,21 +5,19 @@ import { widgetStyles } from "./styles";
 const HOST_SELECTOR = "[data-quietjar-host]";
 
 export function mountWidget(config: ResolvedConfig): HTMLElement {
-  const existing = document.querySelector<HTMLElement>(HOST_SELECTOR);
+  const container = resolveContainer(config);
+  const existing = container.querySelector<HTMLElement>(HOST_SELECTOR);
   if (existing) {
     return existing;
   }
 
-  const container = resolveContainer(config);
   const host = document.createElement("div");
   host.setAttribute("data-quietjar-host", "");
   host.style.cssText = "all: initial;";
   container.append(host);
 
   const root = host.attachShadow({ mode: "open" });
-
-  const style = document.createElement("style");
-  style.textContent = widgetStyles(config.color);
+  applyStyles(root, config.color);
 
   const button = document.createElement("button");
   button.type = "button";
@@ -28,8 +26,26 @@ export function mountWidget(config: ResolvedConfig): HTMLElement {
   button.title = config.headline;
   button.innerHTML = heartIconMarkup();
 
-  root.append(style, button);
+  root.append(button);
   return host;
+}
+
+// A constructed stylesheet is exempt from the style-src CSP directive, so the
+// widget still renders on sites that ship a strict policy. Engines without
+// constructable stylesheets fall back to a <style> element.
+function applyStyles(root: ShadowRoot, color: string): void {
+  const css = widgetStyles(color);
+
+  if (typeof CSSStyleSheet === "function" && "replaceSync" in CSSStyleSheet.prototype) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(css);
+    root.adoptedStyleSheets = [sheet];
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.textContent = css;
+  root.prepend(style);
 }
 
 function resolveContainer(config: ResolvedConfig): HTMLElement {

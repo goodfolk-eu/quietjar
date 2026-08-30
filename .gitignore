@@ -12,6 +12,7 @@ bower_components/
 !.env.sample
 
 # Build output
+apps/frontend/public/js/
 dist/
 build/
 out/

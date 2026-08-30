@@ -10,6 +10,7 @@ COPY package.json bun.lock* ./
 # lockfile; otherwise the install fails its frozen-lockfile check and prunes src.
 COPY apps/backend/package.json ./apps/backend/package.json
 COPY apps/frontend/package.json ./apps/frontend/package.json
+COPY apps/widget/package.json ./apps/widget/package.json
 COPY apps/backend/src ./apps/backend/src
 # Root workspaces metadata + backend deps only.
 RUN bun install --filter @quietjar/backend --production

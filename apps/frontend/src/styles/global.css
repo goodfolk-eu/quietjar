@@ -10,6 +10,14 @@
     'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* Preline injects its overlay backdrop with bg-opacity-*, which Tailwind v4
+   dropped, so the dimming has to be declared here. */
+.hs-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: color-mix(in srgb, var(--color-gray-900) 50%, transparent);
+}
+
 @layer base {
   *,
   ::after,

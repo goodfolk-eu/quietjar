@@ -1,8 +1,8 @@
 ---
+import { locales } from "@/i18n/config";
 import { dictionary } from "@/i18n/t";
 import "@fontsource-variable/inter/index.css";
 import "@fontsource-variable/bricolage-grotesque";
-import "apexcharts/dist/apexcharts.css";
 import "../styles/global.css";
 
 interface Props {
@@ -16,6 +16,19 @@ const copy = dictionary(locale);
 const { title = copy.meta.defaultTitle, description = copy.meta.defaultDescription } = Astro.props;
 
 const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
+
+// Strip any locale prefix and trailing slash so nav highlighting works for
+// every locale and regardless of trailingSlash config.
+const localePrefix = new RegExp(`^/(?:${locales.join("|")})(?=/|$)`);
+const pathname = (Astro.url.pathname.replace(localePrefix, "") || "/").replace(/\/+$/, "") || "/";
+
+const navLinkClass = (href: string, exact = false) => {
+  const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+  return [
+    "w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg focus:outline-hidden focus:bg-gray-100",
+    active ? "bg-gray-100" : "hover:bg-gray-100",
+  ].join(" ");
+};
 ---
 
 <!doctype html>
@@ -183,11 +196,11 @@ const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
         <div
           class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300"
         >
-          <nav class="hs-accordion-group p-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
+          <nav class="p-3 w-full flex flex-col flex-wrap">
             <ul class="flex flex-col space-y-1">
               <li>
                 <a
-                  class="flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+                  class={navLinkClass("/dashboard", true)}
                   href="/dashboard"
                 >
                   <svg
@@ -211,7 +224,7 @@ const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
 
               <li>
                 <a
-                  class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+                  class={navLinkClass("/dashboard/widget")}
                   href="/dashboard/widget"
                 >
                   <svg
@@ -249,7 +262,11 @@ const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
     <!-- End Content -->
 
     <script>
-      import "preline";
+      // Import only the Preline plugins this layout uses. Importing the "preline"
+      // barrel pulls in every plugin (apexcharts, datatables, dropzone, ...) as one
+      // pre-bundled, side-effectful chunk that cannot be tree-shaken (~376 kB).
+      import "preline/plugins/overlay";
+      import "preline/plugins/dropdown";
       import { authClient } from "@/lib/api.ts";
 
       const { data: session } = await authClient.getSession();
