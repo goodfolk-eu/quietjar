@@ -9,34 +9,6 @@ const dashboard = copy.dashboard;
 
 <DashboardLayout title={dashboard.title}>
   <Container>
-    <main class="py-10">
-      <div class="flex items-center justify-between">
-        <h1 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">{dashboard.title}</h1>
-        <button
-          id="qj-sign-out"
-          type="button"
-          class="rounded-sm px-4 py-2 border-2 border-black text-black hover:bg-black hover:text-white transition cursor-pointer">{dashboard.signOut}</button>
-      </div>
-
-      {dashboard.empty}
-    </main>
+    {dashboard.empty}
   </Container>
 </DashboardLayout>
-
-<script>
-  import {authClient} from "@/lib/api.ts";
-
-const signOut = document.getElementById("qj-sign-out") as HTMLButtonElement;
-
-const { data: session } = await authClient.getSession();
-if (!session?.user) {
-  window.location.replace("/");
-  throw new Error("redirecting");
-}
-
-signOut.addEventListener("click", async () => {
-  await authClient.signOut();
-  window.location.href = "/";
-});
-
-</script>

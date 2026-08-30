@@ -1,0 +1,15 @@
+---
+import Container from "@/components/container.astro";
+import { dictionary } from "@/i18n/t";
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const dashboard = copy.dashboard;
+const widget = copy.widget;
+---
+
+<DashboardLayout title={widget.title}>
+  <Container>
+    {dashboard.empty}
+  </Container>
+</DashboardLayout>

@@ -1,0 +1,13 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "signOut": "Sign out",
+    "empty": "Nothing here yet, check back soon!",
+    "signedInAs": "Signed in as",
+    "dropdown": "Dropdown",
+    "toggleNavigation": "Toggle Navigation",
+    "sidebar": "Sidebar",
+    "applicationLayout": "Application Layout",
+    "widget": "Widget"
+  }
+}
