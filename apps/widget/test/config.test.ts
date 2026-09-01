@@ -3,7 +3,6 @@ import "./setup";
 import {
   DEFAULT_COLOR,
   DEFAULT_CORNER,
-  DEFAULT_HEADLINE,
   resolveConfig,
   type QuietJarConfig,
 } from "../src/config";
@@ -11,7 +10,7 @@ import {
 describe("resolveConfig", () => {
   test("returns defaults for empty config", () => {
     expect(resolveConfig(undefined)).toEqual({
-      headline: DEFAULT_HEADLINE,
+      headline: "",
       color: DEFAULT_COLOR,
       corner: DEFAULT_CORNER,
       target: null,
@@ -34,6 +33,11 @@ describe("resolveConfig", () => {
     });
   });
 
+  test("accepts the centered corners", () => {
+    expect(resolveConfig({ position: { corner: "top-center" } }).corner).toBe("top-center");
+    expect(resolveConfig({ position: { corner: "bottom-center" } }).corner).toBe("bottom-center");
+  });
+
   test("falls back to default corner for unknown corner", () => {
     const config = { position: { corner: "middle" } } as unknown as QuietJarConfig;
     expect(resolveConfig(config).corner).toBe(DEFAULT_CORNER);
@@ -53,8 +57,13 @@ describe("resolveConfig", () => {
     expect(resolveConfig({ style: { color: "#abcff" } }).color).toBe(DEFAULT_COLOR);
   });
 
-  test("falls back to default headline for empty string", () => {
-    expect(resolveConfig({ labels: { headline: "" } }).headline).toBe(DEFAULT_HEADLINE);
+  test("keeps the headline empty when blank", () => {
+    expect(resolveConfig({ labels: { headline: "" } }).headline).toBe("");
+    expect(resolveConfig({ labels: { headline: "   " } }).headline).toBe("");
+  });
+
+  test("trims the headline", () => {
+    expect(resolveConfig({ labels: { headline: "  Leave a tip  " } }).headline).toBe("Leave a tip");
   });
 
   test("accepts an element target", () => {

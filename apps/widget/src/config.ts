@@ -1,4 +1,10 @@
-export type Corner = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+export type Corner =
+  | "bottom-right"
+  | "bottom-center"
+  | "bottom-left"
+  | "top-right"
+  | "top-center"
+  | "top-left";
 
 export interface QuietJarConfig {
   labels?: { headline?: string };
@@ -8,17 +14,26 @@ export interface QuietJarConfig {
 }
 
 export interface ResolvedConfig {
+  /** Visible button label; empty means the button stays icon-only. */
   headline: string;
   color: string;
   corner: Corner;
   target: string | HTMLElement | null;
 }
 
+/** Used as the accessible name when no headline is configured. */
 export const DEFAULT_HEADLINE = "Support this site";
 export const DEFAULT_COLOR = "#0f172a";
 export const DEFAULT_CORNER: Corner = "bottom-right";
 
-const CORNERS: readonly Corner[] = ["bottom-right", "bottom-left", "top-right", "top-left"];
+const CORNERS: readonly Corner[] = [
+  "bottom-right",
+  "bottom-center",
+  "bottom-left",
+  "top-right",
+  "top-center",
+  "top-left",
+];
 const HEX_COLOR = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
 export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig {
@@ -28,7 +43,7 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
   const target = input?.mount?.target;
 
   return {
-    headline: typeof headline === "string" && headline !== "" ? headline : DEFAULT_HEADLINE,
+    headline: typeof headline === "string" ? headline.trim() : "",
     color: isValidHexColor(color) ? color : DEFAULT_COLOR,
     corner: CORNERS.includes(corner as Corner) ? (corner as Corner) : DEFAULT_CORNER,
     target: isMountTarget(target) ? target : null,

@@ -1,4 +1,4 @@
-import type { ResolvedConfig } from "./config";
+import { DEFAULT_HEADLINE, type ResolvedConfig } from "./config";
 import { heartIconMarkup } from "./icon";
 import { widgetStyles } from "./styles";
 
@@ -19,12 +19,24 @@ export function mountWidget(config: ResolvedConfig): HTMLElement {
   const root = host.attachShadow({ mode: "open" });
   applyStyles(root, config.color);
 
+  const label = config.headline;
   const button = document.createElement("button");
   button.type = "button";
   button.className = `quietjar-widget quietjar-widget--${config.corner}`;
-  button.setAttribute("aria-label", config.headline);
-  button.title = config.headline;
+  if (label !== "") {
+    button.classList.add("quietjar-widget--labeled");
+  }
+  button.setAttribute("aria-label", label !== "" ? label : DEFAULT_HEADLINE);
+  button.title = label !== "" ? label : DEFAULT_HEADLINE;
   button.innerHTML = heartIconMarkup();
+
+  if (label !== "") {
+    const labelEl = document.createElement("span");
+    labelEl.className = "quietjar-widget__label";
+    // textContent keeps a headline with markup in it from rendering as HTML.
+    labelEl.textContent = label;
+    button.append(labelEl);
+  }
 
   root.append(button);
   return host;

@@ -4,11 +4,13 @@
     "intro": "Style the donation button and copy the snippet into your own site.",
     "settings": "Settings",
     "position": "Position",
-    "positionHint": "The corner the button sits in.",
+    "positionHint": "Where the button sits on the page.",
     "corners": {
       "topLeft": "Top left",
+      "topCenter": "Top center",
       "topRight": "Top right",
       "bottomLeft": "Bottom left",
+      "bottomCenter": "Bottom center",
       "bottomRight": "Bottom right"
     },
     "color": "Color",
@@ -16,7 +18,7 @@
     "customColor": "Custom color",
     "hexValue": "Hex value",
     "headline": "Headline",
-    "headlineHint": "Used as the button label for screen readers and as its tooltip.",
+    "headlineHint": "Shown on the button next to the icon. Leave empty for an icon-only button.",
     "preview": "Preview",
     "previewHint": "A mock page showing where the button lands.",
     "previewUrl": "your-site.com",

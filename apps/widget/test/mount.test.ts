@@ -54,6 +54,17 @@ describe("mountWidget", () => {
     expect(button?.className).toContain("quietjar-widget--top-left");
   });
 
+  test("supports the centered positions", () => {
+    for (const corner of ["top-center", "bottom-center"] as const) {
+      document.body.innerHTML = "";
+      const host = mountWidget(resolveConfig({ position: { corner } }));
+
+      const button = host.shadowRoot?.querySelector("button");
+      expect(button?.className).toContain(`quietjar-widget--${corner}`);
+      expect(widgetCss(host)).toContain(`.quietjar-widget--${corner}`);
+    }
+  });
+
   test("applies the configured color to the stylesheet", () => {
     const host = mountWidget(resolveConfig({ style: { color: "#123abc" } }));
 
@@ -66,12 +77,36 @@ describe("mountWidget", () => {
     expect(widgetCss(host)).toContain(DEFAULT_COLOR);
   });
 
-  test("sets the headline as the button label", () => {
+  test("uses the default headline as the accessible name when none is set", () => {
     const host = mountWidget(resolveConfig(undefined));
 
     const button = host.shadowRoot?.querySelector("button");
     expect(button?.getAttribute("aria-label")).toBe(DEFAULT_HEADLINE);
     expect(button?.title).toBe(DEFAULT_HEADLINE);
+    expect(button?.querySelector(".quietjar-widget__label")).toBeNull();
+    expect(button?.classList.contains("quietjar-widget--labeled")).toBe(false);
+  });
+
+  test("shows the headline next to the icon when one is set", () => {
+    const host = mountWidget(resolveConfig({ labels: { headline: "Leave a tip" } }));
+
+    const button = host.shadowRoot?.querySelector("button");
+    expect(button?.classList.contains("quietjar-widget--labeled")).toBe(true);
+    expect(button?.getAttribute("aria-label")).toBe("Leave a tip");
+    expect(button?.title).toBe("Leave a tip");
+
+    const label = button?.querySelector(".quietjar-widget__label");
+    expect(label?.textContent).toBe("Leave a tip");
+    // The label follows the icon.
+    expect(label?.previousElementSibling?.tagName.toLowerCase()).toBe("svg");
+  });
+
+  test("renders a headline containing markup as text", () => {
+    const host = mountWidget(resolveConfig({ labels: { headline: "<b>tip</b>" } }));
+
+    const label = host.shadowRoot?.querySelector(".quietjar-widget__label");
+    expect(label?.textContent).toBe("<b>tip</b>");
+    expect(label?.querySelector("b")).toBeNull();
   });
 
   test("falls back to body for an invalid selector target", () => {

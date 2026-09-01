@@ -6,7 +6,7 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "bun run dev:backend & bun run dev:frontend",
+    "dev": "bun run dev:backend & bun run dev:frontend && bun run dev:widget",
     "dev:backend": "bun --cwd apps/backend dev",
     "dev:frontend": "bun --cwd apps/frontend dev",
     "dev:widget": "bun --cwd apps/widget dev",
