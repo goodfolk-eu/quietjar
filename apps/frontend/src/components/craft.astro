@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 import { dictionary } from "@/i18n/t";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
@@ -7,30 +6,32 @@ const craft = copy.craft;
 const features = craft.features;
 ---
 
-<section class="mt-24 md:mt-32">
-  <div class="text-center max-w-3xl mx-auto">
-    <p class="text-sm font-semibold tracking-wide text-slate-600 uppercase">{craft.eyebrow}</p>
-    <h2 class="mt-3 text-4xl lg:text-5xl font-bold lg:tracking-tight">
-      {craft.title}
-    </h2>
-    <p class="mt-4 text-lg text-slate-600">
-      {craft.description}
-    </p>
-  </div>
+<section id="features" class="border-y border-qj-line bg-qj-surface">
+  <div class="mx-auto flex max-w-[1200px] flex-col gap-[44px] px-10 pb-24 pt-[88px]">
+    <div class="flex max-w-[56ch] flex-col gap-3.5">
+      <span class="text-[13.5px] font-medium text-qj-green">{craft.eyebrow}</span>
+      <h2 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.03em] text-qj-ink">
+        {craft.title}
+      </h2>
+      <p class="text-pretty text-[17px] leading-[1.62] text-qj-ink-2">
+        {craft.description}
+      </p>
+    </div>
 
-  <div class="grid sm:grid-cols-2 md:grid-cols-3 mt-14 gap-10">
-    {
-      features.map((item) => (
-        <div class="flex gap-4 items-start">
-          <div class="mt-1 bg-black rounded-full p-2 w-8 h-8 shrink-0">
-            <Icon class="text-white" name={item.icon} />
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+      {
+        features.map((item, i) => (
+          <div class="flex flex-col gap-2.5 rounded border border-qj-line bg-white px-[30px] py-[34px]">
+            <span class="font-mono text-[11.5px] text-qj-green">0{i + 1}</span>
+            <h3 class="font-display text-[21px] font-bold tracking-[-0.02em] text-qj-ink">
+              {item.title}
+            </h3>
+            <p class="text-[15px] leading-[1.6] text-qj-ink-2">
+              {item.description}
+            </p>
           </div>
-          <div>
-            <h3 class="font-semibold text-lg">{item.title}</h3>
-            <p class="text-slate-600 mt-2 leading-relaxed">{item.description}</p>
-          </div>
-        </div>
-      ))
-    }
+        ))
+      }
+    </div>
   </div>
 </section>

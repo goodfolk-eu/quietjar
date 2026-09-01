@@ -1,6 +1,5 @@
 import { createClient } from "@libsql/client";
 import { LibsqlDialect } from "@libsql/kysely-libsql";
-import { Kysely } from "kysely";
 
 // BunnyDB is a libsql (Turso-compatible) database.
 // Credentials come from the environment. See ".env.development".
@@ -23,7 +22,3 @@ export const libsqlClient = createClient({
 
 // Kysely dialect over the libsql HTTP connection.
 export const libsqlDialect = new LibsqlDialect({ client: libsqlClient });
-
-// BetterAuth drives the schema via its own migrations on first boot.
-// The table types are "any" here because BetterAuth owns the schema.
-export const kyselyDb = new Kysely<Record<string, never>>({ dialect: libsqlDialect });

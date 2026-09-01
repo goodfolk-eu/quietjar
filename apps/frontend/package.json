@@ -15,8 +15,6 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@elysiajs/eden": "^1.4.9",
-    "@fontsource-variable/bricolage-grotesque": "^5.2.5",
-    "@fontsource-variable/inter": "^5.2.5",
     "@iconify-json/bx": "^1.2.2",
     "@iconify-json/simple-icons": "^1.2.28",
     "@quietjar/backend": "workspace:*",
@@ -34,6 +32,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@types/bun": "^1.4.0"
+    "@types/bun": "^1.4.0",
+    "vite": "^8.2.2"
   }
 }

@@ -1,0 +1,47 @@
+---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const mock = copy.hero.browserMock;
+---
+
+<div class="rounded border border-qj-line bg-white shadow-md">
+  <div class="flex items-center gap-[7px] border-b border-qj-line-2 bg-qj-surface px-4 py-3">
+    <span class="size-[9px] rounded-full bg-[#D9DEE1]" aria-hidden="true"></span>
+    <span class="size-[9px] rounded-full bg-[#D9DEE1]" aria-hidden="true"></span>
+    <span class="size-[9px] rounded-full bg-[#D9DEE1]" aria-hidden="true"></span>
+    <span class="ml-2.5 font-mono text-[11.5px] text-qj-ink-3">{mock.url}</span>
+  </div>
+
+  <div class="flex flex-col gap-3.5 px-8 py-[30px] pb-[34px]">
+    <div class="flex flex-col gap-2">
+      <span class="h-[9px] w-[62%] rounded-sm bg-qj-line-2" aria-hidden="true"></span>
+      <span class="h-[9px] w-full rounded-sm bg-qj-line-2" aria-hidden="true"></span>
+      <span class="h-[9px] w-[88%] rounded-sm bg-qj-line-2" aria-hidden="true"></span>
+      <span class="h-[9px] w-[94%] rounded-sm bg-qj-line-2" aria-hidden="true"></span>
+    </div>
+
+    <div class="my-1.5 flex items-center justify-between gap-5 rounded border border-qj-line px-5 py-[18px]">
+      <div class="flex flex-col gap-[3px]">
+        <span class="font-display text-[17px] font-bold tracking-[-0.02em] text-qj-ink">{mock.enjoy}</span>
+        <span class="text-[13px] text-qj-ink-3">{mock.sub}</span>
+      </div>
+      <span class="shrink-0 whitespace-nowrap rounded-sm bg-qj-green px-[18px] py-[11px] text-[14px] font-semibold text-white">
+        {mock.cta}
+      </span>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="h-[9px] w-full rounded-sm bg-qj-line-2" aria-hidden="true"></span>
+      <span class="h-[9px] w-[74%] rounded-sm bg-qj-line-2" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="border-t border-qj-line bg-qj-surface px-5 py-4">
+    <pre class="whitespace-pre font-mono text-[12.5px] leading-[1.9] text-qj-ink-2">{mock.snippet}</pre>
+    <p class="mt-1 flex items-center gap-1.5 font-mono text-[12.5px] text-qj-green">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      {mock.live}
+    </p>
+  </div>
+</div>

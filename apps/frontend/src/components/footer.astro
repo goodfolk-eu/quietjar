@@ -1,13 +1,34 @@
 ---
+import Logo from "@/components/logo.astro";
 import { dictionary } from "@/i18n/t";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 ---
-<footer class="my-20">
-  <p class="text-center text-sm text-slate-600">
-    {copy.footer.copyright.replace("{year}", String(new Date().getFullYear()))}
-  </p>
-  <p class="text-center text-xs text-slate-600 mt-1">
-    {copy.footer.subtext}
-  </p>
+
+<footer class="bg-qj-ink">
+  <div class="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-10 py-11">
+    <a href="/" aria-label="QuietJar" class="flex items-center gap-0.5">
+      <Logo class="h-7.5 w-auto" mark="#ffffff" quiet="rgba(255,255,255,0.6)" jar="#ffffff" />
+    </a>
+    <span class="text-[13.5px] leading-[1.5] text-white/52">
+      {copy.footer.copyright.replace("{year}", String(new Date().getFullYear()))}
+    </span>
+    <a
+      href="https://goodfolk.eu/"
+      aria-label="Powered by GoodFolk"
+      class="inline-flex items-center gap-[11px] text-white no-underline">
+      <span class="text-[14px] font-normal opacity-60">Powered by</span>
+      <span class="inline-flex items-center gap-2">
+        <svg viewBox="191.61 612.54 212.12 212.13" width="30" height="30" aria-hidden="true" class="flex-none -translate-y-1">
+          <defs><clipPath id="gf-badge-clip" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" d="M180 600 H420 V840 H180 Z M244.643 665.567 A15 15 0 0 1 265.857 665.567 L270.099 661.324 L255.25 648.96 L240.401 661.324 Z M329.483 665.557 A15 15 0 0 1 350.697 665.557 L354.939 661.314 L340.09 648.95 L325.241 661.314 Z"></path></clipPath></defs>
+          <g fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="butt" stroke-linejoin="round" clip-path="url(#gf-badge-clip)">
+            <path d="M265.86 665.57 L212.8 718.6 L308.3 814.1"></path>
+            <path d="M329.5 665.56 L382.5 718.6 L329.5 771.63"></path>
+            <path d="M287.07 729.21 L350.71 665.57"></path>
+          </g>
+        </svg>
+        <span class="text-[19px] font-semibold tracking-[-0.022em]">GoodFolk</span>
+      </span>
+    </a>
+  </div>
 </footer>

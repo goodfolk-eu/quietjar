@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
 import { emailOTP } from "better-auth/plugins";
-import type { Dialect } from "kysely";
 import { libsqlDialect } from "./db";
 import { sendEmail } from "./email";
 
@@ -67,7 +66,7 @@ export const auth = betterAuth({
 
   // BunnyDB — a libsql database reached over HTTP.
   database: {
-    dialect: libsqlDialect as Dialect,
+    dialect: libsqlDialect,
     type: "sqlite",
     debugLogs: process.env.NODE_ENV === "development",
   },

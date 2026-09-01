@@ -5,7 +5,15 @@
     "description": "Every time you send a customer off to a separate donation page, most of them never arrive. QuietJar lives right on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place. Fewer clicks means more of them actually follow through.",
     "ctaPrimary": "Add it to your site",
     "ctaSecondary": "See it in action",
-    "subtext": "No monthly fee. You only pay a small share when you get paid."
+    "subtext": "No monthly fee. You only pay a small share when you get paid.",
+    "browserMock": {
+      "url": "your-site.com",
+      "enjoy": "Enjoying this?",
+      "sub": "Support the work — stays on this page.",
+      "cta": "Support · €5",
+      "snippet": "<script src=\"quietjar.com/j.js\"></script>\n<div data-quietjar=\"you\"></div>",
+      "live": "live · matches your design"
+    }
   },
   "features": {
     "eyebrow": "Why it works",
@@ -30,7 +38,7 @@
   },
   "logos": {
     "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
-    "methods": ["Apple Pay", "Visa", "Mastercard", "American Express", "Card"]
+    "methods": ["Apple Pay", "Visa", "Mastercard", "Amex"]
   },
   "polite": {
     "eyebrow": "Built to respect your audience",
