@@ -38,9 +38,10 @@ export function widgetStyles(color: string): string {
     .quietjar-widget:hover {
       transform: scale(1.05);
     }
-    .quietjar-widget svg {
-      width: 26px;
-      height: 26px;
+    .quietjar-widget__icon {
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", system-ui, sans-serif;
+      font-size: 24px;
+      line-height: 1;
     }
     .quietjar-widget--bottom-right {
       right: 24px;

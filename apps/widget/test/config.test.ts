@@ -3,6 +3,9 @@ import "./setup";
 import {
   DEFAULT_COLOR,
   DEFAULT_CORNER,
+  DEFAULT_ICON,
+  ICON_LIBRARY,
+  ICON_PRESETS,
   resolveConfig,
   type QuietJarConfig,
 } from "../src/config";
@@ -11,6 +14,7 @@ describe("resolveConfig", () => {
   test("returns defaults for empty config", () => {
     expect(resolveConfig(undefined)).toEqual({
       headline: "",
+      icon: DEFAULT_ICON,
       color: DEFAULT_COLOR,
       corner: DEFAULT_CORNER,
       target: null,
@@ -20,17 +24,36 @@ describe("resolveConfig", () => {
   test("uses provided values", () => {
     expect(
       resolveConfig({
-        labels: { headline: "Leave a tip" },
+        labels: { headline: "Leave a tip", icon: "☕" },
         style: { color: "#123abc" },
         position: { corner: "top-left" },
         mount: { target: "#widget" },
       }),
     ).toEqual({
       headline: "Leave a tip",
+      icon: "☕",
       color: "#123abc",
       corner: "top-left",
       target: "#widget",
     });
+  });
+
+  test("falls back to the default icon for blank or oversized values", () => {
+    expect(resolveConfig({ labels: { icon: "  " } }).icon).toBe(DEFAULT_ICON);
+    expect(resolveConfig({ labels: { icon: "way too long" } }).icon).toBe(DEFAULT_ICON);
+    expect(resolveConfig(undefined).icon).toBe(DEFAULT_ICON);
+  });
+
+  test("every offered icon survives validation", () => {
+    for (const icon of [...ICON_PRESETS, ...ICON_LIBRARY]) {
+      expect(resolveConfig({ labels: { icon } }).icon).toBe(icon);
+    }
+    expect(ICON_LIBRARY).toContain(DEFAULT_ICON);
+    expect(new Set(ICON_LIBRARY).size).toBe(ICON_LIBRARY.length);
+  });
+
+  test("accepts an emoji icon", () => {
+    expect(resolveConfig({ labels: { icon: "🫙" } }).icon).toBe("🫙");
   });
 
   test("accepts the centered corners", () => {

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import "./setup";
-import { DEFAULT_COLOR, DEFAULT_HEADLINE, resolveConfig } from "../src/config";
+import { DEFAULT_COLOR, DEFAULT_HEADLINE, DEFAULT_ICON, resolveConfig } from "../src/config";
 import { mountWidget } from "../src/mount";
 
 afterEach(() => {
@@ -98,7 +98,7 @@ describe("mountWidget", () => {
     const label = button?.querySelector(".quietjar-widget__label");
     expect(label?.textContent).toBe("Leave a tip");
     // The label follows the icon.
-    expect(label?.previousElementSibling?.tagName.toLowerCase()).toBe("svg");
+    expect(label?.previousElementSibling?.className).toBe("quietjar-widget__icon");
   });
 
   test("renders a headline containing markup as text", () => {
@@ -145,10 +145,17 @@ describe("mountWidget", () => {
     expect(container.querySelectorAll("[data-quietjar-host]")).toHaveLength(1);
   });
 
-  test("renders a heart icon in the button", () => {
+  test("renders the default icon glyph in the button", () => {
     const host = mountWidget(resolveConfig(undefined));
 
-    const svg = host.shadowRoot?.querySelector("button svg");
-    expect(svg).not.toBeNull();
+    const icon = host.shadowRoot?.querySelector("button .quietjar-widget__icon");
+    expect(icon?.textContent).toBe(DEFAULT_ICON);
+    expect(icon?.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  test("renders the configured icon glyph", () => {
+    const host = mountWidget(resolveConfig({ labels: { icon: "☕" } }));
+
+    expect(host.shadowRoot?.querySelector(".quietjar-widget__icon")?.textContent).toBe("☕");
   });
 });

@@ -1,5 +1,4 @@
 import { DEFAULT_HEADLINE, type ResolvedConfig } from "./config";
-import { heartIconMarkup } from "./icon";
 import { widgetStyles } from "./styles";
 
 const HOST_SELECTOR = "[data-quietjar-host]";
@@ -28,7 +27,12 @@ export function mountWidget(config: ResolvedConfig): HTMLElement {
   }
   button.setAttribute("aria-label", label !== "" ? label : DEFAULT_HEADLINE);
   button.title = label !== "" ? label : DEFAULT_HEADLINE;
-  button.innerHTML = heartIconMarkup();
+
+  const iconEl = document.createElement("span");
+  iconEl.className = "quietjar-widget__icon";
+  iconEl.setAttribute("aria-hidden", "true");
+  iconEl.textContent = config.icon;
+  button.append(iconEl);
 
   if (label !== "") {
     const labelEl = document.createElement("span");

@@ -1,6 +1,7 @@
 {
   "labels": {
-    "headline": "Support this site"
+    "headline": "Support this site",
+    "icon": "♥"
   },
   "style": {
     "color": "#0f172a"

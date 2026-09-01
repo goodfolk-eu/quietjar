@@ -1,3 +1,5 @@
+import { resolveIcon } from "./icon";
+
 export type Corner =
   | "bottom-right"
   | "bottom-center"
@@ -7,7 +9,7 @@ export type Corner =
   | "top-left";
 
 export interface QuietJarConfig {
-  labels?: { headline?: string };
+  labels?: { headline?: string; icon?: string };
   style?: { color?: string };
   position?: { corner?: Corner };
   mount?: { target?: string | HTMLElement };
@@ -16,10 +18,13 @@ export interface QuietJarConfig {
 export interface ResolvedConfig {
   /** Visible button label; empty means the button stays icon-only. */
   headline: string;
+  icon: string;
   color: string;
   corner: Corner;
   target: string | HTMLElement | null;
 }
+
+export { DEFAULT_ICON, ICON_LIBRARY, ICON_PRESETS } from "./icon";
 
 /** Used as the accessible name when no headline is configured. */
 export const DEFAULT_HEADLINE = "Support this site";
@@ -44,6 +49,7 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
 
   return {
     headline: typeof headline === "string" ? headline.trim() : "",
+    icon: resolveIcon(input?.labels?.icon),
     color: isValidHexColor(color) ? color : DEFAULT_COLOR,
     corner: CORNERS.includes(corner as Corner) ? (corner as Corner) : DEFAULT_CORNER,
     target: isMountTarget(target) ? target : null,
