@@ -169,5 +169,10 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss(), apiProxy(), prelineSideEffects()],
+    build: {
+      // Keep small assets (font subsets) as real files instead of data: URIs,
+      // so font-src 'self' is enough and no data: source is needed in the CSP.
+      assetsInlineLimit: 0,
+    },
   },
 });
