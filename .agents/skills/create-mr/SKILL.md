@@ -83,7 +83,7 @@ git push -u origin <branch-name>
 
 ### 6. Create MR
 
-Create the pull request via the Forgejo API. The `head` is the source branch and `base` is the target branch. The response contains the `html_url` of the new MR.
+Create the pull request via the Forgejo API. The `head` is the source branch and `base` is the target branch (the repo's default branch is `main`). The response contains the `html_url` of the new MR.
 
 ```bash
 # Write the description body to a temp file to preserve formatting
@@ -98,7 +98,7 @@ EOF
 MR_JSON=$(jq -n \
   --arg title "Draft: <issue-id> <type>: <short description>" \
   --arg head "<branch-name>" \
-  --arg base "master" \
+  --arg base "main" \
   --rawfile body /tmp/quietjar-mr.md \
   '{title: $title, head: $head, base: $base, body: $body}')
 

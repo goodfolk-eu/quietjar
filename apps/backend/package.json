@@ -16,7 +16,8 @@
     "@libsql/client": "latest",
     "@libsql/kysely-libsql": "^0.4.1",
     "better-auth": "latest",
-    "elysia": "latest"
+    "elysia": "latest",
+    "kysely": "^0.29.5"
   },
   "devDependencies": {
     "bun-types": "latest"

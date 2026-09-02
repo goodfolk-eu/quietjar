@@ -13,7 +13,7 @@ Every redirect to a separate donation page loses people — the willing supporte
 
 ## Who it's for
 
-Non-technical website owners who monetise an audience — creators, writers, musicians, and similar. They own their own site and want support to happen *on it*. The product is positioned as **quiet infrastructure**: understated, well-crafted, trustworthy — never a charity metaphor, never coffee-cup / tip-jar cutesiness.
+Open source project developers and non-technical website owners who monetise an audience — creators, writers, musicians, and similar. They own their own site and want support to happen *on it*. The product is positioned as **quiet infrastructure**: understated, well-crafted, trustworthy — never a charity metaphor, never coffee-cup / tip-jar cutesiness.
 
 ## What makes it different
 
