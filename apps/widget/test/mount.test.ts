@@ -1,10 +1,20 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import "./setup";
-import { DEFAULT_COLOR, DEFAULT_HEADLINE, DEFAULT_ICON, resolveConfig } from "../src/config";
+import {
+  DEFAULT_CLOSE_LABEL,
+  DEFAULT_COLOR,
+  DEFAULT_FONT,
+  DEFAULT_HEADLINE,
+  DEFAULT_ICON,
+  FONT_STACKS,
+  resolveConfig,
+} from "../src/config";
+import { isDismissed } from "../src/dismiss";
 import { mountWidget } from "../src/mount";
 
 afterEach(() => {
   document.body.innerHTML = "";
+  sessionStorage.clear();
 });
 
 function widgetCss(host: HTMLElement): string {
@@ -43,15 +53,15 @@ describe("mountWidget", () => {
     const host = mountWidget(resolveConfig(undefined));
 
     expect(document.body.lastElementChild).toBe(host);
-    const button = host.shadowRoot?.querySelector("button");
-    expect(button?.className).toContain("quietjar-widget--bottom-right");
+    const widget = host.shadowRoot?.querySelector(".quietjar-widget");
+    expect(widget?.className).toContain("quietjar-widget--bottom-right");
   });
 
   test("uses the configured corner class", () => {
     const host = mountWidget(resolveConfig({ position: { corner: "top-left" } }));
 
-    const button = host.shadowRoot?.querySelector("button");
-    expect(button?.className).toContain("quietjar-widget--top-left");
+    const widget = host.shadowRoot?.querySelector(".quietjar-widget");
+    expect(widget?.className).toContain("quietjar-widget--top-left");
   });
 
   test("supports the centered positions", () => {
@@ -59,8 +69,8 @@ describe("mountWidget", () => {
       document.body.innerHTML = "";
       const host = mountWidget(resolveConfig({ position: { corner } }));
 
-      const button = host.shadowRoot?.querySelector("button");
-      expect(button?.className).toContain(`quietjar-widget--${corner}`);
+      const widget = host.shadowRoot?.querySelector(".quietjar-widget");
+      expect(widget?.className).toContain(`quietjar-widget--${corner}`);
       expect(widgetCss(host)).toContain(`.quietjar-widget--${corner}`);
     }
   });
@@ -77,21 +87,51 @@ describe("mountWidget", () => {
     expect(widgetCss(host)).toContain(DEFAULT_COLOR);
   });
 
+  test("applies the configured font preset to the label", () => {
+    for (const font of ["system", "serif", "rounded", "mono"] as const) {
+      document.body.innerHTML = "";
+      const host = mountWidget(resolveConfig({ style: { font } }));
+
+      expect(widgetCss(host)).toContain(`font-family: ${FONT_STACKS[font]}`);
+    }
+  });
+
+  test("uses the default font when none is configured", () => {
+    const host = mountWidget(resolveConfig(undefined));
+
+    expect(widgetCss(host)).toContain(`font-family: ${FONT_STACKS[DEFAULT_FONT]}`);
+    expect(widgetCss(host)).toContain("font-size: 17px");
+  });
+
+  test("inherits the container font when font is inherit", () => {
+    const container = document.createElement("div");
+    container.style.fontFamily = '"Inter", sans-serif';
+    document.body.append(container);
+
+    const host = mountWidget(resolveConfig({ style: { font: "inherit" }, mount: { target: container } }));
+
+    expect(widgetCss(host)).toContain("font-family: Inter, sans-serif");
+  });
+
   test("uses the default headline as the accessible name when none is set", () => {
     const host = mountWidget(resolveConfig(undefined));
 
-    const button = host.shadowRoot?.querySelector("button");
+    const button = host.shadowRoot?.querySelector(
+      ".quietjar-widget__button",
+    ) as HTMLButtonElement | null;
     expect(button?.getAttribute("aria-label")).toBe(DEFAULT_HEADLINE);
     expect(button?.title).toBe(DEFAULT_HEADLINE);
     expect(button?.querySelector(".quietjar-widget__label")).toBeNull();
-    expect(button?.classList.contains("quietjar-widget--labeled")).toBe(false);
+    expect(button?.classList.contains("quietjar-widget__button--labeled")).toBe(false);
   });
 
   test("shows the headline next to the icon when one is set", () => {
     const host = mountWidget(resolveConfig({ labels: { headline: "Leave a tip" } }));
 
-    const button = host.shadowRoot?.querySelector("button");
-    expect(button?.classList.contains("quietjar-widget--labeled")).toBe(true);
+    const button = host.shadowRoot?.querySelector(
+      ".quietjar-widget__button",
+    ) as HTMLButtonElement | null;
+    expect(button?.classList.contains("quietjar-widget__button--labeled")).toBe(true);
     expect(button?.getAttribute("aria-label")).toBe("Leave a tip");
     expect(button?.title).toBe("Leave a tip");
 
@@ -157,5 +197,42 @@ describe("mountWidget", () => {
     const host = mountWidget(resolveConfig({ labels: { icon: "☕" } }));
 
     expect(host.shadowRoot?.querySelector(".quietjar-widget__icon")?.textContent).toBe("☕");
+  });
+
+  test("renders the close control next to the main button", () => {
+    const host = mountWidget(resolveConfig(undefined));
+
+    const close = host.shadowRoot?.querySelector(".quietjar-widget__close");
+    expect(close?.getAttribute("aria-label")).toBe(DEFAULT_CLOSE_LABEL);
+    expect(close?.querySelector("svg")).not.toBeNull();
+  });
+
+  test("uses the configured close label", () => {
+    const host = mountWidget(resolveConfig({ labels: { close: "Sluiten" } }));
+
+    expect(host.shadowRoot?.querySelector(".quietjar-widget__close")?.getAttribute("aria-label")).toBe(
+      "Sluiten",
+    );
+  });
+
+  test("removes the widget and persists the dismissal when close is clicked", () => {
+    const host = mountWidget(resolveConfig(undefined), { persistDismissal: true });
+
+    const close = host.shadowRoot?.querySelector(".quietjar-widget__close") as HTMLButtonElement;
+    close.click();
+
+    expect(host.parentElement).toBeNull();
+    expect(document.querySelectorAll("[data-quietjar-host]")).toHaveLength(0);
+    expect(isDismissed()).toBe(true);
+  });
+
+  test("removes the widget without persisting when persistence is off", () => {
+    const host = mountWidget(resolveConfig(undefined));
+
+    const close = host.shadowRoot?.querySelector(".quietjar-widget__close") as HTMLButtonElement;
+    close.click();
+
+    expect(host.parentElement).toBeNull();
+    expect(isDismissed()).toBe(false);
   });
 });

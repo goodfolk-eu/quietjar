@@ -2,8 +2,10 @@
 import {
   DEFAULT_COLOR,
   DEFAULT_CORNER,
+  DEFAULT_FONT,
   DEFAULT_HEADLINE,
   DEFAULT_ICON,
+  FONT_PRESETS,
   ICON_LIBRARY,
   ICON_PRESETS,
 } from "@quietjar/widget/config";
@@ -130,89 +132,150 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
           </div>
         </fieldset>
 
-        <fieldset class="mt-6">
-          <legend class="text-sm font-medium text-gray-700">{widget.icon}</legend>
-          <p class="mt-1 text-xs text-gray-500">{widget.iconHint}</p>
-          <div class="mt-3 flex flex-wrap gap-2">
-            {
-              ICON_PRESETS.map((icon) => (
-                <button
-                  type="button"
-                  data-icon={icon}
-                  aria-pressed={icon === DEFAULT_ICON ? "true" : "false"}
-                  aria-label={icon}
-                  class="size-9 rounded-lg border-2 border-gray-200 text-lg leading-none transition hover:border-gray-300 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:border-gray-800"
-                >
-                  {icon}
-                </button>
-              ))
-            }
-          </div>
-          <div class="mt-3 flex items-end gap-3">
-            <div>
-              <label for="qj-icon-custom" class="block text-xs text-gray-500">{widget.customIcon}</label>
-              <input
-                id="qj-icon-custom"
-                type="text"
-                maxlength="8"
-                value={DEFAULT_ICON}
-                class={`${fieldClass} w-20 text-center`}
-              />
-            </div>
-
-            <div class="hs-dropdown [--placement:bottom-left] relative inline-flex">
-              <button
-                id="qj-icon-browse"
-                type="button"
-                aria-haspopup="menu"
-                aria-expanded="false"
-                class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100"
-              >
-                {widget.browseIcons}
-              </button>
-
-              <div
-                class="hs-dropdown-menu duration z-50 hidden w-72 rounded-lg border border-gray-200 bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100"
-                role="menu"
-                aria-orientation="horizontal"
-                aria-labelledby="qj-icon-browse"
-              >
-                <div class="grid grid-cols-8 gap-1">
-                  {
-                    ICON_LIBRARY.map((icon) => (
-                      <button
-                        type="button"
-                        role="menuitem"
-                        data-icon={icon}
-                        aria-pressed={icon === DEFAULT_ICON ? "true" : "false"}
-                        aria-label={icon}
-                        class="size-8 rounded-md text-lg leading-none transition hover:bg-gray-100 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:bg-gray-800 aria-pressed:text-white"
-                      >
-                        {icon}
-                      </button>
-                    ))
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-
         <div class="mt-6">
           <label for="qj-headline" class="block text-sm font-medium text-gray-700">{widget.headline}</label>
           <p class="mt-1 text-xs text-gray-500">{widget.headlineHint}</p>
-          <input
-            id="qj-headline"
-            type="text"
-            value={DEFAULT_HEADLINE}
-            class={fieldClass}
-          />
+          <div class="relative">
+            <input
+              id="qj-headline"
+              type="text"
+              value={DEFAULT_HEADLINE}
+              class={`${fieldClass} block pe-9`}
+            />
+            <button
+              id="qj-headline-clear"
+              type="button"
+              aria-label={widget.clearHeadline}
+              class="absolute end-2.5 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100"
+            >
+              <svg
+                class="size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <button
           type="button"
-          data-hs-overlay="#qj-embed-modal"
-          class="mt-6 w-full rounded-lg bg-gray-800 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-900 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200"
+          data-hs-collapse="#qj-advanced"
+          aria-expanded="false"
+          class="hs-collapse-toggle mt-6 flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100"
+        >
+          {widget.advanced}
+          <svg
+            class="size-4 shrink-0 text-gray-400 transition-transform duration-200 hs-collapse-open:rotate-180"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </button>
+
+        <div id="qj-advanced" class="hs-collapse hidden">
+          <fieldset class="mt-6">
+            <legend class="text-sm font-medium text-gray-700">{widget.font}</legend>
+            <p class="mt-1 text-xs text-gray-500">{widget.fontHint}</p>
+            <select id="qj-font" class={fieldClass}>
+              {
+                FONT_PRESETS.map((font) => (
+                  <option value={font} selected={font === DEFAULT_FONT}>
+                    {widget.fonts[font]}
+                  </option>
+                ))
+              }
+              <option value="inherit">{widget.fonts.inherit}</option>
+            </select>
+          </fieldset>
+
+          <fieldset class="mt-6">
+            <legend class="text-sm font-medium text-gray-700">{widget.icon}</legend>
+            <p class="mt-1 text-xs text-gray-500">{widget.iconHint}</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {
+                ICON_PRESETS.map((icon) => (
+                  <button
+                    type="button"
+                    data-icon={icon}
+                    aria-pressed={icon === DEFAULT_ICON ? "true" : "false"}
+                    aria-label={icon}
+                    class="size-9 rounded-lg border-2 border-gray-200 text-lg leading-none transition hover:border-gray-300 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:border-gray-800"
+                  >
+                    {icon}
+                  </button>
+                ))
+              }
+            </div>
+            <div class="mt-3 flex items-end gap-3">
+              <div>
+                <label for="qj-icon-custom" class="block text-xs text-gray-500">{widget.customIcon}</label>
+                <input
+                  id="qj-icon-custom"
+                  type="text"
+                  maxlength="8"
+                  value={DEFAULT_ICON}
+                  class={`${fieldClass} w-20 text-center`}
+                />
+              </div>
+
+              <div class="hs-dropdown [--placement:bottom-left] relative inline-flex">
+                <button
+                  id="qj-icon-browse"
+                  type="button"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                  class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100"
+                >
+                  {widget.browseIcons}
+                </button>
+
+                <div
+                  class="hs-dropdown-menu duration z-50 hidden w-72 rounded-lg border border-gray-200 bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100"
+                  role="menu"
+                  aria-orientation="horizontal"
+                  aria-labelledby="qj-icon-browse"
+                >
+                  <div class="grid grid-cols-8 gap-1">
+                    {
+                      ICON_LIBRARY.map((icon) => (
+                        <button
+                          type="button"
+                          role="menuitem"
+                          data-icon={icon}
+                          aria-pressed={icon === DEFAULT_ICON ? "true" : "false"}
+                          aria-label={icon}
+                          class="size-8 rounded-md text-lg leading-none transition hover:bg-gray-100 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:bg-gray-800 aria-pressed:text-white"
+                        >
+                          {icon}
+                        </button>
+                      ))
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <button
+            type="button"
+            data-hs-overlay="#qj-embed-modal"
+            class="mt-6 w-full rounded-lg bg-gray-800 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-900 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200"
         >
           {widget.generate}
         </button>
@@ -307,11 +370,13 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 </style>
 
 <script>
+  import "preline/plugins/collapse";
   import { mountWidget } from "@quietjar/widget/embed";
-  import type { Corner } from "@quietjar/widget/config";
+  import type { Corner, FontChoice } from "@quietjar/widget/config";
   import {
     DEFAULT_COLOR,
     DEFAULT_CORNER,
+    DEFAULT_FONT,
     DEFAULT_HEADLINE,
     DEFAULT_ICON,
     resolveConfig,
@@ -320,13 +385,26 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   const root = document.getElementById("qj-widget-settings");
   const preview = document.getElementById("qj-preview");
   const headlineInput = document.getElementById("qj-headline") as HTMLInputElement | null;
+  const headlineClear = document.getElementById("qj-headline-clear") as HTMLButtonElement | null;
   const iconInput = document.getElementById("qj-icon-custom") as HTMLInputElement | null;
   const colorPicker = document.getElementById("qj-color-picker") as HTMLInputElement | null;
   const hexInput = document.getElementById("qj-color-hex") as HTMLInputElement | null;
+  const fontSelect = document.getElementById("qj-font") as HTMLSelectElement | null;
   const snippetEl = document.getElementById("qj-snippet");
   const copyButton = document.getElementById("qj-copy");
 
-  if (root && preview && headlineInput && iconInput && colorPicker && hexInput && snippetEl && copyButton) {
+  if (
+    root &&
+    preview &&
+    headlineInput &&
+    headlineClear &&
+    iconInput &&
+    colorPicker &&
+    hexInput &&
+    fontSelect &&
+    snippetEl &&
+    copyButton
+  ) {
     const labels = JSON.parse(root.dataset.i18n ?? "{}") as {
       copy: string;
       copied: string;
@@ -338,6 +416,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       headline: DEFAULT_HEADLINE,
       icon: DEFAULT_ICON,
       color: DEFAULT_COLOR,
+      font: DEFAULT_FONT as FontChoice,
       corner: DEFAULT_CORNER as Corner,
     };
 
@@ -348,7 +427,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     const resolved = () =>
       resolveConfig({
         labels: { headline: state.headline, icon: state.icon },
-        style: { color: state.color },
+        style: { color: state.color, font: state.font },
         position: { corner: state.corner },
         mount: { target: preview },
       });
@@ -359,7 +438,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       // breaking out of the snippet on the site owner's page.
       const json = JSON.stringify({
         labels: { headline: config.headline, icon: config.icon },
-        style: { color: config.color },
+        style: { color: config.color, font: config.font },
         position: { corner: config.corner },
       }).replace(/</g, "\\u003c");
       return `<script>window.QuietJar = ${json};<\/script>\n<script src="${widgetSrc}" async><\/script>`;
@@ -408,11 +487,24 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     headlineInput.addEventListener("input", () => {
       state.headline = headlineInput.value;
+      headlineClear.hidden = headlineInput.value === "";
+      render();
+    });
+
+    headlineClear.addEventListener("click", () => {
+      state.headline = "";
+      headlineInput.value = "";
+      headlineClear.hidden = true;
       render();
     });
 
     colorPicker.addEventListener("input", () => setColor(colorPicker.value, true));
     hexInput.addEventListener("input", () => setColor(hexInput.value.trim(), false));
+
+    fontSelect.addEventListener("change", () => {
+      state.font = fontSelect.value as FontChoice;
+      render();
+    });
 
     for (const swatch of swatches) {
       swatch.addEventListener("click", () => setColor(swatch.dataset.color ?? DEFAULT_COLOR, true));

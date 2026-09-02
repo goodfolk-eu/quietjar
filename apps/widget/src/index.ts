@@ -1,4 +1,5 @@
 import { type QuietJarConfig, resolveConfig } from "./config";
+import { isDismissed } from "./dismiss";
 import { mountWidget } from "./mount";
 
 declare global {
@@ -8,7 +9,10 @@ declare global {
 }
 
 export function mount(): void {
-  mountWidget(resolveConfig(window.QuietJar));
+  if (isDismissed()) {
+    return;
+  }
+  mountWidget(resolveConfig(window.QuietJar), { persistDismissal: true });
 }
 
 if (document.readyState === "loading") {

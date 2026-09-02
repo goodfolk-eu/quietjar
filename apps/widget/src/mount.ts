@@ -1,9 +1,16 @@
-import { DEFAULT_HEADLINE, type ResolvedConfig } from "./config";
+import { DEFAULT_FONT, DEFAULT_HEADLINE, FONT_STACKS, type ResolvedConfig } from "./config";
+import { persistDismissal } from "./dismiss";
 import { widgetStyles } from "./styles";
 
 const HOST_SELECTOR = "[data-quietjar-host]";
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
-export function mountWidget(config: ResolvedConfig): HTMLElement {
+export interface MountOptions {
+  /** Store the dismissal in sessionStorage when the widget is closed. */
+  persistDismissal?: boolean;
+}
+
+export function mountWidget(config: ResolvedConfig, options: MountOptions = {}): HTMLElement {
   const container = resolveContainer(config);
   const existing = container.querySelector<HTMLElement>(HOST_SELECTOR);
   if (existing) {
@@ -16,14 +23,17 @@ export function mountWidget(config: ResolvedConfig): HTMLElement {
   container.append(host);
 
   const root = host.attachShadow({ mode: "open" });
-  applyStyles(root, config.color);
+  applyStyles(root, config.color, labelFontFamily(config.font, container));
 
   const label = config.headline;
+  const widget = document.createElement("div");
+  widget.className = `quietjar-widget quietjar-widget--${config.corner}`;
+
   const button = document.createElement("button");
   button.type = "button";
-  button.className = `quietjar-widget quietjar-widget--${config.corner}`;
+  button.className = "quietjar-widget__button";
   if (label !== "") {
-    button.classList.add("quietjar-widget--labeled");
+    button.classList.add("quietjar-widget__button--labeled");
   }
   button.setAttribute("aria-label", label !== "" ? label : DEFAULT_HEADLINE);
   button.title = label !== "" ? label : DEFAULT_HEADLINE;
@@ -42,15 +52,45 @@ export function mountWidget(config: ResolvedConfig): HTMLElement {
     button.append(labelEl);
   }
 
-  root.append(button);
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "quietjar-widget__close";
+  closeButton.setAttribute("aria-label", config.closeLabel);
+  closeButton.title = config.closeLabel;
+  closeButton.append(closeIcon());
+  closeButton.addEventListener("click", () => {
+    if (options.persistDismissal) {
+      persistDismissal();
+    }
+    host.remove();
+  });
+
+  widget.append(button, closeButton);
+  root.append(widget);
   return host;
+}
+
+function closeIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NAMESPACE, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "10");
+  svg.setAttribute("height", "10");
+  svg.setAttribute("aria-hidden", "true");
+  const path = document.createElementNS(SVG_NAMESPACE, "path");
+  path.setAttribute("d", "M6 6l12 12M18 6L6 18");
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "currentColor");
+  path.setAttribute("stroke-width", "3");
+  path.setAttribute("stroke-linecap", "round");
+  svg.append(path);
+  return svg;
 }
 
 // A constructed stylesheet is exempt from the style-src CSP directive, so the
 // widget still renders on sites that ship a strict policy. Engines without
 // constructable stylesheets fall back to a <style> element.
-function applyStyles(root: ShadowRoot, color: string): void {
-  const css = widgetStyles(color);
+function applyStyles(root: ShadowRoot, color: string, labelFontFamily: string): void {
+  const css = widgetStyles(color, labelFontFamily);
 
   if (typeof CSSStyleSheet === "function" && "replaceSync" in CSSStyleSheet.prototype) {
     const sheet = new CSSStyleSheet();
@@ -78,4 +118,15 @@ function resolveContainer(config: ResolvedConfig): HTMLElement {
     return config.target;
   }
   return document.body;
+}
+
+// @font-face is document-global, so a family declared by the host page still
+// resolves inside the shadow root; reading the computed style picks up the
+// page's effective stack.
+function labelFontFamily(font: ResolvedConfig["font"], container: HTMLElement): string {
+  if (font !== "inherit") {
+    return FONT_STACKS[font];
+  }
+  const family = getComputedStyle(container).fontFamily;
+  return family !== "" ? family : FONT_STACKS[DEFAULT_FONT];
 }

@@ -1,9 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import "./setup";
 import {
+  DEFAULT_CLOSE_LABEL,
   DEFAULT_COLOR,
   DEFAULT_CORNER,
+  DEFAULT_FONT,
   DEFAULT_ICON,
+  FONT_PRESETS,
   ICON_LIBRARY,
   ICON_PRESETS,
   resolveConfig,
@@ -15,7 +18,9 @@ describe("resolveConfig", () => {
     expect(resolveConfig(undefined)).toEqual({
       headline: "",
       icon: DEFAULT_ICON,
+      closeLabel: DEFAULT_CLOSE_LABEL,
       color: DEFAULT_COLOR,
+      font: DEFAULT_FONT,
       corner: DEFAULT_CORNER,
       target: null,
     });
@@ -24,15 +29,17 @@ describe("resolveConfig", () => {
   test("uses provided values", () => {
     expect(
       resolveConfig({
-        labels: { headline: "Leave a tip", icon: "☕" },
-        style: { color: "#123abc" },
+        labels: { headline: "Leave a tip", icon: "☕", close: "No thanks" },
+        style: { color: "#123abc", font: "serif" },
         position: { corner: "top-left" },
         mount: { target: "#widget" },
       }),
     ).toEqual({
       headline: "Leave a tip",
       icon: "☕",
+      closeLabel: "No thanks",
       color: "#123abc",
+      font: "serif",
       corner: "top-left",
       target: "#widget",
     });
@@ -41,7 +48,7 @@ describe("resolveConfig", () => {
   test("falls back to the default icon for blank or oversized values", () => {
     expect(resolveConfig({ labels: { icon: "  " } }).icon).toBe(DEFAULT_ICON);
     expect(resolveConfig({ labels: { icon: "way too long" } }).icon).toBe(DEFAULT_ICON);
-    expect(resolveConfig(undefined).icon).toBe(DEFAULT_ICON);
+    expect(resolveConfig(undefined).icon).toBe("♡");
   });
 
   test("every offered icon survives validation", () => {
@@ -49,6 +56,7 @@ describe("resolveConfig", () => {
       expect(resolveConfig({ labels: { icon } }).icon).toBe(icon);
     }
     expect(ICON_LIBRARY).toContain(DEFAULT_ICON);
+    expect(ICON_PRESETS).toContain(DEFAULT_ICON);
     expect(new Set(ICON_LIBRARY).size).toBe(ICON_LIBRARY.length);
   });
 
@@ -68,6 +76,7 @@ describe("resolveConfig", () => {
 
   test("falls back to default color for invalid color", () => {
     expect(resolveConfig({ style: { color: "red" } }).color).toBe(DEFAULT_COLOR);
+    expect(resolveConfig(undefined).color).toBe("#0284c7");
   });
 
   test("accepts shorthand and long hex colors", () => {
@@ -80,9 +89,31 @@ describe("resolveConfig", () => {
     expect(resolveConfig({ style: { color: "#abcff" } }).color).toBe(DEFAULT_COLOR);
   });
 
+  test("accepts the inherit font choice", () => {
+    expect(resolveConfig({ style: { font: "inherit" } }).font).toBe("inherit");
+  });
+
+  test("falls back to default font for unknown values", () => {
+    const invalid = (font: unknown) => ({ style: { font } }) as unknown as QuietJarConfig;
+    expect(resolveConfig(invalid("comic sans")).font).toBe(DEFAULT_FONT);
+    expect(resolveConfig(invalid("")).font).toBe(DEFAULT_FONT);
+    expect(resolveConfig(undefined).font).toBe("rounded");
+  });
+
+  test("every offered font preset survives validation", () => {
+    for (const font of FONT_PRESETS) {
+      expect(resolveConfig({ style: { font } }).font).toBe(font);
+    }
+  });
+
   test("keeps the headline empty when blank", () => {
     expect(resolveConfig({ labels: { headline: "" } }).headline).toBe("");
     expect(resolveConfig({ labels: { headline: "   " } }).headline).toBe("");
+  });
+
+  test("falls back to the default close label when blank", () => {
+    expect(resolveConfig({ labels: { close: "  " } }).closeLabel).toBe(DEFAULT_CLOSE_LABEL);
+    expect(resolveConfig(undefined).closeLabel).toBe("Dismiss");
   });
 
   test("trims the headline", () => {

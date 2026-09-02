@@ -1,5 +1,5 @@
 /** Quick picks shown inline in the dashboard picker. */
-export const ICON_PRESETS = ["♥", "☕", "★", "✿", "☂", "✉", "⚡", "☺"] as const;
+export const ICON_PRESETS = ["♡", "☕", "★", "✿", "☂", "✉", "⚡", "☺"] as const;
 
 /**
  * The full set offered behind "browse all" in the dashboard. Curated rather
@@ -59,7 +59,7 @@ export const ICON_LIBRARY = [
   "🐛",
 ] as const;
 
-export const DEFAULT_ICON = "♥";
+export const DEFAULT_ICON = "♡";
 
 // A glyph can span several code units (surrogate pairs, variation selectors,
 // ZWJ sequences), so the cap counts characters generously rather than exactly.
