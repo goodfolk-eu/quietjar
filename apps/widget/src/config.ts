@@ -10,8 +10,20 @@ export type Corner =
   | "top-left";
 
 export interface QuietJarConfig {
-  labels?: { headline?: string; icon?: string; close?: string };
-  style?: { color?: string; font?: FontChoice };
+  labels?: {
+    headline?: string;
+    icon?: string;
+    body?: string;
+    action?: string;
+    close?: string;
+  };
+  style?: {
+    color?: string;
+    font?: FontChoice;
+    /** Raw CSS appended after the widget's own stylesheet to override it. */
+    css?: string;
+  };
+  close?: { enabled?: boolean };
   position?: { corner?: Corner };
   mount?: { target?: string | HTMLElement };
 }
@@ -19,11 +31,19 @@ export interface QuietJarConfig {
 export interface ResolvedConfig {
   /** Visible button label; empty means the button stays icon-only. */
   headline: string;
+  /** Card body; empty means the widget renders as a plain pill button. */
+  body: string;
+  /** Label for the card's action button. */
+  actionLabel: string;
   icon: string;
   /** Accessible name for the close control. */
   closeLabel: string;
+  /** Whether the widget shows the close control visitors can use to dismiss it. */
+  closeEnabled: boolean;
   color: string;
   font: FontChoice;
+  /** Custom CSS overriding the widget's own styles; empty when unset. */
+  css: string;
   corner: Corner;
   target: string | HTMLElement | null;
 }
@@ -34,7 +54,9 @@ export { DEFAULT_ICON, ICON_LIBRARY, ICON_PRESETS } from "./icon";
 
 /** Used as the accessible name when no headline is configured. */
 export const DEFAULT_HEADLINE = "Support this site";
+export const DEFAULT_ACTION_LABEL = "Donate";
 export const DEFAULT_CLOSE_LABEL = "Dismiss";
+export const DEFAULT_CLOSE_ENABLED = true;
 export const DEFAULT_COLOR = "#0284c7";
 export const DEFAULT_CORNER: Corner = "bottom-right";
 
@@ -50,18 +72,27 @@ const HEX_COLOR = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
 export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig {
   const headline = input?.labels?.headline;
+  const body = input?.labels?.body;
+  const action = input?.labels?.action;
   const close = input?.labels?.close;
+  const closeEnabled = input?.close?.enabled;
   const color = input?.style?.color;
+  const css = input?.style?.css;
   const corner = input?.position?.corner;
   const target = input?.mount?.target;
 
   return {
     headline: typeof headline === "string" ? headline.trim() : "",
+    body: typeof body === "string" ? body.trim() : "",
+    actionLabel:
+      typeof action === "string" && action.trim() !== "" ? action.trim() : DEFAULT_ACTION_LABEL,
     icon: resolveIcon(input?.labels?.icon),
     closeLabel:
       typeof close === "string" && close.trim() !== "" ? close.trim() : DEFAULT_CLOSE_LABEL,
+    closeEnabled: typeof closeEnabled === "boolean" ? closeEnabled : DEFAULT_CLOSE_ENABLED,
     color: isValidHexColor(color) ? color : DEFAULT_COLOR,
     font: resolveFont(input?.style?.font),
+    css: typeof css === "string" ? css.trim() : "",
     corner: CORNERS.includes(corner as Corner) ? (corner as Corner) : DEFAULT_CORNER,
     target: isMountTarget(target) ? target : null,
   };

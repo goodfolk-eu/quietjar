@@ -113,6 +113,25 @@ describe("mountWidget", () => {
     expect(widgetCss(host)).toContain("font-family: Inter, sans-serif");
   });
 
+  test("appends custom css after the widget styles", () => {
+    const host = mountWidget(
+      resolveConfig({ style: { css: ".quietjar-widget__label { font-family: serif; }" } }),
+    );
+
+    const sheets = host.shadowRoot?.adoptedStyleSheets ?? [];
+    expect(sheets).toHaveLength(2);
+    const css = widgetCss(host);
+    expect(css).toContain(".quietjar-widget__label");
+    expect(css).toContain("serif");
+  });
+
+  test("keeps the widget styles when custom css is invalid", () => {
+    const host = mountWidget(resolveConfig({ style: { css: "@import 'evil.css';" } }));
+
+    expect(host.shadowRoot?.querySelector(".quietjar-widget__button")).not.toBeNull();
+    expect(widgetCss(host)).toContain(".quietjar-widget__button");
+  });
+
   test("uses the default headline as the accessible name when none is set", () => {
     const host = mountWidget(resolveConfig(undefined));
 
@@ -207,6 +226,12 @@ describe("mountWidget", () => {
     expect(close?.querySelector("svg")).not.toBeNull();
   });
 
+  test("omits the close control when disabled", () => {
+    const host = mountWidget(resolveConfig({ close: { enabled: false } }));
+
+    expect(host.shadowRoot?.querySelector(".quietjar-widget__close")).toBeNull();
+  });
+
   test("uses the configured close label", () => {
     const host = mountWidget(resolveConfig({ labels: { close: "Sluiten" } }));
 
@@ -234,5 +259,48 @@ describe("mountWidget", () => {
 
     expect(host.parentElement).toBeNull();
     expect(isDismissed()).toBe(false);
+  });
+
+  test("renders a card with headline, body, and action button when a body is set", () => {
+    const host = mountWidget(
+      resolveConfig({
+        labels: {
+          headline: "Support this site",
+          body: "Every coffee helps\nKeep the lights on",
+          action: "Chip in",
+        },
+      }),
+    );
+
+    const root = host.shadowRoot;
+    const panel = root?.querySelector(".quietjar-widget__panel");
+    expect(panel).not.toBeNull();
+    // The card is informational; the main element is no longer a button.
+    expect(root?.querySelector(".quietjar-widget__button")).toBeNull();
+    expect(panel?.querySelector(".quietjar-widget__headline")?.textContent).toBe(
+      "Support this site",
+    );
+    expect(panel?.querySelector(".quietjar-widget__body")?.textContent).toBe(
+      "Every coffee helps\nKeep the lights on",
+    );
+    expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Chip in");
+  });
+
+  test("renders the card without a headline when only a body is set", () => {
+    const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps" } }));
+
+    const panel = host.shadowRoot?.querySelector(".quietjar-widget__panel");
+    expect(panel?.querySelector(".quietjar-widget__headline")).toBeNull();
+    expect(panel?.querySelector(".quietjar-widget__body")?.textContent).toBe("Every coffee helps");
+    expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Donate");
+  });
+
+  test("keeps the dismissible close control in card mode", () => {
+    const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps" } }));
+
+    const close = host.shadowRoot?.querySelector(".quietjar-widget__close") as HTMLButtonElement;
+    close.click();
+
+    expect(host.parentElement).toBeNull();
   });
 });

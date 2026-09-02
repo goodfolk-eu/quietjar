@@ -1,5 +1,7 @@
 ---
 import {
+  DEFAULT_ACTION_LABEL,
+  DEFAULT_CLOSE_ENABLED,
   DEFAULT_COLOR,
   DEFAULT_CORNER,
   DEFAULT_FONT,
@@ -165,6 +167,23 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
           </div>
         </div>
 
+        <div class="mt-6">
+          <label for="qj-body" class="block text-sm font-medium text-gray-700">{widget.body}</label>
+          <p class="mt-1 text-xs text-gray-500">{widget.bodyHint}</p>
+          <textarea id="qj-body" rows="3" class={`${fieldClass} resize-y`}></textarea>
+        </div>
+
+        <div class="mt-6">
+          <label for="qj-action" class="block text-sm font-medium text-gray-700">{widget.actionLabel}</label>
+          <p class="mt-1 text-xs text-gray-500">{widget.actionLabelHint}</p>
+          <input
+            id="qj-action"
+            type="text"
+            value={DEFAULT_ACTION_LABEL}
+            class={fieldClass}
+          />
+        </div>
+
         <button
           type="button"
           data-hs-collapse="#qj-advanced"
@@ -265,11 +284,24 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
                         </button>
                       ))
                     }
-                  </div>
                 </div>
               </div>
             </div>
+          </div>
           </fieldset>
+
+          <div class="mt-6">
+            <label for="qj-close" class="flex items-center gap-2.5 text-sm font-medium text-gray-700">
+              <input
+                id="qj-close"
+                type="checkbox"
+                checked={DEFAULT_CLOSE_ENABLED}
+                class="size-4 accent-gray-800"
+              />
+              {widget.closeEnabled}
+            </label>
+            <p class="mt-1 text-xs text-gray-500">{widget.closeEnabledHint}</p>
+          </div>
         </div>
 
         <button
@@ -374,6 +406,8 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   import { mountWidget } from "@quietjar/widget/embed";
   import type { Corner, FontChoice } from "@quietjar/widget/config";
   import {
+    DEFAULT_ACTION_LABEL,
+    DEFAULT_CLOSE_ENABLED,
     DEFAULT_COLOR,
     DEFAULT_CORNER,
     DEFAULT_FONT,
@@ -386,10 +420,13 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   const preview = document.getElementById("qj-preview");
   const headlineInput = document.getElementById("qj-headline") as HTMLInputElement | null;
   const headlineClear = document.getElementById("qj-headline-clear") as HTMLButtonElement | null;
+  const bodyInput = document.getElementById("qj-body") as HTMLTextAreaElement | null;
+  const actionInput = document.getElementById("qj-action") as HTMLInputElement | null;
   const iconInput = document.getElementById("qj-icon-custom") as HTMLInputElement | null;
   const colorPicker = document.getElementById("qj-color-picker") as HTMLInputElement | null;
   const hexInput = document.getElementById("qj-color-hex") as HTMLInputElement | null;
   const fontSelect = document.getElementById("qj-font") as HTMLSelectElement | null;
+  const closeToggle = document.getElementById("qj-close") as HTMLInputElement | null;
   const snippetEl = document.getElementById("qj-snippet");
   const copyButton = document.getElementById("qj-copy");
 
@@ -398,10 +435,13 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     preview &&
     headlineInput &&
     headlineClear &&
+    bodyInput &&
+    actionInput &&
     iconInput &&
     colorPicker &&
     hexInput &&
     fontSelect &&
+    closeToggle &&
     snippetEl &&
     copyButton
   ) {
@@ -414,10 +454,13 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     const state = {
       headline: DEFAULT_HEADLINE,
+      body: "",
+      actionLabel: DEFAULT_ACTION_LABEL,
       icon: DEFAULT_ICON,
       color: DEFAULT_COLOR,
       font: DEFAULT_FONT as FontChoice,
       corner: DEFAULT_CORNER as Corner,
+      closeEnabled: DEFAULT_CLOSE_ENABLED,
     };
 
     const cornerButtons = root.querySelectorAll<HTMLButtonElement>("[data-corner]");
@@ -426,8 +469,14 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     const resolved = () =>
       resolveConfig({
-        labels: { headline: state.headline, icon: state.icon },
+        labels: {
+          headline: state.headline,
+          body: state.body,
+          action: state.actionLabel,
+          icon: state.icon,
+        },
         style: { color: state.color, font: state.font },
+        close: { enabled: state.closeEnabled },
         position: { corner: state.corner },
         mount: { target: preview },
       });
@@ -437,8 +486,14 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       // Escaping "<" keeps a headline containing a closing script tag from
       // breaking out of the snippet on the site owner's page.
       const json = JSON.stringify({
-        labels: { headline: config.headline, icon: config.icon },
+        labels: {
+          headline: config.headline,
+          body: config.body,
+          action: config.actionLabel,
+          icon: config.icon,
+        },
         style: { color: config.color, font: config.font },
+        close: { enabled: config.closeEnabled },
         position: { corner: config.corner },
       }).replace(/</g, "\\u003c");
       return `<script>window.QuietJar = ${json};<\/script>\n<script src="${widgetSrc}" async><\/script>`;
@@ -498,11 +553,26 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       render();
     });
 
+    bodyInput.addEventListener("input", () => {
+      state.body = bodyInput.value;
+      render();
+    });
+
+    actionInput.addEventListener("input", () => {
+      state.actionLabel = actionInput.value;
+      render();
+    });
+
     colorPicker.addEventListener("input", () => setColor(colorPicker.value, true));
     hexInput.addEventListener("input", () => setColor(hexInput.value.trim(), false));
 
     fontSelect.addEventListener("change", () => {
       state.font = fontSelect.value as FontChoice;
+      render();
+    });
+
+    closeToggle.addEventListener("change", () => {
+      state.closeEnabled = closeToggle.checked;
       render();
     });
 

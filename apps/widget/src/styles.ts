@@ -46,6 +46,51 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       font-size: 24px;
       line-height: 1;
     }
+    .quietjar-widget__panel {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: min(360px, calc(100vw - 48px));
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: ${color};
+      color: #ffffff;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+    }
+    .quietjar-widget__text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .quietjar-widget__headline {
+      font-family: ${labelFontFamily};
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .quietjar-widget__body {
+      font-family: ${labelFontFamily};
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+    .quietjar-widget__action {
+      flex: none;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #ffffff;
+      color: ${color};
+      font-family: ${labelFontFamily};
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
     .quietjar-widget__close {
       position: absolute;
       top: -8px;
@@ -57,8 +102,11 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       padding: 0;
       border: none;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.5);
-      color: #000;
+      /* Opaque: the control overhangs the widget, so its backdrop is partly
+         the host page and translucent fills shift with unpredictable colors. */
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.35);
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
@@ -70,7 +118,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       pointer-events: auto;
     }
     .quietjar-widget__close:hover {
-      background: rgba(255, 255, 255, 0.45);
+      background: #e2e8f0;
     }
     /* Touch devices never hover, so the close control stays visible there. */
     @media (hover: none) {

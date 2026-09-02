@@ -23,12 +23,34 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
   container.append(host);
 
   const root = host.attachShadow({ mode: "open" });
-  applyStyles(root, config.color, labelFontFamily(config.font, container));
+  applyStyles(root, config.color, labelFontFamily(config.font, container), config.css);
 
-  const label = config.headline;
   const widget = document.createElement("div");
   widget.className = `quietjar-widget quietjar-widget--${config.corner}`;
+  widget.append(config.body !== "" ? cardPanel(config) : pillButton(config));
 
+  if (config.closeEnabled) {
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "quietjar-widget__close";
+    closeButton.setAttribute("aria-label", config.closeLabel);
+    closeButton.title = config.closeLabel;
+    closeButton.append(closeIcon());
+    closeButton.addEventListener("click", () => {
+      if (options.persistDismissal) {
+        persistDismissal();
+      }
+      host.remove();
+    });
+    widget.append(closeButton);
+  }
+
+  root.append(widget);
+  return host;
+}
+
+function pillButton(config: ResolvedConfig): HTMLButtonElement {
+  const label = config.headline;
   const button = document.createElement("button");
   button.type = "button";
   button.className = "quietjar-widget__button";
@@ -52,22 +74,38 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
     button.append(labelEl);
   }
 
-  const closeButton = document.createElement("button");
-  closeButton.type = "button";
-  closeButton.className = "quietjar-widget__close";
-  closeButton.setAttribute("aria-label", config.closeLabel);
-  closeButton.title = config.closeLabel;
-  closeButton.append(closeIcon());
-  closeButton.addEventListener("click", () => {
-    if (options.persistDismissal) {
-      persistDismissal();
-    }
-    host.remove();
-  });
+  return button;
+}
 
-  widget.append(button, closeButton);
-  root.append(widget);
-  return host;
+// With a body the widget is an informational card instead of a clickable
+// pill: bold headline, multi-line body, and an action button on the right.
+function cardPanel(config: ResolvedConfig): HTMLElement {
+  const panel = document.createElement("div");
+  panel.className = "quietjar-widget__panel";
+
+  const text = document.createElement("div");
+  text.className = "quietjar-widget__text";
+
+  if (config.headline !== "") {
+    const headline = document.createElement("div");
+    headline.className = "quietjar-widget__headline";
+    headline.textContent = config.headline;
+    text.append(headline);
+  }
+
+  const body = document.createElement("div");
+  body.className = "quietjar-widget__body";
+  body.textContent = config.body;
+  text.append(body);
+  panel.append(text);
+
+  const action = document.createElement("button");
+  action.type = "button";
+  action.className = "quietjar-widget__action";
+  action.textContent = config.actionLabel;
+  panel.append(action);
+
+  return panel;
 }
 
 function closeIcon(): SVGSVGElement {
@@ -89,18 +127,37 @@ function closeIcon(): SVGSVGElement {
 // A constructed stylesheet is exempt from the style-src CSP directive, so the
 // widget still renders on sites that ship a strict policy. Engines without
 // constructable stylesheets fall back to a <style> element.
-function applyStyles(root: ShadowRoot, color: string, labelFontFamily: string): void {
+function applyStyles(
+  root: ShadowRoot,
+  color: string,
+  labelFontFamily: string,
+  customCss: string,
+): void {
   const css = widgetStyles(color, labelFontFamily);
 
   if (typeof CSSStyleSheet === "function" && "replaceSync" in CSSStyleSheet.prototype) {
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(css);
-    root.adoptedStyleSheets = [sheet];
+    const sheets = [sheet];
+    if (customCss !== "") {
+      // A separate sheet ordered after the base one lets the custom CSS
+      // override it, and keeps invalid custom CSS (replaceSync rejects
+      // @import) from taking down the widget's own styles.
+      try {
+        const custom = new CSSStyleSheet();
+        custom.replaceSync(customCss);
+        sheets.push(custom);
+      } catch {
+        // invalid custom CSS is ignored
+      }
+    }
+    root.adoptedStyleSheets = sheets;
     return;
   }
 
   const style = document.createElement("style");
-  style.textContent = css;
+  // Custom CSS goes last: CSS error recovery only eats rules after it.
+  style.textContent = customCss !== "" ? `${css}\n${customCss}` : css;
   root.prepend(style);
 }
 

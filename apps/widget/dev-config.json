@@ -1,13 +1,14 @@
 {
   "labels": {
     "headline": "Support this site",
-    "icon": "♡"
+    "icon": "♡",
+    "body": "Please donate to my site dear friends because I really need the money to pay for my hosting!! Thankyouuuu!!"
   },
   "style": {
     "color": "#0284c7",
     "font": "inherit"
   },
   "position": {
-    "corner": "bottom-right"
+    "corner": "bottom-center"
   }
 }
