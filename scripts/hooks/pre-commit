@@ -1,0 +1,12 @@
+#!/bin/sh
+# Blocks commits that fail lint or introduce CSP-breaking inline styles.
+
+command -v bun >/dev/null 2>&1 || PATH="/usr/local/bin:$PATH"
+
+if ! bun run lint; then
+  echo ""
+  echo "Commit blocked: lint failed."
+  echo "  Fix with:   bun run lint:fix"
+  echo "  Bypass with: git commit --no-verify"
+  exit 1
+fi

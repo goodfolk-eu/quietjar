@@ -1,0 +1,28 @@
+#!/bin/sh
+# Reinstalls dependencies when the manifests changed under us, after a merge,
+# rebase, amend or cherry-pick.
+#
+# Hashes the manifests against a stamp file rather than diffing revisions, so a
+# single code path covers every hook: the revisions a hook exposes differ between
+# merge, squash merge and multi-commit rewrites, but the manifests do not.
+
+command -v bun >/dev/null 2>&1 || PATH="/usr/local/bin:$PATH"
+
+root=$(git rev-parse --show-toplevel) || exit 0
+cd "$root" || exit 0
+
+stamp="$(git rev-parse --absolute-git-dir)/quietjar-deps-hash"
+current=$(cat bun.lock package.json apps/*/package.json 2>/dev/null | shasum | cut -d' ' -f1)
+
+if [ "$current" = "$(cat "$stamp" 2>/dev/null)" ]; then
+  exit 0
+fi
+
+echo "quietjar: dependency manifests changed, running bun install"
+if bun install; then
+  printf '%s' "$current" > "$stamp"
+else
+  echo "quietjar: bun install failed, run it manually before continuing" >&2
+fi
+
+exit 0

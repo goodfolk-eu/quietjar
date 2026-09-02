@@ -15,7 +15,8 @@
       "**/*.config.ts",
       "astro.config.mjs",
       "tsconfig*.json",
-      "biome.json"
+      "biome.json",
+      "scripts/**/*.ts"
     ]
   },
   "formatter": {
@@ -32,6 +33,9 @@
         "useNamingConvention": "off",
         "noDefaultExport": "error",
         "noNestedTernary": "error"
+      },
+      "nursery": {
+        "noInlineStyles": "error"
       }
     }
   },

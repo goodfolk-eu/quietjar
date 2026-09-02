@@ -10,6 +10,23 @@ Bun monorepo. Workspaces: `apps/frontend` (Astro) and `apps/backend` (Elysia/Bet
 
 `bun` may not be on PATH; use `/usr/local/bin/bun` if needed.
 
+## Git hooks
+
+Hooks live in `scripts/hooks/` and are committed, not generated. `bun install` runs
+`prepare`, which points git at them via `core.hooksPath`, so there is no manual setup.
+Because `core.hooksPath` is set, anything in `.git/hooks` is ignored.
+
+- **pre-commit**: `bun run lint` (Biome plus the inline style check).
+- **pre-push**: blocks a dirty working tree, then runs lint, build and test.
+- **post-merge**, **post-rewrite**: run `bun install` when the dependency manifests
+  changed, via `scripts/sync-deps`.
+
+Bypass a blocking hook with `git commit --no-verify` or `git push --no-verify`.
+
+Inline styles are rejected by `scripts/check-inline-styles.ts`, which runs as part of
+`bun run lint` so CI enforces it too. Biome only parses Astro frontmatter, so it cannot
+see `style="..."` or `define:vars` in a template.
+
 ## Use a Reference Implementation
 
 - When building something new, always check for a reference implementation and use the same style, tools, libraries, patterns as used in the reference implementation.

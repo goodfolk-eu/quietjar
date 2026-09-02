@@ -1,0 +1,22 @@
+#!/bin/sh
+# Blocks pushes on a dirty tree, or when lint, build or tests fail.
+
+command -v bun >/dev/null 2>&1 || PATH="/usr/local/bin:$PATH"
+
+fail() {
+  echo ""
+  echo "$1"
+  echo "  Bypass with: git push --no-verify"
+  exit 1
+}
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Uncommitted changes would not be part of this push:"
+  echo ""
+  git status --short
+  fail "Push blocked: working tree is not clean. Commit, stash or remove the above."
+fi
+
+bun run lint || fail "Push blocked: lint failed. Fix with bun run lint:fix"
+bun run build || fail "Push blocked: build failed."
+bun run test || fail "Push blocked: tests failed."

@@ -6,23 +6,24 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "bun run dev:backend & bun run dev:frontend && bun run dev:widget",
+    "dev": "bun run dev:backend & bun run dev:frontend",
     "dev:backend": "bun --cwd apps/backend dev",
     "dev:frontend": "bun --cwd apps/frontend dev",
     "dev:widget": "bun --cwd apps/widget dev",
-    "build": "bun run build:backend & bun run build:widget & bun run build:frontend",
+    "build": "bun run build:backend && bun run build:widget && bun run build:frontend",
     "build:backend": "bun --cwd apps/backend build",
     "build:widget": "bun --cwd apps/widget build",
     "build:frontend": "bun --cwd apps/frontend build",
-    "deploy": "bun run deploy:backend & bun run deploy:frontend",
+    "deploy": "bun run deploy:backend && bun run deploy:frontend",
     "deploy:backend": "bun --cwd apps/backend deploy",
     "deploy:frontend": "bun --cwd apps/frontend deploy",
     "test": "bun run test:widget",
     "test:widget": "bun --cwd apps/widget test",
-    "lint": "./scripts/biome check .",
-    "lint:fix": "./scripts/biome check --write .",
-    "format": "./scripts/biome format --write .",
-    "format:check": "./scripts/biome format ."
+    "lint": "bunx --bun biome check . && bun scripts/check-inline-styles.ts",
+    "lint:fix": "bunx --bun biome check --write . && bun scripts/check-inline-styles.ts",
+    "format": "bunx --bun biome format --write .",
+    "format:check": "bunx --bun biome format .",
+    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath scripts/hooks || true"
   },
   "overrides": {
     "@libsql/client": "0.8.1"
