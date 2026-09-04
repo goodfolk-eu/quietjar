@@ -75,9 +75,9 @@ git fetch origin <branch-name> && git checkout <branch-name>
 ### 4. Gather the diff (run in parallel)
 
 ```bash
-git log --oneline origin/master..HEAD
-git diff origin/master...HEAD --stat
-git diff origin/master...HEAD
+git log --oneline origin/main..HEAD
+git diff origin/main...HEAD --stat
+git diff origin/main...HEAD
 ```
 
 If the full diff is too large, read it in chunks.

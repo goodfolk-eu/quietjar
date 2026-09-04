@@ -9,7 +9,8 @@ Orchestrate the full feature delivery sequence for the current issue. This is a 
 
 ### 0. Check the branch
 
-Run `git rev-parse --abbrev-ref HEAD`. If the current branch is `master`, do NOT continue - inform the user to create a feature branch first (branches usually start with the issue number, e.g. `4178-fix-foo`) and stop. Only proceed once on a feature branch.
+Run `git rev-parse --abbrev-ref HEAD`. If the current branch is `main`, do NOT continue - inform the user to create a feature branch first (branches usually start with the issue number, e.g. `4178-fix-foo`) and stop. Only proceed once on a feature branch.
+If you make the branch for the user upon request, make sure to first checkout main and pull before creating the new branch.
 
 ### 1. Read the issue
 

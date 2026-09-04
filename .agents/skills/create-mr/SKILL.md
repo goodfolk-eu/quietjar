@@ -112,6 +112,6 @@ curl -fsS -X POST \
 rm -f /tmp/quietjar-mr.md
 ```
 
-- The MR must be created as a **Draft**. The Forgejo API has no `draft` field on PR creation, so prefix the title with `Draft:` (Forgejo recognizes this prefix and marks the PR as draft/WIP).
+- The MR must be created as a **WIP**. The Forgejo API has no `draft` field on PR creation, so prefix the title with `WIP:` (Forgejo recognizes this prefix and marks the PR as draft/WIP).
 - Description body: write a `## Summary` with bullet points describing what changed and why, add `Related #<issue-id>` at the end
 - The final `curl` prints the MR JSON; extract and return the `html_url` to the user when done
