@@ -51,7 +51,14 @@ const apiProxy = () => ({
           });
         }
         const upstream = await fetch(target, { method: req.method, headers, body });
-        res.writeHead(upstream.status, Object.fromEntries(upstream.headers));
+        // Object.fromEntries(headers) keeps only the LAST Set-Cookie, which
+        // silently drops the session cookie when the backend sets more than
+        // one. Forward them as an array instead.
+        const outHeaders = Object.fromEntries(upstream.headers);
+        delete outHeaders["set-cookie"];
+        const setCookies = upstream.headers.getSetCookie();
+        if (setCookies.length > 0) outHeaders["set-cookie"] = setCookies;
+        res.writeHead(upstream.status, outHeaders);
         res.end(Buffer.from(await upstream.arrayBuffer()));
       } catch (err) {
         console.error("[api-proxy]", err);

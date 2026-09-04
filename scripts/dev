@@ -1,0 +1,29 @@
+#!/bin/sh
+# Runs the backend and frontend dev servers together.
+#
+# Backgrounding the backend with a bare `&` leaks it: stopping the foreground
+# frontend leaves the backend holding port 3000, and every later `bun dev` adds
+# another orphan. Trapping on exit kills the whole process group instead, and
+# the port check turns a leftover server into a clear error rather than a
+# confusing "why is my change not live".
+
+set -e
+
+port_in_use() {
+  lsof -nP -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1
+}
+
+for port in 3000 4321; do
+  if port_in_use "$port"; then
+    echo "Port $port is already in use. Another dev server is still running." >&2
+    echo "Find it with: lsof -nP -iTCP:$port -sTCP:LISTEN" >&2
+    exit 1
+  fi
+done
+
+trap 'kill 0' EXIT INT TERM
+
+bun --cwd apps/backend dev &
+bun --cwd apps/frontend dev &
+
+wait

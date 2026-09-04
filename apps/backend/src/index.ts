@@ -1,6 +1,8 @@
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
+import { ensureSchema } from "./schema";
+import { stripeRoutes } from "./stripe/routes";
 
 const frontendOrigin = process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
 
@@ -23,7 +25,8 @@ export const app = new Elysia()
     return { user: session.user };
   })
   // Mount BetterAuth at the standard /api/auth/* path.
-  .all("/api/auth/*", ({ request }) => auth.handler(request));
+  .all("/api/auth/*", ({ request }) => auth.handler(request))
+  .use(stripeRoutes);
 
 const port = Number(process.env.PORT ?? 3000);
 
@@ -39,6 +42,13 @@ async function bootstrap() {
     } catch (err) {
       console.error("⚠️  BetterAuth migration failed:", (err as Error).message);
     }
+  }
+
+  try {
+    await ensureSchema();
+    console.log("🧬 App schema is up to date");
+  } catch (err) {
+    console.error("⚠️  App schema migration failed:", (err as Error).message);
   }
 }
 

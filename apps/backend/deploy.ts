@@ -154,6 +154,8 @@ const MANAGED_ENV_NAMES = [
   "PUBLIC_APP_URL",
   "PUBLIC_FRONTEND_URL",
   "TRUSTED_ORIGINS",
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
 ];
 
 function envVarsFromDotenv(): Array<{ name: string; value: string }> {

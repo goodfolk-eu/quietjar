@@ -1,4 +1,5 @@
 import enDashboard from "./en/dashboard/index.json";
+import enDashboardPayments from "./en/dashboard/payments.json";
 import enDashboardWidget from "./en/dashboard/widget.json";
 import enHome from "./en/home.json";
 import enShared from "./en/shared.json";
@@ -9,6 +10,7 @@ const dictionaries = {
     ...enHome,
     ...enDashboard,
     ...enDashboardWidget,
+    ...enDashboardPayments,
   },
 } as const;
 

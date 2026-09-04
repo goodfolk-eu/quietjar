@@ -6,7 +6,7 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "bun run dev:backend & bun run dev:frontend",
+    "dev": "./scripts/dev",
     "dev:backend": "bun --cwd apps/backend dev",
     "dev:frontend": "bun --cwd apps/frontend dev",
     "dev:widget": "bun --cwd apps/widget dev",
@@ -17,7 +17,8 @@
     "deploy": "bun run deploy:backend && bun run deploy:frontend",
     "deploy:backend": "bun --cwd apps/backend deploy",
     "deploy:frontend": "bun --cwd apps/frontend deploy",
-    "test": "bun run test:widget",
+    "test": "bun run test:widget && bun run test:backend",
+    "test:backend": "bun --cwd apps/backend test",
     "test:widget": "bun --cwd apps/widget test",
     "lint": "bunx --bun biome check .",
     "lint:fix": "bunx --bun biome check --write .",

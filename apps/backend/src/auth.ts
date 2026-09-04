@@ -71,6 +71,15 @@ export const auth = betterAuth({
     debugLogs: process.env.NODE_ENV === "development",
   },
 
+  // PUBLIC_BACKEND_URL can point at an https tunnel while the browser talks to
+  // us over http://localhost through the Astro proxy. Browsers refuse
+  // __Secure- prefixed / Secure cookies over plain http, so the flag must
+  // follow the origin the BROWSER uses (the frontend), not the backend base
+  // URL. NODE_ENV is unset under `bun --watch`, so it cannot be used here.
+  advanced: {
+    useSecureCookies: markerCookieAttrs().secure,
+  },
+
   // Passwordless, email-only: a numeric one-time code is emailed to the user.
   emailAndPassword: {
     enabled: false,

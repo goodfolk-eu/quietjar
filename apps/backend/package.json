@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
+    "test": "bun test",
     "typecheck": "tsc --noEmit",
     "build": "bun run typecheck",
     "deploy": "bun deploy.ts"
@@ -17,7 +18,8 @@
     "@libsql/kysely-libsql": "^0.4.1",
     "better-auth": "latest",
     "elysia": "latest",
-    "kysely": "^0.29.5"
+    "kysely": "^0.29.5",
+    "stripe": "^22.6.1"
   },
   "devDependencies": {
     "bun-types": "latest"
