@@ -38,7 +38,8 @@
   },
   "logos": {
     "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
-    "methods": ["Apple Pay", "Visa", "Mastercard", "Amex"]
+    "methods": ["Apple Pay", "Visa", "Mastercard", "Amex"],
+    "euMethods": "+ Local EU methods"
   },
   "polite": {
     "eyebrow": "Built to respect your audience",

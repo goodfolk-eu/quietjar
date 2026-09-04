@@ -1,5 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="45 13 150 150" role="img" aria-label="quietjar piglet mark">
   <defs>
+    <style>
+      .mark { fill: #4a5259; }
+      @media (prefers-color-scheme: dark) {
+        .mark { fill: #a8afb4; }
+      }
+    </style>
     <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
       <clipPath id="m-c"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
       <g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
@@ -18,5 +24,5 @@
       <circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
     </mask>
   </defs>
-  <rect x="0" y="0" width="240" height="180" fill="#003399" mask="url(#m)"></rect>
+  <rect class="mark" x="0" y="0" width="240" height="180" mask="url(#m)"></rect>
 </svg>
