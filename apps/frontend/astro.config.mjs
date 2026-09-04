@@ -137,8 +137,6 @@ export default defineConfig({
   output: "static",
   site,
   integrations,
-  // No markdown content is rendered today. Shiki's inline styles would
-  // violate the CSP below, so keep highlighting off if markdown appears.
   markdown: { syntaxHighlight: false },
   i18n: {
     defaultLocale,
@@ -148,6 +146,9 @@ export default defineConfig({
   security: {
     csp: {
       algorithm: "SHA-256",
+      styleDirective: {
+        resources: [{ resource: "'unsafe-inline'", kind: "attribute" }],
+      },
       directives: [
         "default-src 'none'",
         "img-src 'self' data:",

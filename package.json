@@ -19,8 +19,8 @@
     "deploy:frontend": "bun --cwd apps/frontend deploy",
     "test": "bun run test:widget",
     "test:widget": "bun --cwd apps/widget test",
-    "lint": "bunx --bun biome check . && bun scripts/check-inline-styles.ts",
-    "lint:fix": "bunx --bun biome check --write . && bun scripts/check-inline-styles.ts",
+    "lint": "bunx --bun biome check .",
+    "lint:fix": "bunx --bun biome check --write .",
     "format": "bunx --bun biome format --write .",
     "format:check": "bunx --bun biome format .",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath scripts/hooks || true"

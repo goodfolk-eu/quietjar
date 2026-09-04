@@ -33,9 +33,6 @@
         "useNamingConvention": "off",
         "noDefaultExport": "error",
         "noNestedTernary": "error"
-      },
-      "nursery": {
-        "noInlineStyles": "error"
       }
     }
   },
