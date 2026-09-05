@@ -47,17 +47,33 @@ describe("isAllowedReturnUrl", () => {
 
 describe("isValidAmount", () => {
   test("accepts amounts within bounds, down to the cent", () => {
-    expect(isValidAmount(1)).toBe(true);
-    expect(isValidAmount(7.5)).toBe(true);
-    expect(isValidAmount(500)).toBe(true);
+    expect(isValidAmount(1, "eur")).toBe(true);
+    expect(isValidAmount(7.5, "eur")).toBe(true);
+    expect(isValidAmount(500, "eur")).toBe(true);
   });
 
   test("refuses amounts outside the bounds or finer than a cent", () => {
-    expect(isValidAmount(0.5)).toBe(false);
-    expect(isValidAmount(501)).toBe(false);
-    expect(isValidAmount(5.555)).toBe(false);
-    expect(isValidAmount(Number.NaN)).toBe(false);
-    expect(isValidAmount(Number.POSITIVE_INFINITY)).toBe(false);
+    expect(isValidAmount(0.5, "eur")).toBe(false);
+    expect(isValidAmount(501, "eur")).toBe(false);
+    expect(isValidAmount(5.555, "eur")).toBe(false);
+    expect(isValidAmount(Number.NaN, "eur")).toBe(false);
+    expect(isValidAmount(Number.POSITIVE_INFINITY, "eur")).toBe(false);
+  });
+
+  test("scales the bounds to the currency", () => {
+    // 500 is the euro ceiling but well inside a low-value currency's range,
+    // and 1 is a valid euro donation but below their floor.
+    expect(isValidAmount(501, "inr")).toBe(true);
+    expect(isValidAmount(45_000, "inr")).toBe(true);
+    expect(isValidAmount(45_001, "inr")).toBe(false);
+    expect(isValidAmount(1, "inr")).toBe(false);
+    expect(isValidAmount(1, "czk")).toBe(false);
+    expect(isValidAmount(20, "czk")).toBe(true);
+  });
+
+  test("falls back to the default currency bounds for an unknown code", () => {
+    expect(isValidAmount(500, "xyz")).toBe(true);
+    expect(isValidAmount(501, "xyz")).toBe(false);
   });
 });
 

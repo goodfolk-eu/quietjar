@@ -26,6 +26,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./eden": "./src/index.ts"
+    "./eden": "./src/index.ts",
+    "./currency": "./src/sites/currency.ts"
   }
 }

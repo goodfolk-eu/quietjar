@@ -1,5 +1,5 @@
 import { ApiError, createSession } from "./api";
-import { MAX_AMOUNT, MIN_AMOUNT, type ResolvedConfig } from "./config";
+import { amountScale, type ResolvedConfig } from "./config";
 import { persistDonation } from "./donation";
 import { formatAmount } from "./money";
 import { computePlacement } from "./position";
@@ -194,11 +194,12 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     const choices = document.createElement("div");
     choices.className = "quietjar-panel__amounts";
 
+    const scale = amountScale(config.currency);
     const custom = document.createElement("input");
     custom.className = "quietjar-panel__custom";
     custom.type = "number";
-    custom.min = String(MIN_AMOUNT);
-    custom.max = String(MAX_AMOUNT);
+    custom.min = String(scale.min);
+    custom.max = String(scale.max);
     custom.step = "1";
     custom.placeholder = config.otherLabel;
     custom.hidden = true;
@@ -209,7 +210,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     submit.className = "quietjar-panel__submit";
 
     function syncSubmit(): void {
-      const valid = amount >= MIN_AMOUNT && amount <= MAX_AMOUNT;
+      const valid = amount >= scale.min && amount <= scale.max;
       submit.disabled = !valid;
       submit.textContent = valid
         ? `${config.actionLabel} ${formatAmount(amount, config.currency)}`

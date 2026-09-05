@@ -83,11 +83,54 @@ export const DEFAULT_OTHER_LABEL = "Other";
 export const DEFAULT_MINIMIZE_LABEL = "Minimize";
 export const DEFAULT_API = "https://api.quietjar.com";
 export const DEFAULT_CURRENCY = "eur";
-export const DEFAULT_AMOUNTS = [3, 5, 10];
-/** Matches the bounds the payment endpoint enforces. */
-export const MIN_AMOUNT = 1;
-export const MAX_AMOUNT = 500;
 export const MAX_AMOUNT_OPTIONS = 4;
+
+interface CurrencyScale {
+  min: number;
+  max: number;
+  presets: number[];
+}
+
+/**
+ * Mirrors AMOUNT_BOUNDS in the backend, which is what actually enforces them;
+ * these drive the input's min/max and the preset buttons. The widget ships to
+ * third-party pages and cannot import backend code, so the two move together by
+ * hand. `presets` are the euro defaults of 3/5/10 converted and rounded -- a
+ * flat 3/5/10 would sit under the minimum charge in the low-value currencies.
+ */
+const SCALES: Record<string, CurrencyScale> = {
+  aed: { min: 5, max: 2000, presets: [10, 25, 50] },
+  ars: { min: 1000, max: 500_000, presets: [3000, 5000, 10_000] },
+  aud: { min: 1, max: 800, presets: [5, 10, 20] },
+  brl: { min: 5, max: 3000, presets: [20, 30, 60] },
+  cad: { min: 1, max: 750, presets: [5, 10, 20] },
+  chf: { min: 1, max: 500, presets: [3, 5, 10] },
+  cop: { min: 5000, max: 2_000_000, presets: [15_000, 25_000, 50_000] },
+  czk: { min: 20, max: 12_000, presets: [75, 125, 250] },
+  dkk: { min: 5, max: 3500, presets: [25, 40, 75] },
+  eur: { min: 1, max: 500, presets: [3, 5, 10] },
+  gbp: { min: 1, max: 400, presets: [3, 5, 10] },
+  hkd: { min: 5, max: 4000, presets: [25, 40, 80] },
+  idr: { min: 20_000, max: 8_000_000, presets: [50_000, 100_000, 150_000] },
+  ils: { min: 5, max: 2000, presets: [10, 20, 40] },
+  inr: { min: 100, max: 45_000, presets: [250, 500, 1000] },
+  mxn: { min: 20, max: 10_000, presets: [60, 100, 200] },
+  myr: { min: 5, max: 2500, presets: [15, 25, 50] },
+  nok: { min: 5, max: 6000, presets: [35, 60, 120] },
+  nzd: { min: 2, max: 900, presets: [5, 10, 20] },
+  php: { min: 100, max: 30_000, presets: [200, 300, 600] },
+  pln: { min: 5, max: 2000, presets: [15, 25, 50] },
+  ron: { min: 5, max: 2500, presets: [15, 25, 50] },
+  sek: { min: 5, max: 6000, presets: [35, 60, 120] },
+  sgd: { min: 1, max: 700, presets: [5, 10, 15] },
+  thb: { min: 20, max: 18_000, presets: [100, 200, 400] },
+  usd: { min: 1, max: 500, presets: [3, 5, 10] },
+  zar: { min: 20, max: 10_000, presets: [60, 100, 200] },
+};
+
+export function amountScale(currency: string): CurrencyScale {
+  return SCALES[currency.toLowerCase()] ?? SCALES[DEFAULT_CURRENCY];
+}
 export const DEFAULT_CLOSE_ENABLED = true;
 export const DEFAULT_COLOR = "#0284c7";
 export const DEFAULT_CORNER: Corner = "bottom-right";
@@ -114,11 +157,14 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
   const corner = input?.position?.corner;
   const target = input?.mount?.target;
 
+  // Amounts are bounded per currency, so the currency has to settle first.
+  const currency = resolveCurrency(input?.currency);
+
   return {
     site: typeof input?.site === "string" ? input.site.trim() : "",
     api: resolveApi(input?.api),
-    currency: resolveCurrency(input?.currency),
-    amounts: resolveAmounts(input?.amounts),
+    currency,
+    amounts: resolveAmounts(input?.amounts, currency),
     thanksLabel: label(input?.labels?.thanks, DEFAULT_THANKS_LABEL),
     otherLabel: label(input?.labels?.other, DEFAULT_OTHER_LABEL),
     minimizeLabel: label(input?.labels?.minimize, DEFAULT_MINIMIZE_LABEL),
@@ -162,16 +208,17 @@ function resolveApi(value: unknown): string {
  * unusable entry is dropped rather than shown, and an empty result falls back
  * to the defaults.
  */
-function resolveAmounts(value: unknown): number[] {
-  if (!Array.isArray(value)) return [...DEFAULT_AMOUNTS];
+function resolveAmounts(value: unknown, currency: string): number[] {
+  const scale = amountScale(currency);
+  if (!Array.isArray(value)) return [...scale.presets];
   const amounts: number[] = [];
   for (const entry of value) {
     if (typeof entry !== "number" || !Number.isFinite(entry)) continue;
     const amount = Math.round(entry * 100) / 100;
-    if (amount < MIN_AMOUNT || amount > MAX_AMOUNT) continue;
+    if (amount < scale.min || amount > scale.max) continue;
     if (!amounts.includes(amount)) amounts.push(amount);
   }
-  if (amounts.length === 0) return [...DEFAULT_AMOUNTS];
+  if (amounts.length === 0) return [...scale.presets];
   return amounts.slice(0, MAX_AMOUNT_OPTIONS).sort((a, b) => a - b);
 }
 

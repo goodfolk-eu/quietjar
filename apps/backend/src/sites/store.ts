@@ -1,6 +1,8 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import { libsqlClient } from "../db";
-import type { Currency } from "./currency";
+import type { Country, Currency } from "./currency";
+
+export type EntityType = "individual" | "company";
 
 export interface Site {
   id: string;
@@ -8,6 +10,9 @@ export interface Site {
   publicKey: string;
   currency: Currency;
   siteUrl: string | null;
+  /** Null until the creator picks one; frozen on the Stripe account after that. */
+  country: Country | null;
+  entityType: EntityType | null;
 }
 
 interface Row {
@@ -16,6 +21,8 @@ interface Row {
   public_key: string;
   currency: string;
   site_url: string | null;
+  country: string | null;
+  entity_type: string | null;
 }
 
 function toSite(row: Row): Site {
@@ -25,6 +32,8 @@ function toSite(row: Row): Site {
     publicKey: row.public_key,
     currency: row.currency as Currency,
     siteUrl: row.site_url,
+    country: (row.country as Country | null) ?? null,
+    entityType: (row.entity_type as EntityType | null) ?? null,
   };
 }
 
@@ -60,22 +69,30 @@ export async function createSite(input: { userId: string; currency: Currency }):
     publicKey: newPublicKey(),
     currency: input.currency,
     siteUrl: null,
+    country: null,
+    entityType: null,
   };
   await libsqlClient.execute({
     sql: `INSERT INTO sites
-            (id, user_id, public_key, currency, site_url, created_at, updated_at)
-          VALUES (?, ?, ?, ?, NULL, ?, ?)`,
+            (id, user_id, public_key, currency, site_url, country, entity_type, created_at, updated_at)
+          VALUES (?, ?, ?, ?, NULL, NULL, NULL, ?, ?)`,
     args: [site.id, site.userId, site.publicKey, site.currency, now, now],
   });
   return site;
 }
 
-export async function updateSite(
-  userId: string,
-  input: { currency: Currency; siteUrl: string | null },
-): Promise<void> {
+export interface SiteUpdate {
+  currency: Currency;
+  siteUrl: string | null;
+  country: Country | null;
+  entityType: EntityType | null;
+}
+
+export async function updateSite(userId: string, input: SiteUpdate): Promise<void> {
   await libsqlClient.execute({
-    sql: "UPDATE sites SET currency = ?, site_url = ?, updated_at = ? WHERE user_id = ?",
-    args: [input.currency, input.siteUrl, Date.now(), userId],
+    sql: `UPDATE sites
+            SET currency = ?, site_url = ?, country = ?, entity_type = ?, updated_at = ?
+          WHERE user_id = ?`,
+    args: [input.currency, input.siteUrl, input.country, input.entityType, Date.now(), userId],
   });
 }

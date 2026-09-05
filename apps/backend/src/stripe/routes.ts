@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import type Stripe from "stripe";
 import { auth } from "../auth";
 import { recordDonation } from "../pay/store";
+import { supportsIdeal } from "../sites/currency";
 import { getSiteByPublicKey, getSiteByUserId } from "../sites/store";
 import {
   applicationFee,
@@ -82,10 +83,13 @@ async function recordCompletedDonation(
   });
 }
 
-async function syncOnboarding(accountId: string) {
+async function syncOnboarding(accountId: string, userId: string) {
   const config = stripeConfigFromEnv();
   if (!config) return null;
-  const onboarding = deriveOnboarding(await retrieveAccount(config, accountId));
+  const site = await getSiteByUserId(userId);
+  const onboarding = deriveOnboarding(await retrieveAccount(config, accountId), {
+    idealEligible: supportsIdeal(site?.country),
+  });
   await saveOnboarding(accountId, onboarding);
   return onboarding;
 }
@@ -101,77 +105,71 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
     if (!connection) return { connection: null };
     return { connection: { onboarding: connection.onboarding } };
   })
-  .post(
-    "/connect",
-    async ({ request, set, body }) => {
-      const user = await sessionUser(request);
-      if (!user) {
-        set.status = 401;
-        return { error: "unauthorized" };
-      }
-      const userId = user.id;
-      const config = stripeConfigFromEnv();
-      if (!config) {
-        set.status = 503;
-        return { error: "stripe_not_configured" };
-      }
+  .post("/connect", async ({ request, set }) => {
+    const user = await sessionUser(request);
+    if (!user) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+    const userId = user.id;
+    const config = stripeConfigFromEnv();
+    if (!config) {
+      set.status = 503;
+      return { error: "stripe_not_configured" };
+    }
 
-      // The account is created with the creator's site address and currency
-      // baked in, so there is nothing to create until they have supplied both.
-      const site = await getSiteByUserId(userId);
-      if (!site?.siteUrl) {
-        set.status = 400;
-        return { error: "site_not_configured" };
-      }
+    // Everything the account is created with comes from the site row, so
+    // there is nothing to create until the creator has filled step one.
+    const site = await getSiteByUserId(userId);
+    if (!site?.siteUrl || !site.country || !site.entityType) {
+      set.status = 400;
+      return { error: "site_not_configured" };
+    }
 
-      const existing = await getConnectionByUserId(userId);
-      let accountId = existing?.accountId;
-      if (!accountId) {
-        try {
-          const account = await createConnectedAccount(config, {
-            country: body.country,
-            email: user.email,
-            entityType: body.entityType,
-            currency: site.currency,
-            businessUrl: site.siteUrl,
-          });
-          accountId = account.id;
-          await createConnection({ userId, accountId });
-          await saveOnboarding(accountId, deriveOnboarding(account));
-        } catch (err) {
-          console.error("[stripe/connect] account creation failed:", err);
-          set.status = 502;
-          return { error: "stripe_request_failed" };
-        }
-      }
-
-      const { refreshUrl, returnUrl } = stepUrls("identity");
+    const existing = await getConnectionByUserId(userId);
+    let accountId = existing?.accountId;
+    if (!accountId) {
       try {
-        const url = await createOnboardingLink(config, {
-          accountId,
-          refreshUrl,
-          returnUrl,
-          fields: "currently_due",
+        const account = await createConnectedAccount(config, {
+          country: site.country,
+          email: user.email,
+          entityType: site.entityType,
+          currency: site.currency,
+          businessUrl: site.siteUrl,
         });
-        return { url };
+        accountId = account.id;
+        await createConnection({ userId, accountId });
+        await saveOnboarding(
+          accountId,
+          deriveOnboarding(account, { idealEligible: supportsIdeal(site.country) }),
+        );
       } catch (err) {
-        if (isMissingAccount(err)) {
-          await deleteConnection(userId);
-          set.status = CONNECTION_RESET.status;
-          return CONNECTION_RESET.body;
-        }
-        console.error("[stripe/connect] account link failed:", err);
+        console.error("[stripe/connect] account creation failed:", err);
         set.status = 502;
         return { error: "stripe_request_failed" };
       }
-    },
-    {
-      body: t.Object({
-        country: t.String({ pattern: "^[A-Z]{2}$" }),
-        entityType: t.Union([t.Literal("individual"), t.Literal("company")]),
-      }),
-    },
-  )
+    }
+
+    const { refreshUrl, returnUrl } = stepUrls("identity");
+    try {
+      const url = await createOnboardingLink(config, {
+        accountId,
+        refreshUrl,
+        returnUrl,
+        fields: "currently_due",
+      });
+      return { url };
+    } catch (err) {
+      if (isMissingAccount(err)) {
+        await deleteConnection(userId);
+        set.status = CONNECTION_RESET.status;
+        return CONNECTION_RESET.body;
+      }
+      console.error("[stripe/connect] account link failed:", err);
+      set.status = 502;
+      return { error: "stripe_request_failed" };
+    }
+  })
   .post(
     "/onboarding-link",
     async ({ request, set, body }) => {
@@ -191,11 +189,20 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
         return { error: "not_connected" };
       }
 
+      const site = await getSiteByUserId(userId);
+
       const step = body.step as Step;
       if (step === "ideal") {
+        // Requesting the capability is what makes Stripe answer, and the answer
+        // costs the creator extra requirements. If the country cannot have it,
+        // say so without asking.
+        if (!supportsIdeal(site?.country)) {
+          set.status = 409;
+          return { error: "ideal_unavailable" };
+        }
         try {
           const account = await requestIdealCapability(config, connection.accountId);
-          const onboarding = deriveOnboarding(account);
+          const onboarding = deriveOnboarding(account, { idealEligible: true });
           await saveOnboarding(connection.accountId, onboarding);
           if (onboarding.ideal === "unavailable") {
             set.status = 409;
@@ -251,7 +258,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
       return { error: "not_connected" };
     }
     try {
-      const onboarding = await syncOnboarding(connection.accountId);
+      const onboarding = await syncOnboarding(connection.accountId, userId);
       if (!onboarding) {
         set.status = 503;
         return { error: "stripe_not_configured" };
@@ -328,7 +335,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
         const connection = await getConnectionByAccountId(accountId);
         if (connection) {
           try {
-            await syncOnboarding(accountId);
+            await syncOnboarding(accountId, connection.userId);
           } catch (err) {
             console.error("[stripe/webhook] onboarding sync failed:", err);
             set.status = 502;

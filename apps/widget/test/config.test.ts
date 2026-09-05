@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import "./setup";
 import {
   DEFAULT_ACTION_LABEL,
-  DEFAULT_AMOUNTS,
+  amountScale,
   DEFAULT_API,
   DEFAULT_CLOSE_ENABLED,
   DEFAULT_CLOSE_LABEL,
@@ -27,7 +27,7 @@ describe("resolveConfig", () => {
       site: "",
       api: DEFAULT_API,
       currency: DEFAULT_CURRENCY,
-      amounts: DEFAULT_AMOUNTS,
+      amounts: amountScale(DEFAULT_CURRENCY).presets,
       thanksLabel: DEFAULT_THANKS_LABEL,
       otherLabel: DEFAULT_OTHER_LABEL,
       minimizeLabel: DEFAULT_MINIMIZE_LABEL,
@@ -97,11 +97,26 @@ describe("resolveConfig", () => {
   });
 
   test("keeps the amount list usable whatever the config says", () => {
-    expect(resolveConfig({ amounts: [] }).amounts).toEqual(DEFAULT_AMOUNTS);
-    expect(resolveConfig({ amounts: [0, 900, Number.NaN] }).amounts).toEqual(DEFAULT_AMOUNTS);
+    const eur = amountScale("eur").presets;
+    expect(resolveConfig({ amounts: [] }).amounts).toEqual(eur);
+    expect(resolveConfig({ amounts: [0, 900, Number.NaN] }).amounts).toEqual(eur);
     expect(resolveConfig({ amounts: [5, 5, 3] }).amounts).toEqual([3, 5]);
     expect(resolveConfig({ amounts: [1, 2, 3, 4, 5, 6] }).amounts).toEqual([1, 2, 3, 4]);
     expect(resolveConfig({ amounts: [2.005] }).amounts).toEqual([2.01]);
+  });
+
+  test("scales amounts to the configured currency", () => {
+    expect(resolveConfig({ currency: "inr" }).amounts).toEqual(amountScale("inr").presets);
+    // 5 is a fine euro donation but under the rupee floor, so it is dropped and
+    // the rupee presets stand in rather than an empty list.
+    expect(resolveConfig({ currency: "inr", amounts: [5] }).amounts).toEqual(
+      amountScale("inr").presets,
+    );
+    expect(resolveConfig({ currency: "inr", amounts: [250, 900] }).amounts).toEqual([250, 900]);
+  });
+
+  test("falls back to the default scale for an unknown currency", () => {
+    expect(amountScale("xyz")).toEqual(amountScale(DEFAULT_CURRENCY));
   });
 
   test("falls back to the hosted API for an unusable override", () => {

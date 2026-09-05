@@ -110,4 +110,19 @@ describe("deriveOnboarding", () => {
     const result = deriveOnboarding(account({ card: "restricted" }));
     expect(result.issues).toEqual({});
   });
+
+  test("an ineligible country reports iDEAL unavailable whatever Stripe says", () => {
+    const options = { idealEligible: false };
+    expect(deriveOnboarding(account({}), options).ideal).toBe("unavailable");
+    expect(deriveOnboarding(account({ ideal: "active" }), options).ideal).toBe("unavailable");
+    expect(deriveOnboarding(account({ ideal: "pending" }), options).ideal).toBe("unavailable");
+  });
+
+  test("iDEAL eligibility leaves the other steps alone", () => {
+    const result = deriveOnboarding(account({ card: "active", payouts: "active" }), {
+      idealEligible: false,
+    });
+    expect(result.identity).toBe("done");
+    expect(result.payouts).toBe("done");
+  });
 });

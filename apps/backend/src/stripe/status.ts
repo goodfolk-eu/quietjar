@@ -76,11 +76,24 @@ function collectIssues(account: V2Account): Partial<Record<StepKey, StepIssue>> 
   return issues;
 }
 
-export function deriveOnboarding(account: V2Account): OnboardingStatus {
+export interface DeriveOptions {
+  /**
+   * False when the account's country cannot request iDEAL at all. Stripe only
+   * reports that once the capability has been asked for, and asking adds
+   * identity-number and liveness requirements to the account, so the answer is
+   * predicted from the country instead of bought with a request.
+   */
+  idealEligible: boolean;
+}
+
+export function deriveOnboarding(
+  account: V2Account,
+  options: DeriveOptions = { idealEligible: true },
+): OnboardingStatus {
   const capabilities = account.configuration?.merchant?.capabilities;
   return {
     identity: toStepState(capabilities?.card_payments),
-    ideal: toStepState(capabilities?.ideal_payments),
+    ideal: options.idealEligible ? toStepState(capabilities?.ideal_payments) : "unavailable",
     payouts: toStepState(capabilities?.stripe_balance?.payouts),
     issues: collectIssues(account),
   };

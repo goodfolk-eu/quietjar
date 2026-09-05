@@ -1,10 +1,14 @@
-/** Bounds on a single donation, in the site's currency, in major units. */
-export const MIN_AMOUNT = 1;
-export const MAX_AMOUNT = 500;
+import { amountBounds } from "../sites/currency";
 
-export function isValidAmount(amount: number): boolean {
+/**
+ * Bounds on a single donation, in the site's currency, in major units. They
+ * differ per currency: a flat 1-500 would be a few cents to a few dollars in
+ * the low-value ones. See AMOUNT_BOUNDS for how the numbers were chosen.
+ */
+export function isValidAmount(amount: number, currency: string): boolean {
   if (!Number.isFinite(amount)) return false;
-  if (amount < MIN_AMOUNT || amount > MAX_AMOUNT) return false;
+  const { min, max } = amountBounds(currency);
+  if (amount < min || amount > max) return false;
   // Anything finer than a cent is a client bug, not a donation.
   const minor = amount * 100;
   return Math.abs(minor - Math.round(minor)) < 1e-6;

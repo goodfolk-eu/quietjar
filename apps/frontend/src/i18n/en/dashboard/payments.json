@@ -2,28 +2,27 @@
   "payments": {
     "title": "Payments",
     "intro": "Set up payments so your widget can receive tips.",
-    "connectTitle": "Set up payments",
-    "connectIntro": "We set up a payment account for you. You will be asked for your details, a bank account and a short identity check. No VAT number needed.",
+    "stepsTitle": "Your setup",
+    "openDashboard": "Open payout dashboard",
     "country": "Country",
     "countryPlaceholder": "Select country",
+    "countryHint": "Where you or your business is based. This cannot be changed later.",
     "accountType": "Are you a business?",
     "accountTypeIndividual": "No, it is just me",
     "accountTypeCompany": "Yes, a registered business",
-    "connect": "Get started",
-    "connecting": "Redirecting…",
-    "connectNeedsSite": "Add your site address above before you set up payments.",
-    "errorSiteNotConfigured": "Add your site address before you set up payments.",
-    "siteTitle": "Your site",
     "siteUrlLabel": "Site address",
     "siteUrlHint": "The address the widget runs on. Payments are only accepted from this site.",
     "siteUrlInvalid": "Enter a valid site address, for example example.com",
     "currency": "Currency",
-    "currencyHint": "Supporters are charged in this currency.",
+    "currencyHint": "Supporters are charged in this currency. It follows your country unless you change it.",
     "saving": "Saving...",
     "saved": "Saved",
     "saveFailed": "Could not save. Try again.",
-    "stepsTitle": "Your setup",
-    "openDashboard": "Open payout dashboard",
+    "connect": "Get started",
+    "connecting": "Redirecting…",
+    "detailsIncomplete": "Fill in all four before you continue.",
+    "edit": "Edit",
+    "editHint": "Your country and business type are fixed on your payment account and cannot be changed.",
     "state": {
       "todo": "To do",
       "pending": "In review",
@@ -36,6 +35,13 @@
       "needsAttention": "This needs another look before it can be approved."
     },
     "steps": {
+      "details": {
+        "title": "Your details",
+        "todo": "Tell us where you are based, what you collect in, and where the widget runs. We use these to open your payment account.",
+        "pending": "Setting up your payment account.",
+        "done": "Your details are set.",
+        "action": "Continue"
+      },
       "identity": {
         "title": "Start receiving tips",
         "todo": "Give your details and a bank account, and complete a short identity check.",
@@ -62,6 +68,7 @@
     "bannerReturn": "Thanks. We are checking your setup.",
     "errorGeneric": "Something went wrong. Please try again.",
     "errorNotConfigured": "Payments are not set up yet. Please try again later.",
-    "errorIdealUnavailable": "iDEAL is not available for accounts in your country."
+    "errorIdealUnavailable": "iDEAL is not available for accounts in your country.",
+    "errorSiteNotConfigured": "Fill in your details above before you set up payments."
   }
 }

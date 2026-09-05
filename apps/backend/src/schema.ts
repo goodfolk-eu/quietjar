@@ -15,6 +15,8 @@ const MIGRATIONS = [
     public_key TEXT NOT NULL UNIQUE,
     currency TEXT NOT NULL,
     site_url TEXT,
+    country TEXT,
+    entity_type TEXT,
     created_at INTEGER NOT NULL,
     updated_at INTEGER NOT NULL
   )`,

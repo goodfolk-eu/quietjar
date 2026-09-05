@@ -1,4 +1,5 @@
 ---
+import { SUPPORTED_COUNTRIES, SUPPORTED_CURRENCIES } from "@quietjar/backend/currency";
 import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
@@ -6,37 +7,21 @@ import DashboardLayout from "@/layouts/DashboardLayout.astro";
 const copy = dictionary(Astro.currentLocale ?? "en");
 const payments = copy.payments;
 
-const countries = [
-  { value: "AT", label: "Austria" },
-  { value: "BE", label: "Belgium" },
-  { value: "CH", label: "Switzerland" },
-  { value: "DE", label: "Germany" },
-  { value: "DK", label: "Denmark" },
-  { value: "ES", label: "Spain" },
-  { value: "FI", label: "Finland" },
-  { value: "FR", label: "France" },
-  { value: "GB", label: "United Kingdom" },
-  { value: "IE", label: "Ireland" },
-  { value: "IT", label: "Italy" },
-  { value: "LU", label: "Luxembourg" },
-  { value: "NL", label: "Netherlands" },
-  { value: "NO", label: "Norway" },
-  { value: "PL", label: "Poland" },
-  { value: "PT", label: "Portugal" },
-  { value: "SE", label: "Sweden" },
-];
+// Imported from the backend rather than mirrored, so a new country or currency
+// is one edit. Both lists are plain constants with no runtime dependencies.
+const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+const countries = SUPPORTED_COUNTRIES.map((code) => ({
+  value: code,
+  label: regionNames.of(code) ?? code,
+})).sort((a, b) => a.label.localeCompare(b.label));
 
-// Mirrors SUPPORTED_CURRENCIES in the backend, which validates what is saved.
-const currencies = [
-  { value: "eur", label: "Euro (EUR)" },
-  { value: "gbp", label: "British pound (GBP)" },
-  { value: "chf", label: "Swiss franc (CHF)" },
-  { value: "dkk", label: "Danish krone (DKK)" },
-  { value: "nok", label: "Norwegian krone (NOK)" },
-  { value: "pln", label: "Polish zloty (PLN)" },
-  { value: "sek", label: "Swedish krona (SEK)" },
-];
+const currencyNames = new Intl.DisplayNames(["en"], { type: "currency" });
+const currencies = SUPPORTED_CURRENCIES.map((code) => ({
+  value: code,
+  label: `${currencyNames.of(code.toUpperCase()) ?? code} (${code.toUpperCase()})`,
+})).sort((a, b) => a.label.localeCompare(b.label));
 
+// Step one is ours; the rest are Stripe's, and only they carry a status badge.
 const steps = [
   { key: "identity", copy: payments.steps.identity },
   { key: "ideal", copy: payments.steps.ideal },
@@ -48,6 +33,9 @@ const fieldClass =
 const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 const buttonClass =
   "rounded-lg bg-gray-800 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-900 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50";
+const stepClass = "rounded-lg border border-gray-200 p-4";
+const labelClass = "block text-sm font-medium text-gray-700";
+const hintClass = "mt-1 text-xs text-gray-500";
 ---
 
 <DashboardLayout title={payments.title}>
@@ -61,62 +49,83 @@ const buttonClass =
       >
       </p>
 
-      <section class={cardClass}>
-        <h2 class="text-base font-semibold text-gray-800">{payments.siteTitle}</h2>
-
-        <div class="mt-5">
-          <label for="qj-site-url" class="block text-sm font-medium text-gray-700">{payments.siteUrlLabel}</label>
-          <p class="mt-1 text-xs text-gray-500">{payments.siteUrlHint}</p>
-          <input
-            id="qj-site-url"
-            type="text"
-            inputmode="url"
-            spellcheck="false"
-            placeholder="example.com"
-            class={fieldClass}
-          />
-        </div>
-
-        <div class="mt-6">
-          <label for="qj-currency" class="block text-sm font-medium text-gray-700">{payments.currency}</label>
-          <p class="mt-1 text-xs text-gray-500">{payments.currencyHint}</p>
-          <select id="qj-currency" class={fieldClass}>
-            {currencies.map((currency) => <option value={currency.value}>{currency.label}</option>)}
-          </select>
-        </div>
-
-        <p id="qj-site-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
-      </section>
-
-      <section id="qj-pay-connect" class={`${cardClass} hidden`}>
-        <h2 class="text-base font-semibold text-gray-800">{payments.connectTitle}</h2>
-        <p class="mt-1 text-xs text-gray-500">{payments.connectIntro}</p>
-        <form id="qj-pay-form" class="mt-5 space-y-4">
-          <div>
-            <label for="qj-pay-country" class="block text-sm font-medium text-gray-700">{payments.country}</label>
-            <select id="qj-pay-country" required class={fieldClass}>
-              <option value="">{payments.countryPlaceholder}</option>
-              {countries.map((country) => <option value={country.value}>{country.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label for="qj-pay-entity" class="block text-sm font-medium text-gray-700">{payments.accountType}</label>
-            <select id="qj-pay-entity" required class={fieldClass}>
-              <option value="individual">{payments.accountTypeIndividual}</option>
-              <option value="company">{payments.accountTypeCompany}</option>
-            </select>
-          </div>
-          <button type="submit" disabled class={`${buttonClass} w-full`}>{payments.connect}</button>
-          <p id="qj-pay-gate" class="text-center text-xs text-gray-500">{payments.connectNeedsSite}</p>
-        </form>
-      </section>
-
-      <section id="qj-pay-steps" class={`${cardClass} hidden`}>
+      <section id="qj-pay-steps" class={cardClass}>
         <h2 class="text-base font-semibold text-gray-800">{payments.stepsTitle}</h2>
         <ol class="mt-5 space-y-4">
+          <li class={stepClass} data-step="details">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="text-sm font-semibold text-gray-800">{payments.steps.details.title}</h3>
+              <span class="hidden shrink-0 rounded-full px-3 py-1 text-xs font-medium" data-badge></span>
+            </div>
+
+            {/* The form and the summary are the same step in two states: open
+                while the payment account does not exist, closed once it does. */}
+            <div id="qj-details-form">
+              <p class="mt-1 text-sm text-gray-600">{payments.steps.details.todo}</p>
+
+              <div class="mt-4">
+                <label for="qj-pay-country" class={labelClass}>{payments.country}</label>
+                <p class={hintClass}>{payments.countryHint}</p>
+                <select id="qj-pay-country" required class={fieldClass}>
+                  <option value="">{payments.countryPlaceholder}</option>
+                  {countries.map((country) => <option value={country.value}>{country.label}</option>)}
+                </select>
+              </div>
+
+              <div class="mt-4">
+                <label for="qj-pay-entity" class={labelClass}>{payments.accountType}</label>
+                <select id="qj-pay-entity" required class={fieldClass}>
+                  <option value="individual">{payments.accountTypeIndividual}</option>
+                  <option value="company">{payments.accountTypeCompany}</option>
+                </select>
+              </div>
+
+              <div class="mt-4">
+                <label for="qj-currency" class={labelClass}>{payments.currency}</label>
+                <p class={hintClass}>{payments.currencyHint}</p>
+                <select id="qj-currency" class={fieldClass}>
+                  {currencies.map((currency) => <option value={currency.value}>{currency.label}</option>)}
+                </select>
+              </div>
+
+              <div class="mt-4">
+                <label for="qj-site-url" class={labelClass}>{payments.siteUrlLabel}</label>
+                <p class={hintClass}>{payments.siteUrlHint}</p>
+                <input
+                  id="qj-site-url"
+                  type="text"
+                  inputmode="url"
+                  spellcheck="false"
+                  placeholder="example.com"
+                  class={fieldClass}
+                />
+              </div>
+
+              <p id="qj-site-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
+
+              <button type="button" id="qj-pay-connect" disabled class={`${buttonClass} mt-4 w-full`}>
+                {payments.connect}
+              </button>
+              <p id="qj-pay-gate" class="mt-2 text-center text-xs text-gray-500">
+                {payments.detailsIncomplete}
+              </p>
+            </div>
+
+            <div id="qj-details-summary" class="hidden">
+              <p id="qj-details-line" class="mt-1 text-sm text-gray-600"></p>
+              <button
+                type="button"
+                id="qj-details-edit"
+                class="mt-2 text-sm text-qj-blue underline underline-offset-2"
+              >
+                {payments.edit}
+              </button>
+            </div>
+          </li>
+
           {
             steps.map((step) => (
-              <li class="rounded-lg border border-gray-200 p-4" data-step={step.key}>
+              <li class={stepClass} data-step={step.key}>
                 <div class="flex items-start justify-between gap-3">
                   <h3 class="text-sm font-semibold text-gray-800">{step.copy.title}</h3>
                   <span class="hidden shrink-0 rounded-full px-3 py-1 text-xs font-medium" data-badge />
@@ -139,6 +148,7 @@ const buttonClass =
 </DashboardLayout>
 
 <script>
+  import { currencyForCountry } from "@quietjar/backend/currency";
   import { api } from "@/lib/api";
 
   type StepKey = "identity" | "ideal" | "payouts";
@@ -166,102 +176,72 @@ const buttonClass =
   interface Copy {
     connect: string;
     connecting: string;
-    state: Record<StepState, string>;
-    issues: Record<StepIssue, string>;
-    steps: Record<StepKey, StepCopy>;
-    bannerReturn: string;
-    errorGeneric: string;
-    errorNotConfigured: string;
-    errorIdealUnavailable: string;
+    edit: string;
+    editHint: string;
+    detailsIncomplete: string;
     siteUrlInvalid: string;
     saving: string;
     saved: string;
     saveFailed: string;
+    state: Record<StepState, string>;
+    issues: Record<StepIssue, string>;
+    steps: Record<StepKey | "details", StepCopy>;
+    bannerReturn: string;
+    errorGeneric: string;
+    errorNotConfigured: string;
+    errorIdealUnavailable: string;
     errorSiteNotConfigured: string;
   }
 
-  // The connected account is created with the site address and currency baked
-  // in, so the Connect form stays locked until the site card has saved one.
-  let siteConfigured = false;
-  let syncConnectGate = (): void => {};
-
   const root = document.getElementById("qj-payments");
-  const connectCard = document.getElementById("qj-pay-connect");
   const stepsCard = document.getElementById("qj-pay-steps");
-  const siteUrlField = document.getElementById("qj-site-url") as HTMLInputElement | null;
-  const currencyField = document.getElementById("qj-currency") as HTMLSelectElement | null;
-  const siteStatusField = document.getElementById("qj-site-status");
 
   void (async () => {
-    if (!(root && siteUrlField && currencyField && siteStatusField)) return;
-
-    const copy = JSON.parse(root.dataset.i18n ?? "{}") as Copy;
-    const siteUrlInput = siteUrlField;
-    const currencySelect = currencyField;
-    const siteStatus = siteStatusField;
-
-    async function saveSite(): Promise<void> {
-      siteStatus.textContent = copy.saving;
-      const { data, error } = await api.api.sites.current.put({
-        currency: currencySelect.value,
-        siteUrl: siteUrlInput.value.trim() === "" ? null : siteUrlInput.value.trim(),
-      });
-      const saved = error ? undefined : data?.site;
-      if (!saved) {
-        siteStatus.textContent = copy.saveFailed;
-        return;
-      }
-      // The server stores a bare origin, so show what it kept rather than what
-      // was typed: that is what payments are checked against.
-      siteUrlInput.value = saved.siteUrl ?? "";
-      siteStatus.textContent = copy.saved;
-      siteConfigured = saved.siteUrl !== null;
-      syncConnectGate();
-    }
-
-    let saveTimer: ReturnType<typeof setTimeout> | undefined;
-    siteUrlInput.addEventListener("input", () => {
-      const value = siteUrlInput.value.trim();
-      const usable = value === "" || value.includes(".");
-      siteStatus.textContent = usable ? "" : copy.siteUrlInvalid;
-      if (!usable) return;
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        void saveSite();
-      }, 600);
-    });
-
-    currencySelect.addEventListener("change", () => {
-      void saveSite();
-    });
-
-    const { data, error } = await api.api.sites.current.get();
-    const loaded = error ? undefined : data?.site;
-    if (!loaded) return;
-    currencySelect.value = loaded.currency;
-    siteUrlInput.value = loaded.siteUrl ?? "";
-    siteConfigured = loaded.siteUrl !== null;
-    syncConnectGate();
-  })();
-
-  void (async () => {
-    if (!(root && connectCard && stepsCard)) return;
+    if (!(root && stepsCard)) return;
 
     const copy = JSON.parse(root.dataset.i18n ?? "{}") as Copy;
 
     const banner = document.getElementById("qj-pay-banner");
-    const form = document.getElementById("qj-pay-form") as HTMLFormElement | null;
-    const countrySelect = document.getElementById("qj-pay-country") as HTMLSelectElement | null;
-    const entitySelect = document.getElementById("qj-pay-entity") as HTMLSelectElement | null;
-    const submitButton = form?.querySelector<HTMLButtonElement>("button[type=submit]") ?? null;
+    const countryField = document.getElementById("qj-pay-country") as HTMLSelectElement | null;
+    const entityField = document.getElementById("qj-pay-entity") as HTMLSelectElement | null;
+    const currencyField = document.getElementById("qj-currency") as HTMLSelectElement | null;
+    const siteUrlField = document.getElementById("qj-site-url") as HTMLInputElement | null;
+    const siteStatusField = document.getElementById("qj-site-status");
+    const connectField = document.getElementById("qj-pay-connect") as HTMLButtonElement | null;
+    const gateHint = document.getElementById("qj-pay-gate");
+    const detailsFormField = document.getElementById("qj-details-form");
+    const detailsSummaryField = document.getElementById("qj-details-summary");
+    const detailsLineField = document.getElementById("qj-details-line");
+    const detailsEdit = document.getElementById("qj-details-edit");
     const dashboardButton = document.getElementById("qj-pay-dashboard") as HTMLButtonElement | null;
-    const gateHint = document.getElementById("qj-pay-gate") as HTMLElement | null;
 
-    syncConnectGate = () => {
-      if (submitButton) submitButton.disabled = !siteConfigured;
-      if (gateHint) gateHint.hidden = siteConfigured;
-    };
-    syncConnectGate();
+    if (
+      !(
+        countryField &&
+        entityField &&
+        currencyField &&
+        siteUrlField &&
+        siteStatusField &&
+        connectField &&
+        detailsFormField &&
+        detailsSummaryField &&
+        detailsLineField
+      )
+    ) {
+      return;
+    }
+
+    // Re-bound inside the guard so the null checks above narrow them for the
+    // helpers below, which are hoisted past the check.
+    const countrySelect = countryField;
+    const entitySelect = entityField;
+    const currencySelect = currencyField;
+    const siteUrlInput = siteUrlField;
+    const siteStatus = siteStatusField;
+    const connectButton = connectField;
+    const detailsForm = detailsFormField;
+    const detailsSummary = detailsSummaryField;
+    const detailsLine = detailsLineField;
 
     const badgeStyles: Record<StepState, string> = {
       todo: "bg-gray-100 text-gray-700",
@@ -273,6 +253,19 @@ const buttonClass =
     const show = (element: Element | null, visible: boolean) => {
       element?.classList.toggle("hidden", !visible);
     };
+
+    const detailsItem = stepsCard.querySelector<HTMLElement>('[data-step="details"]');
+
+    /** Mirrors the server: an account cannot be opened without all four. */
+    let connected = false;
+    // Sticky: autosave re-renders the step on every keystroke, and without this
+    // the summary would snap shut over a creator part-way through an edit.
+    let editing = false;
+    const details = { country: "", entityType: "individual", currency: "eur", siteUrl: "" };
+
+    function detailsComplete(): boolean {
+      return details.country !== "" && details.siteUrl !== "" && details.currency !== "";
+    }
 
     function restartIfConnectionReset(body: ConnectionBody): boolean {
       if (body?.error !== "connection_reset") return false;
@@ -292,12 +285,115 @@ const buttonClass =
         : "rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800";
     }
 
-    const UNSTARTED: Onboarding = { identity: "todo", ideal: "todo", payouts: "todo", issues: {} };
+    function setBadge(item: HTMLElement | null, state: StepState): void {
+      const badge = item?.querySelector<HTMLElement>("[data-badge]");
+      if (!badge) return;
+      badge.textContent = copy.state[state];
+      badge.className = `shrink-0 rounded-full px-3 py-1 text-xs font-medium ${badgeStyles[state]}`;
+    }
+
+    /**
+     * Step one is a form until the payment account exists and a summary after,
+     * because Stripe freezes the country and business type at that point.
+     */
+    function renderDetails(): void {
+      setBadge(detailsItem, connected ? "done" : "todo");
+      show(detailsForm, !connected || editing);
+      show(detailsSummary, connected && !editing);
+      if (connected) {
+        const country = countrySelect.querySelector<HTMLOptionElement>(
+          `option[value="${details.country}"]`,
+        );
+        detailsLine.textContent = [
+          country?.textContent?.trim(),
+          details.currency.toUpperCase(),
+          details.siteUrl.replace(/^https?:\/\//, ""),
+        ]
+          .filter(Boolean)
+          .join(" · ");
+      }
+      const ready = detailsComplete();
+      connectButton.disabled = !ready;
+      // While editing the hint carries the frozen-fields explanation instead.
+      if (gateHint && !editing) gateHint.hidden = ready;
+    }
+
+    async function saveDetails(): Promise<void> {
+      siteStatus.textContent = copy.saving;
+      const { data, error } = await api.api.sites.current.put({
+        currency: details.currency,
+        siteUrl: details.siteUrl === "" ? null : details.siteUrl,
+        country: details.country === "" ? null : details.country,
+        entityType: details.entityType,
+      });
+      const saved = error ? undefined : data?.site;
+      if (!saved) {
+        siteStatus.textContent = copy.saveFailed;
+        return;
+      }
+      // The server stores a bare origin, so show what it kept rather than what
+      // was typed: that is what payments are checked against.
+      details.siteUrl = saved.siteUrl ?? "";
+      siteUrlInput.value = details.siteUrl;
+      siteStatus.textContent = copy.saved;
+      renderDetails();
+    }
+
+    let saveTimer: ReturnType<typeof setTimeout> | undefined;
+    function scheduleSave(): void {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        void saveDetails();
+      }, 600);
+    }
+
+    countrySelect.addEventListener("change", () => {
+      details.country = countrySelect.value;
+      // Currency follows the country. Both stay editable, so a creator
+      // collecting from an audience elsewhere can still change it back.
+      if (details.country !== "") {
+        details.currency = currencyForCountry(details.country);
+        currencySelect.value = details.currency;
+      }
+      renderDetails();
+      void saveDetails();
+    });
+
+    entitySelect.addEventListener("change", () => {
+      details.entityType = entitySelect.value;
+      void saveDetails();
+    });
+
+    currencySelect.addEventListener("change", () => {
+      details.currency = currencySelect.value;
+      void saveDetails();
+    });
+
+    siteUrlInput.addEventListener("input", () => {
+      const value = siteUrlInput.value.trim();
+      const usable = value === "" || value.includes(".");
+      siteStatus.textContent = usable ? "" : copy.siteUrlInvalid;
+      if (!usable) return;
+      details.siteUrl = value;
+      renderDetails();
+      scheduleSave();
+    });
+
+    detailsEdit?.addEventListener("click", () => {
+      editing = true;
+      // Frozen on the Stripe account, so they are shown but not changeable.
+      countrySelect.disabled = true;
+      entitySelect.disabled = true;
+      connectButton.hidden = true;
+      renderDetails();
+      if (gateHint) {
+        gateHint.hidden = false;
+        gateHint.textContent = copy.editHint;
+      }
+    });
 
     function renderSteps(status: Onboarding | null): void {
-      show(connectCard, false);
-      show(stepsCard, true);
-      const onboarding = status ?? UNSTARTED;
+      const onboarding = status ?? { identity: "todo", ideal: "todo", payouts: "todo", issues: {} };
 
       for (const key of ["identity", "ideal", "payouts"] as StepKey[]) {
         const item = stepsCard?.querySelector<HTMLElement>(`[data-step="${key}"]`);
@@ -305,11 +401,7 @@ const buttonClass =
         const state = onboarding[key];
         const stepCopy = copy.steps[key];
 
-        const badge = item.querySelector<HTMLElement>("[data-badge]");
-        if (badge) {
-          badge.textContent = copy.state[state];
-          badge.className = `shrink-0 rounded-full px-3 py-1 text-xs font-medium ${badgeStyles[state]}`;
-        }
+        setBadge(item, state);
 
         const description = item.querySelector<HTMLElement>("[data-description]");
         if (description) {
@@ -324,7 +416,11 @@ const buttonClass =
           show(issueLine, Boolean(issue));
         }
 
-        show(item.querySelector("[data-action]"), state === "todo");
+        // Shown but inert until the payment account exists: every one of these
+        // calls /onboarding-link, which has nothing to link to before then.
+        const action = item.querySelector<HTMLButtonElement>("[data-action]");
+        show(action, state === "todo");
+        if (action) action.disabled = !connected;
       }
 
       show(dashboardButton, onboarding.identity === "done");
@@ -369,16 +465,11 @@ const buttonClass =
       window.open(body.url, "_blank", "noopener,noreferrer");
     });
 
-    form?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      if (!submitButton || !countrySelect || !entitySelect) return;
-      submitButton.disabled = true;
-      submitButton.textContent = copy.connecting;
+    connectButton.addEventListener("click", async () => {
+      connectButton.disabled = true;
+      connectButton.textContent = copy.connecting;
       try {
-        const { data, error } = await api.api.stripe.connect.post({
-          country: countrySelect.value,
-          entityType: entitySelect.value as "individual" | "company",
-        });
+        const { data, error } = await api.api.stripe.connect.post();
         const body = data as ConnectionBody;
         if (restartIfConnectionReset(body)) return;
         if (error || !body?.url) {
@@ -393,10 +484,24 @@ const buttonClass =
         }
         window.location.href = body.url;
       } finally {
-        syncConnectGate();
-        submitButton.textContent = copy.connect;
+        connectButton.textContent = copy.connect;
+        renderDetails();
       }
     });
+
+    const site = (await api.api.sites.current.get()).data?.site;
+    if (site) {
+      details.country = site.country ?? "";
+      details.entityType = site.entityType ?? "individual";
+      details.currency = site.currency;
+      details.siteUrl = site.siteUrl ?? "";
+      connected = site.connected;
+      countrySelect.value = details.country;
+      entitySelect.value = details.entityType;
+      currencySelect.value = details.currency;
+      siteUrlInput.value = details.siteUrl;
+    }
+    renderDetails();
 
     /**
      * Account links are single use and expire within minutes, so Stripe sends
@@ -423,7 +528,7 @@ const buttonClass =
     const body = (error ? null : (data as ConnectionBody)) ?? null;
     const connection = body?.connection ?? null;
     if (!connection) {
-      show(connectCard, true);
+      renderSteps(null);
       return;
     }
 

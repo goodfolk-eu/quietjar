@@ -58,7 +58,7 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
         set.status = 400;
         return { error: "invalid_return_url" };
       }
-      if (!isValidAmount(body.amount)) {
+      if (!isValidAmount(body.amount, site.currency)) {
         set.status = 400;
         return { error: "invalid_amount" };
       }
