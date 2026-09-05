@@ -38,6 +38,8 @@ export interface CreateAccountInput {
   country: string;
   email: string;
   entityType: "individual" | "company";
+  currency: string;
+  businessUrl: string;
 }
 
 /**
@@ -71,10 +73,12 @@ export async function createConnectedAccount(
       },
     },
     defaults: {
+      // The creator already told us both of these on the payments page, so
+      // onboarding opens with them settled rather than asking again.
+      currency: input.currency,
       responsibilities: { fees_collector: "application", losses_collector: "application" },
-      // Prefilled so Stripe stops requiring a business URL, which most hobbyist
-      // creators do not have.
       profile: {
+        business_url: input.businessUrl,
         product_description: "Tips from supporters, collected with Quietjar.",
       },
     },

@@ -26,6 +26,17 @@ const countries = [
   { value: "SE", label: "Sweden" },
 ];
 
+// Mirrors SUPPORTED_CURRENCIES in the backend, which validates what is saved.
+const currencies = [
+  { value: "eur", label: "Euro (EUR)" },
+  { value: "gbp", label: "British pound (GBP)" },
+  { value: "chf", label: "Swiss franc (CHF)" },
+  { value: "dkk", label: "Danish krone (DKK)" },
+  { value: "nok", label: "Norwegian krone (NOK)" },
+  { value: "pln", label: "Polish zloty (PLN)" },
+  { value: "sek", label: "Swedish krona (SEK)" },
+];
+
 const steps = [
   { key: "identity", copy: payments.steps.identity },
   { key: "ideal", copy: payments.steps.ideal },
@@ -43,12 +54,39 @@ const buttonClass =
   <Container>
     <p class="text-sm text-gray-600">{payments.intro}</p>
 
-    <div id="qj-payments" class="mt-5 max-w-2xl" data-i18n={JSON.stringify(payments)}>
+    <div id="qj-payments" class="mt-5 max-w-2xl space-y-5" data-i18n={JSON.stringify(payments)}>
       <p
         id="qj-pay-banner"
         class="hidden rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700"
       >
       </p>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{payments.siteTitle}</h2>
+
+        <div class="mt-5">
+          <label for="qj-site-url" class="block text-sm font-medium text-gray-700">{payments.siteUrlLabel}</label>
+          <p class="mt-1 text-xs text-gray-500">{payments.siteUrlHint}</p>
+          <input
+            id="qj-site-url"
+            type="text"
+            inputmode="url"
+            spellcheck="false"
+            placeholder="example.com"
+            class={fieldClass}
+          />
+        </div>
+
+        <div class="mt-6">
+          <label for="qj-currency" class="block text-sm font-medium text-gray-700">{payments.currency}</label>
+          <p class="mt-1 text-xs text-gray-500">{payments.currencyHint}</p>
+          <select id="qj-currency" class={fieldClass}>
+            {currencies.map((currency) => <option value={currency.value}>{currency.label}</option>)}
+          </select>
+        </div>
+
+        <p id="qj-site-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
+      </section>
 
       <section id="qj-pay-connect" class={`${cardClass} hidden`}>
         <h2 class="text-base font-semibold text-gray-800">{payments.connectTitle}</h2>
@@ -68,7 +106,8 @@ const buttonClass =
               <option value="company">{payments.accountTypeCompany}</option>
             </select>
           </div>
-          <button type="submit" class={`${buttonClass} w-full`}>{payments.connect}</button>
+          <button type="submit" disabled class={`${buttonClass} w-full`}>{payments.connect}</button>
+          <p id="qj-pay-gate" class="text-center text-xs text-gray-500">{payments.connectNeedsSite}</p>
         </form>
       </section>
 
@@ -134,11 +173,76 @@ const buttonClass =
     errorGeneric: string;
     errorNotConfigured: string;
     errorIdealUnavailable: string;
+    siteUrlInvalid: string;
+    saving: string;
+    saved: string;
+    saveFailed: string;
+    errorSiteNotConfigured: string;
   }
+
+  // The connected account is created with the site address and currency baked
+  // in, so the Connect form stays locked until the site card has saved one.
+  let siteConfigured = false;
+  let syncConnectGate = (): void => {};
 
   const root = document.getElementById("qj-payments");
   const connectCard = document.getElementById("qj-pay-connect");
   const stepsCard = document.getElementById("qj-pay-steps");
+  const siteUrlField = document.getElementById("qj-site-url") as HTMLInputElement | null;
+  const currencyField = document.getElementById("qj-currency") as HTMLSelectElement | null;
+  const siteStatusField = document.getElementById("qj-site-status");
+
+  void (async () => {
+    if (!(root && siteUrlField && currencyField && siteStatusField)) return;
+
+    const copy = JSON.parse(root.dataset.i18n ?? "{}") as Copy;
+    const siteUrlInput = siteUrlField;
+    const currencySelect = currencyField;
+    const siteStatus = siteStatusField;
+
+    async function saveSite(): Promise<void> {
+      siteStatus.textContent = copy.saving;
+      const { data, error } = await api.api.sites.current.put({
+        currency: currencySelect.value,
+        siteUrl: siteUrlInput.value.trim() === "" ? null : siteUrlInput.value.trim(),
+      });
+      const saved = error ? undefined : data?.site;
+      if (!saved) {
+        siteStatus.textContent = copy.saveFailed;
+        return;
+      }
+      // The server stores a bare origin, so show what it kept rather than what
+      // was typed: that is what payments are checked against.
+      siteUrlInput.value = saved.siteUrl ?? "";
+      siteStatus.textContent = copy.saved;
+      siteConfigured = saved.siteUrl !== null;
+      syncConnectGate();
+    }
+
+    let saveTimer: ReturnType<typeof setTimeout> | undefined;
+    siteUrlInput.addEventListener("input", () => {
+      const value = siteUrlInput.value.trim();
+      const usable = value === "" || value.includes(".");
+      siteStatus.textContent = usable ? "" : copy.siteUrlInvalid;
+      if (!usable) return;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        void saveSite();
+      }, 600);
+    });
+
+    currencySelect.addEventListener("change", () => {
+      void saveSite();
+    });
+
+    const { data, error } = await api.api.sites.current.get();
+    const loaded = error ? undefined : data?.site;
+    if (!loaded) return;
+    currencySelect.value = loaded.currency;
+    siteUrlInput.value = loaded.siteUrl ?? "";
+    siteConfigured = loaded.siteUrl !== null;
+    syncConnectGate();
+  })();
 
   void (async () => {
     if (!(root && connectCard && stepsCard)) return;
@@ -151,6 +255,13 @@ const buttonClass =
     const entitySelect = document.getElementById("qj-pay-entity") as HTMLSelectElement | null;
     const submitButton = form?.querySelector<HTMLButtonElement>("button[type=submit]") ?? null;
     const dashboardButton = document.getElementById("qj-pay-dashboard") as HTMLButtonElement | null;
+    const gateHint = document.getElementById("qj-pay-gate") as HTMLElement | null;
+
+    syncConnectGate = () => {
+      if (submitButton) submitButton.disabled = !siteConfigured;
+      if (gateHint) gateHint.hidden = siteConfigured;
+    };
+    syncConnectGate();
 
     const badgeStyles: Record<StepState, string> = {
       todo: "bg-gray-100 text-gray-700",
@@ -271,15 +382,18 @@ const buttonClass =
         const body = data as ConnectionBody;
         if (restartIfConnectionReset(body)) return;
         if (error || !body?.url) {
-          showBanner(
-            body?.error === "stripe_not_configured" ? copy.errorNotConfigured : copy.errorGeneric,
-            true,
-          );
+          const message =
+            body?.error === "stripe_not_configured"
+              ? copy.errorNotConfigured
+              : body?.error === "site_not_configured"
+                ? copy.errorSiteNotConfigured
+                : copy.errorGeneric;
+          showBanner(message, true);
           return;
         }
         window.location.href = body.url;
       } finally {
-        submitButton.disabled = false;
+        syncConnectGate();
         submitButton.textContent = copy.connect;
       }
     });

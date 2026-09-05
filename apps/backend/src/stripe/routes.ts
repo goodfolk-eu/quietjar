@@ -2,7 +2,7 @@ import { Elysia, t } from "elysia";
 import type Stripe from "stripe";
 import { auth } from "../auth";
 import { recordDonation } from "../pay/store";
-import { getSiteByPublicKey } from "../sites/store";
+import { getSiteByPublicKey, getSiteByUserId } from "../sites/store";
 import {
   applicationFee,
   constructWebhookEvent,
@@ -116,6 +116,14 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
         return { error: "stripe_not_configured" };
       }
 
+      // The account is created with the creator's site address and currency
+      // baked in, so there is nothing to create until they have supplied both.
+      const site = await getSiteByUserId(userId);
+      if (!site?.siteUrl) {
+        set.status = 400;
+        return { error: "site_not_configured" };
+      }
+
       const existing = await getConnectionByUserId(userId);
       let accountId = existing?.accountId;
       if (!accountId) {
@@ -124,6 +132,8 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
             country: body.country,
             email: user.email,
             entityType: body.entityType,
+            currency: site.currency,
+            businessUrl: site.siteUrl,
           });
           accountId = account.id;
           await createConnection({ userId, accountId });
