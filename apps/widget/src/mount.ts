@@ -9,6 +9,11 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 export interface MountOptions {
   /** Store the dismissal in sessionStorage when the widget is closed. */
   persistDismissal?: boolean;
+  /**
+   * Box the payment container is placed inside of, for a preview that frames
+   * the widget rather than filling the window. Defaults to the viewport.
+   */
+  viewport?: HTMLElement;
 }
 
 const containers = new WeakMap<HTMLElement, PaymentContainer>();
@@ -71,6 +76,7 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
       anchor: face,
       trigger,
       host,
+      viewport: options.viewport,
       onVisibilityChange: (open) => widget.classList.toggle("quietjar-widget--open", open),
     });
     trigger.addEventListener("click", container.open);

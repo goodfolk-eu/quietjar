@@ -5,6 +5,12 @@
 export interface OriginPolicy {
   /** Allow localhost callers, so the widget dev server can take payments. */
   allowLocalhost: boolean;
+  /**
+   * Dashboard origin, allowed for every site so a creator can try the widget
+   * out from the editor's preview. Safe to trust for any site key: a browser
+   * sets Origin itself, so this only lets in pages the dashboard serves.
+   */
+  dashboardOrigin?: string | null;
 }
 
 const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
@@ -38,6 +44,10 @@ export function isAllowedOrigin(
   const url = parseOrigin(origin);
   if (!url) return false;
   if (policy.allowLocalhost && LOCAL_HOSTNAMES.has(url.hostname)) return true;
+  if (policy.dashboardOrigin) {
+    const dashboard = parseOrigin(policy.dashboardOrigin);
+    if (dashboard && dashboard.origin === url.origin) return true;
+  }
   return allowedOrigins(siteUrl).includes(url.origin);
 }
 

@@ -13,6 +13,11 @@ import { isValidAmount, sessionsPerIp, sessionsPerSite } from "./limits";
 import { isAllowedOrigin, isAllowedReturnUrl, type OriginPolicy } from "./origin";
 import { getDonationBySessionId } from "./store";
 
+/** The dashboard serves the widget editor, whose preview is a real widget. */
+function dashboardOrigin(): string {
+  return process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
+}
+
 function callerIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0].trim();
@@ -49,7 +54,10 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
         return { error: "unknown_site" };
       }
 
-      const policy: OriginPolicy = { allowLocalhost: isTestMode(config) };
+      const policy: OriginPolicy = {
+        allowLocalhost: isTestMode(config),
+        dashboardOrigin: dashboardOrigin(),
+      };
       if (!isAllowedOrigin(request.headers.get("origin"), site.siteUrl, policy)) {
         set.status = 403;
         return { error: "origin_not_allowed" };

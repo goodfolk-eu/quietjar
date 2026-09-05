@@ -25,6 +25,31 @@ describe("isAllowedOrigin", () => {
     expect(isAllowedOrigin(null, "https://example.com", live)).toBe(false);
   });
 
+  test("allows the dashboard origin for any site, so the preview can pay", () => {
+    const dash = { allowLocalhost: false, dashboardOrigin: "https://quietjar.com" };
+    expect(isAllowedOrigin("https://quietjar.com", "https://example.com", dash)).toBe(true);
+    // Registered site unknown yet, and the dashboard still gets through.
+    expect(isAllowedOrigin("https://quietjar.com", null, dash)).toBe(true);
+  });
+
+  test("the dashboard allowance is exact, not a domain suffix", () => {
+    const dash = { allowLocalhost: false, dashboardOrigin: "https://quietjar.com" };
+    expect(isAllowedOrigin("https://evil.quietjar.com", null, dash)).toBe(false);
+    expect(isAllowedOrigin("https://quietjar.com.evil.com", null, dash)).toBe(false);
+    expect(isAllowedOrigin("http://quietjar.com", null, dash)).toBe(false);
+    expect(isAllowedOrigin("https://www.quietjar.com", null, dash)).toBe(false);
+  });
+
+  test("no dashboard origin configured lets nothing extra in", () => {
+    expect(isAllowedOrigin("https://quietjar.com", null, { allowLocalhost: false })).toBe(false);
+    expect(
+      isAllowedOrigin("https://quietjar.com", null, {
+        allowLocalhost: false,
+        dashboardOrigin: null,
+      }),
+    ).toBe(false);
+  });
+
   test("allows localhost only in test mode", () => {
     expect(isAllowedOrigin("http://localhost:5175", null, testMode)).toBe(true);
     expect(isAllowedOrigin("http://127.0.0.1:4321", null, testMode)).toBe(true);
@@ -37,6 +62,15 @@ describe("isAllowedReturnUrl", () => {
     expect(isAllowedReturnUrl("https://example.com/post/1?a=b", "https://example.com", live)).toBe(
       true,
     );
+  });
+
+  test("accepts a return to the dashboard, where the preview lives", () => {
+    expect(
+      isAllowedReturnUrl("https://quietjar.com/dashboard/widget", "https://example.com", {
+        allowLocalhost: false,
+        dashboardOrigin: "https://quietjar.com",
+      }),
+    ).toBe(true);
   });
 
   test("refuses a redirect to somewhere else", () => {

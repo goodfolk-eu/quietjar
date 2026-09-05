@@ -173,3 +173,73 @@ describe("payment container", () => {
     expect(panel.querySelector(".quietjar-panel__amounts")).toBeNull();
   });
 });
+
+/**
+ * happy-dom has no layout engine, so the boxes the placement reads are stubbed.
+ * `scale` mimics a CSS transform: it inflates the rects the way a scaled
+ * ancestor would, while the frame's layout size stays unscaled.
+ */
+function stubBox(
+  el: HTMLElement,
+  box: { top: number; left: number; width: number; height: number },
+  scale = 1,
+): void {
+  el.getBoundingClientRect = () =>
+    ({
+      top: box.top,
+      left: box.left,
+      width: box.width * scale,
+      height: box.height * scale,
+      right: box.left + box.width * scale,
+      bottom: box.top + box.height * scale,
+      x: box.left,
+      y: box.top,
+    }) as DOMRect;
+  Object.defineProperty(el, "clientWidth", { value: box.width, configurable: true });
+  Object.defineProperty(el, "clientHeight", { value: box.height, configurable: true });
+}
+
+describe("bounded viewport", () => {
+  test("places the panel against the frame it is previewed in", () => {
+    const frame = document.createElement("div");
+    document.body.append(frame);
+    // Offset from the page origin and scaled down, the way the dashboard's
+    // mock page is: local coordinates must come out free of both.
+    stubBox(frame, { top: 300, left: 200, width: 800, height: 500 }, 0.8);
+
+    const host = mountWidget(resolveConfig({ site: "qj_test", mount: { target: frame } }), {
+      viewport: frame,
+    });
+    const root = host.shadowRoot as ShadowRoot;
+    const panel = root.querySelector<HTMLElement>(".quietjar-panel") as HTMLElement;
+    const trigger = root.querySelector<HTMLButtonElement>(
+      ".quietjar-widget__button",
+    ) as HTMLButtonElement;
+
+    // A widget 60px up from the frame's bottom edge, in the frame's own space.
+    stubBox(trigger, { top: 300 + 0.8 * 400, left: 200 + 0.8 * 700, width: 56, height: 56 }, 0.8);
+    stubBox(panel, { top: 0, left: 0, width: 320, height: 240 }, 0.8);
+
+    trigger.click();
+
+    // Above the widget: 400 - 16 gap - 240 panel. Centring on a widget in the
+    // right-hand corner clamps to the frame's own margin, 800 - 320 - 12,
+    // rather than to the window's.
+    expect(panel.style.top).toBe("144px");
+    expect(panel.style.left).toBe("468px");
+    expect(panel.classList.contains("quietjar-panel--sheet")).toBe(false);
+  });
+
+  test("falls back to the window without a frame", () => {
+    const { panel, trigger } = mount();
+    stubBox(trigger, { top: 600, left: 900, width: 56, height: 56 });
+    stubBox(panel, { top: 0, left: 0, width: 320, height: 240 });
+
+    trigger.click();
+
+    // happy-dom reports a 1024x768 window, so the same widget clamps against
+    // the window instead: 768 - 16 - 240 down, and 1024 - 320 - 12 across.
+    expect(panel.style.top).toBe("344px");
+    expect(panel.style.left).toBe("692px");
+  });
+});

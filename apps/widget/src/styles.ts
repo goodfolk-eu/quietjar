@@ -69,6 +69,10 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      /* Takes the slack so the action sits on the panel's trailing edge rather
+         than against the text, which a short body would otherwise leave short
+         of the edge. min-width lets a long body wrap instead of pushing out. */
+      flex: 1 1 auto;
       min-width: 0;
     }
     .quietjar-widget__headline {

@@ -37,6 +37,13 @@ export interface ContainerOptions {
   trigger: HTMLElement;
   /** Host element of the shadow root; the Stripe element mounts under it. */
   host: HTMLElement;
+  /**
+   * Box the placement treats as the viewport, for a preview that renders the
+   * widget inside a bounded frame instead of the window. Its own transform is
+   * already the containing block for the panel's fixed position, so only the
+   * coordinates have to follow.
+   */
+  viewport?: HTMLElement;
   onVisibilityChange?(open: boolean): void;
 }
 
@@ -88,19 +95,47 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   const mountedElements: StripeElement[] = [];
   const lightMounts: HTMLElement[] = [];
 
+  /**
+   * The space the placement works in: the window by default, or the bounded
+   * frame a preview supplies. Rects come back scaled by any transform on the
+   * frame, while the offsets the panel is positioned with are read in the
+   * frame's own layout space, so measurements are divided back out.
+   */
+  function frame(): { top: number; left: number; scale: number; width: number; height: number } {
+    const box = options.viewport;
+    if (!box) {
+      return { top: 0, left: 0, scale: 1, width: window.innerWidth, height: window.innerHeight };
+    }
+    const rect = box.getBoundingClientRect();
+    const scale = box.clientWidth > 0 ? rect.width / box.clientWidth : 1;
+    return {
+      top: rect.top,
+      left: rect.left,
+      scale: scale > 0 ? scale : 1,
+      width: box.clientWidth,
+      height: box.clientHeight,
+    };
+  }
+
   function reposition(): void {
     if (!open) return;
+    const space = frame();
     const anchorRect = anchor.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
     const placement = computePlacement(
       {
-        top: anchorRect.top,
-        left: anchorRect.left,
-        width: anchorRect.width,
-        height: anchorRect.height,
+        top: (anchorRect.top - space.top) / space.scale,
+        left: (anchorRect.left - space.left) / space.scale,
+        width: anchorRect.width / space.scale,
+        height: anchorRect.height / space.scale,
       },
-      { top: 0, left: 0, width: panelRect.width, height: panelRect.height },
-      { width: window.innerWidth, height: window.innerHeight },
+      {
+        top: 0,
+        left: 0,
+        width: panelRect.width / space.scale,
+        height: panelRect.height / space.scale,
+      },
+      { width: space.width, height: space.height },
     );
     panel.classList.toggle("quietjar-panel--sheet", placement.sheet);
     panel.style.maxHeight = `${placement.maxHeight}px`;
