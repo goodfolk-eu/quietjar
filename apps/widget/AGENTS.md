@@ -10,3 +10,7 @@ Client-side embed widget, installed by site owners as a single `<script>` tag. W
 - Typecheck: `bun run typecheck`
 - Test: `bun test` (Bun's built-in runner; `test/setup.ts` registers happy-dom globals)
 - Config is read from `window.QuietJar`; see `src/config.ts` for the shape and defaults.
+- Payments need a `site` key from the dashboard in the config, and a backend to talk to. The API
+  origin defaults to `https://api.quietjar.com`; `dev-config.json` points it at the local backend.
+- Clicking the button opens the payment container (`src/container.ts`), which loads Stripe.js into
+  the host page on first open and mounts the Payment Element inside the shadow root.

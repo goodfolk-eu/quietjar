@@ -75,7 +75,7 @@ export async function createConnectedAccount(
       // Prefilled so Stripe stops requiring a business URL, which most hobbyist
       // creators do not have.
       profile: {
-        product_description: "Donations and tips from supporters, collected with Quietjar.",
+        product_description: "Tips from supporters, collected with Quietjar.",
       },
     },
     include: [...INCLUDE],
@@ -156,4 +156,85 @@ export async function constructWebhookEvent(
   secret: string,
 ): Promise<Stripe.Event> {
   return stripeClient(config).webhooks.constructEventAsync(payload, signature, secret);
+}
+
+export function publishableKeyFromEnv(): string | undefined {
+  return process.env.STRIPE_PUBLISHABLE_KEY;
+}
+
+/** True when the platform is running against test keys. */
+export function isTestMode(config: StripeConfig): boolean {
+  return config.secretKey.startsWith("sk_test_") || config.secretKey.startsWith("rk_test_");
+}
+
+/** QuietJar's share of a donation, in basis points. */
+export const FEE_BPS = 500;
+
+export function applicationFee(amountInMinorUnits: number): number {
+  return Math.floor((amountInMinorUnits * FEE_BPS) / 10_000);
+}
+
+export interface DonationSessionInput {
+  accountId: string;
+  /** Amount in the currency's minor units. */
+  amount: number;
+  currency: string;
+  /** The page the supporter is on; Stripe returns them here after a redirect. */
+  returnUrl: string;
+  siteKey: string;
+  productName: string;
+}
+
+/**
+ * A Checkout Session in `elements` mode: Stripe owns the totals and the payment
+ * method logic, the widget mounts the Payment Element against the client
+ * secret. Created on the connected account so the creator is the merchant of
+ * record and the funds land in their balance.
+ */
+export async function createDonationSession(
+  config: StripeConfig,
+  input: DonationSessionInput,
+): Promise<{ id: string; clientSecret: string }> {
+  const session = await stripeClient(config).checkout.sessions.create(
+    {
+      ui_mode: "elements",
+      mode: "payment",
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: input.currency,
+            unit_amount: input.amount,
+            product_data: { name: input.productName },
+          },
+        },
+      ],
+      payment_intent_data: {
+        application_fee_amount: applicationFee(input.amount),
+        metadata: { quietjar_site: input.siteKey },
+      },
+      metadata: { quietjar_site: input.siteKey },
+      return_url: `${input.returnUrl}${input.returnUrl.includes("?") ? "&" : "?"}qj_donation={CHECKOUT_SESSION_ID}`,
+    },
+    { stripeAccount: input.accountId },
+  );
+
+  if (!session.client_secret) {
+    throw new Error("Checkout Session was created without a client secret");
+  }
+  return { id: session.id, clientSecret: session.client_secret };
+}
+
+/**
+ * The country the creator onboarded with. `identity` is outside the default
+ * projection, so it has to be asked for explicitly.
+ */
+export async function retrieveAccountCountry(
+  config: StripeConfig,
+  accountId: string,
+): Promise<string | undefined> {
+  const account = await stripeClient(config).v2.core.accounts.retrieve(accountId, {
+    include: ["identity"],
+  });
+  return account.identity?.country ?? undefined;
 }

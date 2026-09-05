@@ -2,12 +2,18 @@ import { describe, expect, test } from "bun:test";
 import "./setup";
 import {
   DEFAULT_ACTION_LABEL,
+  DEFAULT_AMOUNTS,
+  DEFAULT_API,
   DEFAULT_CLOSE_ENABLED,
   DEFAULT_CLOSE_LABEL,
   DEFAULT_COLOR,
   DEFAULT_CORNER,
+  DEFAULT_CURRENCY,
   DEFAULT_FONT,
   DEFAULT_ICON,
+  DEFAULT_MINIMIZE_LABEL,
+  DEFAULT_OTHER_LABEL,
+  DEFAULT_THANKS_LABEL,
   FONT_PRESETS,
   ICON_LIBRARY,
   ICON_PRESETS,
@@ -18,6 +24,13 @@ import {
 describe("resolveConfig", () => {
   test("returns defaults for empty config", () => {
     expect(resolveConfig(undefined)).toEqual({
+      site: "",
+      api: DEFAULT_API,
+      currency: DEFAULT_CURRENCY,
+      amounts: DEFAULT_AMOUNTS,
+      thanksLabel: DEFAULT_THANKS_LABEL,
+      otherLabel: DEFAULT_OTHER_LABEL,
+      minimizeLabel: DEFAULT_MINIMIZE_LABEL,
       headline: "",
       body: "",
       actionLabel: DEFAULT_ACTION_LABEL,
@@ -35,6 +48,10 @@ describe("resolveConfig", () => {
   test("uses provided values", () => {
     expect(
       resolveConfig({
+        site: "qj_abc",
+        api: "https://api.example.com/ignored/path",
+        currency: "GBP",
+        amounts: [10, 2, 2, 5],
         labels: {
           headline: "Leave a tip",
           body: "Every coffee helps",
@@ -52,6 +69,13 @@ describe("resolveConfig", () => {
         mount: { target: "#widget" },
       }),
     ).toEqual({
+      site: "qj_abc",
+      api: "https://api.example.com",
+      currency: "gbp",
+      amounts: [2, 5, 10],
+      thanksLabel: DEFAULT_THANKS_LABEL,
+      otherLabel: DEFAULT_OTHER_LABEL,
+      minimizeLabel: DEFAULT_MINIMIZE_LABEL,
       headline: "Leave a tip",
       body: "Every coffee helps",
       actionLabel: "Chip in",
@@ -70,6 +94,25 @@ describe("resolveConfig", () => {
     expect(resolveConfig({ labels: { icon: "  " } }).icon).toBe(DEFAULT_ICON);
     expect(resolveConfig({ labels: { icon: "way too long" } }).icon).toBe(DEFAULT_ICON);
     expect(resolveConfig(undefined).icon).toBe("♡");
+  });
+
+  test("keeps the amount list usable whatever the config says", () => {
+    expect(resolveConfig({ amounts: [] }).amounts).toEqual(DEFAULT_AMOUNTS);
+    expect(resolveConfig({ amounts: [0, 900, Number.NaN] }).amounts).toEqual(DEFAULT_AMOUNTS);
+    expect(resolveConfig({ amounts: [5, 5, 3] }).amounts).toEqual([3, 5]);
+    expect(resolveConfig({ amounts: [1, 2, 3, 4, 5, 6] }).amounts).toEqual([1, 2, 3, 4]);
+    expect(resolveConfig({ amounts: [2.005] }).amounts).toEqual([2.01]);
+  });
+
+  test("falls back to the hosted API for an unusable override", () => {
+    expect(resolveConfig({ api: "not a url" }).api).toBe(DEFAULT_API);
+    expect(resolveConfig({ api: "  " }).api).toBe(DEFAULT_API);
+    expect(resolveConfig({ api: "http://localhost:3000/api" }).api).toBe("http://localhost:3000");
+  });
+
+  test("only accepts a three-letter currency code", () => {
+    expect(resolveConfig({ currency: "euro" }).currency).toBe(DEFAULT_CURRENCY);
+    expect(resolveConfig({ currency: "SEK" }).currency).toBe("sek");
   });
 
   test("every offered icon survives validation", () => {
@@ -153,7 +196,7 @@ describe("resolveConfig", () => {
 
   test("falls back to the default action label when blank", () => {
     expect(resolveConfig({ labels: { action: "  " } }).actionLabel).toBe(DEFAULT_ACTION_LABEL);
-    expect(resolveConfig(undefined).actionLabel).toBe("Donate");
+    expect(resolveConfig(undefined).actionLabel).toBe("Tip");
   });
 
   test("falls back to the default close label when blank", () => {

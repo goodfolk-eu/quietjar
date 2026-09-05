@@ -1,12 +1,12 @@
 # QuietJar
 
-A small, beautifully made donate button you drop straight into your own website. Supporters pay right there, in a couple of taps, without ever leaving your page.
+A small, beautifully made tip button you drop straight into your own website. Supporters pay right there, in a couple of taps, without ever leaving your page.
 
 It is the "quiet" tip jar: fast, seamless, and polite. It lives on your site instead of sending people to a profile on someone else's platform, so far more of them actually follow through. It knows when to stop asking people who have already given, and it charges no monthly fee. QuietJar takes a small share of what you actually receive, so it only wins when you do.
 
 ## Features
 
-- On-page donation button, no redirect to a third-party page
+- On-page tip button, no redirect to a third-party page
 - Two-tap checkout with familiar payment methods
 - Polite by default: stops asking after someone supports you
 - Matches your site's design

@@ -47,6 +47,17 @@ const presetColors = [
   { hex: "#7c3aed", swatch: "bg-[#7c3aed]" },
 ];
 
+// Mirrors SUPPORTED_CURRENCIES in the backend, which validates what is saved.
+const currencies = [
+  { value: "eur", label: "Euro (EUR)" },
+  { value: "gbp", label: "British pound (GBP)" },
+  { value: "chf", label: "Swiss franc (CHF)" },
+  { value: "dkk", label: "Danish krone (DKK)" },
+  { value: "nok", label: "Norwegian krone (NOK)" },
+  { value: "pln", label: "Polish zloty (PLN)" },
+  { value: "sek", label: "Swedish krona (SEK)" },
+];
+
 const fieldClass =
   "mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:border-gray-600 focus:outline-hidden focus:ring-3 focus:ring-gray-100";
 const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
@@ -60,9 +71,44 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       id="qj-widget-settings"
       class="mt-5 grid gap-6 lg:grid-cols-5"
       data-widget-src={widgetSrc}
-      data-i18n={JSON.stringify({ copy: widget.copy, copied: widget.copied, copyFailed: widget.copyFailed })}
+      data-i18n={JSON.stringify({
+        copy: widget.copy,
+        copied: widget.copied,
+        copyFailed: widget.copyFailed,
+        saving: widget.saving,
+        saved: widget.saved,
+        saveFailed: widget.saveFailed,
+        siteUrlInvalid: widget.siteUrlInvalid,
+      })}
     >
       <section class={`lg:col-span-2 ${cardClass}`}>
+        <h2 class="text-base font-semibold text-gray-800">{widget.site}</h2>
+
+        <div class="mt-5">
+          <label for="qj-site-url" class="block text-sm font-medium text-gray-700">{widget.siteUrlLabel}</label>
+          <p class="mt-1 text-xs text-gray-500">{widget.siteUrlHint}</p>
+          <input
+            id="qj-site-url"
+            type="text"
+            inputmode="url"
+            spellcheck="false"
+            placeholder="example.com"
+            class={fieldClass}
+          />
+        </div>
+
+        <div class="mt-6">
+          <label for="qj-currency" class="block text-sm font-medium text-gray-700">{widget.currency}</label>
+          <p class="mt-1 text-xs text-gray-500">{widget.currencyHint}</p>
+          <select id="qj-currency" class={fieldClass}>
+            {currencies.map((currency) => <option value={currency.value}>{currency.label}</option>)}
+          </select>
+        </div>
+
+        <p id="qj-site-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class={`lg:col-span-2 lg:col-start-1 ${cardClass}`}>
         <h2 class="text-base font-semibold text-gray-800">{widget.settings}</h2>
 
         <fieldset class="mt-5">
@@ -335,12 +381,15 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         </div>
 
         <button
+          id="qj-generate"
           type="button"
           data-hs-overlay="#qj-embed-modal"
-          class="mt-4 w-full rounded-lg bg-qj-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200"
+          disabled
+          class="mt-4 w-full rounded-lg bg-qj-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50"
         >
           {widget.generate}
         </button>
+        <p id="qj-generate-hint" class="mt-2 text-center text-xs text-gray-500">{widget.generateHint}</p>
       </section>
     </div>
 
@@ -404,6 +453,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
 <script>
   import "preline/plugins/collapse";
+  import { api } from "@/lib/api";
   import { mountWidget } from "@quietjar/widget/embed";
   import type { Corner, FontChoice } from "@quietjar/widget/config";
   import {
@@ -430,6 +480,11 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   const closeToggle = document.getElementById("qj-close") as HTMLInputElement | null;
   const snippetEl = document.getElementById("qj-snippet");
   const copyButton = document.getElementById("qj-copy");
+  const siteUrlField = document.getElementById("qj-site-url") as HTMLInputElement | null;
+  const currencyField = document.getElementById("qj-currency") as HTMLSelectElement | null;
+  const siteStatusEl = document.getElementById("qj-site-status");
+  const generateEl = document.getElementById("qj-generate") as HTMLButtonElement | null;
+  const generateHintEl = document.getElementById("qj-generate-hint");
 
   if (
     root &&
@@ -444,14 +499,32 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     fontSelect &&
     closeToggle &&
     snippetEl &&
-    copyButton
+    copyButton &&
+    siteUrlField &&
+    currencyField &&
+    siteStatusEl &&
+    generateEl &&
+    generateHintEl
   ) {
+    // Re-bound inside the guard so the null checks above narrow them for the
+    // helpers below, which are hoisted past the check.
+    const siteUrlInput = siteUrlField;
+    const currencySelect = currencyField;
+    const siteStatus = siteStatusEl;
+    const generateButton = generateEl;
+    const generateHint = generateHintEl;
     const labels = JSON.parse(root.dataset.i18n ?? "{}") as {
       copy: string;
       copied: string;
       copyFailed: string;
+      saving: string;
+      saved: string;
+      saveFailed: string;
+      siteUrlInvalid: string;
     };
     const widgetSrc = root.dataset.widgetSrc ?? "";
+
+    const site = { publicKey: "", currency: "eur", siteUrl: "" };
 
     const state = {
       headline: DEFAULT_HEADLINE,
@@ -487,6 +560,8 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       // Escaping "<" keeps a headline containing a closing script tag from
       // breaking out of the snippet on the site owner's page.
       const json = JSON.stringify({
+        site: site.publicKey,
+        currency: site.currency,
         labels: {
           headline: config.headline,
           body: config.body,
@@ -498,6 +573,54 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         position: { corner: config.corner },
       }).replace(/</g, "\\u003c");
       return `<script>window.QuietJar = ${json};<\/script>\n<script src="${widgetSrc}" async><\/script>`;
+    }
+
+    function syncGenerate(): void {
+      const ready = site.publicKey !== "" && site.siteUrl !== "";
+      generateButton.disabled = !ready;
+      generateHint.hidden = ready;
+    }
+
+    async function saveSite(): Promise<void> {
+      siteStatus.textContent = labels.saving;
+      const { data, error } = await api.api.sites.current.put({
+        currency: currencySelect.value,
+        siteUrl: siteUrlInput.value.trim() === "" ? null : siteUrlInput.value.trim(),
+      });
+      const saved = error ? undefined : data?.site;
+      if (!saved) {
+        siteStatus.textContent = labels.saveFailed;
+        return;
+      }
+      site.currency = saved.currency;
+      site.siteUrl = saved.siteUrl ?? "";
+      // The server stores a bare origin, so show what it kept rather than what
+      // was typed: that is what payments are checked against.
+      siteUrlInput.value = site.siteUrl;
+      siteStatus.textContent = labels.saved;
+      syncGenerate();
+      render();
+    }
+
+    let saveTimer: ReturnType<typeof setTimeout> | undefined;
+    function scheduleSave(): void {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        void saveSite();
+      }, 600);
+    }
+
+    async function loadSite(): Promise<void> {
+      const { data, error } = await api.api.sites.current.get();
+      const loaded = error ? undefined : data?.site;
+      if (!loaded) return;
+      site.publicKey = loaded.publicKey;
+      site.currency = loaded.currency;
+      site.siteUrl = loaded.siteUrl ?? "";
+      currencySelect.value = site.currency;
+      siteUrlInput.value = site.siteUrl;
+      syncGenerate();
+      render();
     }
 
     function render(): void {
@@ -587,6 +710,19 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         render();
       });
     }
+
+    siteUrlInput.addEventListener("input", () => {
+      const value = siteUrlInput.value.trim();
+      const usable = value === "" || value.includes(".");
+      siteStatus.textContent = usable ? "" : labels.siteUrlInvalid;
+      if (usable) scheduleSave();
+    });
+
+    currencySelect.addEventListener("change", () => {
+      void saveSite();
+    });
+
+    void loadSite();
 
     let resetLabel: ReturnType<typeof setTimeout> | undefined;
     copyButton.addEventListener("click", async () => {

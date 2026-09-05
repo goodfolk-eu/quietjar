@@ -292,7 +292,7 @@ describe("mountWidget", () => {
     const panel = host.shadowRoot?.querySelector(".quietjar-widget__panel");
     expect(panel?.querySelector(".quietjar-widget__headline")).toBeNull();
     expect(panel?.querySelector(".quietjar-widget__body")?.textContent).toBe("Every coffee helps");
-    expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Donate");
+    expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Tip");
   });
 
   test("keeps the dismissible close control in card mode", () => {

@@ -1,4 +1,5 @@
 import { DEFAULT_FONT, DEFAULT_HEADLINE, FONT_STACKS, type ResolvedConfig } from "./config";
+import { createPaymentContainer, type PaymentContainer } from "./container";
 import { persistDismissal } from "./dismiss";
 import { widgetStyles } from "./styles";
 
@@ -8,6 +9,13 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 export interface MountOptions {
   /** Store the dismissal in sessionStorage when the widget is closed. */
   persistDismissal?: boolean;
+}
+
+const containers = new WeakMap<HTMLElement, PaymentContainer>();
+
+/** The payment container belonging to a mounted widget host. */
+export function paymentContainer(host: HTMLElement): PaymentContainer | undefined {
+  return containers.get(host);
 }
 
 export function mountWidget(config: ResolvedConfig, options: MountOptions = {}): HTMLElement {
@@ -27,7 +35,13 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
 
   const widget = document.createElement("div");
   widget.className = `quietjar-widget quietjar-widget--${config.corner}`;
-  widget.append(config.body !== "" ? cardPanel(config) : pillButton(config));
+  const face = config.body !== "" ? cardPanel(config) : pillButton(config);
+  widget.append(face);
+
+  const trigger =
+    face instanceof HTMLButtonElement
+      ? face
+      : face.querySelector<HTMLButtonElement>(".quietjar-widget__action");
 
   if (config.closeEnabled) {
     const closeButton = document.createElement("button");
@@ -46,6 +60,24 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
   }
 
   root.append(widget);
+
+  if (trigger) {
+    // The container is a sibling of the widget: a corner that uses a transform
+    // would otherwise become the containing block for its fixed position.
+    const container = createPaymentContainer({
+      config,
+      // The card's action button is only part of the face, so the placement
+      // measures the whole face and the trigger only takes focus back.
+      anchor: face,
+      trigger,
+      host,
+      onVisibilityChange: (open) => widget.classList.toggle("quietjar-widget--open", open),
+    });
+    trigger.addEventListener("click", container.open);
+    root.append(container.element);
+    containers.set(host, container);
+  }
+
   return host;
 }
 

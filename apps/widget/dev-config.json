@@ -1,8 +1,12 @@
 {
+  "site":"qj_4daa3646748619df0009c41d",
+  "api": "http://localhost:3000",
+  "currency": "eur",
+  "amounts": [3, 5, 10],
   "labels": {
     "headline": "Support this site",
     "icon": "♡",
-    "body": "Please donate to my site dear friends because I really need the money to pay for my hosting!! Thankyouuuu!!"
+    "body": ""
   },
   "style": {
     "color": "#0284c7",

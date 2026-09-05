@@ -1,6 +1,10 @@
 import { Elysia, t } from "elysia";
+import type Stripe from "stripe";
 import { auth } from "../auth";
+import { recordDonation } from "../pay/store";
+import { getSiteByPublicKey } from "../sites/store";
 import {
+  applicationFee,
   constructWebhookEvent,
   createConnectedAccount,
   createLoginLink,
@@ -51,6 +55,32 @@ async function sessionUser(request: Request): Promise<{ id: string; email: strin
 }
 
 const CONNECTION_RESET = { status: 409, body: { error: "connection_reset" } } as const;
+
+/**
+ * The site key rides on the session metadata because the connected account on
+ * its own does not say which of the creator's sites the donation came from.
+ */
+async function recordCompletedDonation(
+  session: Stripe.Checkout.Session,
+  accountId: string | undefined,
+): Promise<void> {
+  if (session.payment_status !== "paid") return;
+  const siteKey = session.metadata?.quietjar_site;
+  if (!siteKey || !accountId || session.amount_total === null || session.currency === null) return;
+
+  const site = await getSiteByPublicKey(siteKey);
+  if (!site) return;
+
+  await recordDonation({
+    siteId: site.id,
+    accountId,
+    sessionId: session.id,
+    paymentIntentId: typeof session.payment_intent === "string" ? session.payment_intent : null,
+    amount: session.amount_total,
+    currency: session.currency,
+    applicationFee: applicationFee(session.amount_total),
+  });
+}
 
 async function syncOnboarding(accountId: string) {
   const config = stripeConfigFromEnv();
@@ -295,6 +325,15 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
             return { error: "stripe_request_failed" };
           }
         }
+      }
+
+      // Direct charges bill the connected account, so donation events arrive as
+      // Connect events carrying the account they belong to.
+      if (
+        event.type === "checkout.session.completed" ||
+        event.type === "checkout.session.async_payment_succeeded"
+      ) {
+        await recordCompletedDonation(event.data.object, event.account);
       }
 
       return { received: true };

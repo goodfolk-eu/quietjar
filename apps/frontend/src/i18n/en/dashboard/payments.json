@@ -1,7 +1,7 @@
 {
   "payments": {
     "title": "Payments",
-    "intro": "Set up payments so your widget can receive donations.",
+    "intro": "Set up payments so your widget can receive tips.",
     "connectTitle": "Set up payments",
     "connectIntro": "We set up a payment account for you. You will be asked for your details, a bank account and a short identity check. No VAT number needed.",
     "country": "Country",
@@ -26,10 +26,10 @@
     },
     "steps": {
       "identity": {
-        "title": "Start receiving donations",
+        "title": "Start receiving tips",
         "todo": "Give your details and a bank account, and complete a short identity check.",
         "pending": "Your details are being verified. Your widget goes live as soon as this clears.",
-        "done": "Your widget can receive card donations.",
+        "done": "Your widget can receive card tips.",
         "action": "Continue"
       },
       "ideal": {
@@ -42,7 +42,7 @@
       },
       "payouts": {
         "title": "Get paid out",
-        "todo": "Add a bank account to receive what you collect. Donations already collected stay in your balance until then.",
+        "todo": "Add a bank account to receive what you collect. Tips already collected stay in your balance until then.",
         "pending": "Your bank account is being verified.",
         "done": "Payouts to your bank account are active.",
         "action": "Add bank account"

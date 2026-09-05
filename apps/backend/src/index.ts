@@ -1,15 +1,30 @@
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
+import { payRoutes } from "./pay/routes";
 import { ensureSchema } from "./schema";
+import { siteRoutes } from "./sites/routes";
 import { stripeRoutes } from "./stripe/routes";
 
 const frontendOrigin = process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
+const dashboardOrigins = [frontendOrigin, "http://localhost:4321"];
+
+/**
+ * The dashboard is the only origin allowed to make credentialed calls. The
+ * widget's payment routes are public by design and read no cookies, so they
+ * answer any origin; everything else stays on the allowlist so a third-party
+ * page can never reach a session-backed endpoint.
+ */
+function isAllowedRequestOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (origin && dashboardOrigins.includes(origin)) return true;
+  return new URL(request.url).pathname.startsWith("/api/pay");
+}
 
 export const app = new Elysia()
   .use(
     cors({
-      origin: [frontendOrigin, "http://localhost:4321"],
+      origin: isAllowedRequestOrigin,
       credentials: true,
       allowedHeaders: ["Content-Type"],
     }),
@@ -26,7 +41,9 @@ export const app = new Elysia()
   })
   // Mount BetterAuth at the standard /api/auth/* path.
   .all("/api/auth/*", ({ request }) => auth.handler(request))
-  .use(stripeRoutes);
+  .use(stripeRoutes)
+  .use(siteRoutes)
+  .use(payRoutes);
 
 const port = Number(process.env.PORT ?? 3000);
 

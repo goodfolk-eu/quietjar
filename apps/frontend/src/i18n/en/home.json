@@ -1,8 +1,8 @@
 {
   "hero": {
-    "eyebrow": "A donation button that lives on your site",
+    "eyebrow": "A tip button that lives on your site",
     "title": "Let people support you without leaving your site.",
-    "description": "Every time you send a customer off to a separate donation page, most of them never arrive. QuietJar lives right on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place. Fewer clicks means more of them actually follow through.",
+    "description": "Every time you send a customer off to a separate tip page, most of them never arrive. QuietJar lives right on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place. Fewer clicks means more of them actually follow through.",
     "ctaPrimary": "Add it to your site",
     "ctaSecondary": "See it in action",
     "subtext": "No monthly fee. You only pay a small share when you get paid.",
@@ -96,14 +96,14 @@
     "items": [
       {
         "q": "What is QuietJar?",
-        "a": "A small, polished donate button you drop onto your own website, so your supporters can pay without leaving your page."
+        "a": "A small, polished tip button you drop onto your own website, so your supporters can pay without leaving your page."
       },
       {
         "q": "Do I need a separate account or page for my visitors?",
         "a": "No. The button works right on your site. There is an optional hosted page for people who prefer one, but you do not need it."
       },
       {
-        "q": "How is this different from the donation tools I already know?",
+        "q": "How is this different from the tipping tools I already know?",
         "a": "Most tools send your visitors over to someone else's page. QuietJar keeps them on yours. Fewer steps, no drop-off, more of them actually follow through."
       },
       {
