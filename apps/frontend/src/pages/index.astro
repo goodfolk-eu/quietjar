@@ -3,17 +3,21 @@ import Craft from "@/components/craft.astro";
 import Cta from "@/components/cta.astro";
 import Faq from "@/components/faq.astro";
 import Features from "@/components/features.astro";
+import Goals from "@/components/goals.astro";
 import Hero from "@/components/hero.astro";
 import Polite from "@/components/polite.astro";
 import Pricing from "@/components/pricing.astro";
 import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout>
+<Layout
+  title="QuietJar - A donation button that lives on your site"
+  description="Let your supporters pay without leaving your page. Two taps, no redirect, and it steps back once someone has given.">
   <Hero />
   <Features />
   <Polite />
   <Craft />
+  <Goals />
   <Pricing />
   <Faq />
   <Cta />

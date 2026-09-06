@@ -1,0 +1,55 @@
+{
+  "developers": {
+    "eyebrow": "For developers",
+    "title": "A support button for your docs site.",
+    "sub": "One script tag. No layout shift. It steps back after someone gives.",
+    "snippet": "<script src=\"https://quietjar.com/js/latest/widget.js\"></script>\n<div data-quietjar=\"you\"></div>",
+    "install": {
+      "title": "Install",
+      "steps": [
+        "Add the script to your page.",
+        "Place the div where the button should live.",
+        "Pick a style in the dashboard."
+      ],
+      "frameworks": "Plain HTML shown here. Astro, Hugo, Docusaurus, and VitePress work the same way: the script goes in the layout, the div in the page."
+    },
+    "performance": {
+      "title": "Performance",
+      "text": "Script size: [TODO: script-kb] kB. Load time: [TODO: load-ms] ms on a cold cache. The button floats in a fixed corner layer, so it displaces nothing on your page: zero layout shift. Stripe's payment code loads only when someone opens the checkout, not on page load."
+    },
+    "stepsBack": {
+      "title": "How it steps back",
+      "text": "After a successful payment, the button enters a quiet state for a while and shows a thank-you instead of asking again. The record lives on our side, keyed to the payment, so it holds in Safari and does not depend on cookies. Internally we call it suppression."
+    },
+    "methods": {
+      "title": "Payment methods",
+      "items": [
+        { "name": "Apple Pay", "line": "Appears on iPhone, iPad, and Mac. One tap with Face ID." },
+        { "name": "Google Pay", "line": "Appears in Chrome and on Android. One tap, no forms." },
+        { "name": "Cards", "line": "Visa, Mastercard, Amex. The fallback that always works." },
+        { "name": "iDEAL", "line": "For visitors with a Dutch bank. They pay in their own banking app." },
+        { "name": "Bancontact", "line": "For visitors in Belgium. Their own bank, their own app." },
+        { "name": "SEPA", "line": "Bank transfer for the rest of Europe, for the amounts cards make awkward." }
+      ]
+    },
+    "goals": {
+      "title": "Goals",
+      "text": "Give the button a public target and a bar that fills toward it: hosting for the year, the next release, a new microphone. Concrete goals lift the amounts people choose. Set one in the dashboard next to the button's style."
+    },
+    "fees": {
+      "title": "What we take",
+      "text": "5% per payment, capped at €[TODO: cap]. No monthly fee. Paid out [TODO: payout]."
+    },
+    "feesLink": "Full pricing",
+    "alternatives": {
+      "title": "Alternatives, honestly",
+      "paragraphs": [
+        "GitHub Sponsors is the right default for your repo, and it takes 0%. It lives on github.com, both sides need a GitHub account, and support is recurring by default. That is exactly why your website needs its own button: most of your readers never open the repo. Use both.",
+        "You can build this on Stripe yourself, and their embedded checkout is good. You will own the button, the states, the step-back logic, the design matching, and the upkeep. Count the weekends. Our fee exists to buy back that time, not to tax anyone's generosity.",
+        "Ko-fi takes 0% on one-off tips and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay, which is the drop this whole product exists to remove."
+      ]
+    },
+    "compareLink": "See the full comparison",
+    "cta": "Add it to your site"
+  }
+}

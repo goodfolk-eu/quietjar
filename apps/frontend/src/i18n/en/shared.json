@@ -1,14 +1,13 @@
 {
   "meta": {
     "defaultTitle": "QuietJar - Accept support without sending people away",
-    "defaultDescription": "A tip button that lives on your own site, so your supporters can pay without leaving your page."
+    "defaultDescription": "Let your supporters pay without leaving your page. Two taps, no redirect, and it steps back once someone has given."
   },
   "nav": {
     "links": [
-      { "title": "Features", "path": "/#features" },
-      { "title": "How it works", "path": "/#how" },
       { "title": "Pricing", "path": "/#pricing" },
-      { "title": "FAQ", "path": "/#faq" }
+      { "title": "Developers", "path": "/developers/" },
+      { "title": "Compare", "path": "/compare/" }
     ],
     "login": "Log in",
     "signup": "Add to your site",
@@ -18,8 +17,19 @@
     "mobile": "Mobile"
   },
   "footer": {
+    "address": ["Panamalaan 8-D", "1019 AZ Amsterdam", "The Netherlands"],
+    "navHeading": "Company",
+    "legalHeading": "Legal",
+    "siteLinks": [
+      { "title": "Features", "path": "/#features" },
+      { "title": "How it works", "path": "/#how" },
+      { "title": "Pricing", "path": "/#pricing" },
+      { "title": "FAQ", "path": "/#faq" },
+      { "title": "Developers", "path": "/developers/" },
+      { "title": "Compare", "path": "/compare/" }
+    ],
     "copyright": "Copyright © {year} QuietJar · A quiet way to accept support.",
-    "subtext": "No monthly fee. A small share only when you get paid."
+    "subtext": "A small share only when you get paid."
   },
   "auth": {
     "title": "Sign in to QuietJar",
@@ -38,7 +48,7 @@
       "codeSent": "Code sent. Check your inbox.",
       "enterCode": "Enter the code we sent you.",
       "verifying": "Verifying...",
-      "signedIn": "Signed in! Redirecting to your dashboard..."
+      "signedIn": "Signed in. Redirecting to your dashboard..."
     }
   }
 }

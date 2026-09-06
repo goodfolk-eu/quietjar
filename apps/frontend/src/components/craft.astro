@@ -29,6 +29,12 @@ const features = craft.features;
             <p class="text-[15px] leading-[1.6] text-qj-ink-2">
               {item.description}
             </p>
+            {/* The measured line stays in the source but hidden until real numbers
+                exist. Set craft.perfReady to true in home.json once load-ms and
+                script-kb are measured on a real page. */}
+            {craft.perfReady && item.perf && (
+              <p class="mt-1 font-mono text-[12.5px] leading-[1.6] text-qj-ink-3">{item.perf}</p>
+            )}
           </div>
         ))
       }

@@ -1,0 +1,36 @@
+{
+  "compare": {
+    "title": "How QuietJar compares.",
+    "intro": "Every tool here does something well. The question is what happens to your visitor after they decide to support you.",
+    "sections": [
+      {
+        "name": "Ko-fi",
+        "text": "Ko-fi charges 0% on one-off tips (checked September 2026), and that is a real advantage. Your visitor clicks your button, lands on Ko-fi's page, and pays there with PayPal or a card. How many of them finish the trip?"
+      },
+      {
+        "name": "Buy Me a Coffee",
+        "text": "Buy Me a Coffee has the friendliest brand in the space and a huge installed base on blogs and READMEs. It takes a flat 5% platform fee with no cap (checked September 2026), and payment happens on its page, not yours. Does a coffee cup fit your site, and how many of your visitors finish the trip?"
+      },
+      {
+        "name": "Stripe direct",
+        "text": "Stripe is the best payment infrastructure there is, and you can build the button yourself on it: 1.5% + €0.25 per EU card and €0.29 per iDEAL payment (checked September 2026). Payment Links redirect to Stripe's page; Embedded Checkout stays on yours and needs real code. How many weekends, and who maintains it after?"
+      },
+      {
+        "name": "GitHub Sponsors",
+        "text": "GitHub Sponsors is the right default for maintainers, and it takes 0% (checked September 2026). It lives on github.com, both sides need a GitHub account, and support is recurring by default. How many of your readers ever open the repo? Use both."
+      }
+    ],
+    "table": {
+      "head": ["", "Platform fee", "Monthly fee", "Payment happens on your page", "Apple Pay", "iDEAL and Bancontact", "Steps back after giving", "Who can use it"],
+      "rows": [
+        ["QuietJar", "5% (Sep 2026)", "None", "Yes", "Yes", "Yes", "Yes", "Anyone with a site"],
+        ["Ko-fi", "0% tips, 5% memberships and shop (Sep 2026)", "Gold plan optional", "No", "No", "No", "No", "Anyone"],
+        ["Buy Me a Coffee", "5% (Sep 2026)", "None", "No", "Limited", "No", "No", "Anyone"],
+        ["Stripe direct", "0% platform, processing on top (Sep 2026)", "None", "If you build it", "Yes", "Yes", "No", "Anyone technical"],
+        ["GitHub Sponsors", "0% (Sep 2026)", "None", "No", "No", "No", "Not applicable", "GitHub users"]
+      ]
+    },
+    "footnote": "Fees checked September 2026. Tell us if something changed.",
+    "footnote2": "Processing fees apply on top for every row."
+  }
+}

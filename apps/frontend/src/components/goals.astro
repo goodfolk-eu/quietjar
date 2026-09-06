@@ -1,0 +1,33 @@
+---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const goals = copy.goals;
+---
+
+<section class="bg-white">
+  <div class="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-18 px-10 py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)]">
+    <div class="flex flex-col gap-4">
+      <span class="text-[13.5px] font-medium text-qj-green">{goals.eyebrow}</span>
+      <h2 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.03em] text-qj-ink">
+        {goals.title}
+      </h2>
+      <p class="max-w-[50ch] text-pretty text-[17px] leading-[1.62] text-qj-ink-2">
+        {goals.description}
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-4 rounded border border-qj-line bg-qj-surface px-8 py-8">
+      <span class="font-display text-[17px] font-bold tracking-[-0.02em] text-qj-ink">{goals.barLabel}</span>
+      <div
+        class="h-3 w-full overflow-hidden rounded-sm bg-qj-line-2"
+        role="progressbar"
+        aria-valuenow={goals.barPercent}
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-label={goals.barLabel}>
+        <div class="h-full rounded-sm bg-qj-green" style={`width: ${goals.barPercent}%`}></div>
+      </div>
+    </div>
+  </div>
+</section>

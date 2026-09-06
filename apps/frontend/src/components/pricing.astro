@@ -5,7 +5,7 @@ const copy = dictionary(Astro.currentLocale ?? "en");
 const pricing = copy.pricing;
 ---
 
-<section id="pricing" class="bg-white">
+<section id="pricing" class="border-y border-qj-line bg-qj-surface">
   <div class="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-18 px-10 py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)]">
     <div class="flex flex-col gap-4">
       <span class="text-[13.5px] font-medium text-qj-green">{pricing.eyebrow}</span>
@@ -23,11 +23,30 @@ const pricing = copy.pricing;
         <span class="font-display text-[66px] font-bold leading-[0.9] tracking-[-0.035em] text-white">{pricing.planPrice}</span>
         <span class="text-[15px] text-white/72">{pricing.planPriceNote}</span>
       </div>
-      <div class="flex flex-col gap-3 border-t border-white/18 pt-[22px] text-[15px] leading-[1.55] text-white/86">
-        {pricing.planFeatures.map((feature) => (
-          <span>{feature}</span>
-        ))}
-      </div>
+      <table class="w-full border-collapse text-left text-[15px] text-white">
+        <thead>
+          <tr class="border-b border-white/25">
+            {pricing.exampleHead.map((heading) => (
+              <th scope="col" class="py-2.5 pr-4 font-mono text-[11.5px] font-medium uppercase tracking-[0.08em] text-white/60">
+                {heading}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {
+            pricing.exampleRows.map((row) => (
+              <tr class="border-b border-white/12">
+                {row.map((cell) => (
+                  <td class="py-2.5 pr-4">{cell}</td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="text-[14px] leading-[1.6] text-white/80">{pricing.absorb}</p>
+      <p class="text-[14px] leading-[1.6] text-white/80">{pricing.payout}</p>
       <button
         data-auth-mode="signup"
         type="button"

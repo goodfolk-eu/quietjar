@@ -1,0 +1,115 @@
+---
+import { getCollection } from "astro:content";
+import Container from "@/components/container.astro";
+import { dictionary } from "@/i18n/t";
+import Layout from "@/layouts/Layout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  lastUpdated: Date;
+  currentSlug: string;
+}
+
+const { title, description, lastUpdated, currentSlug } = Astro.props;
+
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+
+const docs = (await getCollection("legal", ({ id }) => id.startsWith(`${locale}/`)))
+  .map((entry) => ({ slug: entry.id.split("/")[1], ...entry.data }))
+  .sort((a, b) => a.order - b.order);
+
+const railItems = docs.map((doc) => ({
+  title: doc.navTitle ?? doc.title,
+  path: `/legal/${doc.slug}/`,
+  current: doc.slug === currentSlug,
+}));
+
+const index = docs.findIndex((doc) => doc.slug === currentSlug);
+const prev = index > 0 ? docs[index - 1] : null;
+const next = index >= 0 && index < docs.length - 1 ? docs[index + 1] : null;
+
+const formattedDate = lastUpdated.toLocaleDateString("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+---
+
+<Layout title={title} description={description}>
+  <Container>
+    <div class="mx-auto max-w-[1020px]">
+    <div class="grid gap-12 py-16 lg:grid-cols-[210px_1fr] lg:gap-[60px] lg:py-24">
+      <aside>
+        <nav aria-label={copy.legal.navLabel} class="flex flex-col gap-10 lg:sticky lg:top-10">
+          <div>
+            <p class="mb-4 font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-ink-3">
+              {copy.legal.navLabel}
+            </p>
+            <div class="flex flex-col gap-1">
+              {
+                railItems.map((item) => (
+                  <a
+                    href={item.path}
+                    aria-current={item.current ? "page" : undefined}
+                    class:list={[
+                      "flex items-center justify-between gap-2 px-4 py-2.5 text-[15.5px]",
+                      item.current
+                        ? "border-l-[3px] border-qj-green bg-qj-surface font-semibold text-qj-blue"
+                        : "border-l-[3px] border-transparent text-qj-ink-2 hover:bg-qj-surface hover:text-qj-blue",
+                    ]}
+                  >
+                    {item.title}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <article class="min-w-0">
+        <p class="mb-5 text-[13.5px] font-medium text-qj-green">{copy.legal.kicker}</p>
+        <h1 class="text-3xl lg:text-4xl font-bold lg:tracking-tight">{title}</h1>
+        <div class="max-w-[68ch]">
+          <p class="mt-5 text-lg text-qj-ink-2">{description}</p>
+          <p class="mt-10 border-b border-qj-line pb-10 text-sm text-qj-ink-3">
+            {copy.legal.lastUpdated.replace("{date}", formattedDate)}
+          </p>
+
+          <div
+            class="prose prose-slate mt-10 max-w-none prose-headings:font-display prose-a:text-qj-blue hover:prose-a:text-qj-green">
+            <slot />
+          </div>
+
+          <nav
+            aria-label={copy.legal.pager}
+            class="mt-12 flex items-center justify-between gap-8 border-t border-qj-line pt-10">
+            {
+              prev ? (
+                <a
+                  href={`/legal/${prev.slug}/`}
+                  class="font-mono text-[13px] text-qj-ink-3 hover:text-qj-blue">
+                  ← {prev.title}
+                </a>
+              ) : (
+                <span />
+              )
+            }
+            {
+              next && (
+                <a
+                  href={`/legal/${next.slug}/`}
+                  class="font-mono text-[13px] text-qj-ink-3 hover:text-qj-blue">
+                  {next.title} →
+                </a>
+              )
+            }
+          </nav>
+        </div>
+      </article>
+    </div>
+    </div>
+  </Container>
+</Layout>

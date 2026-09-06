@@ -1,31 +1,86 @@
 ---
+import { getCollection } from "astro:content";
+import Container from "@/components/container.astro";
 import Logo from "@/components/logo.astro";
 import { dictionary } from "@/i18n/t";
 
-const copy = dictionary(Astro.currentLocale ?? "en");
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+const siteLinks = copy.footer.siteLinks;
+
+const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${locale}/`)))
+  .map((entry) => ({ slug: entry.id.split("/")[1], ...entry.data }))
+  .sort((a, b) => a.order - b.order);
 ---
 
 <footer class="bg-qj-ink">
-  <div class="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-10 py-11">
-    <a href="/" aria-label="QuietJar" class="flex items-center gap-0.5">
-      <Logo class="h-7.5 w-auto" mark="#ffffff" quiet="rgba(255,255,255,0.6)" jar="#ffffff" />
-    </a>
-    <span class="text-[13.5px] leading-[1.5] text-white/52">
-      {copy.footer.copyright.replace("{year}", String(new Date().getFullYear()))}
-    </span>
-    <a
-      href="https://goodfolk.eu/"
-      rel="noopener"
-      aria-label="Powered by Goodfolk"
-      class="inline-flex items-center gap-[11px] text-white no-underline">
-      <span class="text-[14px] font-normal opacity-60">Powered by</span>
-      <svg viewBox="0 0 187.57 40.23" height="20" width="93.3" fill="currentColor" aria-hidden="true" class="block flex-none">
+  <Container class="py-16">
+    <div class="flex flex-wrap items-start justify-between gap-x-16 gap-y-12">
+      <div class="max-w-64">
+        <a href="/" aria-label="QuietJar" class="flex items-center gap-0.5">
+          <Logo class="h-11 w-auto" mark="#ffffff" quiet="rgba(255,255,255,0.6)" jar="#ffffff" />
+        </a>
+        <p class="mt-4 text-[13.5px] leading-[1.6] text-white/52">
+          {copy.footer.address.map((line) => <>{line}<br /></>)}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-16">
+        <div>
+          <p class="text-[13px] font-semibold tracking-wide text-white/40 uppercase">
+            {copy.footer.navHeading}
+          </p>
+          <ul class="mt-4 space-y-2.5">
+            {
+              siteLinks.map((link) => (
+                <li>
+                  <a href={link.path} class="text-[14px] text-white/70 hover:text-white">
+                    {link.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <p class="text-[13px] font-semibold tracking-wide text-white/40 uppercase">
+            {copy.footer.legalHeading}
+          </p>
+          <ul class="mt-4 space-y-2.5">
+            {
+              legalDocs.map((doc) => (
+                <li>
+                  <a href={`/legal/${doc.slug}/`} class="text-[14px] text-white/70 hover:text-white">
+                    {doc.navTitle ?? doc.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mt-14 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-white/10 pt-8">
+      <span class="text-[13.5px] leading-[1.5] text-white/52">
+        {copy.footer.copyright.replace("{year}", String(new Date().getFullYear()))}
+      </span>
+      <a
+        href="https://goodfolk.eu/"
+        rel="noopener"
+        aria-label="Powered by Goodfolk"
+        class="inline-flex items-center gap-[11px] text-white no-underline">
+        <span class="text-[14px] font-normal opacity-60">Powered by</span>
+        <svg viewBox="0 0 187.57 40.23" height="20" width="93.3" fill="currentColor" aria-hidden="true" class="block flex-none">
         <svg x="-1.52" y="-11.90" width="52" height="52" viewBox="191.61 612.54 212.12 212.13" overflow="visible"><path d="M265.87 665.53 L276.48 676.14 L234.02 718.6 L319.36 803.95 L298.15 825.16 L202.2 729.2 A15 15 0 0 1 202.2 707.99 L244.66 665.53 A15 15 0 0 1 265.87 665.53 Z M350.72 665.46 L392.83 707.57 A15 15 0 0 1 392.83 728.78 L339.76 781.85 L318.55 760.63 L361.01 718.17 L340.08 697.24 L297.62 739.7 L276.44 718.53 L329.51 665.46 A15 15 0 0 1 350.72 665.46 Z" fill="currentColor"></path></svg>
         <g transform="translate(58.48 31.82) scale(0.592593)">
           <path d="M19.494-38.232Q23.328-38.232 26.271-37.071Q29.214-35.910 31.752-33.750L31.752-33.750L27.486-29.376Q25.596-30.942 23.841-31.644Q22.086-32.346 19.872-32.346L19.872-32.346Q15.606-32.346 12.987-28.971Q10.368-25.596 10.368-18.684L10.368-18.684Q10.368-11.394 12.393-8.235Q14.418-5.076 18.684-5.076L18.684-5.076Q21.762-5.076 24.246-6.426L24.246-6.426L24.246-15.552L19.008-15.552L18.198-21.330L31.968-21.330L31.968-2.916Q29.106-1.134 25.704-0.135Q22.302 0.864 18.630 0.864L18.630 0.864Q10.530 0.864 6.291-4.131Q2.052-9.126 2.052-18.738L2.052-18.738Q2.052-24.840 4.374-29.268Q6.696-33.696 10.665-35.964Q14.634-38.232 19.494-38.232L19.494-38.232Z M49.248-29.484Q55.674-29.484 59.292-25.461Q62.910-21.438 62.910-14.310L62.910-14.310Q62.910-9.774 61.263-6.345Q59.616-2.916 56.511-1.026Q53.406 0.864 49.194 0.864L49.194 0.864Q42.768 0.864 39.123-3.159Q35.478-7.182 35.478-14.310L35.478-14.310Q35.478-18.846 37.125-22.275Q38.772-25.704 41.877-27.594Q44.982-29.484 49.248-29.484L49.248-29.484ZM49.248-23.760Q46.332-23.760 44.901-21.465Q43.470-19.170 43.470-14.310L43.470-14.310Q43.470-9.450 44.901-7.155Q46.332-4.860 49.194-4.860L49.194-4.860Q52.056-4.860 53.487-7.155Q54.918-9.450 54.918-14.310L54.918-14.310Q54.918-19.170 53.514-21.465Q52.110-23.760 49.248-23.760L49.248-23.760Z M79.596-29.484Q86.022-29.484 89.640-25.461Q93.258-21.438 93.258-14.310L93.258-14.310Q93.258-9.774 91.611-6.345Q89.964-2.916 86.859-1.026Q83.754 0.864 79.542 0.864L79.542 0.864Q73.116 0.864 69.471-3.159Q65.826-7.182 65.826-14.310L65.826-14.310Q65.826-18.846 67.473-22.275Q69.120-25.704 72.225-27.594Q75.330-29.484 79.596-29.484L79.596-29.484ZM79.596-23.760Q76.680-23.760 75.249-21.465Q73.818-19.170 73.818-14.310L73.818-14.310Q73.818-9.450 75.249-7.155Q76.680-4.860 79.542-4.860L79.542-4.860Q82.404-4.860 83.835-7.155Q85.266-9.450 85.266-14.310L85.266-14.310Q85.266-19.170 83.862-21.465Q82.458-23.760 79.596-23.760L79.596-23.760Z M115.020-40.878L122.688-40.014L122.688 0L115.938 0L115.452-3.510Q114.102-1.512 112.050-0.324Q109.998 0.864 107.298 0.864L107.298 0.864Q102.006 0.864 99.225-3.213Q96.444-7.290 96.444-14.310L96.444-14.310Q96.444-18.738 97.875-22.167Q99.306-25.596 101.952-27.540Q104.598-29.484 108.162-29.484L108.162-29.484Q110.160-29.484 111.915-28.701Q113.670-27.918 115.020-26.568L115.020-26.568L115.020-40.878ZM109.620-4.860Q111.294-4.860 112.590-5.724Q113.886-6.588 115.020-8.316L115.020-8.316L115.020-21.114Q113.886-22.464 112.725-23.139Q111.564-23.814 110.106-23.814L110.106-23.814Q107.460-23.814 105.948-21.492Q104.436-19.170 104.436-14.310L104.436-14.310Q104.436-9.180 105.759-7.020Q107.082-4.860 109.620-4.860L109.620-4.860Z" fill="currentColor"></path>
           <path d="M141.318-35.154Q139.374-35.154 138.537-34.236Q137.700-33.318 137.700-31.266L137.700-31.266L137.700-28.620L144.504-28.620L143.640-23.220L137.700-23.220L137.700 0L130.032 0L130.032-23.220L125.496-23.220L125.496-28.620L130.032-28.620L130.032-31.482Q130.032-35.640 132.759-38.259Q135.486-40.878 140.508-40.878L140.508-40.878Q144.504-40.878 148.068-39.150L148.068-39.150L145.962-34.074Q143.640-35.154 141.318-35.154L141.318-35.154Z M158.868-29.484Q165.294-29.484 168.912-25.461Q172.530-21.438 172.530-14.310L172.530-14.310Q172.530-9.774 170.883-6.345Q169.236-2.916 166.131-1.026Q163.026 0.864 158.814 0.864L158.814 0.864Q152.388 0.864 148.743-3.159Q145.098-7.182 145.098-14.310L145.098-14.310Q145.098-18.846 146.745-22.275Q148.392-25.704 151.497-27.594Q154.602-29.484 158.868-29.484L158.868-29.484ZM158.868-23.760Q155.952-23.760 154.521-21.465Q153.090-19.170 153.090-14.310L153.090-14.310Q153.090-9.450 154.521-7.155Q155.952-4.860 158.814-4.860L158.814-4.860Q161.676-4.860 163.107-7.155Q164.538-9.450 164.538-14.310L164.538-14.310Q164.538-19.170 163.134-21.465Q161.730-23.760 158.868-23.760L158.868-23.760Z M184.302 0.864Q180.792 0.864 178.848-1.161Q176.904-3.186 176.904-6.912L176.904-6.912L176.904-40.014L184.572-40.878L184.572-7.128Q184.572-5.238 186.138-5.238L186.138-5.238Q187.002-5.238 187.650-5.562L187.650-5.562L189.216-0.108Q187.002 0.864 184.302 0.864L184.302 0.864Z M199.638-40.878L199.638 0L191.970 0L191.970-40.014L199.638-40.878ZM217.026-28.620L207.900-16.038L217.836 0L209.142 0L199.908-15.660L209.088-28.620L217.026-28.620Z" fill="currentColor"></path>
         </g>
-      </svg>
-    </a>
-  </div>
+        </svg>
+      </a>
+    </div>
+  </Container>
 </footer>

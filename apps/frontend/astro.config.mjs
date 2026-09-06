@@ -144,6 +144,9 @@ export default defineConfig({
   output: "static",
   site,
   integrations,
+  redirects: {
+    "/legal": "/legal/privacy-policy",
+  },
   markdown: { syntaxHighlight: false },
   i18n: {
     defaultLocale,

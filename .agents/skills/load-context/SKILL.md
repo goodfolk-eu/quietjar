@@ -1,6 +1,6 @@
 ---
 name: load-context
-description: Load this at the start of any AI session on this project. It's the shared grounding — what the product is, who it's for, and how we talk about it.
+description: Load this at the start of any AI session on this project. It's the shared grounding — what the product is, who it's for, and how we talk about it. Deeper reference files live in context/ and load on demand.
 ---
 
 ## What it is
@@ -44,3 +44,22 @@ Quietjar.com
 - **Benefit-led, plain language** for a non-technical audience — say what it does *for them*, not how it works underneath.
 - **Short lines, lots of breathing room.** The copy should feel as clean and unfussy as the product.
 - **Lead with conversion.** If anything has to be cut, keep the "no redirect = more supporters" message.
+
+These are the product-specific rules. The general house style (rhythm, banned words, formatting, numbers, how to reference competitors) is in `context/writing.md`. Load it for any writing task.
+
+## Status
+
+Pre-launch, September 2026. Current work: website redesign. The logo is final and out of scope for any advice.
+
+## Reference files (load on demand)
+
+Read the file that matches the task. Each one assumes you have read this page and does not repeat it.
+
+- `references/competitors.md` — fees, features, and posture of every tool a visitor might compare us to. Load for compare pages, objection handling, pricing copy.
+- `references/audience.md` — three personas, the wedge decision, where each group lives online. Load for any page or post aimed at a specific reader.
+- `references/positioning.md` — positioning statement, category name, three pillars, persona-specific leads, objections. Load for homepage, developer page, and any pitch.
+- `references/writing.md` — house writing style: rhythm, banned words, formatting, numbers, competitive references. Load for every writing task.
+- `references/brand.md` — values, personality, vocabulary rules, visual behaviour. Load for copywriting and design review.
+- `references/market.md` — TAM, SAM, SOM with sourced anchors and stated assumptions. Internal only, never for the website.
+- `references/go-to-market.md` — site architecture, content pillars, channels, launch phases, metrics. Load for planning content or launch work.
+- `references/open-decisions.md` — the unresolved questions that block copy. Check before writing anything with a number in it.

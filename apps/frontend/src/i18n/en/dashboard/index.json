@@ -2,7 +2,7 @@
   "dashboard": {
     "title": "Dashboard",
     "signOut": "Sign out",
-    "empty": "Nothing here yet, check back soon!",
+    "empty": "Nothing here yet. Check back soon.",
     "signedInAs": "Signed in as",
     "dropdown": "Dropdown",
     "toggleNavigation": "Toggle Navigation",

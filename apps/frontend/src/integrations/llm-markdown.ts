@@ -369,6 +369,7 @@ async function processBuild(
 
   let generated = 0;
   let excluded = 0;
+  let redirected = 0;
   const entries: PageEntry[] = [];
 
   for (const page of pages) {
@@ -396,6 +397,12 @@ async function processBuild(
         continue;
       }
 
+      // Astro's static redirects emit meta-refresh stubs with no content to convert.
+      if (html && /http-equiv=["']refresh["']/i.test(html)) {
+        redirected++;
+        continue;
+      }
+
       if (!html) continue;
       const result = htmlToMarkdown(html);
       const md = result.title ? `# ${result.title}\n\n${result.body}` : result.body;
@@ -409,7 +416,7 @@ async function processBuild(
   }
 
   logger.info(
-    `Generated ${generated} .md files (${excluded} skipped as noindex of ${pages.length} built pages)`,
+    `Generated ${generated} .md files (${excluded} skipped as noindex, ${redirected} redirects of ${pages.length} built pages)`,
   );
 
   if (pages.length === 0) {

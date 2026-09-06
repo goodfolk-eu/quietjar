@@ -1,18 +1,26 @@
 {
   "hero": {
-    "eyebrow": "A tip button that lives on your site",
+    "eyebrow": "A support button that lives on your site",
     "title": "Let people support you without leaving your site.",
-    "description": "Every time you send a customer off to a separate tip page, most of them never arrive. QuietJar lives right on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place. Fewer clicks means more of them actually follow through.",
+    "description": "Every time you send a customer off to a separate donation page, most of them never arrive. QuietJar lives on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place.",
     "ctaPrimary": "Add it to your site",
     "ctaSecondary": "See it in action",
-    "subtext": "No monthly fee. You only pay a small share when you get paid.",
+    "subtext": "No monthly fee. We take 5% of what you receive, capped at €[TODO: cap] per payment.",
     "browserMock": {
       "url": "your-site.com",
       "enjoy": "Enjoying this?",
-      "sub": "Support the work — stays on this page.",
+      "sub": "Support the work - stays on this page.",
       "cta": "Support · €5",
-      "snippet": "<script src=\"quietjar.com/j.js\"></script>\n<div data-quietjar=\"you\"></div>",
-      "live": "live · matches your design"
+      "thanks": "Thank you.",
+      "thanksSub": "Your support keeps this site running.",
+      "snippet": "<script src=\"https://quietjar.com/js/latest/widget.js\"></script>\n<div data-quietjar=\"you\"></div>",
+      "live": "live · matches your design",
+      "caption": "Tap it. This is the real thing.",
+      "presets": [
+        { "key": "docs", "label": "Docs site" },
+        { "key": "blog", "label": "Personal blog" },
+        { "key": "magazine", "label": "Magazine" }
+      ]
     }
   },
   "features": {
@@ -22,9 +30,9 @@
     "oldWaySubtitle": "Send them away. Lose them on the way.",
     "oldWaySteps": [
       "Visitor reads your page",
-      "Clicks your \"tip\" link",
+      "Clicks your support link",
       "New tab opens on someone else's site",
-      "Slow load, unfamiliar page, distraction, closed tab",
+      "Slow load, unfamiliar page, closed tab",
       "They never make it to \"thank you\""
     ],
     "withTitle": "With QuietJar",
@@ -38,13 +46,13 @@
   },
   "logos": {
     "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
-    "methods": ["Apple Pay", "Visa", "Mastercard", "Amex"],
-    "euMethods": "+ Local EU methods"
+    "methods": ["Apple Pay", "Visa", "Mastercard", "Amex", "iDEAL", "Bancontact", "SEPA"],
+    "moreLabel": "+ Local methods"
   },
   "polite": {
     "eyebrow": "Built to respect your audience",
     "title": "It knows when to step back.",
-    "description": "Once someone has supported you, QuietJar quietly leaves them alone for a while. It does not nag the people who already gave. Your biggest supporters get thanked, not pestered. That is what keeps them coming back.",
+    "description": "Once someone has supported you, QuietJar quietly leaves them alone for a while. It does not nag the people who already gave. Your biggest supporters get thanked, not pestered. That is what keeps them coming back. It remembers on our side, not in your visitor's browser, so it works in Safari too.",
     "note": "Your fans get thanked for giving, never chased for giving again.",
     "feelLabel": "What it feels like to your most loyal supporter",
     "feelSteps": [
@@ -57,11 +65,13 @@
   "craft": {
     "eyebrow": "Craft",
     "title": "Feels like part of your site. Not an ad for someone else's.",
-    "description": "QuietJar is not a clunky widget stapled onto your page. It is fast and seamless, designed to look like you built it yourself. Paying feels effortless. The same frictionless experience they'd expect from any well-made checkout.",
+    "description": "QuietJar is not a clunky add-on stapled onto your page. It is fast and precise, designed to look like you built it yourself. Paying feels effortless. The same frictionless experience they'd expect from any well-made checkout.",
+    "perfReady": false,
     "features": [
       {
         "title": "Two-tap checkout",
         "description": "No forms to fill, no account to create. Just tap and it is done.",
+        "perf": "Loads in [TODO: load-ms] ms. [TODO: script-kb] kB. No layout shift.",
         "icon": "bx:bxs-zap"
       },
       {
@@ -76,18 +86,27 @@
       }
     ]
   },
+  "goals": {
+    "eyebrow": "Goals",
+    "title": "Show them what the support is for.",
+    "description": "Set a goal your visitors can see. Hosting for the year. The next release. A new microphone. A progress bar turns a vague ask into a concrete one, and people give more when they know where it goes.",
+    "barLabel": "Hosting for 2027 · €184 of €300",
+    "barPercent": 61
+  },
   "pricing": {
     "eyebrow": "Pricing",
     "title": "We only win when you do.",
-    "description": "No monthly fee. No plans to compare. QuietJar takes a small share of what you actually receive. So it costs you nothing until it is earning you something. Your incentives and ours point the same direction. Get more of your supporters to follow through.",
+    "description": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive, capped at €[TODO: cap] per payment. It costs you nothing until it is earning you something.",
     "planLabel": "Simple",
     "planPrice": "Free",
     "planPriceNote": "to start, forever",
-    "planFeatures": [
-      "No monthly fee. No plans to compare.",
-      "Pay a small percentage only when someone supports you.",
-      "Your incentives and ours point the same direction."
+    "exampleHead": ["Someone supports you with", "You receive"],
+    "exampleRows": [
+      ["€5", "€4.75"],
+      ["€50", "€47.50"]
     ],
+    "absorb": "Payment processing costs vary by method. We absorb the difference. Your supporters are never charged extra.",
+    "payout": "Paid out [TODO: payout].",
     "cta": "Add it to your site"
   },
   "faq": {
@@ -96,15 +115,21 @@
     "items": [
       {
         "q": "What is QuietJar?",
-        "a": "A small, polished tip button you drop onto your own website, so your supporters can pay without leaving your page."
+        "a": "A small, polished support button you drop onto your own website, so your supporters can pay without leaving your page."
       },
       {
         "q": "Do I need a separate account or page for my visitors?",
         "a": "No. The button works right on your site. There is an optional hosted page for people who prefer one, but you do not need it."
       },
       {
-        "q": "How is this different from the tipping tools I already know?",
-        "a": "Most tools send your visitors over to someone else's page. QuietJar keeps them on yours. Fewer steps, no drop-off, more of them actually follow through."
+        "q": "How is this different from the donation tools I already know?",
+        "a": "Most tools have earned their place. Ko-fi charges nothing on tips and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish.",
+        "linkLabel": "See the comparison",
+        "linkHref": "/compare/"
+      },
+      {
+        "q": "Can I use it alongside GitHub Sponsors or Patreon?",
+        "a": "Yes. GitHub Sponsors is the right default on your repo. QuietJar is for your site, where most of your readers actually are. Use both."
       },
       {
         "q": "Will it slow down my site?",
@@ -112,15 +137,27 @@
       },
       {
         "q": "What does it cost?",
-        "a": "There is no monthly fee and no plans to compare. QuietJar takes a small share of what you actually receive, so it costs you nothing until it earns you something."
+        "a": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive, capped at €[TODO: cap] per payment. It costs you nothing until it is earning you something."
+      },
+      {
+        "q": "When do I get paid?",
+        "a": "[TODO: payout]"
       },
       {
         "q": "What payment methods can my supporters use?",
-        "a": "The ones people actually reach for. Apple Pay, cards, and other common options, right where they already pay. Paying feels effortless."
+        "a": "Apple Pay, Google Pay, cards, iDEAL, Bancontact, and SEPA. Your visitors see the method they already use, not a card form."
+      },
+      {
+        "q": "Will my visitors trust paying on my site?",
+        "a": "They pay through the same regulated rails as any checkout. What they see is Apple Pay, Google Pay, or their own bank's iDEAL screen. Nothing unfamiliar, nothing to type."
       },
       {
         "q": "What happens after someone supports me?",
         "a": "QuietJar steps back. It stops pestering people who have already given, so your biggest supporters get thanked instead of nagged."
+      },
+      {
+        "q": "Is my data and my supporters' data in the EU?",
+        "a": "Yes. Payments and data stay on European infrastructure, and there is no cookie banner because there is nothing to consent to."
       },
       {
         "q": "How do I add it to my site?",
@@ -130,7 +167,7 @@
   },
   "cta": {
     "title": "Stop losing supporters on the way to the checkout.",
-    "description": "Add the button to your site in minutes. No monthly fee. No redirects. Just a quiet, polished way for your people to support you.",
+    "description": "Add the button to your site in minutes. No redirects. Just a quiet, polished way for your people to support you.",
     "primary": "Add it to your site",
     "secondary": "Questions?"
   }
