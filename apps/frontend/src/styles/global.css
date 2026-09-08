@@ -4,11 +4,12 @@
 @plugin '@tailwindcss/typography';
 
 @font-face {
-  font-family: 'Gabarito';
+  font-family: 'Schibsted Grotesk';
   font-style: normal;
   font-display: swap;
-  font-weight: 400 900;
-  src: url('/fonts/gabarito/Gabarito-VariableFont.woff2') format('woff2');
+  font-weight: 500 700;
+  src: url('/fonts/schibsted-grotesk/SchibstedGrotesk-VariableFont.woff2')
+    format('woff2');
 }
 
 @font-face {
@@ -53,35 +54,55 @@
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   --font-display:
-    'Gabarito', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
   --font-mono:
     'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
     monospace;
 
-  --color-qj-blue: #003399;
-  --color-qj-blue-lift: #0b49b4;
-  --color-qj-blue-press: #00256e;
-  --color-qj-green: #00b366;
-  --color-qj-green-press: #009454;
-  --color-qj-tint: #7fd9b3;
-  --color-qj-eu-yellow: #ffcc00;
-  --color-qj-ink: #14181c;
-  --color-qj-ink-2: #4a5259;
-  --color-qj-ink-3: #6b747b;
-  --color-qj-ink-4: #a8afb4;
-  --color-qj-surface: #f4f6f7;
-  --color-qj-line: #e6e9eb;
-  --color-qj-line-2: #eef1f2;
-  --color-qj-line-3: #dde2e5;
+  /* One accent, deep. Bright green and Reflex Blue are both retired: two
+     full-strength colours competing was the core problem. */
+  --color-qj-accent: #0b6b3a;
+  --color-qj-accent-alt: #08542d; /* hover */
+  --color-qj-accent-pale: #7fb79a; /* one "half" step, one list marker only */
 
-  --radius-xs: 2px;
-  --radius-sm: 2px;
-  --radius-md: 2px;
-  --radius-lg: 2px;
-  --radius-xl: 2px;
-  --radius-2xl: 2px;
-  --radius-3xl: 2px;
+  --color-qj-paper: #faf9f6;
+  --color-qj-ink: #171a18;
+  --color-qj-body: #565e59;
+  --color-qj-mint: #f2f7f3; /* the widget block inside the hero mock */
+  --color-qj-line: #e0dccf; /* section boundaries */
+  --color-qj-line-card: #e9e5dc; /* card edges, payment chips */
+  --color-qj-line-soft: #e3dfd3; /* rules inside cards, skeleton bars */
+  --color-qj-code: #f8f6f0;
+  --color-qj-field: #14201c; /* pricing panel, closing CTA band */
+  --color-qj-field-deep: #0e1714; /* footer, one step past the field */
+  --color-qj-field-mint: #86c4a3; /* small text/links on the dark fields */
+
+  /* Compat aliases: pages outside this pass (dashboard, legal, compare,
+     developers, ui/*) still reference the old token names. Point them at
+     the closest new value so they stay visually consistent. */
+  --color-qj-ink-2: #565e59;
+  --color-qj-ink-3: #565e59;
+  --color-qj-ink-4: #565e59;
+  --color-qj-line-2: #f0ede6;
+  --color-qj-line-3: #e9e5dc;
+  --color-qj-surface: #faf9f6;
+  --color-qj-band: #faf9f6;
+  --color-qj-green: #0b6b3a;
+  --color-qj-green-deep: #08542d;
+  --color-qj-green-press: #08542d;
+  --color-qj-blue: #003399;
+
+  /* Two steps, capped at 6px: 4px for buttons/chips/the widget block,
+     6px for cards, panels, the hero mock and the pricing panel. */
+  --radius-xs: 4px;
+  --radius-sm: 4px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --radius-2xl: 6px;
+  --radius-3xl: 6px;
 }
 
 /* Preline injects its overlay backdrop with bg-opacity-*, which Tailwind v4
@@ -90,6 +111,13 @@
   position: fixed;
   inset: 0;
   background-color: color-mix(in srgb, var(--color-gray-900) 50%, transparent);
+}
+
+/* Markdown tables (legal docs) don't wrap on narrow viewports by default -
+   let them scroll horizontally instead of overflowing the page. */
+.prose table {
+  display: block;
+  overflow-x: auto;
 }
 
 @layer base {
@@ -111,16 +139,16 @@
   }
 
   a {
-    color: var(--color-qj-blue);
+    color: var(--color-qj-accent);
     text-decoration: none;
   }
 
   a:hover {
-    color: var(--color-qj-green);
+    color: var(--color-qj-accent-alt);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-qj-green);
+    outline: 2px solid var(--color-qj-accent);
     outline-offset: 2px;
   }
 }

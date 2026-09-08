@@ -8,54 +8,31 @@ const copy = dictionary(Astro.currentLocale ?? "en");
 const navLinks = copy.nav.links;
 ---
 
-<header class="sticky top-0 z-40 border-b border-qj-line bg-white/94 backdrop-blur-md">
-  <Container class="flex h-18 items-center justify-between">
+<header id="qj-header" class="sticky top-0 z-40 bg-transparent transition-colors duration-200 data-[scrolled=true]:bg-white data-[scrolled=true]:shadow-[0_1px_0_rgba(23,26,24,0.08)]">
+  <Container
+    class="flex items-center justify-between gap-x-6 py-[18px] max-[1000px]:px-6 max-[1000px]:py-4 max-[560px]:px-5 max-[560px]:py-3.5">
     <a href="/" aria-label="QuietJar" class="flex items-center gap-0.5">
-      <Logo class="h-11 w-auto" />
+      <Logo class="hidden h-11 w-auto min-[1000px]:block" />
+      <Logo class="block h-9 w-auto min-[1000px]:hidden" iconOnly />
     </a>
 
-    <nav class="hidden md:flex items-center gap-6.5" aria-label={copy.nav.primary}>
+    <nav class="hidden items-center gap-6.5 min-[1000px]:flex" aria-label={copy.nav.primary}>
       {navLinks.map((link) => (
-        <a href={link.path} class="text-[14.5px] font-medium text-qj-ink transition hover:text-qj-blue">{link.title}</a>
+        <a href={link.path} class="text-[14.5px] font-medium text-qj-ink transition hover:text-qj-accent">{link.title}</a>
       ))}
     </nav>
 
-    <div class="hidden md:flex items-center gap-3">
+    <div class="flex items-center gap-3">
       <div id="qj-auth-buttons" class="flex items-center gap-3">
         <button type="button" id="qj-nav-login"
-          class="cursor-pointer px-1 py-2.5 text-[14.5px] font-medium text-qj-blue transition hover:text-qj-blue-press">{copy.nav.login}</button>
+          class="cursor-pointer px-1 py-2.5 text-[14.5px] font-medium text-qj-ink transition hover:text-qj-accent">{copy.nav.login}</button>
         <button type="button" id="qj-nav-signup"
-          class="cursor-pointer rounded-sm bg-qj-green px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-green-press">{copy.nav.signup}</button>
+          class="cursor-pointer rounded-sm bg-qj-accent px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-accent-alt">{copy.nav.signup}</button>
       </div>
       <a id="qj-nav-dashboard" href="/dashboard/"
-        class="hidden rounded-sm bg-qj-green px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-green-press">{copy.nav.dashboard}</a>
+        class="hidden rounded-sm bg-qj-accent px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-accent-alt">{copy.nav.dashboard}</a>
     </div>
-
-    <button id="qj-mobile-toggle" type="button"
-      class="cursor-pointer p-2 text-qj-ink md:hidden" aria-label={copy.nav.menu} aria-expanded="false">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
   </Container>
-
-  <div id="qj-mobile-menu" class="hidden border-t border-qj-line bg-white pb-4 md:hidden">
-    <Container class="flex flex-col gap-1 pt-3">
-      <nav class="flex flex-col gap-1" aria-label={copy.nav.mobile}>
-        {navLinks.map((link) => (
-          <a href={link.path} class="px-3 py-2 text-[14.5px] text-qj-ink transition hover:text-qj-blue">{link.title}</a>
-        ))}
-      </nav>
-      <div class="mt-3 flex gap-3">
-        <div id="qj-auth-buttons-mobile" class="flex items-center gap-3">
-          <button type="button" id="qj-nav-login-mobile"
-            class="cursor-pointer rounded-sm border-2 border-qj-blue px-4 py-2 text-center text-[14.5px] text-qj-blue transition hover:bg-qj-blue hover:text-white">{copy.nav.login}</button>
-          <button type="button" id="qj-nav-signup-mobile"
-            class="cursor-pointer rounded-sm bg-qj-green px-4 py-2 text-center text-[14.5px] text-white transition hover:bg-qj-green-press">{copy.nav.signup}</button>
-        </div>
-        <a id="qj-nav-dashboard-mobile" href="/dashboard/"
-          class="hidden rounded-sm bg-qj-green px-4 py-2 text-center text-[14.5px] text-white transition hover:bg-qj-green-press">{copy.nav.dashboard}</a>
-      </div>
-    </Container>
-  </div>
 </header>
 
 <AuthModal />
@@ -63,10 +40,8 @@ const navLinks = copy.nav.links;
 <script>
 import { hasSessionCookie, onAuthStateChange } from "../../lib/session";
 
-const loginBtns = [document.getElementById("qj-nav-login"), document.getElementById("qj-nav-login-mobile")];
-const signupBtns = [document.getElementById("qj-nav-signup"), document.getElementById("qj-nav-signup-mobile")];
-const authDesk = [document.getElementById("qj-auth-buttons"), document.getElementById("qj-auth-buttons-mobile")];
-const dashDesk = [document.getElementById("qj-nav-dashboard"), document.getElementById("qj-nav-dashboard-mobile")];
+const authDesk = [document.getElementById("qj-auth-buttons")];
+const dashDesk = [document.getElementById("qj-nav-dashboard")];
 
 function setSignedIn(signedIn: boolean) {
   authDesk.forEach((el) => el?.classList.toggle("hidden", signedIn));
@@ -76,14 +51,13 @@ function setSignedIn(signedIn: boolean) {
 setSignedIn(hasSessionCookie());
 onAuthStateChange(setSignedIn);
 
-loginBtns.forEach((b) => b?.addEventListener("click", () => window.__quietjarAuthOpen?.("login")));
-signupBtns.forEach((b) => b?.addEventListener("click", () => window.__quietjarAuthOpen?.("signup")));
+const header = document.getElementById("qj-header");
+function updateScrolled() {
+  header?.setAttribute("data-scrolled", String(window.scrollY > 8));
+}
+updateScrolled();
+window.addEventListener("scroll", updateScrolled, { passive: true });
 
-const toggle = document.getElementById("qj-mobile-toggle")!;
-const menu = document.getElementById("qj-mobile-menu")!;
-toggle.addEventListener("click", () => {
-  const willOpen = menu.classList.contains("hidden");
-  menu.classList.toggle("hidden");
-  toggle.setAttribute("aria-expanded", String(willOpen));
-});
+document.getElementById("qj-nav-login")?.addEventListener("click", () => window.__quietjarAuthOpen?.("login"));
+document.getElementById("qj-nav-signup")?.addEventListener("click", () => window.__quietjarAuthOpen?.("signup"));
 </script>

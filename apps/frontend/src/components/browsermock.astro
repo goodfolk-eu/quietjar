@@ -5,39 +5,38 @@ const copy = dictionary(Astro.currentLocale ?? "en");
 const mock = copy.hero.browserMock;
 ---
 
-<div class="flex flex-col gap-4" data-qj-demo>
-  <div class="inline-flex rounded-sm border border-qj-line bg-qj-surface p-[3px]" data-qj-presets>
-    {
-      mock.presets.map((preset, i) => (
-        <button
-          type="button"
-          data-preset-btn={preset.key}
-          aria-pressed={i === 0 ? "true" : "false"}
-          class="cursor-pointer rounded-[1px] px-3.5 py-1.5 font-mono text-[12px] text-qj-ink-3 transition hover:text-qj-ink aria-pressed:bg-white aria-pressed:font-medium aria-pressed:text-qj-ink aria-pressed:shadow-sm"
-        >
-          {preset.label}
-        </button>
-      ))
-    }
-  </div>
+<div class="flex flex-col" data-qj-demo>
+  <div class="mock-card overflow-hidden rounded-xl bg-white" data-qj-mock data-preset="docs" data-state="ask">
+    <div class="flex items-center gap-5 border-b border-qj-line-card px-[18px]" data-qj-presets>
+      {
+        mock.presets.map((preset, i) => (
+          <button
+            type="button"
+            data-preset-btn={preset.key}
+            aria-pressed={i === 0 ? "true" : "false"}
+            class="-mb-px cursor-pointer border-b-2 border-transparent py-3 text-[13.5px] text-qj-body transition hover:text-qj-ink aria-pressed:border-qj-accent aria-pressed:font-semibold aria-pressed:text-qj-ink"
+          >
+            {preset.label}
+          </button>
+        ))
+      }
+    </div>
 
-  <div class="rounded border border-qj-line bg-white shadow-md" data-qj-mock data-preset="docs" data-state="ask">
-    <div class="flex items-center gap-[7px] border-b border-qj-line-2 bg-qj-surface px-4 py-3">
-      <span class="size-[9px] rounded-full bg-[#D9DEE1]" aria-hidden="true"></span>
-      <span class="size-[9px] rounded-full bg-[#D9DEE1]" aria-hidden="true"></span>
-      <span class="size-[9px] rounded-full bg-[#D9DEE1]" aria-hidden="true"></span>
-      <span class="ml-2.5 font-mono text-[11.5px] text-qj-ink-3">{mock.url}</span>
+    <div class="flex items-center gap-[7px] border-b border-qj-line-card px-4 py-3">
+      <span class="size-2 rounded-full bg-[#DCE0DA]" aria-hidden="true"></span>
+      <span class="size-2 rounded-full bg-[#DCE0DA]" aria-hidden="true"></span>
+      <span class="size-2 rounded-full bg-[#DCE0DA]" aria-hidden="true"></span>
+      <span class="ml-2.5 font-mono text-[11.5px] text-qj-body">{mock.url}</span>
     </div>
 
     <div class="flex flex-col gap-3.5 px-8 py-[30px] pb-[34px]" style={`background: var(--demo-bg)`}>
       <div class="flex flex-col gap-2">
-        <span class="h-[9px] w-[62%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
-        <span class="h-[9px] w-full rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
-        <span class="h-[9px] w-[88%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
-        <span class="h-[9px] w-[94%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
+        <span class="h-2 w-[62%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
+        <span class="h-2 w-full rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
+        <span class="h-2 w-[88%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
       </div>
 
-      <div class="my-1.5 flex items-center justify-between gap-5 rounded border px-5 py-[18px]" style={`border-color: var(--demo-line)`}>
+      <div class="my-1.5 flex items-center justify-between gap-5 rounded-lg px-[22px] py-5" style={`background: var(--demo-widget-bg)`}>
         <div class="flex flex-col gap-[3px]">
           <span class="font-display text-[17px] font-bold tracking-[-0.02em]" style={`color: var(--demo-ink); font-family: var(--demo-heading-font)`} data-qj-ask-headline>
             {mock.enjoy}
@@ -45,8 +44,8 @@ const mock = copy.hero.browserMock;
           <span class="hidden font-display text-[17px] font-bold tracking-[-0.02em]" style={`color: var(--demo-ink); font-family: var(--demo-heading-font)`} data-qj-thanks-headline>
             {mock.thanks}
           </span>
-          <span class="text-[13px] text-qj-ink-3" data-qj-ask-sub>{mock.sub}</span>
-          <span class="hidden text-[13px] text-qj-ink-3" data-qj-thanks-sub>{mock.thanksSub}</span>
+          <span class="text-[13px] text-qj-body" data-qj-ask-sub>{mock.sub}</span>
+          <span class="hidden text-[13px] text-qj-body" data-qj-thanks-sub>{mock.thanksSub}</span>
         </div>
         <button
           type="button"
@@ -58,36 +57,37 @@ const mock = copy.hero.browserMock;
       </div>
 
       <div class="flex flex-col gap-2">
-        <span class="h-[9px] w-full rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
-        <span class="h-[9px] w-[74%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
+        <span class="h-2 w-full rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
+        <span class="h-2 w-[74%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
       </div>
     </div>
 
-    <div class="border-t border-qj-line bg-qj-surface px-5 py-4">
-      <pre class="whitespace-pre font-mono text-[12.5px] leading-[1.9] text-qj-ink-2">{mock.snippet}</pre>
-      <p class="mt-1 flex items-center gap-1.5 font-mono text-[12.5px] text-qj-green">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-        {mock.live}
-      </p>
+    <div class="flex flex-col items-start gap-1 border-t border-qj-line-card bg-qj-code px-5 py-3 font-mono text-[12px] sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+      <span class="break-all text-qj-body">{mock.snippet}</span>
+      <span class="whitespace-nowrap text-qj-accent">{mock.live}</span>
     </div>
   </div>
-
-  <p class="text-[13.5px] text-qj-ink-3">{mock.caption}</p>
 </div>
 
 <style>
+  .mock-card {
+    box-shadow: 0 28px 56px -26px rgba(20, 32, 28, 0.28);
+  }
+
   [data-qj-mock][data-preset="docs"] {
     --demo-bg: #ffffff;
-    --demo-ink: #16181c;
-    --demo-line: #e6e9eb;
-    --demo-accent: #003399;
-    --demo-heading-font: var(--font-sans);
+    --demo-ink: #171a18;
+    --demo-line: #f0ede6;
+    --demo-widget-bg: #f2f7f3;
+    --demo-accent: #0b6b3a;
+    --demo-heading-font: var(--font-display);
   }
 
   [data-qj-mock][data-preset="blog"] {
     --demo-bg: #fbf7ef;
     --demo-ink: #2b2013;
     --demo-line: #eae1d0;
+    --demo-widget-bg: #fbf7ef;
     --demo-accent: #8a5a2b;
     --demo-heading-font: Georgia, "Times New Roman", serif;
   }
@@ -96,6 +96,7 @@ const mock = copy.hero.browserMock;
     --demo-bg: #f5f4f2;
     --demo-ink: #111111;
     --demo-line: #dedcd8;
+    --demo-widget-bg: #f5f4f2;
     --demo-accent: #c4372b;
     --demo-heading-font: "Arial Narrow", Arial, sans-serif;
   }

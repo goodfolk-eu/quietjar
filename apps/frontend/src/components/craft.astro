@@ -6,14 +6,14 @@ const craft = copy.craft;
 const features = craft.features;
 ---
 
-<section id="features" class="border-y border-qj-line bg-qj-surface">
-  <div class="mx-auto flex max-w-[1200px] flex-col gap-[44px] px-10 pb-24 pt-[88px]">
-    <div class="flex max-w-[56ch] flex-col gap-3.5">
-      <span class="text-[13.5px] font-medium text-qj-green">{craft.eyebrow}</span>
-      <h2 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.03em] text-qj-ink">
+<section id="features">
+  <div class="mx-auto flex max-w-[1180px] flex-col gap-[44px] border-t border-qj-line px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)]">
+    <div class="flex flex-col gap-3.5">
+      <span class="text-[13.5px] font-semibold tracking-[-0.005em] text-qj-accent">{craft.eyebrow}</span>
+      <h2 class="text-balance font-display text-[clamp(28px,3.4vw,44px)] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
         {craft.title}
       </h2>
-      <p class="text-pretty text-[17px] leading-[1.62] text-qj-ink-2">
+      <p class="max-w-[50ch] text-pretty text-[17px] leading-[1.62] text-qj-body">
         {craft.description}
       </p>
     </div>
@@ -21,19 +21,19 @@ const features = craft.features;
     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
       {
         features.map((item, i) => (
-          <div class="flex flex-col gap-2.5 rounded border border-qj-line bg-white px-[30px] py-[34px]">
-            <span class="font-mono text-[11.5px] text-qj-green">0{i + 1}</span>
-            <h3 class="font-display text-[21px] font-bold tracking-[-0.02em] text-qj-ink">
+          <div class="flex flex-col gap-2.5 rounded-lg border border-qj-line-card bg-white px-[30px] py-[34px]">
+            <span class="font-mono text-[11.5px] text-qj-accent">0{i + 1}</span>
+            <h3 class="font-display text-[21px] font-bold tracking-[-0.022em] text-qj-ink">
               {item.title}
             </h3>
-            <p class="text-[15px] leading-[1.6] text-qj-ink-2">
+            <p class="text-[15px] leading-[1.6] text-qj-body">
               {item.description}
             </p>
             {/* The measured line stays in the source but hidden until real numbers
                 exist. Set craft.perfReady to true in home.json once load-ms and
                 script-kb are measured on a real page. */}
             {craft.perfReady && item.perf && (
-              <p class="mt-1 font-mono text-[12.5px] leading-[1.6] text-qj-ink-3">{item.perf}</p>
+              <p class="mt-1 font-mono text-[12.5px] leading-[1.6] text-qj-body">{item.perf}</p>
             )}
           </div>
         ))

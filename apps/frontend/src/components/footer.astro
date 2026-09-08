@@ -13,12 +13,12 @@ const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${loc
   .sort((a, b) => a.order - b.order);
 ---
 
-<footer class="bg-qj-ink">
+<footer class="bg-qj-field-deep">
   <Container class="py-16">
     <div class="flex flex-wrap items-start justify-between gap-x-16 gap-y-12">
       <div class="max-w-64">
         <a href="/" aria-label="QuietJar" class="flex items-center gap-0.5">
-          <Logo class="h-11 w-auto" mark="#ffffff" quiet="rgba(255,255,255,0.6)" jar="#ffffff" />
+          <Logo class="h-11 w-auto" mark="#ffffff" quiet="#86C4A3" jar="#ffffff" />
         </a>
         <p class="mt-4 text-[13.5px] leading-[1.6] text-white/52">
           {copy.footer.address.map((line) => <>{line}<br /></>)}
@@ -70,9 +70,9 @@ const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${loc
       <a
         href="https://goodfolk.eu/"
         rel="noopener"
-        aria-label="Powered by Goodfolk"
+        aria-label={`${copy.footer.poweredBy} Goodfolk`}
         class="inline-flex items-center gap-[11px] text-white no-underline">
-        <span class="text-[14px] font-normal opacity-60">Powered by</span>
+        <span class="text-[14px] font-normal opacity-60">{copy.footer.poweredBy}</span>
         <svg viewBox="0 0 187.57 40.23" height="20" width="93.3" fill="currentColor" aria-hidden="true" class="block flex-none">
         <svg x="-1.52" y="-11.90" width="52" height="52" viewBox="191.61 612.54 212.12 212.13" overflow="visible"><path d="M265.87 665.53 L276.48 676.14 L234.02 718.6 L319.36 803.95 L298.15 825.16 L202.2 729.2 A15 15 0 0 1 202.2 707.99 L244.66 665.53 A15 15 0 0 1 265.87 665.53 Z M350.72 665.46 L392.83 707.57 A15 15 0 0 1 392.83 728.78 L339.76 781.85 L318.55 760.63 L361.01 718.17 L340.08 697.24 L297.62 739.7 L276.44 718.53 L329.51 665.46 A15 15 0 0 1 350.72 665.46 Z" fill="currentColor"></path></svg>
         <g transform="translate(58.48 31.82) scale(0.592593)">

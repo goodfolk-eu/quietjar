@@ -1,15 +1,13 @@
 ---
-import StarRing from "@/components/starrring.astro";
 import { dictionary } from "@/i18n/t";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const cta = copy.cta;
 ---
 
-<section class="relative overflow-hidden bg-qj-blue">
-  <StarRing />
-  <div class="relative mx-auto flex max-w-[1200px] flex-col items-start gap-[22px] px-10 pb-[104px] pt-24">
-    <h2 class="max-w-[26ch] text-balance font-display text-[50px] font-bold leading-[1.03] tracking-[-0.032em] text-white">
+<section class="relative overflow-hidden bg-qj-field">
+  <div class="relative mx-auto flex max-w-[1180px] flex-col items-start gap-[22px] px-10 py-[clamp(72px,9vw,120px)]">
+    <h2 class="max-w-[22ch] text-balance font-display text-[clamp(30px,3.8vw,48px)] font-bold leading-[1.05] tracking-[-0.028em] text-white">
       {cta.title}
     </h2>
     <p class="max-w-[48ch] text-pretty text-[17px] leading-[1.62] text-white/80">
@@ -17,10 +15,10 @@ const cta = copy.cta;
     </p>
     <div class="mt-1.5 flex flex-col items-center gap-3.5 sm:flex-row">
       <button type="button" data-auth-mode="signup"
-        class="cursor-pointer rounded-sm bg-qj-green px-6 py-3.5 text-center text-[15px] font-semibold text-white transition hover:bg-qj-green-press">
+        class="cursor-pointer rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
         {cta.primary}
       </button>
-      <a href="#faq" class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-tint transition hover:text-white">
+      <a href="#faq" class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
         {cta.secondary}
       </a>
     </div>

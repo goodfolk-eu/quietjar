@@ -12,9 +12,7 @@
     "login": "Log in",
     "signup": "Add to your site",
     "dashboard": "Dashboard",
-    "menu": "Menu",
-    "primary": "Primary",
-    "mobile": "Mobile"
+    "primary": "Primary"
   },
   "footer": {
     "address": ["Panamalaan 8-D", "1019 AZ Amsterdam", "The Netherlands"],
@@ -29,7 +27,7 @@
       { "title": "Compare", "path": "/compare/" }
     ],
     "copyright": "Copyright © {year} QuietJar · A quiet way to accept support.",
-    "subtext": "A small share only when you get paid."
+    "poweredBy": "Powered by"
   },
   "auth": {
     "title": "Sign in to QuietJar",

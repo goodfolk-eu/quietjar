@@ -6,26 +6,26 @@ const features = copy.features;
 const logos = copy.logos;
 ---
 
-<section id="how" class="border-y border-qj-line bg-qj-surface">
-  <div class="mx-auto flex max-w-[1200px] flex-col gap-[44px] px-10 pb-24 pt-[88px]">
-    <div class="flex max-w-[60ch] flex-col gap-3.5">
-      <span class="text-[13.5px] font-medium text-qj-green">{features.eyebrow}</span>
-      <h2 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.03em] text-qj-ink">
+<section id="how">
+  <div class="mx-auto flex max-w-[1180px] flex-col gap-[44px] px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)]">
+    <div class="flex flex-col gap-3.5">
+      <span class="text-[13.5px] font-semibold tracking-[-0.005em] text-qj-accent">{features.eyebrow}</span>
+      <h2 class="text-balance font-display text-[clamp(28px,3.4vw,44px)] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
         {features.title}
       </h2>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
-      <div class="flex flex-col gap-5 rounded border border-qj-line bg-white px-[34px] py-8 pb-9">
+      <div class="flex flex-col gap-5 rounded-lg border border-qj-line-card bg-white px-[34px] py-8 pb-9">
         <div class="flex flex-col gap-1.5">
-          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-ink-3">{features.oldWayTitle}</span>
-          <span class="font-display text-[22px] font-bold tracking-[-0.02em] text-qj-ink">{features.oldWaySubtitle}</span>
+          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-body">{features.oldWayTitle}</span>
+          <span class="font-display text-[22px] font-bold tracking-[-0.022em] text-qj-ink">{features.oldWaySubtitle}</span>
         </div>
-        <ol class="flex flex-col gap-3 text-[15px] leading-[1.5] text-qj-ink-2">
+        <ol class="flex flex-col gap-3 text-[15px] leading-[1.5] text-qj-body">
           {
             features.oldWaySteps.map((step, i) => (
               <li class="flex gap-3">
-                <span class="w-6 shrink-0 pt-[3px] font-mono text-[12.5px] text-qj-ink-4">0{i + 1}</span>
+                <span class="w-6 shrink-0 pt-[3px] font-mono text-[12.5px] text-qj-body">0{i + 1}</span>
                 <span class:list={[i === features.oldWaySteps.length - 1 && "font-medium text-qj-ink"]}>{step}</span>
               </li>
             ))
@@ -33,32 +33,32 @@ const logos = copy.logos;
         </ol>
       </div>
 
-      <div class="flex flex-col gap-5 rounded border-[1.5px] border-qj-green bg-white px-[34px] py-8 pb-9">
+      <div class="flex flex-col gap-5 rounded-lg border-[1.5px] border-qj-accent-pale bg-white px-[34px] py-8 pb-9">
         <div class="flex flex-col gap-1.5">
-          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-green">{features.withTitle}</span>
-          <span class="font-display text-[22px] font-bold tracking-[-0.02em] text-qj-ink">{features.withSubtitle}</span>
+          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-accent">{features.withTitle}</span>
+          <span class="font-display text-[22px] font-bold tracking-[-0.022em] text-qj-ink">{features.withSubtitle}</span>
         </div>
-        <ol class="flex flex-col gap-3 text-[15px] leading-[1.5] text-qj-ink-2">
+        <ol class="flex flex-col gap-3 text-[15px] leading-[1.5] text-qj-body">
           {
             features.withSteps.map((step, i) => (
               <li class="flex gap-3">
-                <span class="w-6 shrink-0 pt-[3px] font-mono text-[12.5px] text-qj-tint">0{i + 1}</span>
+                <span class="w-6 shrink-0 pt-[3px] font-mono text-[12.5px] text-qj-accent">0{i + 1}</span>
                 <span>{step}</span>
               </li>
             ))
           }
         </ol>
-        <p class="mt-2 border-t border-qj-line-2 pt-[18px] text-[14.5px] leading-[1.6] text-qj-ink-2">{features.closing}</p>
+        <p class="mt-2 border-t border-qj-line-soft pt-[18px] text-[14.5px] leading-[1.6] text-qj-body">{features.closing}</p>
       </div>
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-8 rounded border border-qj-line bg-white px-[30px] py-[22px]">
-      <span class="max-w-[52ch] text-[15px] leading-[1.5] text-qj-ink-2">{logos.text}</span>
-      <div class="flex flex-wrap items-center gap-2.5 font-mono text-[12px] text-qj-ink-2">
+    <div class="flex flex-wrap items-center justify-between gap-8 lg:flex-nowrap">
+      <span class="max-w-[52ch] shrink text-[15px] leading-[1.5] text-qj-body">{logos.text}</span>
+      <div class="flex flex-wrap items-center gap-2.5 font-mono text-[12px] text-qj-body lg:shrink-0">
         {logos.methods.map((method) => (
-          <span class="rounded-sm border border-qj-line px-3 py-[7px]">{method}</span>
+          <span class="rounded-sm border border-qj-line-card px-3 py-[7px]">{method}</span>
         ))}
-        <span class="rounded-sm border border-qj-line px-3 py-[7px] text-qj-blue">{logos.moreLabel}</span>
+        <span class="rounded-sm border border-qj-line-card px-3 py-[7px] text-qj-accent">{logos.moreLabel}</span>
       </div>
     </div>
   </div>

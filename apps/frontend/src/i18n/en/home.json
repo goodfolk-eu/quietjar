@@ -1,21 +1,25 @@
 {
   "hero": {
     "eyebrow": "A support button that lives on your site",
-    "title": "Let people support you without leaving your site.",
-    "description": "Every time you send a customer off to a separate donation page, most of them never arrive. QuietJar lives on your page. The moment someone wants to give, they can. Two taps, no redirect, no lost place.",
+    "title": "Your supporters never have to leave.",
+    "description": "The moment someone wants to give, they can. Two taps, on your page, in your design - nobody gets sent anywhere.",
     "ctaPrimary": "Add it to your site",
     "ctaSecondary": "See it in action",
-    "subtext": "No monthly fee. We take 5% of what you receive, capped at €[TODO: cap] per payment.",
+    "trustBar": [
+      "On-page checkout, no redirect",
+      "Free to start, no monthly fee",
+      "EU-hosted, no cookie banner",
+      "Wallets, iDEAL & cards"
+    ],
     "browserMock": {
       "url": "your-site.com",
       "enjoy": "Enjoying this?",
-      "sub": "Support the work - stays on this page.",
+      "sub": "Stays on this page.",
       "cta": "Support · €5",
       "thanks": "Thank you.",
       "thanksSub": "Your support keeps this site running.",
-      "snippet": "<script src=\"https://quietjar.com/js/latest/widget.js\"></script>\n<div data-quietjar=\"you\"></div>",
-      "live": "live · matches your design",
-      "caption": "Tap it. This is the real thing.",
+      "snippet": "<div data-quietjar=\"you\"></div>",
+      "live": "Live, not a picture",
       "presets": [
         { "key": "docs", "label": "Docs site" },
         { "key": "blog", "label": "Personal blog" },
@@ -52,8 +56,8 @@
   "polite": {
     "eyebrow": "Built to respect your audience",
     "title": "It knows when to step back.",
-    "description": "Once someone has supported you, QuietJar quietly leaves them alone for a while. It does not nag the people who already gave. Your biggest supporters get thanked, not pestered. That is what keeps them coming back. It remembers on our side, not in your visitor's browser, so it works in Safari too.",
-    "note": "Your fans get thanked for giving, never chased for giving again.",
+    "description": "Once someone has given, QuietJar stops asking. It remembers on our side, not in your visitor's browser, so it works in Safari too.",
+    "note": "Your fans get thanked, never chased.",
     "feelLabel": "What it feels like to your most loyal supporter",
     "feelSteps": [
       "Supports you once",
@@ -64,34 +68,24 @@
   },
   "craft": {
     "eyebrow": "Craft",
-    "title": "Feels like part of your site. Not an ad for someone else's.",
-    "description": "QuietJar is not a clunky add-on stapled onto your page. It is fast and precise, designed to look like you built it yourself. Paying feels effortless. The same frictionless experience they'd expect from any well-made checkout.",
+    "title": "Feels like part of your site, not an ad for someone else's.",
+    "description": "Fast and precise, designed to look like you built it yourself. Paying feels effortless, like any well-made checkout.",
     "perfReady": false,
     "features": [
       {
         "title": "Two-tap checkout",
         "description": "No forms to fill, no account to create. Just tap and it is done.",
-        "perf": "Loads in [TODO: load-ms] ms. [TODO: script-kb] kB. No layout shift.",
-        "icon": "bx:bxs-zap"
+        "perf": "Loads in [TODO: load-ms] ms. [TODO: script-kb] kB. No layout shift."
       },
       {
         "title": "Matches your design",
-        "description": "Colors, corners, and feel fit your page, not an ad for someone else's.",
-        "icon": "bx:bxs-palette"
+        "description": "Colors, corners, and feel fit your page, not an ad for someone else's."
       },
       {
         "title": "Familiar payment methods",
-        "description": "Apple Pay, cards, and more, right where your visitors already pay.",
-        "icon": "bx:bxs-credit-card"
+        "description": "Apple Pay, cards, and more, right where your visitors already pay."
       }
     ]
-  },
-  "goals": {
-    "eyebrow": "Goals",
-    "title": "Show them what the support is for.",
-    "description": "Set a goal your visitors can see. Hosting for the year. The next release. A new microphone. A progress bar turns a vague ask into a concrete one, and people give more when they know where it goes.",
-    "barLabel": "Hosting for 2027 · €184 of €300",
-    "barPercent": 61
   },
   "pricing": {
     "eyebrow": "Pricing",

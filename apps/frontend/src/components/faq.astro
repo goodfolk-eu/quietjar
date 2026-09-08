@@ -6,11 +6,11 @@ const faq = copy.faq;
 const faqs = faq.items;
 ---
 
-<section id="faq" class="bg-white">
-  <div class="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-18 px-10 pb-24 pt-[88px] lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)]">
+<section id="faq">
+  <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-start gap-[72px] border-t border-qj-line px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)] lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)]">
     <div class="flex flex-col gap-3.5 lg:sticky lg:top-[104px]">
-      <span class="text-[13.5px] font-medium text-qj-green">{faq.eyebrow}</span>
-      <h2 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.03em] text-qj-ink">
+      <span class="text-[13.5px] font-semibold tracking-[-0.005em] text-qj-accent">{faq.eyebrow}</span>
+      <h2 class="text-balance font-display text-[clamp(28px,3.4vw,44px)] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
         {faq.title}
       </h2>
     </div>
@@ -18,17 +18,24 @@ const faqs = faq.items;
     <div>
       {
         faqs.map((item) => (
-          <div class="border-t border-qj-line-3 py-6 last:border-b last:border-qj-line-3">
-            <div class="flex flex-col gap-2">
-              <span class="font-display text-[19px] font-bold tracking-[-0.02em] text-qj-ink">{item.q}</span>
-              <span class="text-pretty text-[15.5px] leading-[1.62] text-qj-ink-2">{item.a}</span>
+          <details class="group border-t border-qj-line-soft py-6 last:border-b last:border-qj-line-soft">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[19px] font-bold tracking-[-0.022em] text-qj-ink [&::-webkit-details-marker]:hidden">
+              {item.q}
+              <span
+                class="shrink-0 text-[22px] font-normal leading-none text-qj-body transition-transform duration-200 group-open:rotate-45"
+                aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <div class="flex flex-col gap-2 pt-3">
+              <span class="text-pretty text-[15.5px] leading-[1.62] text-qj-body">{item.a}</span>
               {item.linkLabel && item.linkHref && (
-                <a href={item.linkHref} class="self-start text-[14px] font-semibold text-qj-blue transition hover:text-qj-green">
+                <a href={item.linkHref} class="self-start text-[14px] font-semibold text-qj-accent transition hover:text-qj-ink">
                   {item.linkLabel}
                 </a>
               )}
             </div>
-          </div>
+          </details>
         ))
       }
     </div>

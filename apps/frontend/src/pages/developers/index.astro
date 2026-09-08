@@ -11,10 +11,10 @@ const dev = copy.developers;
   title="QuietJar for developers - One script tag, no layout shift"
   description="Add QuietJar to any site with one script tag. No layout shift, the payment methods people already use, and it steps back after someone gives.">
   <Container class="py-16 lg:py-24">
-    <div class="mx-auto max-w-[68ch]">
+    <div class="mx-auto max-w-[720px]">
     <div class="flex flex-col gap-4">
       <span class="text-[13.5px] font-medium text-qj-green">{dev.eyebrow}</span>
-      <h1 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.03em] text-qj-ink">
+      <h1 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
         {dev.title}
       </h1>
       <p class="max-w-[52ch] text-pretty text-[17px] leading-[1.62] text-qj-ink-2">{dev.sub}</p>
@@ -22,8 +22,8 @@ const dev = copy.developers;
 
     <div class="mt-14 flex flex-col gap-14">
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.install.title}</h2>
-        <pre class="whitespace-pre-wrap rounded border border-qj-line bg-qj-surface px-5 py-4 font-mono text-[13px] leading-[1.8] text-qj-ink-2">{dev.snippet}</pre>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.install.title}</h2>
+        <pre class="whitespace-pre-wrap break-all rounded border border-qj-line bg-qj-surface px-5 py-4 font-mono text-[13px] leading-[1.8] text-qj-ink-2">{dev.snippet}</pre>
         <ol class="flex flex-col gap-2.5 text-[15.5px] leading-[1.6] text-qj-ink-2">
           {
             dev.install.steps.map((step, i) => (
@@ -38,17 +38,17 @@ const dev = copy.developers;
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.performance.title}</h2>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.performance.title}</h2>
         <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.performance.text}</p>
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.stepsBack.title}</h2>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.stepsBack.title}</h2>
         <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.stepsBack.text}</p>
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.methods.title}</h2>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.methods.title}</h2>
         <dl class="flex flex-col gap-3 text-[15.5px] leading-[1.6]">
           {
             dev.methods.items.map((method) => (
@@ -62,22 +62,22 @@ const dev = copy.developers;
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.goals.title}</h2>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.goals.title}</h2>
         <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.goals.text}</p>
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.fees.title}</h2>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.fees.title}</h2>
         <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.fees.text}</p>
-        <a href="/#pricing" class="self-start text-[14px] font-semibold text-qj-blue transition hover:text-qj-green">{dev.feesLink}</a>
+        <a href="/#pricing" class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.feesLink}</a>
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.02em] text-qj-ink">{dev.alternatives.title}</h2>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.alternatives.title}</h2>
         {dev.alternatives.paragraphs.map((paragraph) => (
           <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{paragraph}</p>
         ))}
-        <a href="/compare/" class="self-start text-[14px] font-semibold text-qj-blue transition hover:text-qj-green">{dev.compareLink}</a>
+        <a href="/compare/" class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.compareLink}</a>
       </section>
 
       <div class="border-t border-qj-line pt-10">
