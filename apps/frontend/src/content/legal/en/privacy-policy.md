@@ -39,8 +39,8 @@ open a payment account, Stripe collects your details and identity data as a
 controller under its own privacy policy; we receive only the status of that setup.
 
 **Suppression records.** The site, the date, and a pseudonymous identifier
-([DESCRIBE, e.g. hash of Stripe payment method fingerprint]), kept on the
-supporter's device and on ours, so the widget steps back for [N] days after a
+(a random value containing no name, email, or card details), kept on the
+supporter's device and on ours, so the widget steps back for a while after a
 donation instead of asking again.
 
 **Support data.** Anything you send us by email or in writing.
@@ -72,7 +72,7 @@ We do not profile supporters, sell data, or use anything for advertising.
 **Account data.** For the life of the account, then deleted within 30 days of
 closure.
 
-**Suppression records.** [N] days after the donation, then deleted.
+**Suppression records.** Kept only while the step-back is active, then deleted.
 
 **Technical and security logs.** For brief, fixed periods, no longer than 30 days.
 

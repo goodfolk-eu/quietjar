@@ -74,7 +74,7 @@ below. It deletes data as described below at the end of the contract.
 The creator grants general written authorization to engage sub-processors. The
 current list, with each sub-processor's role, location, and engagement date, is on
 the [subprocessors](/legal/subprocessors/) page. Stripe operates the creator's
-[EXPRESS/CUSTOM] connected account: it is a sub-processor for the donation flow
+Express connected account: it is a sub-processor for the donation flow
 and an independent controller for identity checks and fraud scoring, which its own
 terms govern. QuietJar notifies creators of new sub-processors at least 30 days
 before they begin processing; a creator may object on reasonable data-protection

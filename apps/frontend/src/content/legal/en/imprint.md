@@ -18,20 +18,22 @@ GoodFolk B.V. i.o., Panamalaan 8-D, 1019 AZ Amsterdam, the Netherlands.
 
 ## Commercial register
 
-Kamer van Koophandel (Dutch Chamber of Commerce), number [KVK NUMBER].
+GoodFolk B.V. i.o. is being registered with the Kamer van Koophandel (Dutch
+Chamber of Commerce). The registration number will be published here once it is
+issued.
 
 ## Represented by
 
-GoodFolk B.V. i.o. is represented by its managing director, [NAME].
+GoodFolk B.V. i.o. is represented by its managing director.
 
 ## Contact
 
-General: info@quietjar.com. Data protection: privacy@quietjar.com.
-[SECOND CONTACT CHANNEL].
+General: info@quietjar.com. Data protection: privacy@quietjar.com. By post:
+Panamalaan 8-D, 1019 AZ Amsterdam, the Netherlands.
 
 ## VAT identification number
 
-Dutch VAT number: [VAT NUMBER].
+The Dutch VAT identification number will be published here once it is issued.
 
 ## Dispute resolution
 

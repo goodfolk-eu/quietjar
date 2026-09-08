@@ -194,10 +194,10 @@ Fill this in and send it to info@quietjar.com only if you want to withdraw.
 
 To GoodFolk B.V. i.o., Panamalaan 8-D, 1019 AZ Amsterdam, The Netherlands:
 
-I withdraw from the contract for the use of QuietJar, concluded on [DATE].
+I withdraw from the contract for the use of QuietJar, concluded on ____________.
 
-Name: [NAME]
+Name: ____________________________
 
-Email: [EMAIL]
+Email: ____________________________
 
-Date: [DATE]
+Date: ____________

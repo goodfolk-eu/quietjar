@@ -70,12 +70,12 @@
     "eyebrow": "Craft",
     "title": "Feels like part of your site, not an ad for someone else's.",
     "description": "Fast and precise, designed to look like you built it yourself. Paying feels effortless, like any well-made checkout.",
-    "perfReady": false,
+    "perfReady": true,
     "features": [
       {
         "title": "Two-tap checkout",
         "description": "No forms to fill, no account to create. Just tap and it is done.",
-        "perf": "Loads in [TODO: load-ms] ms. [TODO: script-kb] kB. No layout shift."
+        "perf": "Loads in 15 ms. 9.4 kB. No layout shift."
       },
       {
         "title": "Matches your design",
@@ -90,7 +90,7 @@
   "pricing": {
     "eyebrow": "Pricing",
     "title": "We only win when you do.",
-    "description": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive, capped at €[TODO: cap] per payment. It costs you nothing until it is earning you something.",
+    "description": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. It costs you nothing until it is earning you something.",
     "planLabel": "Simple",
     "planPrice": "Free",
     "planPriceNote": "to start, forever",
@@ -100,7 +100,7 @@
       ["€50", "€47.50"]
     ],
     "absorb": "Payment processing costs vary by method. We absorb the difference. Your supporters are never charged extra.",
-    "payout": "Paid out [TODO: payout].",
+    "payout": "Paid out on demand, with a click.",
     "cta": "Add it to your site"
   },
   "faq": {
@@ -131,11 +131,11 @@
       },
       {
         "q": "What does it cost?",
-        "a": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive, capped at €[TODO: cap] per payment. It costs you nothing until it is earning you something."
+        "a": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. Donations are €1 to €500. It costs you nothing until it is earning you something."
       },
       {
         "q": "When do I get paid?",
-        "a": "[TODO: payout]"
+        "a": "Whenever you want. Click Payout in your dashboard and Stripe sends your balance to your bank account."
       },
       {
         "q": "What payment methods can my supporters use?",
@@ -147,7 +147,7 @@
       },
       {
         "q": "What happens after someone supports me?",
-        "a": "QuietJar steps back. It stops pestering people who have already given, so your biggest supporters get thanked instead of nagged."
+        "a": "QuietJar steps back. After someone gives, the button takes a break: 30 days by default, and you choose how long. Your biggest supporters get thanked instead of nagged."
       },
       {
         "q": "Is my data and my supporters' data in the EU?",

@@ -113,11 +113,16 @@
   background-color: color-mix(in srgb, var(--color-gray-900) 50%, transparent);
 }
 
-/* Markdown tables (legal docs) don't wrap on narrow viewports by default -
-   let them scroll horizontally instead of overflowing the page. */
-.prose table {
-  display: block;
+/* Markdown tables (legal docs) can need more room than the prose column on
+   narrow viewports - scroll the wrapper horizontally instead of overflowing
+   the page or squeezing the table (which misaligns columns). Wrapper is
+   added client-side by LegalLayout.astro. */
+.table-scroll {
   overflow-x: auto;
+}
+
+.prose table {
+  width: 100%;
 }
 
 @layer base {

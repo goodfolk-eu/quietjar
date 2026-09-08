@@ -14,10 +14,10 @@ Framework and standard contractual clauses.
 
 | Subprocessor | Role | Processing location | Engaged |
 | --- | --- | --- | --- |
-| Stripe Payments Europe, Ltd. | Payments: donation checkout, payouts, identity checks, and fraud prevention for creators' payment accounts | Ireland, EEA | [MONTH YEAR] |
-| Bunny.net (Bunny Way d.o.o.) | Infrastructure: hosting, CDN, and managed database for the widget, dashboard, API, and website | European Union | [MONTH YEAR] |
-| Scaleway (Scaleway SAS) | Transactional email: sign-in codes and account email | France | [MONTH YEAR] |
-| [MAILBOX PROVIDER] | Support email mailbox | [LOCATION] | [MONTH YEAR] |
+| Stripe Payments Europe, Ltd. | Payments: donation checkout, payouts, identity checks, and fraud prevention for creators' payment accounts | Ireland, EEA | September 2026 |
+| Bunny.net (Bunny Way d.o.o.) | Infrastructure: hosting, CDN, and managed database for the widget, dashboard, API, and website | European Union | September 2026 |
+| Scaleway (Scaleway SAS) | Transactional email: sign-in codes and account email | France | September 2026 |
+| Soverin (Soverin B.V.) | Support email mailbox | Netherlands | September 2026 |
 
 Each subprocessor uses its own sub-processors; they are listed in each
 subprocessor's own documentation. This list is complete as of the date above.

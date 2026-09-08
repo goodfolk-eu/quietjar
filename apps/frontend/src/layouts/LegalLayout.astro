@@ -79,9 +79,24 @@ const formattedDate = lastUpdated.toLocaleDateString("en-CA", {
           </p>
 
           <div
-            class="prose prose-slate mt-10 max-w-none prose-headings:font-display prose-a:text-qj-blue hover:prose-a:text-qj-green">
+            class="prose prose-slate mt-10 max-w-none prose-headings:font-display prose-a:text-qj-blue hover:prose-a:text-qj-green"
+            data-legal-content>
             <slot />
           </div>
+
+          <script>
+            // Markdown tables can need more room than the prose column on narrow
+            // viewports. Wrap each in a scrollable div instead of letting it
+            // overflow the page or forcing table-layout: fixed.
+            for (const table of document.querySelectorAll<HTMLTableElement>(
+              "[data-legal-content] table",
+            )) {
+              const wrapper = document.createElement("div");
+              wrapper.className = "table-scroll";
+              table.replaceWith(wrapper);
+              wrapper.append(table);
+            }
+          </script>
 
           <nav
             aria-label={copy.legal.pager}
