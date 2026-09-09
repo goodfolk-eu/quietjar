@@ -77,7 +77,7 @@ serve({
   fetch: (req) => {
     const { pathname } = new URL(req.url);
 
-    if (pathname === "/widget.js") {
+    if (pathname === "/quietjar.js") {
       if (currentBundle === null) {
         return new Response("Widget not built yet. Check the dev server output for errors.", {
           status: 500,

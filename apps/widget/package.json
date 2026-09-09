@@ -7,7 +7,7 @@
     "dev": "bun dev.ts",
     "typecheck": "tsc --noEmit",
     "bundle": "bun build src/index.ts --target=browser --format=iife --minify",
-    "build": "bun run typecheck && bun run bundle -- --outfile=dist/widget.js",
+    "build": "bun run typecheck && bun run bundle -- --outfile=dist/quietjar.js",
     "test": "bun test"
   },
   "exports": {

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "typecheck": "astro check && tsc --noEmit",
-    "build:embed": "cd ../widget && bun run typecheck && bun run bundle -- --outfile=../frontend/public/js/latest/widget.js",
+    "build:embed": "cd ../widget && bun run typecheck && bun run bundle -- --outfile=../frontend/public/js/latest/quietjar.js",
     "build": "bun run build:embed && bun run typecheck && astro build",
     "deploy": "bun deploy.ts",
     "preview": "astro preview",

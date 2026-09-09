@@ -3,7 +3,7 @@
     "eyebrow": "For developers",
     "title": "A support button for your docs site.",
     "sub": "One script tag. No layout shift. It steps back after someone gives.",
-    "snippet": "<script src=\"https://quietjar.com/js/latest/widget.js\"></script>\n<div data-quietjar=\"you\"></div>",
+    "snippet": "<script src=\"https://quietjar.com/js/latest/quietjar.js\"></script>\n<div data-quietjar=\"you\"></div>",
     "install": {
       "title": "Install",
       "steps": [
