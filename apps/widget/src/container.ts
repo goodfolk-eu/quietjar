@@ -1,4 +1,4 @@
-import { ApiError, createSession } from "./api";
+import { ApiError, createSession, saveDonationDetails } from "./api";
 import { amountScale, type ResolvedConfig } from "./config";
 import { persistDonation } from "./donation";
 import { formatAmount } from "./money";
@@ -51,7 +51,7 @@ export interface PaymentContainer {
   element: HTMLElement;
   open(): void;
   close(): void;
-  showThanks(): void;
+  showThanks(sessionId?: string): void;
   isOpen(): boolean;
 }
 
@@ -324,9 +324,73 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     reposition();
   }
 
-  function showThanks(): void {
+  function showThanks(sessionId?: string): void {
     teardownPaymentElement();
+    if (sessionId === undefined || sessionId === "") {
+      body.replaceChildren(renderMessage("quietjar-panel__thanks", config.thanksLabel));
+      reposition();
+      return;
+    }
+    renderDetailsStep(sessionId);
+  }
+
+  /**
+   * The donation is already done; these fields are a note the supporter can
+   * skip by closing the panel. The limits mirror the server's.
+   */
+  function renderDetailsStep(sessionId: string): void {
     body.replaceChildren(renderMessage("quietjar-panel__thanks", config.thanksLabel));
+
+    const name = document.createElement("input");
+    name.className = "quietjar-panel__field";
+    name.type = "text";
+    name.maxLength = 80;
+    name.placeholder = "Your name (optional)";
+
+    const message = document.createElement("textarea");
+    message.className = "quietjar-panel__field";
+    message.maxLength = 280;
+    message.placeholder = "A message for the creator (optional)";
+
+    const counter = document.createElement("span");
+    counter.className = "quietjar-panel__counter";
+
+    function syncCounter(): void {
+      counter.textContent = `${message.value.length} / 280`;
+    }
+    message.addEventListener("input", syncCounter);
+    syncCounter();
+
+    const submit = document.createElement("button");
+    submit.type = "button";
+    submit.className = "quietjar-panel__submit";
+    submit.textContent = "Send";
+
+    const error = renderMessage("quietjar-panel__error", "");
+    error.hidden = true;
+
+    submit.addEventListener("click", () => {
+      submit.disabled = true;
+      error.hidden = true;
+      void saveDonationDetails({
+        api: config.api,
+        sessionId,
+        name: name.value.trim(),
+        message: message.value.trim(),
+      }).then((saved) => {
+        if (!saved) {
+          error.textContent = "Could not send that. Try again?";
+          error.hidden = false;
+          submit.disabled = false;
+          reposition();
+          return;
+        }
+        body.replaceChildren(renderMessage("quietjar-panel__thanks", "Thank you."));
+        reposition();
+      });
+    });
+
+    body.append(name, message, counter, submit, error);
     reposition();
   }
 
@@ -432,7 +496,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
         // Redirect methods never reach this point: the browser has already
         // left for the bank by the time confirm settles.
         persistDonation(config.site);
-        showThanks();
+        showThanks(session.sessionId);
       });
     } catch (err) {
       renderError(messageFor(err));

@@ -296,6 +296,31 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       font-family: inherit;
       font-size: 15px;
     }
+    .quietjar-panel__field {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #0f172a;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    .quietjar-panel__field:focus {
+      border-color: ${color};
+      outline: none;
+    }
+    textarea.quietjar-panel__field {
+      min-height: 72px;
+      resize: vertical;
+    }
+    .quietjar-panel__counter {
+      align-self: flex-end;
+      font-size: 12px;
+      color: #6b747b;
+    }
     .quietjar-panel__submit {
       width: 100%;
       padding: 12px 16px;

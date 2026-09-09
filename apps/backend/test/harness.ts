@@ -49,6 +49,12 @@ export const stripeState = {
   throwOnCreate: null as Error | null,
   throwOnLink: null as Error | null,
   missingAccount: false,
+  /** What the fake charge's balance transaction nets down to. Null = unknown. */
+  chargeNet: null as number | null,
+  /** The event constructWebhookEvent hands to the webhook route. */
+  webhookEvent: null as Record<string, unknown> | null,
+  /** The checkout session Stripe answers with on a status lookup. */
+  donationSession: null as Record<string, unknown> | null,
 };
 
 function account() {
@@ -71,10 +77,16 @@ function record(name: string, args: unknown) {
 mock.module("../src/stripe/client", () => ({
   stripeConfigFromEnv: () => ({ secretKey: process.env.STRIPE_SECRET_KEY }),
   webhookSecretFromEnv: () => "whsec_test",
+  isTestMode: () => true,
+  publishableKeyFromEnv: () => "pk_test_harness",
+  createDonationSession: async (_config: unknown, input: unknown) => {
+    record("createDonationSession", input);
+    return { id: "cs_test_harness", clientSecret: "cs_test_harness_secret" };
+  },
+  isMissingAccount: () => stripeState.missingAccount,
   // Pure and network-free, so it mirrors the real implementation rather than
   // faking it -- mock.module is global and pay.test.ts asserts on the real one.
   applicationFee: (amountInMinorUnits: number) => Math.floor((amountInMinorUnits * 500) / 10_000),
-  isMissingAccount: () => stripeState.missingAccount,
   createConnectedAccount: async (_config: unknown, input: unknown) => {
     record("createConnectedAccount", input);
     if (stripeState.throwOnCreate) throw stripeState.throwOnCreate;
@@ -97,8 +109,17 @@ mock.module("../src/stripe/client", () => ({
     record("createLoginLink", { accountId });
     return stripeState.loginUrl;
   },
+  chargeNet: async (_config: unknown, accountId: string, paymentIntentId: string) => {
+    record("chargeNet", { accountId, paymentIntentId });
+    return stripeState.chargeNet;
+  },
   constructWebhookEvent: async () => {
-    throw new Error("not used");
+    if (stripeState.webhookEvent === null) throw new Error("not used");
+    return stripeState.webhookEvent;
+  },
+  retrieveDonationSession: async (_config: unknown, accountId: string, sessionId: string) => {
+    record("retrieveDonationSession", { accountId, sessionId });
+    return stripeState.donationSession;
   },
 }));
 
@@ -110,6 +131,9 @@ export function resetStripe(): void {
   stripeState.throwOnCreate = null;
   stripeState.throwOnLink = null;
   stripeState.missingAccount = false;
+  stripeState.chargeNet = null;
+  stripeState.webhookEvent = null;
+  stripeState.donationSession = null;
 }
 
 export function calledWith(name: string): unknown | undefined {

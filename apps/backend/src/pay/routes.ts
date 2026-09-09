@@ -6,12 +6,21 @@ import {
   isMissingAccount,
   isTestMode,
   publishableKeyFromEnv,
+  retrieveDonationSession,
   stripeConfigFromEnv,
 } from "../stripe/client";
 import { getConnectionByUserId } from "../stripe/store";
-import { isValidAmount, sessionsPerIp, sessionsPerSite } from "./limits";
+import {
+  detailsPerIp,
+  isValidAmount,
+  MAX_MESSAGE_LENGTH,
+  MAX_NAME_LENGTH,
+  sessionsPerIp,
+  sessionsPerSite,
+  statusPerIp,
+} from "./limits";
 import { isAllowedOrigin, isAllowedReturnUrl, type OriginPolicy } from "./origin";
-import { getDonationBySessionId } from "./store";
+import { getDonationBySessionId, saveDonationDetails } from "./store";
 
 /** The dashboard serves the widget editor, whose preview is a real widget. */
 function dashboardOrigin(): string {
@@ -97,6 +106,7 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
           productName: `Support for ${siteHost(site.siteUrl)}`,
         });
         return {
+          sessionId: session.id,
           clientSecret: session.clientSecret,
           publishableKey,
           account: connection.accountId,
@@ -121,17 +131,70 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
     },
   )
   // The widget calls this after a redirect payment method returns the supporter
-  // to the page. It reports our own record, written by the webhook.
+  // to the page. Our own record is written by the webhook, which can trail the
+  // redirect or never arrive, so with the site key in hand the answer is also
+  // asked straight from Stripe. Paid is only ever reported once the money is
+  // certain; a failed or cancelled attempt stays quiet.
   .get(
     "/status",
-    async ({ query }) => {
+    async ({ query, request, set }) => {
       const donation = await getDonationBySessionId(query.session);
-      if (!donation) return { status: "pending" as const };
+      if (donation) {
+        return {
+          status: "paid" as const,
+          amount: donation.amount,
+          currency: donation.currency,
+        };
+      }
+      if (!query.site) return { status: "pending" as const };
+      if (!statusPerIp.take(callerIp(request))) {
+        set.status = 429;
+        return { error: "rate_limited" };
+      }
+      const site = await getSiteByPublicKey(query.site);
+      if (!site) return { status: "pending" as const };
+      const connection = await getConnectionByUserId(site.userId);
+      const config = stripeConfigFromEnv();
+      if (!connection || !config) return { status: "pending" as const };
+      const session = await retrieveDonationSession(config, connection.accountId, query.session);
+      if (session?.payment_status !== "paid") return { status: "pending" as const };
       return {
         status: "paid" as const,
-        amount: donation.amount,
-        currency: donation.currency,
+        amount: session.amount_total ?? 0,
+        currency: session.currency ?? site.currency,
       };
     },
-    { query: t.Object({ session: t.String({ minLength: 1, maxLength: 128 }) }) },
+    {
+      query: t.Object({
+        session: t.String({ minLength: 1, maxLength: 128 }),
+        site: t.Optional(t.String({ minLength: 1, maxLength: 64 })),
+      }),
+    },
+  )
+  // The thank-you step's optional name and message. Keyed by the checkout
+  // session the supporter's own payment just created; the webhook may still
+  // be on its way, so existence is not checked and the first submit wins.
+  .post(
+    "/details",
+    async ({ request, set, body }) => {
+      if (!detailsPerIp.take(callerIp(request))) {
+        set.status = 429;
+        return { error: "rate_limited" };
+      }
+      const name = (body.name ?? "").trim();
+      const message = (body.message ?? "").trim();
+      await saveDonationDetails({
+        sessionId: body.session,
+        name: name === "" ? null : name,
+        message: message === "" ? null : message,
+      });
+      return { ok: true };
+    },
+    {
+      body: t.Object({
+        session: t.String({ minLength: 1, maxLength: 512 }),
+        name: t.Optional(t.String({ maxLength: MAX_NAME_LENGTH })),
+        message: t.Optional(t.String({ maxLength: MAX_MESSAGE_LENGTH })),
+      }),
+    },
   );

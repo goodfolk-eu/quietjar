@@ -31,10 +31,32 @@ const MIGRATIONS = [
     application_fee INTEGER NOT NULL,
     created_at INTEGER NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS donation_details (
+    session_id TEXT PRIMARY KEY,
+    name TEXT,
+    message TEXT,
+    created_at INTEGER NOT NULL
+  )`,
 ];
+
+/**
+ * SQLite has no ADD COLUMN IF NOT EXISTS, so the "duplicate column name"
+ * failure is what a re-run looks like and is treated as success.
+ */
+const COLUMN_MIGRATIONS = [
+  { table: "donations", name: "email", type: "TEXT" },
+  { table: "donations", name: "net", type: "INTEGER" },
+] as const;
 
 export async function ensureSchema(): Promise<void> {
   for (const statement of MIGRATIONS) {
     await libsqlClient.execute(statement);
+  }
+  for (const { table, name, type } of COLUMN_MIGRATIONS) {
+    try {
+      await libsqlClient.execute(`ALTER TABLE ${table} ADD COLUMN ${name} ${type}`);
+    } catch (err) {
+      if (!(err instanceof Error && /duplicate column name/i.test(err.message))) throw err;
+    }
   }
 }

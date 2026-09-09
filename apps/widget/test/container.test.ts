@@ -174,6 +174,132 @@ describe("payment container", () => {
   });
 });
 
+describe("thank you details step", () => {
+  interface FetchCall {
+    url: string;
+    body: Record<string, unknown>;
+  }
+
+  function stubFetch(ok: boolean, calls: FetchCall[]): void {
+    window.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({
+        url: String(input),
+        body: JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>,
+      });
+      return { ok } as unknown as Response;
+    }) as unknown as typeof fetch;
+  }
+
+  function restoreFetch(original: typeof fetch): void {
+    window.fetch = original;
+  }
+
+  function showDetailsStep(): { panel: HTMLElement } {
+    const { host, panel, trigger } = mount();
+    trigger.click();
+    paymentContainer(host)?.showThanks("cs_123");
+    return { panel };
+  }
+
+  function nameField(panel: HTMLElement): HTMLInputElement | null {
+    return panel.querySelector<HTMLInputElement>("input.quietjar-panel__field");
+  }
+
+  function messageField(panel: HTMLElement): HTMLTextAreaElement | null {
+    return panel.querySelector<HTMLTextAreaElement>("textarea.quietjar-panel__field");
+  }
+  /**
+   * The submit path is promise-only (no timers), so draining microtasks runs
+   * it to completion without wall-clock waits.
+   */
+  async function flush(): Promise<void> {
+    for (let i = 0; i < 3; i += 1) await Promise.resolve();
+  }
+  function counter(panel: HTMLElement): Element | null {
+    return panel.querySelector(".quietjar-panel__counter");
+  }
+
+  function submit(panel: HTMLElement): HTMLButtonElement {
+    const button = panel.querySelector<HTMLButtonElement>(".quietjar-panel__submit");
+    if (!button) throw new Error("no submit button");
+    return button;
+  }
+
+  test("offers optional fields with the visible limits", () => {
+    const { panel } = showDetailsStep();
+    expect(nameField(panel)?.maxLength).toBe(80);
+    expect(messageField(panel)?.maxLength).toBe(280);
+    expect(counter(panel)?.textContent).toBe("0 / 280");
+  });
+
+  test("the counter follows the message as it is typed", () => {
+    const { panel } = showDetailsStep();
+    const message = messageField(panel);
+    if (!message) throw new Error("no message field");
+    message.value = "Hello!";
+    message.dispatchEvent(new Event("input"));
+    expect(counter(panel)?.textContent).toBe("6 / 280");
+  });
+
+  test("submitting posts the details and shows a short confirmation", async () => {
+    const calls: FetchCall[] = [];
+    const original = window.fetch;
+    stubFetch(true, calls);
+    try {
+      const { panel } = showDetailsStep();
+      const name = nameField(panel);
+      const message = messageField(panel);
+      if (!(name && message)) throw new Error("missing fields");
+      name.value = "  Ann  ";
+      message.value = "  Hi  ";
+      submit(panel).click();
+      await flush();
+
+      expect(calls).toHaveLength(1);
+      expect(calls[0].url).toContain("/api/pay/details");
+      expect(calls[0].body).toEqual({ session: "cs_123", name: "Ann", message: "Hi" });
+      expect(panel.querySelector(".quietjar-panel__thanks")?.textContent).toBe("Thank you.");
+      expect(nameField(panel)).toBeNull();
+    } finally {
+      restoreFetch(original);
+    }
+  });
+
+  test("blank fields are sent as absent rather than empty strings", async () => {
+    const calls: FetchCall[] = [];
+    const original = window.fetch;
+    stubFetch(true, calls);
+    try {
+      const { panel } = showDetailsStep();
+      submit(panel).click();
+      await flush();
+
+      expect(calls[0].body).toEqual({ session: "cs_123" });
+    } finally {
+      restoreFetch(original);
+    }
+  });
+
+  test("a failed submit leaves the fields editable and explains itself", async () => {
+    const calls: FetchCall[] = [];
+    const original = window.fetch;
+    stubFetch(false, calls);
+    try {
+      const { panel } = showDetailsStep();
+      submit(panel).click();
+      await flush();
+
+      expect(panel.querySelector(".quietjar-panel__error")?.textContent).toBe(
+        "Could not send that. Try again?",
+      );
+      expect(nameField(panel)).not.toBeNull();
+      expect(submit(panel).disabled).toBe(false);
+    } finally {
+      restoreFetch(original);
+    }
+  });
+});
+
 /**
  * happy-dom has no layout engine, so the boxes the placement reads are stubbed.
  * `scale` mimics a CSS transform: it inflates the rects the way a scaled

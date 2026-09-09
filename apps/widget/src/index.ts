@@ -26,7 +26,7 @@ export function mount(): void {
   void resolveReturn({ api: config.api, site: config.site, sessionId }).then((paid) => {
     if (!paid) return;
     container.open();
-    container.showThanks();
+    container.showThanks(sessionId);
   });
 }
 

@@ -6,6 +6,7 @@ import { supportsIdeal } from "../sites/currency";
 import { getSiteByPublicKey, getSiteByUserId } from "../sites/store";
 import {
   applicationFee,
+  chargeNet,
   constructWebhookEvent,
   createConnectedAccount,
   createLoginLink,
@@ -72,6 +73,14 @@ async function recordCompletedDonation(
   const site = await getSiteByPublicKey(siteKey);
   if (!site) return;
 
+  // When Stripe is slow or the net cannot be read, the row still records and
+  // the dashboard falls back to gross minus our fee for it.
+  const config = stripeConfigFromEnv();
+  const net =
+    config && typeof session.payment_intent === "string"
+      ? await chargeNet(config, accountId, session.payment_intent).catch(() => null)
+      : null;
+
   await recordDonation({
     siteId: site.id,
     accountId,
@@ -80,6 +89,8 @@ async function recordCompletedDonation(
     amount: session.amount_total,
     currency: session.currency,
     applicationFee: applicationFee(session.amount_total),
+    email: session.customer_details?.email ?? null,
+    net,
   });
 }
 

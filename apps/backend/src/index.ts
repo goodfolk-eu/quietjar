@@ -1,6 +1,7 @@
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
+import { donationRoutes } from "./donations/routes";
 import { payRoutes } from "./pay/routes";
 import { ensureSchema } from "./schema";
 import { siteRoutes } from "./sites/routes";
@@ -43,6 +44,7 @@ export const app = new Elysia()
   .all("/api/auth/*", ({ request }) => auth.handler(request))
   .use(stripeRoutes)
   .use(siteRoutes)
+  .use(donationRoutes)
   .use(payRoutes);
 
 const port = Number(process.env.PORT ?? 3000);

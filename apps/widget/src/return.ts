@@ -34,7 +34,7 @@ export async function resolveReturn(options: {
 }): Promise<boolean> {
   for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
     try {
-      if ((await fetchStatus(options.api, options.sessionId)) === "paid") {
+      if ((await fetchStatus(options.api, options.sessionId, options.site)) === "paid") {
         persistDonation(options.site);
         clearReturnParam();
         return true;

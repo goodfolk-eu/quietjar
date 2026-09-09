@@ -153,6 +153,48 @@ export async function createLoginLink(config: StripeConfig, accountId: string): 
   return link.url;
 }
 
+/**
+ * What the creator keeps from a direct charge. The connected account's balance
+ * transaction nets the gross amount down by our application fee and Stripe's
+ * own processing cost, which is the only place that cost is stated.
+ */
+export async function chargeNet(
+  config: StripeConfig,
+  accountId: string,
+  paymentIntentId: string,
+): Promise<number | null> {
+  const intent = await stripeClient(config).paymentIntents.retrieve(
+    paymentIntentId,
+    { expand: ["latest_charge.balance_transaction"] },
+    { stripeAccount: accountId },
+  );
+  const charge = typeof intent.latest_charge === "object" ? intent.latest_charge : null;
+  const transaction =
+    charge && typeof charge.balance_transaction === "object" ? charge.balance_transaction : null;
+  return transaction?.net ?? null;
+}
+
+/**
+ * Live payment status for a redirect return. The session was created on the
+ * connected account, so the retrieval needs its id; a session we cannot read
+ * (wrong account, unknown id) reads as unresolved.
+ */
+export async function retrieveDonationSession(
+  config: StripeConfig,
+  accountId: string,
+  sessionId: string,
+): Promise<Stripe.Checkout.Session | null> {
+  try {
+    return await stripeClient(config).checkout.sessions.retrieve(
+      sessionId,
+      {},
+      { stripeAccount: accountId },
+    );
+  } catch {
+    return null;
+  }
+}
+
 export async function constructWebhookEvent(
   config: StripeConfig,
   payload: string,

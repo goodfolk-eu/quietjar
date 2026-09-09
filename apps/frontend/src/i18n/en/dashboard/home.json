@@ -1,0 +1,15 @@
+{
+  "home": {
+    "earningsTitle": "Earnings",
+    "earningsHint": "What you keep after fees.",
+    "period30": "Last 30 days",
+    "period90": "Last 90 days",
+    "periodAll": "All time",
+    "recentTitle": "Recent donations",
+    "anonymous": "Anonymous",
+    "noMessage": "No message",
+    "loadMore": "Load more",
+    "empty": "No donations yet.",
+    "error": "Could not load. Try again."
+  }
+}

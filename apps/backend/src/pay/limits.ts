@@ -52,5 +52,12 @@ export class RateLimiter {
   }
 }
 
+/** The thank-you form's visible limits; the widget shows the same numbers. */
+export const MAX_NAME_LENGTH = 80;
+export const MAX_MESSAGE_LENGTH = 280;
+
 export const sessionsPerIp = new RateLimiter(10, 60_000);
 export const sessionsPerSite = new RateLimiter(60, 60_000);
+export const detailsPerIp = new RateLimiter(10, 60_000);
+/** Status can hit the Stripe API when our own record has not landed yet. */
+export const statusPerIp = new RateLimiter(30, 60_000);
