@@ -6,7 +6,7 @@ interface ScwEmailConfig {
   from: { name: string; email: string };
 }
 
-/** Parse "Quietjar <no-reply@quietjar.com>" into a name + email pair. */
+/** Parse "QuietJar <no-reply@quietjar.com>" into a name + email pair. */
 function parseFrom(raw: string): { name: string; email: string } {
   const match = raw.match(/^(.*?)\s*<([^>]+)>$/);
   if (match) return { name: match[1].trim(), email: match[2].trim() };

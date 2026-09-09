@@ -1,4 +1,4 @@
-# Builds the Quietjar backend as a container (Bunny Magic Container).
+# Builds the QuietJar backend as a container (Bunny Magic Container).
 # Build from the MONOREPO ROOT (so workspace resolution works):
 #   docker build -f apps/backend/Dockerfile -t quietjar-backend .
 

@@ -79,7 +79,7 @@ export async function createConnectedAccount(
       responsibilities: { fees_collector: "application", losses_collector: "application" },
       profile: {
         business_url: input.businessUrl,
-        product_description: "Tips from supporters, collected with Quietjar.",
+        product_description: "Tips from supporters, collected with QuietJar.",
       },
     },
     include: [...INCLUDE],

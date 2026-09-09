@@ -74,7 +74,7 @@ async function bootstrap() {
 if (import.meta.main) {
   await bootstrap();
   app.listen(port, () => {
-    console.log(`⚡ Quietjar backend listening on http://localhost:${port}`);
+    console.log(`⚡ QuietJar backend listening on http://localhost:${port}`);
     console.log(`🛡  Auth mounted at /api/auth/*`);
   });
 }

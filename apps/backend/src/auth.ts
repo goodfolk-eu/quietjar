@@ -59,7 +59,7 @@ function resolveTrustedOrigins(): string[] {
 }
 
 export const auth = betterAuth({
-  appName: "Quietjar",
+  appName: "QuietJar",
   secret: process.env.BETTER_AUTH_SECRET ?? "dev-only-change-me-in-production",
   baseURL: resolveBaseUrl(),
   trustedOrigins: resolveTrustedOrigins(),
@@ -89,7 +89,7 @@ export const auth = betterAuth({
       // Numeric code, emailed via SMTP (see email.ts).
       async sendVerificationOTP({ email, otp, type }) {
         const subjects: Record<string, string> = {
-          "sign-in": "Your Quietjar sign-in code",
+          "sign-in": "Your QuietJar sign-in code",
           "email-verification": "Verify your email",
           "forget-password": "Reset your password",
         };
@@ -98,7 +98,7 @@ export const auth = betterAuth({
         await sendEmail(
           email,
           subject,
-          `<p>Your Quietjar one-time code is:</p><p style="font-size:24px;font-weight:bold;letter-spacing:4px">${otp}</p><p>It expires in 5 minutes.</p>`,
+          `<p>Your QuietJar one-time code is:</p><p style="font-size:24px;font-weight:bold;letter-spacing:4px">${otp}</p><p>It expires in 5 minutes.</p>`,
         );
       },
       otpLength: 6,
