@@ -38,7 +38,7 @@
     },
     "fees": {
       "title": "What we take",
-      "text": "5% per payment. No monthly fee. Paid out on demand, with a click."
+      "text": "5% per payment. No monthly fee. Paid out daily to your bank account, automatically."
     },
     "feesLink": "Full pricing",
     "alternatives": {
@@ -46,7 +46,7 @@
       "paragraphs": [
         "GitHub Sponsors is the right default for your repo, and it takes 0%. It lives on github.com, both sides need a GitHub account, and support is recurring by default. That is exactly why your website needs its own button: most of your readers never open the repo. Use both.",
         "You can build this on Stripe yourself, and their embedded checkout is good. You will own the button, the states, the step-back logic, the design matching, and the upkeep. Count the weekends. Our fee exists to buy back that time, not to tax anyone's generosity.",
-        "Ko-fi takes 0% on one-off tips and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay, which is the drop this whole product exists to remove."
+        "Ko-fi takes 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay, which is the drop this whole product exists to remove."
       ]
     },
     "compareLink": "See the full comparison",

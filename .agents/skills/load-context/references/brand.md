@@ -20,7 +20,7 @@ When two conflict, the higher one wins.
 
 1. **Respect for the supporter.** Ask once. Say thank you. Step back. No guilt, no chasing, no dark patterns. The suppression feature is this value made into code.
 2. **Craft.** Fast, precise, invisible when it should be. Every detail engineered. This is the moat and the personality.
-3. **Alignment.** No monthly fee. A share only when the creator gets paid. Method costs absorbed, never surcharged onto the supporter.
+3. **Alignment.** No monthly fee. A share only when the creator gets paid. Processing costs come out of that share, never surcharged onto the supporter.
 4. **Restraint.** Say less. Show more. Cut the second adjective.
 
 ## Personality
@@ -59,7 +59,7 @@ A senior engineer who is also a good host. Competent, calm, a little dry, warm w
 - Before: "Say goodbye to annoying popups that harass your loyal fans!"
   After: "Once someone has supported you, QuietJar steps back. Your best supporters get thanked, not asked again."
 - Before: "Affordable pricing with no hidden fees"
-  After: "No monthly fee. We take [X]% of what you receive, capped at €[Y] per payment."
+  After: "No monthly fee. We take 5% of what you receive."
 
 ## Tone by context
 

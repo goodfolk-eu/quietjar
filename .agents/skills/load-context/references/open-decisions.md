@@ -2,11 +2,14 @@
 
 Everything unresolved, in one place. Check this before writing anything with a number in it. When a decision lands, move it to the top as "Decided" with the date, and update the file that depends on it.
 
+## Decided
+
+- **The exact fee and cap (2026-09-09).** 5% flat per payment, no per-transaction cap. Shipped on the homepage, developers page, and compare page.
+- **Payout schedule (2026-09-09).** Stripe's default: paid out daily to the creator's bank account, automatically. No manual payout action.
+
 ## Blocking the redesign copy
 
-1. **The exact fee and cap.** Every pricing line, the compare page, and the market model use a 4% placeholder. "A small share" must not ship.
-2. **Payout schedule.** Every persona asks. Needs one FAQ answer.
-3. **VAT treatment.** Gift or taxable supply. Formal advice required before launch and before any publisher outreach.
+1. **VAT treatment.** Gift or taxable supply. Formal advice required before launch and before any publisher outreach.
 
 ## Product questions that shape copy
 

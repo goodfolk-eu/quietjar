@@ -94,13 +94,13 @@
     "planLabel": "Simple",
     "planPrice": "Free",
     "planPriceNote": "to start, forever",
-    "exampleHead": ["Someone supports you with", "You receive"],
+    "exampleHead": ["Someone supports you with", "Our fee"],
     "exampleRows": [
-      ["€5", "€4.75"],
-      ["€50", "€47.50"]
+      ["€5", "€0.25"],
+      ["€50", "€2.50"]
     ],
-    "absorb": "Payment processing costs vary by method. We absorb the difference. Your supporters are never charged extra.",
-    "payout": "Paid out on demand, with a click.",
+    "absorb": "Payment processing costs come out too, on top of our 5%, and vary by method. You keep the rest. Your supporters are never charged extra.",
+    "payout": "Paid out daily to your bank account, automatically.",
     "cta": "Add it to your site"
   },
   "faq": {
@@ -117,7 +117,7 @@
       },
       {
         "q": "How is this different from the donation tools I already know?",
-        "a": "Most tools have earned their place. Ko-fi charges nothing on tips and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish.",
+        "a": "Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish.",
         "linkLabel": "See the comparison",
         "linkHref": "/compare/"
       },
@@ -135,7 +135,7 @@
       },
       {
         "q": "When do I get paid?",
-        "a": "Whenever you want. Click Payout in your dashboard and Stripe sends your balance to your bank account."
+        "a": "Stripe pays out your balance to your bank account automatically every day. No manual step needed."
       },
       {
         "q": "What payment methods can my supporters use?",

@@ -6,7 +6,7 @@ Launch to maintainers first. Earn visible installs and one conversion number. Us
 
 - **Homepage.** The argument, a live demo, the three pillars, pricing with real numbers, FAQ.
 - **Developers.** Snippet, install steps, performance numbers, how "steps back" works, methods supported, a technical note on zero layout shift. The wedge page. In the main nav.
-- **Pricing.** Exact percentage, the cap, a worked example on €5 and €50, one line on method differences.
+- **Pricing.** Exact percentage, a worked example on €5 and €50, one line on method differences.
 - **Compare.** Four short sections: Ko-fi, Buy Me a Coffee, Stripe direct, GitHub Sponsors. Fair, factual, strength first, then the question.
 - **Goals.** Progress bar in action, "cover a real cost" framing. Invisible on the current site.
 - **Writing.** Not "blog." Text-led, in voice.
@@ -35,7 +35,7 @@ Every piece maps to one. If it does not, do not publish.
 
 ## Launch phases
 
-**Phase 0, before the site goes live.** Settle fee, cap, payout schedule, VAT. Install on two or three friendly sites and measure. Write the developer page, compare page, two craft notes.
+**Phase 0, before the site goes live.** Settle VAT. Install on two or three friendly sites and measure. Write the developer page, compare page, two craft notes.
 
 **Phase 1, quiet launch, weeks 1 to 4.** Site live. Outreach to the 50-project list. Two craft notes published. No announcements.
 

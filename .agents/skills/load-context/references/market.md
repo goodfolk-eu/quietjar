@@ -61,13 +61,13 @@ Assumptions:
 
 ## SOM scenarios, year three
 
-| | Active sites | Avg monthly volume | Processed per year | Revenue at 4% placeholder |
+| | Active sites | Avg monthly volume | Processed per year | Revenue at 5% |
 |---|---|---|---|---|
-| Conservative | 1,500 | €60 | €1.1 million | about €45,000 |
-| Base | 5,000 | €100 | €6 million | about €240,000 |
-| Ambitious | 12,000 | €120 | €17 million | about €700,000 |
+| Conservative | 1,500 | €60 | €1.1 million | about €55,000 |
+| Base | 5,000 | €100 | €6 million | about €300,000 |
+| Ambitious | 12,000 | €120 | €17 million | about €850,000 |
 
-Replace 4% with the real fee. The per-transaction cap trims these on larger payments. Net margin depends on the method mix: iDEAL and wallets versus international cards.
+Net margin depends on the method mix: iDEAL and wallets versus international cards.
 
 ## What moves the number, ranked
 

@@ -24,12 +24,20 @@ issued.
 
 ## Represented by
 
-GoodFolk B.V. i.o. is represented by its managing director.
+GoodFolk B.V. i.o. is represented by its managing directors, Marcel Panse and
+Sander Nagtegaal.
 
 ## Contact
 
-General: info@quietjar.com. Data protection: privacy@quietjar.com. By post:
-Panamalaan 8-D, 1019 AZ Amsterdam, the Netherlands.
+General: info@quietjar.com
+
+Data protection: support@quietjar.com
+
+By post:\
+GoodFolk B.V. i.o.\
+Panamalaan 8-D\
+1019 AZ Amsterdam\
+The Netherlands
 
 ## VAT identification number
 

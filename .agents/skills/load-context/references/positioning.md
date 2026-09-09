@@ -35,7 +35,7 @@ Fast, no layout shift, matches the host design, wallets and local EU methods pre
 ## Supporting messages (not pillars)
 
 - Goals and progress: "help cover a real cost." Lifts the average amount. A section, not a pillar
-- Aligned pricing: no monthly fee, a small percentage with a cap. Only costs you when it earns you something
+- Aligned pricing: no monthly fee, a small flat percentage. Only costs you when it earns you something
 - EU-built: one line in the footer or FAQ, a dedicated trust page. Never the lead
 
 ## First sentence by persona
@@ -49,10 +49,10 @@ Fast, no layout shift, matches the host design, wallets and local EU methods pre
 Write each answer in under 40 words. Acknowledge the competitor's strength, then ask the question that exposes the gap.
 
 **Why not Ko-fi? It is 0%.**
-Ko-fi's 0% on tips is real. The question is how many of your visitors finish the payment after the redirect. A percentage of more can be more than zero percent of fewer.
+Only if you pay for Gold. On the free plan, Ko-fi takes 5% on tips by default. Either way, the question is how many of your visitors finish the payment after the redirect.
 
 **Why not Buy Me a Coffee?**
-It has the friendliest brand in the space. Does a coffee cup fit your site, and does a flat 5% with no cap fit your larger supporters?
+It has the friendliest brand in the space. Does a coffee cup fit your site?
 
 **Why not embed Stripe myself?**
 You can, and Stripe's embedded checkout is good. How many weekends for suppression, goals, design matching, wallets, and iDEAL, and who maintains it after that?
@@ -61,7 +61,7 @@ You can, and Stripe's embedded checkout is good. How many weekends for suppressi
 It is the right default for maintainers. How many of your users ever open the repo, and how many have a GitHub account? Use both.
 
 **What do you take?**
-The exact percentage and the cap, on the page. "A small share" loses every developer who reads it.
+The exact percentage, on the page. "A small share" loses every developer who reads it.
 
 **Is it safe to pay on your domain instead of a known platform?**
 Payments run on the same regulated rails as any checkout. Supporters see Apple Pay, Google Pay, or their bank's iDEAL screen, not an unfamiliar card form.
@@ -70,7 +70,7 @@ Payments run on the same regulated rails as any checkout. Supporters see Apple P
 Give the measured number: script size and load time.
 
 **When do I get paid?**
-Needs a settled answer before launch. See `open-decisions.md`.
+Stripe pays out daily to your bank account, automatically.
 
 ## Proof to gather before launch, ranked
 

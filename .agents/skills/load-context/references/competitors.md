@@ -29,7 +29,7 @@ The threat is not a direct competitor. It is Ko-fi or Buy Me a Coffee shipping a
 - Ko-fi Gold removes platform fees. Price reported as $12/month (cartmango.com, August 2026); older sources say $6 or $8. Verify
 - Pays out instantly to the creator's own Stripe or PayPal
 - Buttons, floating widget, and a WordPress plugin, all handing off to a Ko-fi-hosted flow
-- Strength: 0% on tips is hard to beat in a fee table. Ko-fi self-reports over 1 million creators
+- Strength: fee-free tips are one Gold subscription away, and free-plan tips can be too if Contributor status is turned off. Ko-fi self-reports over 1 million creators
 - Gap: PayPal-heavy, no wallets or iDEAL, English-only interface, the button is an afterthought
 
 ### Liberapay
@@ -117,9 +117,9 @@ Niche. Not relevant to the on-page wedge.
 
 | | Platform fee | Monthly | On-page checkout | Wallets | EU local methods | Steps back after giving | Who can use it |
 |---|---|---|---|---|---|---|---|
-| QuietJar | [publish it], capped | none | yes | yes | yes | yes, server-side | anyone with a site |
+| QuietJar | 5%, no cap | none | yes | yes | yes | yes, server-side | anyone with a site |
 | Buy Me a Coffee | 5% | none | no | limited | no | no | anyone |
-| Ko-fi | 0% tips / 5% other | Gold optional | no | no | no | no | anyone |
+| Ko-fi | 5% tips by default, 0% on Gold | Gold optional | no | no | no | no | anyone |
 | Liberapay | 0% | none | no | no | no | n/a | anyone |
 | Fundraise Up | 4% | none | yes | yes | partial | no | nonprofits |
 | Givebutter | 0% (tips on) / 3% | none | partial | yes | no | no | nonprofits |
@@ -135,7 +135,7 @@ Processing fees apply on top for every row.
 
 Acknowledge the strength first, then ask the question that exposes the gap. Never trash-talk.
 
-- Ko-fi: "0% on tips is a real advantage. How many of your visitors finish the payment after the redirect?"
+- Ko-fi: "5% on tips by default, free only on a paid Gold plan. How many of your visitors finish the payment after the redirect?"
 - Buy Me a Coffee: "The friendliest brand in the space. Does a coffee cup fit your site?"
 - Stripe direct: "You can build this yourself. How many weekends, and who maintains it?"
 - GitHub Sponsors: "The right default for maintainers. How many of your users ever open the repo?"
