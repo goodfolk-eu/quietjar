@@ -159,15 +159,18 @@ export default defineConfig({
       styleDirective: {
         resources: [{ resource: "'unsafe-inline'", kind: "attribute" }],
       },
+      scriptDirective: {
+        resources: ["'self'", "https://js.stripe.com", "https://*.js.stripe.com"],
+      },
       directives: [
         "default-src 'none'",
-        "img-src 'self' data:",
+        "img-src 'self' data: https://*.stripe.com",
         "font-src 'self'",
-        "connect-src 'self' " + apiOrigin,
+        "connect-src 'self' " + apiOrigin + " https://api.stripe.com",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
-        "frame-src 'none'",
+        "frame-src https://js.stripe.com https://*.js.stripe.com https://hooks.stripe.com",
         "media-src 'none'",
         "worker-src 'none'",
         "upgrade-insecure-requests",

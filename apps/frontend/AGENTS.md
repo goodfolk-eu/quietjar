@@ -8,3 +8,4 @@ Astro site (static). Workspace: `@quietjar/frontend`.
 - API origin via `PUBLIC_API_URL` / `PUBLIC_FRONTEND_URL`; dev proxies `/api` -> `BACKEND_URL` (default `http://localhost:3000`).
 - `.env` holds production URLs; `.env.development` overrides them with localhost in `bun run dev`.
 - Strict CSP is on (`security.csp` in `astro.config.mjs`). Inline scripts and `<style>` blocks are hashed; `style="..."` attributes and `define:vars` are allowed via `style-src-attr 'unsafe-inline'`. `data:` URIs in CSS are still blocked: keep `vite.build.assetsInlineLimit: 0` so fonts stay real files under `font-src 'self'`.
+- The Bunny pull zone sends `Content-Security-Policy: frame-ancestors 'none'` as a response header (plus `X-Content-Type-Options: nosniff`). `frame-ancestors` is ignored in meta policies, so the header carries only it; every other directive lives in the meta CSP above.
