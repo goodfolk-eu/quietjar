@@ -3,6 +3,8 @@ import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
 
+export { getStaticPaths } from "@/lib/locale-paths";
+
 const copy = dictionary(Astro.currentLocale ?? "en");
 const dashboard = copy.dashboard;
 const home = copy.home;

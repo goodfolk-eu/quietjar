@@ -3,13 +3,20 @@ import AuthModal from "@/components/auth/auth-modal.astro";
 import Container from "@/components/container.astro";
 import Logo from "@/components/logo.astro";
 import { dictionary } from "@/i18n/t";
+import { localizedPath } from "@/lib/links";
 
-const copy = dictionary(Astro.currentLocale ?? "en");
-const navLinks = copy.nav.links;
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+const navLinks = copy.nav.links.map((link) => ({
+  ...link,
+  path: localizedPath(link.path, locale),
+}));
+const dashboardPath = localizedPath("/dashboard/", locale);
 
 // Active for an exact match, and for anything under that link's own path, so
 // a future sub-page (e.g. /pricing/enterprise/) still lights up "Pricing".
 const currentPath = Astro.url.pathname;
+
 const isActive = (path: string) =>
   currentPath === path || (path !== "/" && currentPath.startsWith(path));
 ---
@@ -47,18 +54,18 @@ const isActive = (path: string) =>
         <button type="button" id="qj-nav-signup"
           class="cursor-pointer rounded-sm bg-qj-accent px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-accent-alt max-[560px]:px-3.5 max-[560px]:text-[14px]">{copy.nav.signup}</button>
       </div>
-      <a id="qj-nav-dashboard" href="/dashboard/"
-        class="hidden rounded-sm bg-qj-accent px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-accent-alt max-[560px]:px-3.5 max-[560px]:text-[14px]">{copy.nav.dashboard}</a>
+      <a id="qj-nav-dashboard" href={dashboardPath}
+        class="hidden rounded-sm bg-qj-accent px-[18px] py-2.5 text-[14.5px] font-semibold text-white transition hover:bg-qj-accent-alt">{copy.nav.dashboard}</a>
 
       <button
-        type="button"
-        id="qj-menu-toggle"
-        aria-controls="qj-mobile-menu"
-        aria-expanded="false"
-        aria-label={copy.nav.menuOpen}
-        data-label-open={copy.nav.menuOpen}
-        data-label-close={copy.nav.menuClose}
-        class="-mr-2 flex size-10 cursor-pointer items-center justify-center rounded-sm text-qj-ink transition hover:text-qj-accent min-[1000px]:hidden">
+          type="button"
+          id="qj-menu-toggle"
+          aria-controls="qj-mobile-menu"
+          aria-expanded="false"
+          aria-label={copy.nav.menuOpen}
+          data-label-open={copy.nav.menuOpen}
+          data-label-close={copy.nav.menuClose}
+          class="-mr-2 flex size-10 cursor-pointer items-center justify-center rounded-sm text-qj-ink transition hover:text-qj-accent min-[1000px]:hidden">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <g data-icon="open">
             <path d="M3 6h16" />

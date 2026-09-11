@@ -3,6 +3,8 @@ import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
 
+export { getStaticPaths } from "@/lib/locale-paths";
+
 const copy = dictionary(Astro.currentLocale ?? "en");
 const compare = copy.compare;
 ---

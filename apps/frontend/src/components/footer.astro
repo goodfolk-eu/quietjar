@@ -3,13 +3,21 @@ import { getCollection } from "astro:content";
 import Container from "@/components/container.astro";
 import Logo from "@/components/logo.astro";
 import { dictionary } from "@/i18n/t";
+import { localizedPath } from "@/lib/links";
 
 const locale = Astro.currentLocale ?? "en";
 const copy = dictionary(locale);
-const siteLinks = copy.footer.siteLinks;
+const siteLinks = copy.footer.siteLinks.map((link) => ({
+  ...link,
+  path: localizedPath(link.path, locale),
+}));
 
 const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${locale}/`)))
-  .map((entry) => ({ slug: entry.id.split("/")[1], ...entry.data }))
+  .map((entry) => ({
+    slug: entry.id.split("/")[1],
+    ...entry.data,
+    path: localizedPath(`/legal/${entry.id.split("/")[1]}/`, locale),
+  }))
   .sort((a, b) => a.order - b.order);
 ---
 
@@ -51,7 +59,7 @@ const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${loc
             {
               legalDocs.map((doc) => (
                 <li>
-                  <a href={`/legal/${doc.slug}/`} class="text-[14px] text-white/70 hover:text-white">
+                  <a href={doc.path} class="text-[14px] text-white/70 hover:text-white">
                     {doc.navTitle ?? doc.title}
                   </a>
                 </li>

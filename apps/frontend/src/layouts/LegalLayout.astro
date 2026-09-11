@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
+import { localizedPath } from "@/lib/links";
 
 interface Props {
   title: string;
@@ -22,7 +23,7 @@ const docs = (await getCollection("legal", ({ id }) => id.startsWith(`${locale}/
 
 const railItems = docs.map((doc) => ({
   title: doc.navTitle ?? doc.title,
-  path: `/legal/${doc.slug}/`,
+  path: localizedPath(`/legal/${doc.slug}/`, locale),
   current: doc.slug === currentSlug,
 }));
 
@@ -104,7 +105,7 @@ const formattedDate = lastUpdated.toLocaleDateString("en-CA", {
             {
               prev ? (
                 <a
-                  href={`/legal/${prev.slug}/`}
+                  href={localizedPath(`/legal/${prev.slug}/`, locale)}
                   class="font-mono text-[13px] text-qj-ink-3 hover:text-qj-blue">
                   ← {prev.title}
                 </a>
@@ -115,7 +116,7 @@ const formattedDate = lastUpdated.toLocaleDateString("en-CA", {
             {
               next && (
                 <a
-                  href={`/legal/${next.slug}/`}
+                  href={localizedPath(`/legal/${next.slug}/`, locale)}
                   class="font-mono text-[13px] text-qj-ink-3 hover:text-qj-blue">
                   {next.title} →
                 </a>

@@ -38,7 +38,9 @@ function frontendOrigin(): string {
  * top-level redirect back to the API would arrive unauthenticated.
  */
 function stepUrls(step: Step): { refreshUrl: string; returnUrl: string } {
-  const base = `${frontendOrigin()}/dashboard/payments`;
+  // Hardcoded to the "en" locale prefix: the backend has no notion of a
+  // user's locale today. Revisit once a second locale actually exists.
+  const base = `${frontendOrigin()}/en/dashboard/payments`;
   return {
     refreshUrl: `${base}?stripe=refresh&step=${step}`,
     returnUrl: `${base}?stripe=return`,

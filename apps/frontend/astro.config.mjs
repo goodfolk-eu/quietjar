@@ -107,13 +107,13 @@ const integrations = [
   robotsTxt({
     host: true,
     policy: [
-      { userAgent: "*", disallow: ["/dashboard/", "/api/"] },
+      { userAgent: "*", disallow: ["/en/dashboard/", "/api/"] },
       // Each AI agent gets its own group, which overrides the wildcard group
       // above, so the dashboard/api disallow must be repeated here.
       ...AI_USER_AGENTS.map((agent) => ({
         userAgent: agent,
         allow: "/",
-        disallow: ["/dashboard/", "/api/"],
+        disallow: ["/en/dashboard/", "/api/"],
       })),
     ],
   }),
@@ -145,13 +145,14 @@ export default defineConfig({
   site,
   integrations,
   redirects: {
-    "/legal": "/legal/privacy-policy",
+    "/legal": "/en/legal/privacy-policy",
+    "/en": "/",
   },
   markdown: { syntaxHighlight: false },
   i18n: {
     defaultLocale,
     locales: [...locales],
-    routing: { prefixDefaultLocale: false, redirectToDefaultLocale: false },
+    routing: { prefixDefaultLocale: true, redirectToDefaultLocale: false },
   },
   security: {
     csp: {

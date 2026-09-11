@@ -1,6 +1,7 @@
 ---
 import { locales } from "@/i18n/config";
 import { dictionary } from "@/i18n/t";
+import { localizedPath } from "@/lib/links";
 import "../styles/global.css";
 
 interface Props {
@@ -19,6 +20,10 @@ const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
 // every locale and regardless of trailingSlash config.
 const localePrefix = new RegExp(`^/(?:${locales.join("|")})(?=/|$)`);
 const pathname = (Astro.url.pathname.replace(localePrefix, "") || "/").replace(/\/+$/, "") || "/";
+
+const dashboardPath = localizedPath("/dashboard/", locale);
+const paymentsPath = localizedPath("/dashboard/payments/", locale);
+const widgetPath = localizedPath("/dashboard/widget/", locale);
 
 const navLinkClass = (href: string, exact = false) => {
   const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
@@ -200,7 +205,7 @@ const navLinkClass = (href: string, exact = false) => {
               <li>
                 <a
                   class={navLinkClass("/dashboard", true)}
-                  href="/dashboard"
+                  href={dashboardPath}
                 >
                   <svg
                     class="shrink-0 size-4"
@@ -224,7 +229,7 @@ const navLinkClass = (href: string, exact = false) => {
               <li>
                 <a
                   class={navLinkClass("/dashboard/payments")}
-                  href="/dashboard/payments"
+                  href={paymentsPath}
                 >
                   <svg
                     class="shrink-0 size-4"
@@ -248,7 +253,7 @@ const navLinkClass = (href: string, exact = false) => {
               <li>
                 <a
                   class={navLinkClass("/dashboard/widget")}
-                  href="/dashboard/widget"
+                  href={widgetPath}
                 >
                   <svg
                     class="shrink-0 size-4"

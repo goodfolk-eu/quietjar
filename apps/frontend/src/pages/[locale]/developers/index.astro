@@ -2,9 +2,15 @@
 import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
+import { localizedPath } from "@/lib/links";
 
-const copy = dictionary(Astro.currentLocale ?? "en");
+export { getStaticPaths } from "@/lib/locale-paths";
+
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
 const dev = copy.developers;
+const pricingPath = localizedPath("/#pricing", locale);
+const comparePath = localizedPath("/compare/", locale);
 ---
 
 <Layout
@@ -69,7 +75,7 @@ const dev = copy.developers;
       <section class="flex flex-col gap-4">
         <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.fees.title}</h2>
         <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.fees.text}</p>
-        <a href="/#pricing" class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.feesLink}</a>
+        <a href={pricingPath} class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.feesLink}</a>
       </section>
 
       <section class="flex flex-col gap-4">
@@ -77,7 +83,7 @@ const dev = copy.developers;
         {dev.alternatives.paragraphs.map((paragraph) => (
           <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{paragraph}</p>
         ))}
-        <a href="/compare/" class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.compareLink}</a>
+        <a href={comparePath} class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.compareLink}</a>
       </section>
 
       <div class="border-t border-qj-line pt-10">

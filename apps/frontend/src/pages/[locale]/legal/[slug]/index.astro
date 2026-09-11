@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from "astro:content";
+import { locales } from "@/i18n/config";
+import LegalLayout from "@/layouts/LegalLayout.astro";
+
+// This route has two dynamic segments (locale and slug), so it writes its own
+// getStaticPaths rather than reusing the shared one-param helper: each locale
+// only enumerates its own docs, derived from `locales` rather than a
+// hardcoded string.
+export async function getStaticPaths() {
+  const entries = await getCollection("legal");
+  return locales.flatMap((locale) =>
+    entries
+      .filter((entry) => entry.id.startsWith(`${locale}/`))
+      .map((entry) => ({
+        params: { locale, slug: entry.id.split("/")[1] },
+        props: { entry },
+      })),
+  );
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const slug = entry.id.split("/")[1];
+---
+
+<LegalLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  lastUpdated={entry.data.lastUpdated}
+  currentSlug={slug}>
+  <Content />
+</LegalLayout>

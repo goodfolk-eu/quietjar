@@ -13,6 +13,8 @@ import {
   rateFor,
 } from "@/lib/fees";
 
+export { getStaticPaths } from "@/lib/locale-paths";
+
 const copy = dictionary(Astro.currentLocale ?? "en");
 const page = copy.pricingPage;
 
@@ -311,7 +313,7 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
 </Layout>
 
 <script>
-import { breakdown, clampAmount, formatEuro, rateFor } from "../../lib/fees";
+import { breakdown, clampAmount, formatEuro, rateFor } from "../../../lib/fees.ts";
 
 const root = document.querySelector<HTMLElement>("[data-qj-calc]");
 

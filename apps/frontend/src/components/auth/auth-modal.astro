@@ -66,6 +66,7 @@ const auth = copy.auth;
 
 <script>
 import { authClient } from "../../lib/api";
+import { localizedPath } from "../../lib/links";
 import { emitAuthStateChange } from "../../lib/session";
 
 const overlay = document.getElementById("qj-auth-overlay")!;
@@ -157,7 +158,9 @@ signInBtn.addEventListener("click", async () => {
   }
   statusEl.textContent = t.messages.signedIn;
   emitAuthStateChange(true);
-  window.location.href = "/dashboard/";
+  // The client script has no Astro.currentLocale, so it reads the locale off
+  // the page itself - the same value Astro rendered into <html lang="...">.
+  window.location.href = localizedPath("/dashboard/", document.documentElement.lang);
 });
 
 form.addEventListener("submit", (e) => e.preventDefault());
