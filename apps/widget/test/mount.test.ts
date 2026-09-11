@@ -62,6 +62,18 @@ describe("mountWidget", () => {
     expect(widgetCss(host)).toContain(".quietjar-widget--inline");
   });
 
+  test("mounts into a preview target with the floating corner placement", () => {
+    const container = document.createElement("div");
+    document.body.append(container);
+
+    const host = mountWidget(resolveConfig(undefined), { target: container });
+
+    expect(host.parentElement).toBe(container);
+    const widget = host.shadowRoot?.querySelector(".quietjar-widget");
+    expect(widget?.className).toContain("quietjar-widget--bottom-right");
+    expect(widget?.className).not.toContain("quietjar-widget--inline");
+  });
+
   test("mounts on body with fixed positioning when no target is given", () => {
     const host = mountWidget(resolveConfig(undefined));
 

@@ -14,6 +14,12 @@ export interface MountOptions {
    * the widget rather than filling the window. Defaults to the viewport.
    */
   viewport?: HTMLElement;
+  /**
+   * Element the host is inserted into, for a preview that frames the widget.
+   * Unlike the config's mount target this keeps the floating corner
+   * placement; it only chooses where the host lands in the DOM.
+   */
+  target?: HTMLElement;
 }
 
 const containers = new WeakMap<HTMLElement, PaymentContainer>();
@@ -24,15 +30,17 @@ export function paymentContainer(host: HTMLElement): PaymentContainer | undefine
 }
 
 export function mountWidget(config: ResolvedConfig, options: MountOptions = {}): HTMLElement {
-  const container = resolveContainer(config);
+  const container = options.target ?? resolveContainer(config);
   const existing = container.querySelector<HTMLElement>(HOST_SELECTOR);
   if (existing) {
     return existing;
   }
 
-  // Inline mounting puts the widget in the target's flow; the fixed corner
-  // classes would keep pinning it to the viewport and defeat the placement.
-  const inline = container !== document.body;
+  // The config's mount target puts the widget in the target's flow; the fixed
+  // corner classes would keep pinning it to the viewport and defeat the
+  // placement. A preview target only chooses where the host is inserted, so
+  // the corner placement stays.
+  const inline = options.target === undefined && container !== document.body;
   const host = document.createElement("div");
   host.setAttribute("data-quietjar-host", "");
   host.style.cssText = inline ? "all: initial; display: block;" : "all: initial;";

@@ -522,7 +522,6 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         style: { color: state.color, font: state.font },
         close: { enabled: state.closeEnabled },
         position: { corner: state.corner },
-        mount: { target: preview },
       });
 
     function snippet(): string {
@@ -565,10 +564,10 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     function render(): void {
       preview?.querySelector("[data-quietjar-host]")?.remove();
       const config = resolved();
-      // The mock page is scaled and clipped, so the panel is placed against
-      // that frame instead of the browser viewport it cannot reach.
-      mountWidget(config, { viewport: previewPage });
-
+      // The mock page is scaled and clipped, so the host is inserted into it
+      // and the panel is placed against that frame instead of the browser
+      // viewport the panel cannot reach.
+      mountWidget(config, { viewport: previewPage, target: previewPage });
       if (snippetEl) snippetEl.textContent = snippet();
 
       for (const button of cornerButtons) {
