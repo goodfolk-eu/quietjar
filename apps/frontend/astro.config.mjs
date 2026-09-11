@@ -160,13 +160,13 @@ export default defineConfig({
         resources: [{ resource: "'unsafe-inline'", kind: "attribute" }],
       },
       scriptDirective: {
-        resources: ["'self'", "https://js.stripe.com", "https://*.js.stripe.com"],
+        resources: ["'self'", "https://js.stripe.com", "https://*.js.stripe.com", "https://umami.quietjar.com"],
       },
       directives: [
         "default-src 'none'",
         "img-src 'self' data: https://*.stripe.com",
         "font-src 'self'",
-        "connect-src 'self' " + apiOrigin + " https://api.stripe.com",
+        "connect-src 'self' " + apiOrigin + " https://api.stripe.com https://umami.quietjar.com",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
