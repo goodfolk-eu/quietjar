@@ -13,17 +13,11 @@
     ],
     "browserMock": {
       "url": "your-site.com",
-      "enjoy": "Enjoying this?",
-      "sub": "Stays on this page.",
-      "cta": "Support · €5",
-      "thanks": "Thank you.",
-      "thanksSub": "Your support keeps this site running.",
-      "snippet": "<div data-quietjar=\"you\"></div>",
       "live": "Live, not a picture",
       "presets": [
-        { "key": "docs", "label": "Docs site" },
-        { "key": "blog", "label": "Personal blog" },
-        { "key": "magazine", "label": "Magazine" }
+        { "key": "docs", "label": "Docs site", "headline": "Enjoying the docs?", "body": "Keeps the docs free and current.", "action": "Sponsor", "color": "#0b6b3a", "font": "rounded" },
+        { "key": "blog", "label": "Personal blog", "headline": "Enjoying the read?", "body": "Funds more posts like this one.", "action": "Tip", "color": "#8a5a2b", "font": "serif" },
+        { "key": "magazine", "label": "Magazine", "headline": "Enjoying this issue?", "body": "Funds the next issue.", "action": "Support", "color": "#c4372b", "font": "system" }
       ]
     }
   },

@@ -14,6 +14,19 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       position: fixed;
       z-index: 2147483000;
     }
+    .quietjar-widget--inline {
+      position: relative;
+      z-index: auto;
+    }
+    /* Face widths are viewport-based for the floating widget; inline, the
+       host element is the box to fit. */
+    .quietjar-widget--inline .quietjar-widget__panel,
+    .quietjar-widget--inline .quietjar-widget__button--labeled {
+      max-width: 100%;
+    }
+    .quietjar-widget--inline .quietjar-widget__panel {
+      margin-inline: auto;
+    }
     .quietjar-widget__button {
       display: grid;
       place-items: center;

@@ -1,12 +1,40 @@
 ---
+import type { QuietJarConfig } from "@quietjar/widget/config";
 import { dictionary } from "@/i18n/t";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const mock = copy.hero.browserMock;
+
+// The homepage installs the widget the way a customer would, pointing the
+// inline mount at the demo slot. Dev loads the local bundle: the deployed
+// bundle at the customer URL would be older than this checkout. Dev can still
+// target another origin with PUBLIC_WIDGET_URL.
+const widgetSrc =
+  import.meta.env.PUBLIC_WIDGET_URL ??
+  (import.meta.env.DEV ? "/js/latest/quietjar.js" : "https://quietjar.com/js/latest/quietjar.js");
+
+// Font strings are validated by the widget itself; an unknown value falls
+// back to its default preset.
+const presetStyles = Object.fromEntries(
+  mock.presets.map((preset) => [
+    preset.key,
+    {
+      headline: preset.headline,
+      body: preset.body,
+      action: preset.action,
+      color: preset.color,
+      font: preset.font as NonNullable<QuietJarConfig["style"]>["font"],
+    },
+  ]),
+);
 ---
 
-<div class="flex flex-col" data-qj-demo>
-  <div class="mock-card overflow-hidden rounded-xl bg-white" data-qj-mock data-preset="docs" data-state="ask">
+<div
+  class="flex flex-col"
+  data-qj-demo
+  data-presets={JSON.stringify(presetStyles)}
+>
+  <div class="mock-card overflow-hidden rounded-xl bg-white" data-qj-mock data-preset="docs">
     <div class="flex items-center gap-5 border-b border-qj-line-card px-[18px]" data-qj-presets>
       {
         mock.presets.map((preset, i) => (
@@ -36,25 +64,7 @@ const mock = copy.hero.browserMock;
         <span class="h-2 w-[88%] rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
       </div>
 
-      <div class="my-1.5 flex items-center justify-between gap-5 rounded-lg px-[22px] py-5" style={`background: var(--demo-widget-bg)`}>
-        <div class="flex flex-col gap-[3px]">
-          <span class="font-display text-[17px] font-bold tracking-[-0.02em]" style={`color: var(--demo-ink); font-family: var(--demo-heading-font)`} data-qj-ask-headline>
-            {mock.enjoy}
-          </span>
-          <span class="hidden font-display text-[17px] font-bold tracking-[-0.02em]" style={`color: var(--demo-ink); font-family: var(--demo-heading-font)`} data-qj-thanks-headline>
-            {mock.thanks}
-          </span>
-          <span class="text-[13px] text-qj-body" data-qj-ask-sub>{mock.sub}</span>
-          <span class="hidden text-[13px] text-qj-body" data-qj-thanks-sub>{mock.thanksSub}</span>
-        </div>
-        <button
-          type="button"
-          data-qj-demo-cta
-          class="shrink-0 cursor-pointer whitespace-nowrap rounded-sm px-[18px] py-[11px] text-[14px] font-semibold text-white transition"
-          style={`background: var(--demo-accent)`}>
-          {mock.cta}
-        </button>
-      </div>
+      <div id="qj-demo-slot" class="my-1.5"></div>
 
       <div class="flex flex-col gap-2">
         <span class="h-2 w-full rounded-sm" style={`background: var(--demo-line)`} aria-hidden="true"></span>
@@ -62,8 +72,9 @@ const mock = copy.hero.browserMock;
       </div>
     </div>
 
-    <div class="flex flex-col items-start gap-1 border-t border-qj-line-card bg-qj-code px-5 py-3 font-mono text-[12px] sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-      <span class="break-all text-qj-body">{mock.snippet}</span>
+    <div
+      class="flex items-center justify-end border-t border-qj-line-card bg-qj-code px-5 py-3 font-mono text-[12px]"
+    >
       <span class="whitespace-nowrap text-qj-accent">{mock.live}</span>
     </div>
   </div>
@@ -76,66 +87,76 @@ const mock = copy.hero.browserMock;
 
   [data-qj-mock][data-preset="docs"] {
     --demo-bg: #ffffff;
-    --demo-ink: #171a18;
     --demo-line: #f0ede6;
-    --demo-widget-bg: #f2f7f3;
-    --demo-accent: #0b6b3a;
-    --demo-heading-font: var(--font-display);
   }
 
   [data-qj-mock][data-preset="blog"] {
     --demo-bg: #fbf7ef;
-    --demo-ink: #2b2013;
     --demo-line: #eae1d0;
-    --demo-widget-bg: #fbf7ef;
-    --demo-accent: #8a5a2b;
-    --demo-heading-font: Georgia, "Times New Roman", serif;
   }
 
   [data-qj-mock][data-preset="magazine"] {
     --demo-bg: #f5f4f2;
-    --demo-ink: #111111;
     --demo-line: #dedcd8;
-    --demo-widget-bg: #f5f4f2;
-    --demo-accent: #c4372b;
-    --demo-heading-font: "Arial Narrow", Arial, sans-serif;
-  }
-
-  [data-qj-mock][data-state="thanks"] [data-qj-demo-cta] {
-    opacity: 0.4;
-    pointer-events: none;
-    box-shadow: none;
-  }
-
-  [data-qj-mock][data-state="thanks"] [data-qj-ask-headline],
-  [data-qj-mock][data-state="thanks"] [data-qj-ask-sub] {
-    display: none;
-  }
-
-  [data-qj-mock][data-state="thanks"] [data-qj-thanks-headline],
-  [data-qj-mock][data-state="thanks"] [data-qj-thanks-sub] {
-    display: block;
   }
 </style>
 
 <script>
+  import { mountWidget } from "@quietjar/widget/embed";
+  import { resolveConfig, type QuietJarConfig } from "@quietjar/widget/config";
+
   const root = document.querySelector<HTMLElement>("[data-qj-demo]");
 
   if (root) {
-    const mock = root.querySelector<HTMLElement>("[data-qj-mock]");
+    const mockCard = root.querySelector<HTMLElement>("[data-qj-mock]");
+    const slot = root.querySelector<HTMLElement>("#qj-demo-slot");
     const presetButtons = [...root.querySelectorAll<HTMLButtonElement>("[data-preset-btn]")];
+    const presetStyles = JSON.parse(root.dataset.presets ?? "{}") as Record<
+      string,
+      {
+        headline?: string;
+        body?: string;
+        action?: string;
+        color?: string;
+        font?: NonNullable<QuietJarConfig["style"]>["font"];
+      }
+    >;
+
+    // Captured before any preset runs, so every tab composes from the
+    // production config instead of the previous tab's restyle.
+    const baseConfig = window.QuietJar ? structuredClone(window.QuietJar) : undefined;
 
     for (const button of presetButtons) {
       button.addEventListener("click", () => {
-        mock?.setAttribute("data-preset", button.dataset.presetBtn ?? "docs");
+        mockCard?.setAttribute("data-preset", button.dataset.presetBtn ?? "docs");
         for (const other of presetButtons) {
           other.setAttribute("aria-pressed", String(other === button));
         }
+
+        if (!slot || !baseConfig) return;
+        slot.querySelector("[data-quietjar-host]")?.remove();
+        const preset = presetStyles[button.dataset.presetBtn ?? ""] ?? {};
+        mountWidget(
+          resolveConfig({
+            ...baseConfig,
+            labels: {
+              ...baseConfig.labels,
+              headline: preset.headline ?? baseConfig.labels?.headline,
+              body: preset.body ?? baseConfig.labels?.body,
+              action: preset.action ?? baseConfig.labels?.action,
+            },
+            style: {
+              ...baseConfig.style,
+              color: preset.color ?? baseConfig.style?.color,
+              font: preset.font ?? baseConfig.style?.font,
+            },
+          }),
+        );
       });
     }
-
-    root.querySelector("[data-qj-demo-cta]")?.addEventListener("click", () => {
-      mock?.setAttribute("data-state", "thanks");
-    });
   }
 </script>
+
+<script is:inline src="/demo-config.js"></script>
+
+<script is:inline src={widgetSrc} async></script>

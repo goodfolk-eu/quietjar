@@ -1,11 +1,13 @@
 import { watch } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import { serve } from "bun";
 
 const PORT = Number(process.env.PORT ?? 5175);
 
-const clients = new Set<ReadableStreamDefaultController>();
+const FRONTEND_BUNDLE = "../frontend/public/js/latest/quietjar.js";
 
+const clients = new Set<ReadableStreamDefaultController>();
 let currentBundle: string | null = null;
 
 function broadcast(eventName: string, data: string): void {
@@ -28,6 +30,10 @@ async function build(): Promise<void> {
       minify: false,
     });
     currentBundle = await result.outputs[0].text();
+    // The homepage demo serves the widget from apps/frontend's public
+    // directory; mirroring every rebuild keeps it on the code being worked on.
+    await mkdir(dirname(FRONTEND_BUNDLE), { recursive: true });
+    await writeFile(FRONTEND_BUNDLE, currentBundle);
     broadcast("reload", "now");
   } catch (err) {
     console.error("Widget build failed:", err);

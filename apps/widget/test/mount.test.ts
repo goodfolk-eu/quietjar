@@ -49,6 +49,19 @@ describe("mountWidget", () => {
     expect(host.parentElement).toBe(container);
   });
 
+  test("mounts inline without corner positioning when a target resolves", () => {
+    const container = document.createElement("div");
+    document.body.append(container);
+
+    const host = mountWidget(resolveConfig({ mount: { target: container } }));
+
+    expect(host.style.display).toBe("block");
+    const widget = host.shadowRoot?.querySelector(".quietjar-widget");
+    expect(widget?.className).toContain("quietjar-widget--inline");
+    expect(widget?.className).not.toContain("quietjar-widget--bottom-right");
+    expect(widgetCss(host)).toContain(".quietjar-widget--inline");
+  });
+
   test("mounts on body with fixed positioning when no target is given", () => {
     const host = mountWidget(resolveConfig(undefined));
 
@@ -171,6 +184,8 @@ describe("mountWidget", () => {
   test("falls back to body for an invalid selector target", () => {
     const host = mountWidget(resolveConfig({ mount: { target: "###" } }));
     expect(host.parentElement).toBe(document.body);
+    const widget = host.shadowRoot?.querySelector(".quietjar-widget");
+    expect(widget?.className).toContain("quietjar-widget--bottom-right");
   });
 
   test("returns the existing host instead of mounting twice", () => {

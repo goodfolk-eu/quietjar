@@ -30,16 +30,21 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
     return existing;
   }
 
+  // Inline mounting puts the widget in the target's flow; the fixed corner
+  // classes would keep pinning it to the viewport and defeat the placement.
+  const inline = container !== document.body;
   const host = document.createElement("div");
   host.setAttribute("data-quietjar-host", "");
-  host.style.cssText = "all: initial;";
+  host.style.cssText = inline ? "all: initial; display: block;" : "all: initial;";
   container.append(host);
 
   const root = host.attachShadow({ mode: "open" });
   applyStyles(root, config.color, labelFontFamily(config.font, container), config.css);
 
   const widget = document.createElement("div");
-  widget.className = `quietjar-widget quietjar-widget--${config.corner}`;
+  widget.className = inline
+    ? "quietjar-widget quietjar-widget--inline"
+    : `quietjar-widget quietjar-widget--${config.corner}`;
   const face = config.body !== "" ? cardPanel(config) : pillButton(config);
   widget.append(face);
 
