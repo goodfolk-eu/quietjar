@@ -5,24 +5,24 @@
   },
   "nav": {
     "links": [
-      { "title": "Pricing", "path": "/#pricing" },
+      { "title": "Pricing", "path": "/pricing/" },
       { "title": "Developers", "path": "/developers/" },
       { "title": "Compare", "path": "/compare/" }
     ],
     "login": "Log in",
     "signup": "Add to your site",
     "dashboard": "Dashboard",
-    "primary": "Primary"
+    "primary": "Primary",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
   },
   "footer": {
     "address": ["Panamalaan 8-D", "1019 AZ Amsterdam", "The Netherlands"],
     "navHeading": "Company",
     "legalHeading": "Legal",
     "siteLinks": [
-      { "title": "Features", "path": "/#features" },
-      { "title": "How it works", "path": "/#how" },
-      { "title": "Pricing", "path": "/#pricing" },
-      { "title": "FAQ", "path": "/#faq" },
+      { "title": "Home", "path": "/" },
+      { "title": "Pricing", "path": "/pricing/" },
       { "title": "Developers", "path": "/developers/" },
       { "title": "Compare", "path": "/compare/" }
     ],

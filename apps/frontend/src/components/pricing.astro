@@ -18,35 +18,14 @@ const pricing = copy.pricing;
     </div>
 
     <div class="flex flex-col gap-[22px] rounded-xl bg-qj-field p-10 pb-11">
-      <span class="font-mono text-[11.5px] uppercase tracking-[0.1em] text-qj-field-mint">{pricing.planLabel}</span>
-      <div class="flex items-baseline gap-2.5">
-        <span class="font-display text-[66px] font-bold leading-[0.9] tracking-[-0.028em] text-white">{pricing.planPrice}</span>
-        <span class="text-[15px] text-white/72">{pricing.planPriceNote}</span>
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span class="font-display text-[clamp(64px,8vw,96px)] font-bold leading-[0.9] tracking-[-0.04em] text-white">{pricing.planPrice}</span>
+        <span class="text-[16px] text-white/72">{pricing.planPriceNote}</span>
       </div>
-      <table class="w-full border-collapse text-left text-[15px] text-white">
-        <thead>
-          <tr class="border-b border-white/25">
-            {pricing.exampleHead.map((heading) => (
-              <th scope="col" class="py-2.5 pr-4 font-mono text-[11.5px] font-medium uppercase tracking-[0.08em] text-white/60">
-                {heading}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {
-            pricing.exampleRows.map((row) => (
-              <tr class="border-b border-white/12">
-                {row.map((cell) => (
-                  <td class="py-2.5 pr-4">{cell}</td>
-                ))}
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-      <p class="text-[14px] leading-[1.6] text-white/80">{pricing.absorb}</p>
-      <p class="text-[14px] leading-[1.6] text-white/80">{pricing.payout}</p>
+      <p class="max-w-[38ch] text-[15px] leading-[1.6] text-white/80">{pricing.note}</p>
+      <a href="/pricing/" class="self-start text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
+        {pricing.link} →
+      </a>
       <button
         data-auth-mode="signup"
         type="button"

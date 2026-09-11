@@ -91,16 +91,10 @@
     "eyebrow": "Pricing",
     "title": "We only win when you do.",
     "description": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. It costs you nothing until it is earning you something.",
-    "planLabel": "Simple",
-    "planPrice": "Free",
-    "planPriceNote": "to start, forever",
-    "exampleHead": ["Someone supports you with", "Our fee"],
-    "exampleRows": [
-      ["€5", "€0.25"],
-      ["€50", "€2.50"]
-    ],
-    "absorb": "Payment processing costs come out too, on top of our 5%, and vary by method. You keep the rest. Your supporters are never charged extra.",
-    "payout": "Paid out daily to your bank account, automatically.",
+    "planPrice": "5%",
+    "planPriceNote": "of what you receive",
+    "note": "No monthly fee, no cap. Payment processing comes on top, at cost, and your supporters are never charged extra.",
+    "link": "See exactly what you keep",
     "cta": "Add it to your site"
   },
   "faq": {
@@ -131,7 +125,9 @@
       },
       {
         "q": "What does it cost?",
-        "a": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. Donations are €1 to €500. It costs you nothing until it is earning you something."
+        "a": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. Donations are €1 to €500. It costs you nothing until it is earning you something.",
+        "linkLabel": "See the pricing page",
+        "linkHref": "/pricing/"
       },
       {
         "q": "When do I get paid?",

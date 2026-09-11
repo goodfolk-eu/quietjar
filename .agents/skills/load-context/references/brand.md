@@ -20,7 +20,7 @@ When two conflict, the higher one wins.
 
 1. **Respect for the supporter.** Ask once. Say thank you. Step back. No guilt, no chasing, no dark patterns. The suppression feature is this value made into code.
 2. **Craft.** Fast, precise, invisible when it should be. Every detail engineered. This is the moat and the personality.
-3. **Alignment.** No monthly fee. A share only when the creator gets paid. Processing costs come out of that share, never surcharged onto the supporter.
+3. **Alignment.** No monthly fee. A share only when the creator gets paid. Payment processing is passed through at cost on top of that share, never surcharged onto the supporter.
 4. **Restraint.** Say less. Show more. Cut the second adjective.
 
 ## Personality

@@ -6,6 +6,7 @@ import enDashboardWidget from "./en/dashboard/widget.json";
 import enDevelopers from "./en/developers.json";
 import enHome from "./en/home.json";
 import enLegal from "./en/legal.json";
+import enPricing from "./en/pricing.json";
 import enShared from "./en/shared.json";
 
 const dictionaries = {
@@ -19,6 +20,7 @@ const dictionaries = {
     ...enLegal,
     ...enDevelopers,
     ...enCompare,
+    ...enPricing,
   },
 } as const;
 
