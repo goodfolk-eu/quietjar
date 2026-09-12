@@ -32,14 +32,13 @@ ENV NODE_ENV=production
 # Node port that the container listens on (Magic Container maps a public port).
 ENV PORT=3000
 
-# Headless Chrome for Bun.WebView, plus the fonts the widget's system stacks
-# resolve to (sans/serif/mono fallbacks and color emoji for text icons).
-ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
-RUN bunx playwright-core@1.63.0 install --with-deps chromium-headless-shell \
-  && ln -s /opt/ms-playwright/chromium_headless_shell-*/chrome-linux/headless_shell /usr/local/bin/chrome-headless-shell \
-  && apt-get install -y --no-install-recommends fontconfig fonts-liberation fonts-noto-color-emoji \
+# Chromium for Bun.WebView, installed from the distro so no Bun process ever
+# runs under qemu during the image build (Bun segfaults there), plus the fonts
+# the widget's system stacks resolve to.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends chromium fontconfig fonts-liberation fonts-noto-color-emoji \
   && rm -rf /var/lib/apt/lists/*
-ENV BUN_CHROME_PATH=/usr/local/bin/chrome-headless-shell
+ENV BUN_CHROME_PATH=/usr/bin/chromium
 ENV WIDGET_BUNDLE_PATH=/app/widget-bundle/quietjar.js
 USER bun
 

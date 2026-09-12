@@ -66,7 +66,7 @@ beforeEach(() => {
 
 describe("GET /api/widget/image", () => {
   test("renders and serves a cacheable png for a valid config blob", async () => {
-    const response = await call(`${IMAGE}?c=${blobOf({ color: "#0284c7" })}`);
+    const response = await call(`${IMAGE}/${blobOf({ color: "#0284c7" })}.png`);
     expect(response.status).toBe(200);
     expect(response.headers.get("content-type")).toBe("image/png");
     expect(response.headers.get("cache-control")).toContain("immutable");
@@ -75,19 +75,19 @@ describe("GET /api/widget/image", () => {
   });
 
   test("rejects an undecodable blob without rendering", async () => {
-    const response = await call(`${IMAGE}?c=${encodeURIComponent("!!!not-json!!!")}`);
+    const response = await call(`${IMAGE}/!!!not-json!!!.png`);
     expect(response.status).toBe(400);
     expect(renders).toHaveLength(0);
   });
 
   test("rejects a blob that is not an object", async () => {
-    const response = await call(`${IMAGE}?c=${encodeRaw([1, 2])}`);
+    const response = await call(`${IMAGE}/${encodeRaw([1, 2])}.png`);
     expect(response.status).toBe(400);
     expect(renders).toHaveLength(0);
   });
 
   test("an oversized blob fails validation", async () => {
-    const response = await call(`${IMAGE}?c=${"a".repeat(storage.MAX_BLOB_LENGTH + 1)}`);
+    const response = await call(`${IMAGE}/${"a".repeat(storage.MAX_BLOB_LENGTH + 1)}.png`);
     expect(response.status).toBe(422);
     expect(renders).toHaveLength(0);
   });
@@ -97,7 +97,7 @@ describe("GET /api/widget/image", () => {
     stored.set(storage.imageKeyFor(blob), new Uint8Array([9, 9, 9]));
     storeEnabled = true;
 
-    const response = await call(`${IMAGE}?c=${blob}`);
+    const response = await call(`${IMAGE}/${blob}.png`);
     expect(response.status).toBe(200);
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([9, 9, 9]));
     expect(renders).toHaveLength(0);
@@ -107,7 +107,7 @@ describe("GET /api/widget/image", () => {
     const blob = blobOf({ color: "#00ff00" });
     storeEnabled = true;
 
-    const response = await call(`${IMAGE}?c=${blob}`);
+    const response = await call(`${IMAGE}/${blob}.png`);
     expect(response.status).toBe(200);
     expect(stored.get(storage.imageKeyFor(blob))).toEqual(PNG);
     expect(renders).toHaveLength(1);
@@ -115,20 +115,25 @@ describe("GET /api/widget/image", () => {
 
   test("a failed render surfaces as an error response", async () => {
     renderError = new Error("no browser available");
-    const response = await call(`${IMAGE}?c=${blobOf({})}`);
+    const response = await call(`${IMAGE}/${blobOf({})}.png`);
     expect(response.status).toBe(500);
   });
 });
 
 describe("GET /widget/render", () => {
-  test("embeds the config and never caches", async () => {
-    const response = await call(`/widget/render?c=${blobOf({ color: "#0284c7" })}`);
+  test("embeds the config with the close control off and never caches", async () => {
+    const response = await call(
+      `/widget/render?c=${blobOf({ color: "#0284c7", close: { enabled: true, after: "session", days: 7 } })}`,
+    );
     expect(response.status).toBe(200);
     expect(response.headers.get("content-type")).toContain("text/html");
     expect(response.headers.get("cache-control")).toBe("no-store");
     const html = await response.text();
     expect(html).toContain("window.QuietJar=");
     expect(html).toContain("#0284c7");
+    // The close control is widget chrome; a static image is the button alone.
+    expect(html).toContain('"enabled":false');
+    expect(html).not.toContain('"enabled":true');
   });
 
   test("rejects an undecodable blob", async () => {

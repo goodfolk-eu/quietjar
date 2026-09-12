@@ -29,8 +29,16 @@ function renderPage(blob: string): Response {
   if (!config) {
     return new Response("invalid widget config", { status: 400 });
   }
+  // The close control is interactive widget chrome; a static image is the
+  // button alone, so it is never rendered into the screenshot.
+  const patchable = config as Record<string, unknown>;
+  const close = patchable.close;
+  patchable.close = {
+    ...(typeof close === "object" && close !== null ? close : {}),
+    enabled: false,
+  };
   // Script-tag safety: the config is attacker-controlled input in principle.
-  const json = JSON.stringify(config)
+  const json = JSON.stringify(patchable)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026");
@@ -54,25 +62,29 @@ function bundle(): Response {
 
 export const widgetRoutes = new Elysia()
   .get(
-    "/api/widget/image",
-    async ({ query }) => {
+    // The config blob is the path, not a query string: BunnyCDN keys its cache
+    // on the path and ignores query strings, so query-encoded settings would
+    // all share one cached image. The .png file name keeps the URL cacheable.
+    "/api/widget/image/:file",
+    async ({ params }) => {
       const store = await imageStoreFromEnv();
-      const config = decodeImageConfig(query.c);
+      const blob = params.file.replace(/\.png$/i, "");
+      const config = decodeImageConfig(blob);
       if (!config) {
         return new Response("invalid widget config", { status: 400 });
       }
       if (store) {
-        const cached = await store.get(imageKeyFor(query.c));
+        const cached = await store.get(imageKeyFor(blob));
         if (cached) return png(cached);
       }
       const image = await renderWidgetImage(config);
       // The response goes out first; the stored copy serves future misses.
-      if (store) void store.put(imageKeyFor(query.c), image);
+      if (store) void store.put(imageKeyFor(blob), image);
       return png(image);
     },
     {
-      query: t.Object({
-        c: t.String({ minLength: 1, maxLength: MAX_BLOB_LENGTH }),
+      params: t.Object({
+        file: t.String({ minLength: 1, maxLength: MAX_BLOB_LENGTH }),
       }),
     },
   )
