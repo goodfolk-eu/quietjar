@@ -90,10 +90,10 @@ describe("resolveConfig", () => {
     });
   });
 
-  test("falls back to the default icon for blank or oversized values", () => {
-    expect(resolveConfig({ labels: { icon: "  " } }).icon).toBe(DEFAULT_ICON);
+  test("treats blank as no icon and falls back to the default for oversized values", () => {
+    expect(resolveConfig({ labels: { icon: "  " } }).icon).toBe("");
     expect(resolveConfig({ labels: { icon: "way too long" } }).icon).toBe(DEFAULT_ICON);
-    expect(resolveConfig(undefined).icon).toBe("♡");
+    expect(resolveConfig(undefined).icon).toBe(DEFAULT_ICON);
   });
 
   test("keeps the amount list usable whatever the config says", () => {
@@ -134,8 +134,6 @@ describe("resolveConfig", () => {
     for (const icon of [...ICON_PRESETS, ...ICON_LIBRARY]) {
       expect(resolveConfig({ labels: { icon } }).icon).toBe(icon);
     }
-    expect(ICON_LIBRARY).toContain(DEFAULT_ICON);
-    expect(ICON_PRESETS).toContain(DEFAULT_ICON);
     expect(new Set(ICON_LIBRARY).size).toBe(ICON_LIBRARY.length);
   });
 

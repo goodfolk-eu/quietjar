@@ -5,8 +5,8 @@ import {
   DEFAULT_COLOR,
   DEFAULT_FONT,
   DEFAULT_HEADLINE,
-  DEFAULT_ICON,
   FONT_STACKS,
+  PIGGY_ICON,
   resolveConfig,
 } from "../src/config";
 import { isDismissed } from "../src/dismiss";
@@ -237,18 +237,29 @@ describe("mountWidget", () => {
     expect(container.querySelectorAll("[data-quietjar-host]")).toHaveLength(1);
   });
 
-  test("renders the default icon glyph in the button", () => {
+  test("renders the piggy svg as the default icon", () => {
     const host = mountWidget(resolveConfig(undefined));
 
-    const icon = host.shadowRoot?.querySelector("button .quietjar-widget__icon");
-    expect(icon?.textContent).toBe(DEFAULT_ICON);
-    expect(icon?.getAttribute("aria-hidden")).toBe("true");
+    const icon = host.shadowRoot?.querySelector("button .quietjar-widget__icon svg");
+    expect(icon?.getAttribute("viewBox")).toBe("45 13 150 150");
   });
 
   test("renders the configured icon glyph", () => {
     const host = mountWidget(resolveConfig({ labels: { icon: "☕" } }));
 
     expect(host.shadowRoot?.querySelector(".quietjar-widget__icon")?.textContent).toBe("☕");
+  });
+
+  test("renders the piggy svg when the piggy is selected", () => {
+    const host = mountWidget(resolveConfig({ labels: { icon: PIGGY_ICON } }));
+
+    expect(host.shadowRoot?.querySelector("button .quietjar-widget__icon svg")).not.toBeNull();
+  });
+
+  test("renders no icon when the config chooses none", () => {
+    const host = mountWidget(resolveConfig({ labels: { icon: "" } }));
+
+    expect(host.shadowRoot?.querySelector("button .quietjar-widget__icon")).toBeNull();
   });
 
   test("renders the close control next to the main button", () => {

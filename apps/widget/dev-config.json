@@ -5,7 +5,6 @@
   "amounts": [3, 5, 10],
   "labels": {
     "headline": "Support this site",
-    "icon": "♡",
     "body": ""
   },
   "style": {

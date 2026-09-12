@@ -59,7 +59,9 @@ export const ICON_LIBRARY = [
   "🐛",
 ] as const;
 
-export const DEFAULT_ICON = "♡";
+/** Reserved labels.icon value rendering the piglet mark; also the default when no icon is configured. */
+export const PIGGY_ICON = "piggy";
+export const DEFAULT_ICON = PIGGY_ICON;
 
 // A glyph can span several code units (surrogate pairs, variation selectors,
 // ZWJ sequences), so the cap counts characters generously rather than exactly.
@@ -70,7 +72,9 @@ export function resolveIcon(value: unknown): string {
     return DEFAULT_ICON;
   }
   const icon = value.trim();
-  if (icon === "" || icon.length > MAX_ICON_LENGTH) {
+  // Empty means the owner explicitly chose no icon; only an unconfigured or
+  // oversized value falls back to the default.
+  if (icon.length > MAX_ICON_LENGTH) {
     return DEFAULT_ICON;
   }
   return icon;

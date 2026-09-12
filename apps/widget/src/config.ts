@@ -57,6 +57,7 @@ export interface ResolvedConfig {
   body: string;
   /** Label for the card's action button. */
   actionLabel: string;
+  /** Text glyph, the piggy sentinel for the default mark, or empty for no icon. */
   icon: string;
   /** Accessible name for the close control. */
   closeLabel: string;
@@ -72,7 +73,7 @@ export interface ResolvedConfig {
 
 export { DEFAULT_FONT, FONT_PRESETS, FONT_STACKS, type FontChoice, resolveFont } from "./font";
 
-export { DEFAULT_ICON, ICON_LIBRARY, ICON_PRESETS } from "./icon";
+export { DEFAULT_ICON, ICON_LIBRARY, ICON_PRESETS, PIGGY_ICON } from "./icon";
 
 /** Used as the accessible name when no headline is configured. */
 export const DEFAULT_HEADLINE = "Support this site";

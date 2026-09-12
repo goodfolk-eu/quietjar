@@ -31,6 +31,8 @@
     "iconHint": "Pick a symbol or type your own.",
     "customIcon": "Custom",
     "browseIcons": "Browse all",
+    "iconPiggy": "Piggy",
+    "iconNone": "No icon",
     "headline": "Headline",
     "headlineHint": "Shown on the button next to the icon. Leave empty for an icon-only button.",
     "clearHeadline": "Clear headline",

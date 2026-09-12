@@ -1,4 +1,10 @@
-import { DEFAULT_FONT, DEFAULT_HEADLINE, FONT_STACKS, type ResolvedConfig } from "./config";
+import {
+  DEFAULT_FONT,
+  DEFAULT_HEADLINE,
+  FONT_STACKS,
+  PIGGY_ICON,
+  type ResolvedConfig,
+} from "./config";
 import { createPaymentContainer, type PaymentContainer } from "./container";
 import { persistDismissal } from "./dismiss";
 import { widgetStyles } from "./styles";
@@ -111,11 +117,17 @@ function pillButton(config: ResolvedConfig): HTMLButtonElement {
   button.setAttribute("aria-label", label !== "" ? label : DEFAULT_HEADLINE);
   button.title = label !== "" ? label : DEFAULT_HEADLINE;
 
-  const iconEl = document.createElement("span");
-  iconEl.className = "quietjar-widget__icon";
-  iconEl.setAttribute("aria-hidden", "true");
-  iconEl.textContent = config.icon;
-  button.append(iconEl);
+  if (config.icon !== "") {
+    const iconEl = document.createElement("span");
+    iconEl.className = "quietjar-widget__icon";
+    iconEl.setAttribute("aria-hidden", "true");
+    if (config.icon === PIGGY_ICON) {
+      iconEl.append(piggyIcon());
+    } else {
+      iconEl.textContent = config.icon;
+    }
+    button.append(iconEl);
+  }
 
   if (label !== "") {
     const labelEl = document.createElement("span");
@@ -172,6 +184,65 @@ function closeIcon(): SVGSVGElement {
   path.setAttribute("stroke-width", "3");
   path.setAttribute("stroke-linecap", "round");
   svg.append(path);
+  return svg;
+}
+
+function piggyIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NAMESPACE, "svg");
+  svg.setAttribute("viewBox", "45 13 150 150");
+  svg.setAttribute("width", "24");
+  svg.setAttribute("height", "24");
+  svg.setAttribute("aria-hidden", "true");
+
+  const el = (parent: Element, name: string, attrs: Record<string, string>): SVGElement => {
+    const node = document.createElementNS(SVG_NAMESPACE, name);
+    for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+    parent.append(node);
+    return node;
+  };
+
+  const mask = el(svg, "mask", {
+    id: "qj-piggy-mask",
+    maskUnits: "userSpaceOnUse",
+    x: "0",
+    y: "0",
+    width: "240",
+    height: "180",
+  });
+  const clip = el(mask, "clipPath", { id: "qj-piggy-clip" });
+  el(clip, "rect", { x: "56.9", y: "44.4", width: "126.3", height: "99.2", rx: "47.6" });
+  const white = el(mask, "g", {
+    fill: "#fff",
+    stroke: "#fff",
+    "stroke-width": "6",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+  });
+  el(white, "path", { d: "M68.5 64.2 L45.3 56.9 L70.6 81.1 Z" });
+  el(white, "path", { d: "M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z" });
+  el(white, "path", { d: "M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z" });
+  el(white, "path", { d: "M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z" });
+  el(white, "path", { d: "M140.7 33.3 L194.2 55.8 L138.1 73.2 Z" });
+  el(white, "rect", { x: "59.9", y: "47.4", width: "120.3", height: "93.2", rx: "44.6" });
+  el(white, "path", { d: "M116.5 44.9 L147.6 17.8 L138.9 91 Z" });
+  const black = el(mask, "g", { "clip-path": "url(#qj-piggy-clip)" });
+  el(black, "path", {
+    d: "M116.5 44.9 L147.6 17.8 L138.9 91 Z",
+    fill: "#000",
+    stroke: "#000",
+    "stroke-width": "6",
+    "stroke-linejoin": "round",
+  });
+  el(black, "path", { d: "M113.6 44.3 L127.1 35.7 L122.6 57.5 Z", fill: "#000" });
+  el(mask, "circle", { cx: "160.5", cy: "80.5", r: "7.2", fill: "#000" });
+  el(svg, "rect", {
+    x: "0",
+    y: "0",
+    width: "240",
+    height: "180",
+    fill: "currentColor",
+    mask: "url(#qj-piggy-mask)",
+  });
   return svg;
 }
 

@@ -6,10 +6,10 @@ import {
   DEFAULT_CORNER,
   DEFAULT_FONT,
   DEFAULT_HEADLINE,
-  DEFAULT_ICON,
   FONT_PRESETS,
   ICON_LIBRARY,
   ICON_PRESETS,
+  PIGGY_ICON,
 } from "@quietjar/widget/config";
 import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
@@ -232,12 +232,42 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
             <legend class="text-sm font-medium text-gray-700">{widget.icon}</legend>
             <p class="mt-1 text-xs text-gray-500">{widget.iconHint}</p>
             <div class="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                data-icon={PIGGY_ICON}
+                aria-pressed="true"
+                aria-label={widget.iconPiggy}
+                class="flex size-9 items-center justify-center rounded-lg border-2 border-gray-200 transition hover:border-gray-300 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:border-gray-800"
+              >
+                <svg class="size-5" viewBox="45 13 150 150" aria-hidden="true">
+                  <defs>
+                    <mask id="qj-editor-piggy-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
+                      <clipPath id="qj-editor-piggy-clip"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
+                      <g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M68.5 64.2 L45.3 56.9 L70.6 81.1 Z"></path>
+                        <path d="M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z"></path>
+                        <path d="M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z"></path>
+                        <path d="M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z"></path>
+                        <path d="M140.7 33.3 L194.2 55.8 L138.1 73.2 Z"></path>
+                        <rect x="59.9" y="47.4" width="120.3" height="93.2" rx="44.6"></rect>
+                        <path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z"></path>
+                      </g>
+                      <g clip-path="url(#qj-editor-piggy-clip)">
+                        <path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"></path>
+                        <path d="M113.6 44.3 L127.1 35.7 L122.6 57.5 Z" fill="#000"></path>
+                      </g>
+                      <circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
+                    </mask>
+                  </defs>
+                  <rect x="0" y="0" width="240" height="180" fill="currentColor" mask="url(#qj-editor-piggy-mask)"></rect>
+                </svg>
+              </button>
               {
                 ICON_PRESETS.map((icon) => (
                   <button
                     type="button"
                     data-icon={icon}
-                    aria-pressed={icon === DEFAULT_ICON ? "true" : "false"}
+                    aria-pressed="false"
                     aria-label={icon}
                     class="size-9 rounded-lg border-2 border-gray-200 text-lg leading-none transition hover:border-gray-300 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:border-gray-800"
                   >
@@ -245,6 +275,18 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
                   </button>
                 ))
               }
+              <button
+                type="button"
+                data-icon=""
+                aria-pressed="false"
+                aria-label={widget.iconNone}
+                class="flex size-9 items-center justify-center rounded-lg border-2 border-gray-200 text-gray-400 transition hover:border-gray-300 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:border-gray-800"
+              >
+                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M5.8 5.8l12.4 12.4" stroke-linecap="round"></path>
+                </svg>
+              </button>
             </div>
             <div class="mt-3 flex items-end gap-3">
               <div>
@@ -253,7 +295,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
                   id="qj-icon-custom"
                   type="text"
                   maxlength="8"
-                  value={DEFAULT_ICON}
+                  value=""
                   class={`${fieldClass} w-20 text-center`}
                 />
               </div>
@@ -282,7 +324,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
                           type="button"
                           role="menuitem"
                           data-icon={icon}
-                          aria-pressed={icon === DEFAULT_ICON ? "true" : "false"}
+                          aria-pressed="false"
                           aria-label={icon}
                           class="size-8 rounded-md text-lg leading-none transition hover:bg-gray-100 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:bg-gray-800 aria-pressed:text-white"
                         >
@@ -435,6 +477,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     DEFAULT_FONT,
     DEFAULT_HEADLINE,
     DEFAULT_ICON,
+    PIGGY_ICON,
     resolveConfig,
   } from "@quietjar/widget/config";
 
@@ -594,7 +637,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     function setIcon(value: string, syncInput: boolean): void {
       state.icon = value;
-      if (syncInput && iconInput) iconInput.value = value;
+      if (syncInput && iconInput) iconInput.value = value === PIGGY_ICON || value === "" ? "" : value;
       render();
     }
 

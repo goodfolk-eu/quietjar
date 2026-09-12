@@ -66,6 +66,9 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       text-overflow: ellipsis;
     }
     .quietjar-widget__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", system-ui, sans-serif;
       font-size: 24px;
       line-height: 1;
