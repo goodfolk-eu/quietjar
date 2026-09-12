@@ -13,3 +13,4 @@ dist
 .astro
 apps/widget/*
 !apps/widget/package.json
+!apps/widget/src
