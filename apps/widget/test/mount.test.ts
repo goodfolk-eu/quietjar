@@ -106,6 +106,12 @@ describe("mountWidget", () => {
     expect(widgetCss(host)).toContain("#123abc");
   });
 
+  test("renders black text on a light brand color", () => {
+    const host = mountWidget(resolveConfig({ style: { color: "#f59e0b" } }));
+
+    expect(widgetCss(host)).toContain("#000000");
+  });
+
   test("uses the default color when none is configured", () => {
     const host = mountWidget(resolveConfig(undefined));
 

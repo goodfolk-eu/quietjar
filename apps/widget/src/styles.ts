@@ -1,3 +1,5 @@
+import { contrastText, textColorOnWhite } from "./contrast";
+
 /**
  * The card face and the payment container share one width, so opening the
  * container in body mode grows the widget upwards rather than sideways.
@@ -6,6 +8,8 @@
 const FACE_WIDTH = "min(360px, calc(100vw - 24px))";
 
 export function widgetStyles(color: string, labelFontFamily: string): string {
+  const text = contrastText(color);
+  const onWhite = textColorOnWhite(color);
   return `
     :host {
       all: initial;
@@ -35,7 +39,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       border: none;
       border-radius: 9999px;
       background: ${color};
-      color: #ffffff;
+      color: ${text};
       cursor: pointer;
       padding: 0;
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
@@ -75,7 +79,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       padding: 14px 16px;
       border-radius: 8px;
       background: ${color};
-      color: #ffffff;
+      color: ${text};
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
     }
     .quietjar-widget__text {
@@ -108,7 +112,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       border: none;
       border-radius: 8px;
       background: #ffffff;
-      color: ${color};
+      color: ${onWhite};
       font-family: ${labelFontFamily};
       font-size: 14px;
       font-weight: 600;
@@ -296,7 +300,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
     }
     .quietjar-panel__amount[aria-pressed="true"] {
       border-color: ${color};
-      color: ${color};
+      color: ${onWhite};
     }
     .quietjar-panel__custom {
       width: 100%;
@@ -340,7 +344,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       border: none;
       border-radius: 8px;
       background: ${color};
-      color: #ffffff;
+      color: ${text};
       font-family: inherit;
       font-size: 15px;
       font-weight: 600;
