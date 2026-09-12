@@ -404,6 +404,37 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       max-height: 85vh;
       border-radius: 16px 16px 0 0;
     }
+    /* Deep-link mode: the panel centers over a dimmed page instead of
+       anchoring to the widget. The backdrop shares the widget's z-index and
+       wins by DOM order, with the panel still on top. */
+    .quietjar-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483000;
+      background: rgba(15, 23, 42, 0.55);
+      transition: opacity 0.2s ease;
+    }
+    .quietjar-backdrop[hidden] {
+      display: none;
+    }
+    .quietjar-backdrop[data-state="closed"] {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .quietjar-panel--modal {
+      inset: 0;
+      margin: auto;
+      height: fit-content;
+    }
+    @media (max-width: 640px) {
+      .quietjar-panel--modal {
+        inset: auto 0 0 0;
+        margin: 0;
+        height: auto;
+        max-height: 85vh;
+        border-radius: 16px 16px 0 0;
+      }
+    }
     @media (max-width: 640px) {
       .quietjar-widget--open:not(.quietjar-widget--inline) {
         display: none;

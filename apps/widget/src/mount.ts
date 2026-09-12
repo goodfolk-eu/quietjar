@@ -10,6 +10,9 @@ import { persistDismissal } from "./dismiss";
 import { widgetStyles } from "./styles";
 
 const HOST_SELECTOR = "[data-quietjar-host]";
+
+/** The clickable face of the widget: a pill button, or a card panel. */
+export const FACE_SELECTOR = ".quietjar-widget__button, .quietjar-widget__panel";
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
 export interface MountOptions {
@@ -98,7 +101,7 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
       viewport: options.viewport,
       onVisibilityChange: (open) => widget.classList.toggle("quietjar-widget--open", open),
     });
-    trigger.addEventListener("click", container.open);
+    trigger.addEventListener("click", () => container.open());
     root.append(container.element);
     containers.set(host, container);
   }

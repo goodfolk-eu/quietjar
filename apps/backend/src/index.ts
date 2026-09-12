@@ -6,6 +6,7 @@ import { payRoutes } from "./pay/routes";
 import { ensureSchema } from "./schema";
 import { siteRoutes } from "./sites/routes";
 import { stripeRoutes } from "./stripe/routes";
+import { widgetRoutes } from "./widget/routes";
 
 const frontendOrigin = process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
 const dashboardOrigins = [frontendOrigin, "http://localhost:4321"];
@@ -45,7 +46,8 @@ export const app = new Elysia()
   .use(stripeRoutes)
   .use(siteRoutes)
   .use(donationRoutes)
-  .use(payRoutes);
+  .use(payRoutes)
+  .use(widgetRoutes);
 
 const port = Number(process.env.PORT ?? 3000);
 

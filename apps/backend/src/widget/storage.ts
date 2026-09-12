@@ -1,0 +1,123 @@
+/**
+ * Bunny storage for rendered widget images. The S3-compatible endpoint
+ * authenticates with the storage zone's password, not the account API key,
+ * so the zone password is resolved once through the Core API and cached.
+ * A deployment without an API key still serves images (they just re-render).
+ */
+export interface WidgetImageStore {
+  /** Stored bytes or null when the key is absent or unreachable. */
+  get(key: string): Promise<Uint8Array<ArrayBuffer> | null>;
+  /** Best-effort write; a failed store only costs a later re-render. */
+  put(key: string, data: Uint8Array<ArrayBuffer>): Promise<void>;
+}
+
+/** Mirrors PROTECTED_PREFIX in apps/frontend/deploy.ts: the website deploy
+    skips this folder when cleaning stale keys, so the cache survives deploys. */
+export const IMAGE_PREFIX = "widget-button-cache/images/";
+
+/** Resolved zone passwords, keyed by storage zone name. */
+const passwordCache = new Map<string, { password: string; hostname: string }>();
+
+interface StorageZone {
+  Name?: string;
+  Password?: string;
+  StorageHostname?: string;
+}
+
+async function fetchZone(apiKey: string, bucket: string): Promise<StorageZone | null> {
+  const url = `https://api.bunny.net/storagezone?search=${encodeURIComponent(bucket)}&perPage=1000`;
+  const response = await fetch(url, { headers: { AccessKey: apiKey, accept: "application/json" } });
+  if (!response.ok) return null;
+  const data = (await response.json()) as { Items?: StorageZone[] };
+  return data.Items?.find((zone) => zone.Name === bucket) ?? null;
+}
+
+/**
+ * The S3 secret for a storage zone, fetched through the Core API with the
+ * account key. Positive lookups are cached for the process lifetime; a
+ * failed lookup returns null and retries on the next call.
+ */
+export async function resolveS3Credentials(
+  apiKey: string,
+  bucket: string,
+): Promise<{ password: string; hostname: string } | null> {
+  const cached = passwordCache.get(bucket);
+  if (cached) return cached;
+  let zone: StorageZone | null = null;
+  try {
+    zone = await fetchZone(apiKey, bucket);
+  } catch {
+    return null;
+  }
+  if (zone?.Name !== bucket || !zone.Password) return null;
+  const credentials = {
+    password: zone.Password,
+    hostname: zone.StorageHostname ?? "storage.bunnycdn.com",
+  };
+  passwordCache.set(bucket, credentials);
+  return credentials;
+}
+
+export async function imageStoreFromEnv(
+  env: Record<string, string | undefined> = process.env,
+): Promise<WidgetImageStore | null> {
+  const apiKey = env.BUNNY_API_KEY;
+  const bucket = env.BUNNY_S3_BUCKET;
+  if (!apiKey || !bucket) return null;
+  const credentials = await resolveS3Credentials(apiKey, bucket);
+  if (!credentials) return null;
+  const s3 = new Bun.S3Client({
+    accessKeyId: bucket,
+    secretAccessKey: credentials.password,
+    bucket,
+    endpoint: env.BUNNY_S3_ENDPOINT ?? `https://${credentials.hostname}`,
+  });
+  return {
+    async get(key) {
+      try {
+        return new Uint8Array(await s3.file(key).arrayBuffer());
+      } catch {
+        // A missing key and an unreachable bucket look the same here: both
+        // fall back to a fresh render.
+        return null;
+      }
+    },
+    async put(key, data) {
+      try {
+        await s3.write(key, data, { type: "image/png" });
+      } catch {
+        // The response still goes out; the CDN caches it by its headers.
+      }
+    },
+  };
+}
+
+export function imageKeyFor(blob: string): string {
+  const digest = new Bun.CryptoHasher("sha256").update(blob).digest("hex");
+  return `${IMAGE_PREFIX}${digest}.png`;
+}
+
+/** Longest accepted `c` query value; roughly 6KB of widget config JSON. */
+export const MAX_BLOB_LENGTH = 8 * 1024;
+
+/**
+ * Decodes the base64url config blob from an image URL. The content is only
+ * ever passed to the widget's own config resolver inside the render page, so
+ * shape validation happens there; here it only has to be JSON we can embed.
+ */
+export function decodeImageConfig(blob: string): unknown | null {
+  if (blob === "" || blob.length > MAX_BLOB_LENGTH) return null;
+  try {
+    const json = Buffer.from(blob, "base64url").toString("utf8");
+    const parsed: unknown = JSON.parse(json);
+    if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+/** The snippet generator's inverse: widget config JSON to a URL-safe blob. */
+export function encodeImageConfig(config: object): string {
+  return Buffer.from(JSON.stringify(config), "utf8").toString("base64url");
+}

@@ -11,6 +11,7 @@ COPY package.json bun.lock* ./
 COPY apps/backend/package.json ./apps/backend/package.json
 COPY apps/frontend/package.json ./apps/frontend/package.json
 COPY apps/widget/package.json ./apps/widget/package.json
+COPY apps/widget/src ./apps/widget/src
 COPY apps/backend/src ./apps/backend/src
 # Root workspaces metadata + backend deps only. This stage runs on the native
 # builder arch (Bun segfaults under qemu emulation), so the optional native deps
@@ -20,15 +21,31 @@ COPY apps/backend/src ./apps/backend/src
 # apps/*/node_modules symlinks that the runtime stage never copies).
 RUN bun install --filter @quietjar/backend --production --os=linux --cpu=x64 --linker=hoisted
 
+# The static image feature renders the real widget in a headless browser, so
+# the bundle ships inside the image, version-locked to the deploy.
+RUN mkdir -p /app/widget-bundle && cd apps/widget && bun run bundle -- --outfile=/app/widget-bundle/quietjar.js
+
 # --- Runtime stage ---
 FROM oven/bun:1.4 AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 # Node port that the container listens on (Magic Container maps a public port).
 ENV PORT=3000
+
+# Headless Chrome for Bun.WebView, plus the fonts the widget's system stacks
+# resolve to (sans/serif/mono fallbacks and color emoji for text icons).
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
+RUN bunx playwright-core@1.63.0 install --with-deps chromium-headless-shell \
+  && ln -s /opt/ms-playwright/chromium_headless_shell-*/chrome-linux/headless_shell /usr/local/bin/chrome-headless-shell \
+  && apt-get install -y --no-install-recommends fontconfig fonts-liberation fonts-noto-color-emoji \
+  && rm -rf /var/lib/apt/lists/*
+ENV BUN_CHROME_PATH=/usr/local/bin/chrome-headless-shell
+ENV WIDGET_BUNDLE_PATH=/app/widget-bundle/quietjar.js
 USER bun
 
 COPY --from=build --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=build --chown=bun:bun /app/widget-bundle ./widget-bundle
+
 # Copy manifests and source from the build context so the runtime stage never
 # depends on the build stage retaining them after `bun install --production`.
 COPY --chown=bun:bun package.json ./package.json

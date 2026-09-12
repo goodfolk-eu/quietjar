@@ -7,6 +7,8 @@ import { loadStripe, type StripeElement, StripeUnavailableError } from "./stripe
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const INSTANT_CLASS = "quietjar-panel--instant";
+const MODAL_CLASS = "quietjar-panel--modal";
+const BACKDROP_CLASS = "quietjar-backdrop";
 const CONTACT_SLOT = "quietjar-contact";
 const PAYMENT_SLOT = "quietjar-payment";
 const FOOTER_URL = "https://quietjar.com";
@@ -49,7 +51,8 @@ export interface ContainerOptions {
 
 export interface PaymentContainer {
   element: HTMLElement;
-  open(): void;
+  /** With `modal` the panel centers over a backdrop instead of anchoring to the widget. */
+  open(options?: { modal?: boolean }): void;
   close(): void;
   showThanks(sessionId?: string): void;
   isOpen(): boolean;
@@ -66,6 +69,14 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   // visible, which flashes before the entrance animation can begin.
   panel.dataset.state = "closed";
   panel.hidden = true;
+
+  // Sits behind the centered panel and swallows outside clicks; only shown in
+  // modal mode. It stays in the tree once created so reopening is a toggle.
+  const backdrop = document.createElement("div");
+  backdrop.className = BACKDROP_CLASS;
+  backdrop.dataset.state = "closed";
+  backdrop.hidden = true;
+  backdrop.addEventListener("click", close);
 
   const head = document.createElement("div");
   head.className = "quietjar-panel__head";
@@ -167,7 +178,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     }
   }
 
-  function show(): void {
+  function show(modal: boolean): void {
     if (open) return;
     clearTimeout(exitTimer);
     open = true;
@@ -178,7 +189,23 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     // panel's own height, so an empty panel would start barely off the edge.
     panel.classList.add(INSTANT_CLASS);
     renderAmountStep();
-    reposition();
+    panel.classList.toggle(MODAL_CLASS, modal);
+    if (modal) {
+      // Centering is pure CSS and follows the panel's height on its own, so
+      // the anchored placement, the resize listeners and the size observer
+      // all stay out of it. Inline styles from an earlier anchored open go.
+      panel.style.left = "";
+      panel.style.top = "";
+      panel.style.maxHeight = "";
+      if (!backdrop.isConnected) panel.parentNode?.insertBefore(backdrop, panel);
+      backdrop.classList.add(INSTANT_CLASS);
+      backdrop.hidden = false;
+      void backdrop.offsetHeight;
+      backdrop.classList.remove(INSTANT_CLASS);
+      backdrop.dataset.state = "open";
+    } else {
+      reposition();
+    }
     // Reading the layout commits the closed offset as the transition's start
     // value, with transitions held so the panel does not animate into it.
     void panel.offsetHeight;
@@ -186,15 +213,17 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     requestFrame(() => {
       if (open) panel.dataset.state = "open";
     });
-    window.addEventListener("resize", reposition);
-    window.addEventListener("scroll", reposition, { passive: true });
+    if (!modal) {
+      window.addEventListener("resize", reposition);
+      window.addEventListener("scroll", reposition, { passive: true });
+      // The Stripe element settles on its height after it has mounted, and
+      // each step is a different size, so the placement has to follow it.
+      sizeObserver?.observe(panel);
+    }
     document.addEventListener("keydown", onKeydown);
-    // The Stripe element settles on its height after it has mounted, and each
-    // step is a different size, so the placement has to follow the panel.
-    sizeObserver?.observe(panel);
     options.onVisibilityChange?.(true);
-    // The amount is the first decision; the minimize control comes first in the
-    // DOM but is not where a supporter wants to land.
+    // The amount is the first decision; the minimize control comes first in
+    // the DOM but is not where a supporter wants to land.
     const first = panel.querySelector<HTMLButtonElement>(".quietjar-panel__amount");
     (first ?? panel.querySelector<HTMLButtonElement>("button"))?.focus();
   }
@@ -203,6 +232,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     if (!open) return;
     open = false;
     panel.dataset.state = "closed";
+    backdrop.dataset.state = "closed";
     window.removeEventListener("resize", reposition);
     window.removeEventListener("scroll", reposition);
     document.removeEventListener("keydown", onKeydown);
@@ -217,6 +247,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     exitTimer = setTimeout(() => {
       if (open) return;
       panel.hidden = true;
+      backdrop.hidden = true;
       teardownPaymentElement();
       // The donation is complete: the widget leaves the page, and the
       // post-donation hide keeps it away on the next loads.
@@ -522,7 +553,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
 
   return {
     element: panel,
-    open: show,
+    open: (options) => show(options?.modal === true),
     close,
     showThanks,
     isOpen: () => open,

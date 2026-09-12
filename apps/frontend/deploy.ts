@@ -138,6 +138,10 @@ async function purgeCache(): Promise<void> {
   }
 }
 
+/** Mirrors IMAGE_PREFIX in apps/backend/src/widget/storage.ts: rendered widget
+    images live in the same zone and must survive the deploy's cleanup. */
+const PROTECTED_PREFIX = "widget-button-cache/";
+
 async function deleteStale(s3: Bun.S3Client, localKeys: Set<string>): Promise<number> {
   // list returns a Promise resolving to a paged result with a `contents` array.
   // Only real files (size > 0) are deletion candidates; directory markers are skipped.
@@ -153,7 +157,9 @@ async function deleteStale(s3: Bun.S3Client, localKeys: Set<string>): Promise<nu
     continuation = page.isTruncated ? page.nextContinuationToken : undefined;
   } while (continuation);
 
-  const stale = remoteKeys.filter((key) => !localKeys.has(key));
+  const stale = remoteKeys.filter(
+    (key) => !localKeys.has(key) && !key.startsWith(PROTECTED_PREFIX),
+  );
   for (const key of stale) {
     await s3.delete(key);
     console.log(`  deleted   ${key}`);
