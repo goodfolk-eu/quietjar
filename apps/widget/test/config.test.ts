@@ -4,6 +4,9 @@ import {
   DEFAULT_ACTION_LABEL,
   amountScale,
   DEFAULT_API,
+  DEFAULT_CLOSE_AFTER,
+  DEFAULT_CLOSE_DAYS,
+  DEFAULT_DONATION_HIDE_DAYS,
   DEFAULT_CLOSE_ENABLED,
   DEFAULT_CLOSE_LABEL,
   DEFAULT_COLOR,
@@ -18,6 +21,7 @@ import {
   ICON_LIBRARY,
   ICON_PRESETS,
   resolveConfig,
+  type CloseAfterMode,
   type QuietJarConfig,
 } from "../src/config";
 
@@ -37,6 +41,9 @@ describe("resolveConfig", () => {
       icon: DEFAULT_ICON,
       closeLabel: DEFAULT_CLOSE_LABEL,
       closeEnabled: DEFAULT_CLOSE_ENABLED,
+      closeAfter: DEFAULT_CLOSE_AFTER,
+      closeDays: DEFAULT_CLOSE_DAYS,
+      donationHideDays: DEFAULT_DONATION_HIDE_DAYS,
       color: DEFAULT_COLOR,
       font: DEFAULT_FONT,
       css: "",
@@ -82,12 +89,41 @@ describe("resolveConfig", () => {
       icon: "☕",
       closeLabel: "No thanks",
       closeEnabled: false,
+      closeAfter: DEFAULT_CLOSE_AFTER,
+      closeDays: DEFAULT_CLOSE_DAYS,
+      donationHideDays: DEFAULT_DONATION_HIDE_DAYS,
       color: "#123abc",
       font: "serif",
       css: ".quietjar-widget { border-radius: 12px; }",
       corner: "top-left",
       target: "#widget",
     });
+  });
+
+  test("day counts accept a whole number of one or more and fall back otherwise", () => {
+    expect(resolveConfig({ donation: { hideDays: 14 } }).donationHideDays).toBe(14);
+    expect(resolveConfig({ donation: { hideDays: 2.5 } }).donationHideDays).toBe(2);
+    expect(resolveConfig({ donation: { hideDays: 0 } }).donationHideDays).toBe(
+      DEFAULT_DONATION_HIDE_DAYS,
+    );
+    expect(resolveConfig({ donation: { hideDays: -3 } }).donationHideDays).toBe(
+      DEFAULT_DONATION_HIDE_DAYS,
+    );
+    expect(resolveConfig({ donation: { hideDays: Number.NaN } }).donationHideDays).toBe(
+      DEFAULT_DONATION_HIDE_DAYS,
+    );
+  });
+
+  test("close behavior falls back to session mode and a default day count", () => {
+    expect(resolveConfig(undefined).closeAfter).toBe(DEFAULT_CLOSE_AFTER);
+    expect(resolveConfig({ close: { after: "forever" } }).closeAfter).toBe("forever");
+    expect(resolveConfig({ close: { after: "never", days: 3 } }).closeDays).toBe(3);
+    expect(
+      resolveConfig({ close: { after: "whenever" as CloseAfterMode } }).closeAfter,
+    ).toBe(DEFAULT_CLOSE_AFTER);
+    expect(resolveConfig({ close: { after: "days", days: 0 } }).closeDays).toBe(DEFAULT_CLOSE_DAYS);
+    expect(resolveConfig(undefined).closeDays).toBe(DEFAULT_CLOSE_DAYS);
+    expect(resolveConfig(undefined).donationHideDays).toBe(DEFAULT_DONATION_HIDE_DAYS);
   });
 
   test("treats blank as no icon and falls back to the default for oversized values", () => {

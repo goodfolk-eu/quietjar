@@ -91,6 +91,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   panel.append(head, body, footer);
 
   let open = false;
+  let donated = false;
   let amount = config.amounts[0];
   const mountedElements: StripeElement[] = [];
   const lightMounts: HTMLElement[] = [];
@@ -217,6 +218,9 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
       if (open) return;
       panel.hidden = true;
       teardownPaymentElement();
+      // The donation is complete: the widget leaves the page, and the
+      // post-donation hide keeps it away on the next loads.
+      if (donated) host.remove();
     }, exitDuration());
   }
 
@@ -325,6 +329,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   }
 
   function showThanks(sessionId?: string): void {
+    donated = true;
     teardownPaymentElement();
     if (sessionId === undefined || sessionId === "") {
       body.replaceChildren(renderMessage("quietjar-panel__thanks", config.thanksLabel));
@@ -495,7 +500,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
         }
         // Redirect methods never reach this point: the browser has already
         // left for the bank by the time confirm settles.
-        persistDonation(config.site);
+        persistDonation(config.site, new Date(), config.donationHideDays);
         showThanks(session.sessionId);
       });
     } catch (err) {

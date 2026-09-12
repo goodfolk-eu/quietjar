@@ -19,7 +19,7 @@
     },
     "stepsBack": {
       "title": "How it steps back",
-      "text": "After a successful payment, the button enters a quiet state for a while and shows a thank-you instead of asking again. The record lives on our side, keyed to the payment, so it holds in Safari and does not depend on cookies. Internally we call it suppression."
+      "text": "After a successful payment, the button enters a quiet state for a while and shows a thank-you instead of asking again. The record lives in the visitor's browser, so nothing is stored on our side and there is no server-side suppression. You pick how long it steps back in the dashboard: 30 days by default. Safari clears browser storage after 7 days without a visit, so a long step-back can end early there. Internally we call it suppression."
     },
     "methods": {
       "title": "Payment methods",

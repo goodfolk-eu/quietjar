@@ -40,22 +40,21 @@ contract between the parties.
 ## Nature and purpose of processing
 
 Processing is automated: we serve the widget, create the payment session for a
-donation, hand the payment to Stripe, record the result, show the supporter a
-thank-you, and suppress repeat prompts for a while so supporters are thanked
-instead of nagged. Stripe collects the donation into the creator's connected
-account, and our fee travels with it as an application fee through Stripe. We
-never hold donations. We also process as controller for fee accounting, platform
-security, and statutory bookkeeping.
+donation, hand the payment to Stripe, record the result, and show the supporter a
+thank-you. The widget suppresses repeat prompts for a while in the visitor's
+browser, so supporters are thanked instead of nagged. Stripe collects the
+donation into the creator's connected account, and our fee travels with it as an
+application fee through Stripe. We never hold donations. We also process as
+controller for fee accounting, platform security, and statutory bookkeeping.
 
 ## Categories of data and data subjects
 
 Donation data: amount, currency, payment status, timestamps, payment provider
 identifiers, the fee deducted, and the site the widget runs on. From the moment
-the widget script loads, the visitor's IP address and user agent. The suppression
-identifier that lets the widget step back after a donation. Where a supporter
-chooses to provide an email address, for example for a receipt, it is processed by
-Stripe. No card or bank credentials reach us. Data subjects are visitors of the
-creator's website who donate.
+the widget script loads, the visitor's IP address and user agent. Where a
+supporter chooses to provide an email address, for example for a receipt, it is
+processed by Stripe. No card or bank credentials reach us. Data subjects are
+visitors of the creator's website who donate.
 
 ## Obligations of the processor
 

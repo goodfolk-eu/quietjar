@@ -172,6 +172,20 @@ describe("payment container", () => {
     );
     expect(panel.querySelector(".quietjar-panel__amounts")).toBeNull();
   });
+
+  test("closing after the donation completed hides the widget button", async () => {
+    const { host, panel, trigger } = mount();
+    trigger.click();
+    panel.querySelector<HTMLButtonElement>(".quietjar-panel__minimize")?.click();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(host.isConnected).toBe(true);
+
+    trigger.click();
+    paymentContainer(host)?.showThanks();
+    panel.querySelector<HTMLButtonElement>(".quietjar-panel__minimize")?.click();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(host.isConnected).toBe(false);
+  });
 });
 
 describe("thank you details step", () => {

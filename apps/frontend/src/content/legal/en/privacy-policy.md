@@ -72,7 +72,8 @@ We do not profile supporters, sell data, or use anything for advertising.
 **Account data.** For the life of the account, then deleted within 30 days of
 closure.
 
-**Suppression records.** Kept only while the step-back is active, then deleted.
+**Suppression records.** Stored in your browser, never on our side. Your browser
+deletes them when the step-back ends or when it clears site data.
 
 **Technical and security logs.** For brief, fixed periods, no longer than 30 days.
 

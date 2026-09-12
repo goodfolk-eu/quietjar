@@ -18,7 +18,7 @@ Open source project developers and non-technical website owners who monetise an 
 ## What makes it different
 
 - **On-page conversion** — no redirect, no drop-off. The main wedge.
-- **Polite by design** — once someone has donated, the widget suppresses repeat prompts for a while (server-side, so it survives Safari's storage limits). It thanks supporters instead of nagging them.
+- **Polite by design** — once someone has donated, the widget suppresses repeat prompts for a while (in the visitor's browser via localStorage; Safari clears it after 7 days without a site visit). It thanks supporters instead of nagging them.
 - **Engineered like a real payments SDK** — fast, seamless, part of the site rather than a clunky bolt-on. Supports the payment methods people actually reach for (wallets, iDEAL, etc.), with checkout that never shifts or stalls. This craft is the hardest thing for incumbents to copy.
 - **A goal / progress feature** — progress bars that reframe giving from "buy me a coffee" to "help cover a real, concrete cost," which also lifts the typical donation amount.
 

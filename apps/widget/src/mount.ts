@@ -13,7 +13,7 @@ const HOST_SELECTOR = "[data-quietjar-host]";
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
 export interface MountOptions {
-  /** Store the dismissal in sessionStorage when the widget is closed. */
+  /** Persist the dismissal per the config's close mode when the widget is closed. */
   persistDismissal?: boolean;
   /**
    * Box the payment container is placed inside of, for a preview that frames
@@ -76,7 +76,7 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
     closeButton.append(closeIcon());
     closeButton.addEventListener("click", () => {
       if (options.persistDismissal) {
-        persistDismissal();
+        persistDismissal(config.closeAfter, config.closeDays);
       }
       host.remove();
     });

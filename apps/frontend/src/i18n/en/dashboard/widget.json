@@ -42,6 +42,18 @@
     "actionLabelHint": "Text on the card's button. Only used when a body is set.",
     "closeEnabled": "Close button",
     "closeEnabledHint": "Show the control visitors can use to hide the widget.",
+    "donationHideDays": "Hide after a donation",
+    "donationHideDaysHint": "Days the widget stays hidden after a completed donation. Leave empty for the default of 30.",
+    "closeAfter": "After closing",
+    "closeAfterHint": "What happens after a visitor closes the widget.",
+    "closeAfters": {
+      "session": "Stay hidden for this session",
+      "days": "Stay hidden for a number of days",
+      "never": "Show again on the next page load",
+      "forever": "Never show again"
+    },
+    "closeDays": "Days hidden",
+    "closeDaysHint": "Days the widget stays hidden after closing. Leave empty for the default of 7.",
     "advanced": "Advanced options",
     "preview": "Preview",
     "previewHint": "A mock page showing where the button lands.",

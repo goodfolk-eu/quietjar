@@ -38,12 +38,15 @@ signing in. Everything else on the QuietJar website works without any cookie.
 
 ## Storage used by the widget
 
-The widget stores one small record in your browser's local storage under the name
-`quietjar-donated`: the date of your last donation on that site and the site's
-public key. This record counts as personal data. It has one purpose: so the widget
-can step back for a while instead of asking you again after you have already
-donated. Clearing your browser storage removes it. If storage is unavailable, the
-widget simply does not know and may ask again.
+The widget stores records in your browser's storage. Under `quietjar-donated` in
+local storage: the date of your last donation on that site, the site's public
+key, and how long the widget stays hidden afterwards. When you close the widget
+on a site that configured a lasting hide, a record under `quietjar-dismissed` is
+added: in session storage for the current session, or in local storage for a
+number of days or until you clear it. These records count as personal data. They
+have one purpose: so the widget can step back for a while instead of asking you
+again after you have already donated. Clearing your browser storage removes them.
+If storage is unavailable, the widget simply does not know and may ask again.
 
 ## The hosted page
 

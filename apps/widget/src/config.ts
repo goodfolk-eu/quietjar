@@ -9,6 +9,9 @@ export type Corner =
   | "top-center"
   | "top-left";
 
+/** What a visitor closing the widget does to its visibility. */
+export type CloseAfterMode = "session" | "days" | "never" | "forever";
+
 export interface QuietJarConfig {
   /** Public site key from the dashboard; without it the widget cannot collect. */
   site?: string;
@@ -33,7 +36,13 @@ export interface QuietJarConfig {
     /** Raw CSS appended after the widget's own stylesheet to override it. */
     css?: string;
   };
-  close?: { enabled?: boolean };
+  close?: {
+    enabled?: boolean;
+    after?: CloseAfterMode;
+    /** Days hidden after closing. Only used when after is "days". */
+    days?: number;
+  };
+  donation?: { hideDays?: number };
   position?: { corner?: Corner };
   mount?: { target?: string | HTMLElement };
 }
@@ -64,6 +73,12 @@ export interface ResolvedConfig {
   /** Whether the widget shows the close control visitors can use to dismiss it. */
   closeEnabled: boolean;
   color: string;
+  /** What a visitor closing the widget does to its visibility. */
+  closeAfter: CloseAfterMode;
+  /** Days hidden after closing; only used when closeAfter is "days". */
+  closeDays: number;
+  /** Days hidden after a completed donation. */
+  donationHideDays: number;
   font: FontChoice;
   /** Custom CSS overriding the widget's own styles; empty when unset. */
   css: string;
@@ -133,9 +148,13 @@ export function amountScale(currency: string): CurrencyScale {
   return SCALES[currency.toLowerCase()] ?? SCALES[DEFAULT_CURRENCY];
 }
 export const DEFAULT_CLOSE_ENABLED = true;
+export const DEFAULT_CLOSE_AFTER: CloseAfterMode = "session";
+export const DEFAULT_CLOSE_DAYS = 7;
+export const DEFAULT_DONATION_HIDE_DAYS = 30;
 export const DEFAULT_COLOR = "#0284c7";
 export const DEFAULT_CORNER: Corner = "bottom-right";
 
+export const CLOSE_AFTER_MODES: readonly CloseAfterMode[] = ["session", "days", "never", "forever"];
 const CORNERS: readonly Corner[] = [
   "bottom-right",
   "bottom-center",
@@ -153,6 +172,9 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
   const action = input?.labels?.action;
   const close = input?.labels?.close;
   const closeEnabled = input?.close?.enabled;
+  const closeAfter = input?.close?.after;
+  const closeDays = input?.close?.days;
+  const donationHideDays = input?.donation?.hideDays;
   const color = input?.style?.color;
   const css = input?.style?.css;
   const corner = input?.position?.corner;
@@ -177,6 +199,11 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
     closeLabel:
       typeof close === "string" && close.trim() !== "" ? close.trim() : DEFAULT_CLOSE_LABEL,
     closeEnabled: typeof closeEnabled === "boolean" ? closeEnabled : DEFAULT_CLOSE_ENABLED,
+    closeAfter: CLOSE_AFTER_MODES.includes(closeAfter as CloseAfterMode)
+      ? (closeAfter as CloseAfterMode)
+      : DEFAULT_CLOSE_AFTER,
+    closeDays: resolveDays(closeDays, DEFAULT_CLOSE_DAYS),
+    donationHideDays: resolveDays(donationHideDays, DEFAULT_DONATION_HIDE_DAYS),
     color: isValidHexColor(color) ? color : DEFAULT_COLOR,
     font: resolveFont(input?.style?.font),
     css: typeof css === "string" ? css.trim() : "",
@@ -187,6 +214,13 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
 
 function label(value: unknown, fallback: string): string {
   return typeof value === "string" && value.trim() !== "" ? value.trim() : fallback;
+}
+
+/** A day count is only usable as a whole number of one or more. */
+function resolveDays(value: unknown, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 1
+    ? Math.floor(value)
+    : fallback;
 }
 
 function resolveCurrency(value: unknown): string {

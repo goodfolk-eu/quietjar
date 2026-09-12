@@ -1,5 +1,6 @@
 import { type QuietJarConfig, resolveConfig } from "./config";
 import { isDismissed } from "./dismiss";
+import { donationHideActive } from "./donation";
 import { mountWidget, paymentContainer } from "./mount";
 import { pendingSessionId, resolveReturn } from "./return";
 
@@ -10,7 +11,7 @@ declare global {
 }
 
 export function mount(): void {
-  if (isDismissed()) {
+  if (isDismissed() || donationHideActive()) {
     return;
   }
   const config = resolveConfig(window.QuietJar);
@@ -23,7 +24,12 @@ export function mount(): void {
 
   const container = paymentContainer(host);
   if (!container) return;
-  void resolveReturn({ api: config.api, site: config.site, sessionId }).then((paid) => {
+  void resolveReturn({
+    api: config.api,
+    site: config.site,
+    sessionId,
+    donationHideDays: config.donationHideDays,
+  }).then((paid) => {
     if (!paid) return;
     container.open();
     container.showThanks(sessionId);

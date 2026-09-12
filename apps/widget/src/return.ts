@@ -31,11 +31,12 @@ export async function resolveReturn(options: {
   api: string;
   site: string;
   sessionId: string;
+  donationHideDays: number;
 }): Promise<boolean> {
   for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
     try {
       if ((await fetchStatus(options.api, options.sessionId, options.site)) === "paid") {
-        persistDonation(options.site);
+        persistDonation(options.site, new Date(), options.donationHideDays);
         clearReturnParam();
         return true;
       }
