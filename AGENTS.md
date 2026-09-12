@@ -66,3 +66,8 @@ After writing the happy path, ask yourself: what happens with empty input? What 
 
 **Fewer tests of higher quality is better.**
 Do not write tests to hit a coverage number. A small suite of focused, meaningful tests is more valuable than a large suite of shallow ones. Remove or skip tests that do not assert anything useful rather than keeping them for appearances.
+
+## Visual verification
+
+- Do not do visual verification with a browser or Puppeteer unless specifically asked for.
+- If visual verification is needed, ask the user to verify instead.
