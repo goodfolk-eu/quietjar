@@ -398,7 +398,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       border-radius: 16px 16px 0 0;
     }
     @media (max-width: 640px) {
-      .quietjar-widget--open {
+      .quietjar-widget--open:not(.quietjar-widget--inline) {
         display: none;
       }
     }
