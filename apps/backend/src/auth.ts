@@ -3,6 +3,7 @@ import { createAuthMiddleware } from "better-auth/api";
 import { emailOTP } from "better-auth/plugins";
 import { libsqlDialect } from "./db";
 import { sendEmail } from "./email";
+import { pushSubscriber } from "./keila";
 
 /**
  * Non-httpOnly marker cookie used by the static homepage to decide whether to
@@ -84,6 +85,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: false,
   },
+
+  user: {
+    additionalFields: {
+      newsletterOptIn: { type: "boolean", defaultValue: false, input: true },
+    },
+  },
   plugins: [
     emailOTP({
       // Numeric code, emailed via SMTP (see email.ts).
@@ -113,6 +120,17 @@ export const auth = betterAuth({
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path === "/sign-in/email-otp") {
         ctx.setCookie(AUTH_MARKER, "1", markerCookieAttrs());
+        const body = ctx.body as { email?: unknown; newsletterOptIn?: unknown } | undefined;
+        const email = typeof body?.email === "string" ? body.email.toLowerCase() : undefined;
+        if (email && body?.newsletterOptIn === true) {
+          const found = await ctx.context.internalAdapter.findUserByEmail(email);
+          if (!found) return;
+          const user = found.user as { id: string; email: string; newsletterOptIn?: boolean };
+          if (!user.newsletterOptIn) {
+            await ctx.context.internalAdapter.updateUser(user.id, { newsletterOptIn: true });
+          }
+          pushSubscriber(user);
+        }
       }
       if (ctx.path === "/sign-out") {
         ctx.setCookie(AUTH_MARKER, "", { ...markerCookieAttrs(), maxAge: 0 });

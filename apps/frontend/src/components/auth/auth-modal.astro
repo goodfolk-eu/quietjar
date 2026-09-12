@@ -32,6 +32,14 @@ const auth = copy.auth;
         placeholder={auth.emailPlaceholder}
         class="mt-1 w-full px-4 py-3 border-2 rounded-md placeholder:text-gray-400 outline-hidden focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
       />
+      <label for="qj-newsletter-optin" class="mt-4 flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+        <input
+          id="qj-newsletter-optin"
+          type="checkbox"
+          class="h-4 w-4 cursor-pointer accent-qj-green"
+        />
+        {auth.subscribeToUpdates}
+      </label>
       <div id="qj-code-row" class="hidden mt-4">
         <label for="qj-auth-code" class="block text-sm font-medium text-gray-700">{auth.code}</label>
         <input
@@ -86,6 +94,7 @@ const title = document.getElementById("qj-auth-title")!;
 const form = document.getElementById("qj-auth-form") as HTMLFormElement;
 const emailInput = document.getElementById("qj-auth-email") as HTMLInputElement;
 const codeInput = document.getElementById("qj-auth-code") as HTMLInputElement;
+const newsletterCheckbox = document.getElementById("qj-newsletter-optin") as HTMLInputElement;
 const codeRow = document.getElementById("qj-code-row")!;
 const sendBtn = document.getElementById("qj-send-code") as HTMLButtonElement;
 const signInBtn = document.getElementById("qj-sign-in") as HTMLButtonElement;
@@ -103,6 +112,7 @@ function open(mode: "login" | "signup" | string) {
   statusEl.textContent = "";
   emailInput.value = "";
   codeInput.value = "";
+  newsletterCheckbox.checked = false;
   overlay.classList.remove("hidden");
   overlay.classList.add("flex");
   setTimeout(() => emailInput.focus(), 0);
@@ -149,6 +159,7 @@ signInBtn.addEventListener("click", async () => {
     email: capturedEmail,
     otp: code,
     name: capturedEmail.split("@")[0],
+    newsletterOptIn: newsletterCheckbox.checked,
   });
   if (error) {
     statusEl.classList.remove("text-green-600");
