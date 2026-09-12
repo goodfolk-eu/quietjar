@@ -117,15 +117,8 @@ function pillButton(config: ResolvedConfig): HTMLButtonElement {
   button.setAttribute("aria-label", label !== "" ? label : DEFAULT_HEADLINE);
   button.title = label !== "" ? label : DEFAULT_HEADLINE;
 
-  if (config.icon !== "") {
-    const iconEl = document.createElement("span");
-    iconEl.className = "quietjar-widget__icon";
-    iconEl.setAttribute("aria-hidden", "true");
-    if (config.icon === PIGGY_ICON) {
-      iconEl.append(piggyIcon());
-    } else {
-      iconEl.textContent = config.icon;
-    }
+  const iconEl = iconElement(config);
+  if (iconEl) {
     button.append(iconEl);
   }
 
@@ -145,6 +138,11 @@ function pillButton(config: ResolvedConfig): HTMLButtonElement {
 function cardPanel(config: ResolvedConfig): HTMLElement {
   const panel = document.createElement("div");
   panel.className = "quietjar-widget__panel";
+
+  const iconEl = iconElement(config);
+  if (iconEl) {
+    panel.append(iconEl);
+  }
 
   const text = document.createElement("div");
   text.className = "quietjar-widget__text";
@@ -169,6 +167,21 @@ function cardPanel(config: ResolvedConfig): HTMLElement {
   panel.append(action);
 
   return panel;
+}
+
+function iconElement(config: ResolvedConfig): HTMLSpanElement | null {
+  if (config.icon === "") {
+    return null;
+  }
+  const iconEl = document.createElement("span");
+  iconEl.className = "quietjar-widget__icon";
+  iconEl.setAttribute("aria-hidden", "true");
+  if (config.icon === PIGGY_ICON) {
+    iconEl.append(piggyIcon());
+  } else {
+    iconEl.textContent = config.icon;
+  }
+  return iconEl;
 }
 
 function closeIcon(): SVGSVGElement {

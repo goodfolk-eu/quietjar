@@ -339,6 +339,35 @@ describe("mountWidget", () => {
     expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Tip");
   });
 
+  test("renders the default piggy icon in the card when a body is set", () => {
+    const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps" } }));
+
+    const panel = host.shadowRoot?.querySelector(".quietjar-widget__panel");
+    expect(panel?.querySelector(".quietjar-widget__icon svg")?.getAttribute("viewBox")).toBe(
+      "45 13 150 150",
+    );
+    // The icon sits left of the headline and body.
+    expect(panel?.querySelector(".quietjar-widget__text")?.previousElementSibling?.className).toBe(
+      "quietjar-widget__icon",
+    );
+  });
+
+  test("renders the configured glyph in the card when a body is set", () => {
+    const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps", icon: "☕" } }));
+
+    expect(
+      host.shadowRoot?.querySelector(".quietjar-widget__panel .quietjar-widget__icon")?.textContent,
+    ).toBe("☕");
+  });
+
+  test("renders no icon in the card when the config chooses none", () => {
+    const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps", icon: "" } }));
+
+    expect(
+      host.shadowRoot?.querySelector(".quietjar-widget__panel .quietjar-widget__icon"),
+    ).toBeNull();
+  });
+
   test("keeps the dismissible close control in card mode", () => {
     const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps" } }));
 
