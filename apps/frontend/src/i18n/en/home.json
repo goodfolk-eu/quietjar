@@ -69,7 +69,7 @@
       {
         "title": "Two-tap checkout",
         "description": "No forms to fill, no account to create. Just tap and it is done.",
-        "perf": "Loads in 15 ms. 9.4 kB. No layout shift."
+        "perf": "Loads in under 50 ms. 11.7 kB gzipped. No layout shift."
       },
       {
         "title": "Matches your design",

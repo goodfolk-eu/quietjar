@@ -203,7 +203,7 @@
     },
     "performance": {
       "title": "Performance",
-      "text": "Script size: 9.4 kB (4.2 kB zipped). Load time: 15 ms on a cold cache. The button floats in a fixed corner layer, so it displaces nothing on your page: zero layout shift. Stripe's payment code loads only when someone opens the checkout, not on page load."
+      "text": "Script size: 38.6 kB (11.7 kB gzipped over the wire). Load time: around 40 ms on a cold cache. The button floats in a fixed corner layer, so it displaces nothing on your page: zero layout shift. Stripe's payment code loads only when someone opens the checkout, not on page load."
     },
     "stepsBack": {
       "title": "How it steps back",
