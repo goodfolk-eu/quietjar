@@ -18,6 +18,8 @@ export interface QuietJarConfig {
   /** Overrides the QuietJar API origin. Only the widget dev server sets this. */
   api?: string;
   currency?: string;
+  /** Goal id from the dashboard; renders the progress meter on the card. */
+  goal?: string;
   /** Amounts offered in the payment container, in major units. */
   amounts?: number[];
   labels?: {
@@ -53,6 +55,8 @@ export interface ResolvedConfig {
   api: string;
   /** ISO 4217 code, lowercase, as Stripe expects it. */
   currency: string;
+  /** Empty when unset; otherwise the card renders a progress meter for it. */
+  goal: string;
   amounts: number[];
   /** Shown in the container once a tip succeeds. */
   thanksLabel: string;
@@ -187,6 +191,7 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
     site: typeof input?.site === "string" ? input.site.trim() : "",
     api: resolveApi(input?.api),
     currency,
+    goal: typeof input?.goal === "string" ? input.goal.trim() : "",
     amounts: resolveAmounts(input?.amounts, currency),
     thanksLabel: label(input?.labels?.thanks, DEFAULT_THANKS_LABEL),
     otherLabel: label(input?.labels?.other, DEFAULT_OTHER_LABEL),

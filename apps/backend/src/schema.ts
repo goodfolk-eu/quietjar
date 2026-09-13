@@ -31,6 +31,16 @@ const MIGRATIONS = [
     application_fee INTEGER NOT NULL,
     created_at INTEGER NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS goals (
+    id TEXT PRIMARY KEY,
+    site_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    target INTEGER NOT NULL,
+    period TEXT NOT NULL,
+    archived_at INTEGER,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS donation_details (
     session_id TEXT PRIMARY KEY,
     name TEXT,
@@ -46,6 +56,7 @@ const MIGRATIONS = [
 const COLUMN_MIGRATIONS = [
   { table: "donations", name: "email", type: "TEXT" },
   { table: "donations", name: "net", type: "INTEGER" },
+  { table: "donations", name: "goal_id", type: "TEXT" },
 ] as const;
 
 export async function ensureSchema(): Promise<void> {

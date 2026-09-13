@@ -1,4 +1,5 @@
 import { Elysia, t } from "elysia";
+import { activeGoalForSite } from "../goals/store";
 import { toMinorUnits } from "../sites/currency";
 import { getSiteByPublicKey } from "../sites/store";
 import {
@@ -96,6 +97,12 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
         return { error: "payments_not_enabled" };
       }
 
+      // A stale or archived goal id in a snippet must never cost a supporter
+      // their payment, so the attribution is dropped and the session goes on.
+      // The ownership check is also what stops one site pointing its widget at
+      // another site's goal.
+      const goal = body.goal ? await activeGoalForSite(body.goal, site.id) : null;
+
       try {
         const session = await createDonationSession(config, {
           accountId: connection.accountId,
@@ -103,6 +110,7 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
           currency: site.currency,
           returnUrl: body.returnUrl,
           siteKey: site.publicKey,
+          goalId: goal?.id ?? null,
           productName: `Support for ${siteHost(site.siteUrl)}`,
         });
         return {
@@ -127,6 +135,7 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
         site: t.String({ minLength: 1, maxLength: 64 }),
         amount: t.Number(),
         returnUrl: t.String({ minLength: 1, maxLength: 2048 }),
+        goal: t.Optional(t.String({ maxLength: 64 })),
       }),
     },
   )

@@ -24,6 +24,7 @@ const pathname = (Astro.url.pathname.replace(localePrefix, "") || "/").replace(/
 const dashboardPath = localizedPath("/dashboard/", locale);
 const paymentsPath = localizedPath("/dashboard/payments/", locale);
 const widgetPath = localizedPath("/dashboard/widget/", locale);
+const goalsPath = localizedPath("/dashboard/goals/", locale);
 
 const navLinkClass = (href: string, exact = false) => {
   const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
@@ -247,6 +248,31 @@ const navLinkClass = (href: string, exact = false) => {
                     <line x1="2" x2="22" y1="10" y2="10"></line>
                   </svg>
                   {copy.dashboard.payments}
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class={navLinkClass("/dashboard/goals")}
+                  href={goalsPath}
+                >
+                  <svg
+                    class="shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                  </svg>
+                  {copy.dashboard.goals}
                 </a>
               </li>
 

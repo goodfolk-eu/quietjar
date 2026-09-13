@@ -2,6 +2,7 @@ import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
 import { donationRoutes } from "./donations/routes";
+import { goalRoutes, publicGoalRoutes } from "./goals/routes";
 import { payRoutes } from "./pay/routes";
 import { ensureSchema } from "./schema";
 import { siteRoutes } from "./sites/routes";
@@ -13,14 +14,16 @@ const dashboardOrigins = [frontendOrigin, "http://localhost:4321"];
 
 /**
  * The dashboard is the only origin allowed to make credentialed calls. The
- * widget's payment routes are public by design and read no cookies, so they
- * answer any origin; everything else stays on the allowlist so a third-party
- * page can never reach a session-backed endpoint.
+ * widget's payment routes and its goal meter are public by design and read no
+ * cookies, so they answer any origin; everything else stays on the allowlist
+ * so a third-party page can never reach a session-backed endpoint. The goal
+ * CRUD lives under /api/goals and is deliberately not on this list.
  */
 function isAllowedRequestOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (origin && dashboardOrigins.includes(origin)) return true;
-  return new URL(request.url).pathname.startsWith("/api/pay");
+  const path = new URL(request.url).pathname;
+  return path.startsWith("/api/pay") || path.startsWith("/api/widget/goal");
 }
 
 export const app = new Elysia()
@@ -47,6 +50,8 @@ export const app = new Elysia()
   .use(siteRoutes)
   .use(donationRoutes)
   .use(payRoutes)
+  .use(goalRoutes)
+  .use(publicGoalRoutes)
   .use(widgetRoutes);
 
 const port = Number(process.env.PORT ?? 3000);

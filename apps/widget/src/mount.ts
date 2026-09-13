@@ -7,9 +7,11 @@ import {
 } from "./config";
 import { createPaymentContainer, type PaymentContainer } from "./container";
 import { persistDismissal } from "./dismiss";
+import { fetchGoalProgress, meterLabel, meterRatio } from "./goal";
 import { widgetStyles } from "./styles";
 
 const HOST_SELECTOR = "[data-quietjar-host]";
+const METER_SELECTOR = ".quietjar-widget__meter";
 
 /** The clickable face of the widget: a pill button, or a card panel. */
 export const FACE_SELECTOR = ".quietjar-widget__button, .quietjar-widget__panel";
@@ -62,8 +64,15 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
   widget.className = inline
     ? "quietjar-widget quietjar-widget--inline"
     : `quietjar-widget quietjar-widget--${config.corner}`;
-  const face = config.body !== "" ? cardPanel(config) : pillButton(config);
+  // A goal needs the vertical room only the card has, so it turns the pill into
+  // one even when the owner wrote no body text.
+  const face = config.body !== "" || config.goal !== "" ? cardPanel(config) : pillButton(config);
   widget.append(face);
+
+  const meter = face.querySelector<HTMLElement>(METER_SELECTOR);
+  if (meter) {
+    void fillMeter(meter, config);
+  }
 
   const trigger =
     face instanceof HTMLButtonElement
@@ -157,10 +166,17 @@ function cardPanel(config: ResolvedConfig): HTMLElement {
     text.append(headline);
   }
 
-  const body = document.createElement("div");
-  body.className = "quietjar-widget__body";
-  body.textContent = config.body;
-  text.append(body);
+  if (config.body !== "") {
+    const body = document.createElement("div");
+    body.className = "quietjar-widget__body";
+    body.textContent = config.body;
+    text.append(body);
+  }
+
+  if (config.goal !== "") {
+    text.append(meterRow());
+  }
+
   panel.append(text);
 
   const action = document.createElement("button");
@@ -170,6 +186,41 @@ function cardPanel(config: ResolvedConfig): HTMLElement {
   panel.append(action);
 
   return panel;
+}
+
+/**
+ * Built empty and filled once the progress lands, so the card does not grow a
+ * row a moment after it appears. A failed lookup removes it again.
+ */
+function meterRow(): HTMLElement {
+  const meter = document.createElement("div");
+  meter.className = "quietjar-widget__meter";
+
+  const track = document.createElement("div");
+  track.className = "quietjar-widget__meter-track";
+  // The label states the same amounts in words, so the bar is decoration.
+  track.setAttribute("aria-hidden", "true");
+  const fill = document.createElement("div");
+  fill.className = "quietjar-widget__meter-fill";
+  track.append(fill);
+
+  const label = document.createElement("div");
+  label.className = "quietjar-widget__meter-label";
+
+  meter.append(track, label);
+  return meter;
+}
+
+async function fillMeter(meter: HTMLElement, config: ResolvedConfig): Promise<void> {
+  const progress = await fetchGoalProgress(config.api, config.goal);
+  if (!progress) {
+    meter.remove();
+    return;
+  }
+  const fill = meter.querySelector<HTMLElement>(".quietjar-widget__meter-fill");
+  const label = meter.querySelector<HTMLElement>(".quietjar-widget__meter-label");
+  if (fill) fill.style.width = `${meterRatio(progress) * 100}%`;
+  if (label) label.textContent = meterLabel(progress);
 }
 
 function iconElement(config: ResolvedConfig): HTMLSpanElement | null {

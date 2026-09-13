@@ -3,6 +3,8 @@ export interface SessionRequest {
   site: string;
   amount: number;
   returnUrl: string;
+  /** Goal the donation should count toward; empty when none is configured. */
+  goal: string;
 }
 
 export interface SessionResponse {
@@ -39,6 +41,7 @@ export async function createSession(input: SessionRequest): Promise<SessionRespo
       site: input.site,
       amount: input.amount,
       returnUrl: input.returnUrl,
+      ...(input.goal === "" ? {} : { goal: input.goal }),
     }),
   });
   if (!response.ok) throw new ApiError(await errorCode(response));

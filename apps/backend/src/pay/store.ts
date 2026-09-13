@@ -17,6 +17,8 @@ export interface Donation {
   email: string | null;
   /** What the creator kept. Null on rows written before it was captured. */
   net: number | null;
+  /** Goal the donation counts toward, or null when the widget named none. */
+  goalId: string | null;
   createdAt: number;
 }
 
@@ -31,6 +33,7 @@ interface Row {
   application_fee: number;
   email: string | null;
   net: number | null;
+  goal_id: string | null;
   created_at: number;
 }
 
@@ -46,6 +49,7 @@ function toDonation(row: Row): Donation {
     applicationFee: row.application_fee,
     email: row.email,
     net: row.net,
+    goalId: row.goal_id,
     createdAt: row.created_at,
   };
 }
@@ -72,12 +76,13 @@ export async function recordDonation(input: {
   applicationFee: number;
   email: string | null;
   net: number | null;
+  goalId: string | null;
 }): Promise<void> {
   await libsqlClient.execute({
     sql: `INSERT INTO donations
             (id, site_id, account_id, session_id, payment_intent_id,
-             amount, currency, application_fee, email, net, created_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             amount, currency, application_fee, email, net, goal_id, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT (session_id) DO NOTHING`,
     args: [
       randomUUID(),
@@ -90,6 +95,7 @@ export async function recordDonation(input: {
       input.applicationFee,
       input.email,
       input.net,
+      input.goalId,
       Date.now(),
     ],
   });
@@ -203,4 +209,49 @@ export async function earningsByDay(input: {
     const row = raw as unknown as { day: number; net: number };
     return { day: row.day, net: row.net };
   });
+}
+
+/**
+ * Gross donations attributed to a goal since a point in time, in minor units.
+ * Gross rather than net: the meter promises supporters what they gave, not
+ * what survived the fees.
+ */
+export async function goalRaised(goalId: string, since: number): Promise<number> {
+  const result = await libsqlClient.execute({
+    sql: `SELECT COALESCE(SUM(amount), 0) AS total
+          FROM donations
+          WHERE goal_id = ? AND created_at >= ?`,
+    args: [goalId, since],
+  });
+  const row = result.rows[0] as unknown as { total: number } | undefined;
+  return typeof row?.total === "number" ? row.total : 0;
+}
+
+/** Both window totals a goal can need, so a list of goals costs one query. */
+export interface GoalTotals {
+  lifetime: number;
+  month: number;
+}
+
+export async function raisedByGoal(
+  goalIds: string[],
+  monthStart: number,
+): Promise<Map<string, GoalTotals>> {
+  if (goalIds.length === 0) return new Map();
+  const placeholders = goalIds.map(() => "?").join(", ");
+  const result = await libsqlClient.execute({
+    sql: `SELECT goal_id,
+                 COALESCE(SUM(amount), 0) AS lifetime,
+                 COALESCE(SUM(CASE WHEN created_at >= ? THEN amount ELSE 0 END), 0) AS month
+          FROM donations
+          WHERE goal_id IN (${placeholders})
+          GROUP BY goal_id`,
+    args: [monthStart, ...goalIds],
+  });
+  const totals = new Map<string, GoalTotals>();
+  for (const raw of result.rows) {
+    const row = raw as unknown as { goal_id: string; lifetime: number; month: number };
+    totals.set(row.goal_id, { lifetime: row.lifetime, month: row.month });
+  }
+  return totals;
 }

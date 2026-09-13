@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import type Stripe from "stripe";
 import { auth } from "../auth";
+import { goalForSite } from "../goals/store";
 import { recordDonation } from "../pay/store";
 import { supportsIdeal } from "../sites/currency";
 import { getSiteByPublicKey, getSiteByUserId } from "../sites/store";
@@ -75,6 +76,12 @@ async function recordCompletedDonation(
   const site = await getSiteByPublicKey(siteKey);
   if (!site) return;
 
+  // Ownership is re-checked rather than trusted from the metadata, but an
+  // archived goal is still recorded: the donation was made toward it, and
+  // archiving hides a goal rather than rewriting what it raised.
+  const goalId = session.metadata?.quietjar_goal;
+  const goal = goalId ? await goalForSite(goalId, site.id) : null;
+
   // When Stripe is slow or the net cannot be read, the row still records and
   // the dashboard falls back to gross minus our fee for it.
   const config = stripeConfigFromEnv();
@@ -93,6 +100,7 @@ async function recordCompletedDonation(
     applicationFee: applicationFee(session.amount_total),
     email: session.customer_details?.email ?? null,
     net,
+    goalId: goal?.id ?? null,
   });
 }
 

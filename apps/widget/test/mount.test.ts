@@ -376,4 +376,96 @@ describe("mountWidget", () => {
 
     expect(host.parentElement).toBeNull();
   });
+  describe("goal meter", () => {
+    const originalFetch = globalThis.fetch;
+
+    afterEach(() => {
+      globalThis.fetch = originalFetch;
+    });
+
+    function respondWith(body: unknown, status = 200): void {
+      globalThis.fetch = (async () =>
+        new Response(JSON.stringify(body), { status })) as unknown as typeof fetch;
+    }
+
+    /**
+     * The meter is filled from a fetch the widget owns, so the test waits for
+     * the DOM to catch up rather than guessing how many ticks that takes.
+     */
+    async function settled(done: () => boolean): Promise<void> {
+      for (let i = 0; i < 50 && !done(); i += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
+    }
+
+    function meter(host: HTMLElement): Element | null | undefined {
+      return host.shadowRoot?.querySelector(".quietjar-widget__meter");
+    }
+
+    test("a goal alone turns the pill into a card with an empty meter", () => {
+      respondWith({ raised: 4500, target: 10_000, currency: "eur" });
+      // A lookup is memoised per goal, so each test needs its own id.
+      const host = mountWidget(resolveConfig({ goal: "qg_card" }));
+
+      const root = host.shadowRoot;
+      expect(root?.querySelector(".quietjar-widget__panel")).not.toBeNull();
+      expect(root?.querySelector(".quietjar-widget__button")).toBeNull();
+      // No body was configured, so the card carries the meter and nothing else.
+      expect(root?.querySelector(".quietjar-widget__body")).toBeNull();
+      const fill = root?.querySelector(".quietjar-widget__meter-fill") as HTMLElement;
+      expect(fill.style.width).toBe("");
+      expect(root?.querySelector(".quietjar-widget__meter-label")?.textContent).toBe("");
+    });
+
+    test("fills the bar and labels it once the progress lands", async () => {
+      respondWith({ raised: 4500, target: 10_000, currency: "eur" });
+      const host = mountWidget(resolveConfig({ goal: "qg_fill" }));
+      const fill = host.shadowRoot?.querySelector(".quietjar-widget__meter-fill") as HTMLElement;
+      await settled(() => fill.style.width !== "");
+
+      const root = host.shadowRoot;
+      expect(fill.style.width).toBe("45%");
+      expect(root?.querySelector(".quietjar-widget__meter-label")?.textContent).toBe(
+        "\u20ac45 of \u20ac100 raised",
+      );
+    });
+
+    test("keeps the body text above the meter", async () => {
+      respondWith({ raised: 4500, target: 10_000, currency: "eur" });
+      const host = mountWidget(
+        resolveConfig({ goal: "qg_order", labels: { body: "Every coffee helps" } }),
+      );
+      const text = host.shadowRoot?.querySelector(".quietjar-widget__text");
+      await settled(() => text?.querySelector(".quietjar-widget__meter-label")?.textContent !== "");
+
+      expect(Array.from(text?.children ?? [], (child) => child.className)).toEqual([
+        "quietjar-widget__body",
+        "quietjar-widget__meter",
+      ]);
+    });
+
+    test("removes the meter when the goal cannot be read", async () => {
+      respondWith({ error: "unknown_goal" }, 404);
+      const host = mountWidget(resolveConfig({ goal: "qg_gone" }));
+      expect(meter(host)).not.toBeNull();
+      await settled(() => meter(host) === null);
+
+      expect(meter(host)).toBeNull();
+      // The card itself stays: the donate button is the point of the widget.
+      expect(host.shadowRoot?.querySelector(".quietjar-widget__action")).not.toBeNull();
+    });
+
+    test("does not ask for progress when no goal is configured", () => {
+      let asked = false;
+      globalThis.fetch = (async () => {
+        asked = true;
+        return new Response("{}");
+      }) as unknown as typeof fetch;
+
+      const host = mountWidget(resolveConfig({ labels: { body: "Every coffee helps" } }));
+
+      expect(meter(host)).toBeNull();
+      expect(asked).toBe(false);
+    });
+  });
 });

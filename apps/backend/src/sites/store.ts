@@ -53,6 +53,14 @@ export async function getSiteByUserId(userId: string): Promise<Site | null> {
   return result.rows.length > 0 ? toSite(result.rows[0] as unknown as Row) : null;
 }
 
+export async function getSiteById(id: string): Promise<Site | null> {
+  const result = await libsqlClient.execute({
+    sql: "SELECT * FROM sites WHERE id = ?",
+    args: [id],
+  });
+  return result.rows.length > 0 ? toSite(result.rows[0] as unknown as Row) : null;
+}
+
 export async function getSiteByPublicKey(publicKey: string): Promise<Site | null> {
   const result = await libsqlClient.execute({
     sql: "SELECT * FROM sites WHERE public_key = ?",

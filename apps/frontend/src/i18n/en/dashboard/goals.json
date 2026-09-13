@@ -1,0 +1,33 @@
+{
+  "goals": {
+    "title": "Goals",
+    "intro": "Set a target, then show supporters how close you are on the widget.",
+    "add": "Add goal",
+    "edit": "Edit",
+    "remove": "Remove",
+    "empty": "No goals yet. Add one to show a progress meter on your widget.",
+    "noSite": "Go to the Payments page first to finish setting up your site.",
+    "limitReached": "You have reached the maximum of 20 goals. Remove one to add another.",
+    "name": "Name",
+    "nameHint": "Only you see this. It is never shown on your site.",
+    "namePlaceholder": "My first goal",
+    "target": "Target",
+    "targetHint": "The amount you are aiming for, in your payout currency.",
+    "window": "Window",
+    "windowHint": "A monthly goal starts again on the first of each month. A lifetime goal keeps counting.",
+    "windows": {
+      "monthly": "Monthly",
+      "lifetime": "Lifetime"
+    },
+    "raised": "raised",
+    "reached": "Goal reached",
+    "dialogAdd": "Add a goal",
+    "dialogEdit": "Edit goal",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "removeConfirm": "Remove this goal? Widgets using it lose their progress meter. Donations already counted stay in your earnings.",
+    "saveFailed": "That did not save. Check the name and target and try again.",
+    "loadFailed": "Your goals could not be loaded. Reload the page to try again."
+  }
+}

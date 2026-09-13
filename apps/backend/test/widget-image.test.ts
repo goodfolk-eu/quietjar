@@ -18,28 +18,53 @@ delete process.env.WIDGET_BUNDLE_PATH;
 const PNG = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 1, 2, 3]);
 const renders: unknown[] = [];
 let renderError: Error | null = null;
+/** Set to hold renders open, so a concurrency test is not decided by timing. */
+let renderGate: Promise<void> | null = null;
 mock.module("../src/widget/render", () => ({
   renderWidgetImage: async (config: unknown) => {
     renders.push(config);
+    if (renderGate) await renderGate;
     if (renderError) throw renderError;
     return new Uint8Array(PNG);
   },
 }));
 
-const stored = new Map<string, Uint8Array<ArrayBuffer>>();
+const stored = new Map<string, { data: Uint8Array<ArrayBuffer>; storedAt: number | null }>();
 let storeEnabled = false;
+/** Whether the last read asked for the extra HEAD that carries the write time. */
+let askedWriteTime: boolean | null = null;
 mock.module("../src/widget/storage", () => ({
   ...storage,
   imageStoreFromEnv: () => {
     if (!storeEnabled) return null;
     return {
-      get: async (key: string) => stored.get(key) ?? null,
+      get: async (key: string, withWriteTime: boolean) => {
+        askedWriteTime = withWriteTime;
+        return stored.get(key) ?? null;
+      },
       put: async (key: string, data: Uint8Array<ArrayBuffer>) => {
-        stored.set(key, data);
+        stored.set(key, { data, storedAt: Date.now() });
       },
     };
   },
 }));
+
+/** Puts a copy in the store as though it had been written `ageMs` ago. */
+function seedStored(blob: string, data: number[], ageMs = 0): void {
+  stored.set(storage.imageKeyFor(blob), {
+    data: new Uint8Array(data),
+    storedAt: Date.now() - ageMs,
+  });
+}
+
+/** The background refresh is fire-and-forget, so tests wait for it to land. */
+async function settled(done: () => boolean): Promise<void> {
+  for (let i = 0; i < 50 && !done(); i += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+}
+
+const GOAL_CONFIG = { color: "#0284c7", goal: "qg_abc" };
 
 const { widgetRoutes } = await import("../src/widget/routes");
 
@@ -60,6 +85,8 @@ async function call(path: string): Promise<Response> {
 beforeEach(() => {
   renders.length = 0;
   renderError = null;
+  renderGate = null;
+  askedWriteTime = null;
   stored.clear();
   storeEnabled = false;
 });
@@ -94,7 +121,7 @@ describe("GET /api/widget/image", () => {
 
   test("serves the stored copy without rendering", async () => {
     const blob = blobOf({ color: "#ff0000" });
-    stored.set(storage.imageKeyFor(blob), new Uint8Array([9, 9, 9]));
+    seedStored(blob, [9, 9, 9]);
     storeEnabled = true;
 
     const response = await call(`${IMAGE}/${blob}.png`);
@@ -109,7 +136,7 @@ describe("GET /api/widget/image", () => {
 
     const response = await call(`${IMAGE}/${blob}.png`);
     expect(response.status).toBe(200);
-    expect(stored.get(storage.imageKeyFor(blob))).toEqual(PNG);
+    expect(stored.get(storage.imageKeyFor(blob))?.data).toEqual(PNG);
     expect(renders).toHaveLength(1);
   });
 
@@ -117,6 +144,112 @@ describe("GET /api/widget/image", () => {
     renderError = new Error("no browser available");
     const response = await call(`${IMAGE}/${blobOf({})}.png`);
     expect(response.status).toBe(500);
+  });
+});
+
+describe("GET /api/widget/image with a goal", () => {
+  test("expires on the same window as the progress endpoint", async () => {
+    const response = await call(`${IMAGE}/${blobOf(GOAL_CONFIG)}.png`);
+    expect(response.headers.get("cache-control")).toBe("public, max-age=300");
+  });
+
+  test("an empty goal is still an immutable image", async () => {
+    const response = await call(`${IMAGE}/${blobOf({ color: "#0284c7", goal: "  " })}.png`);
+    expect(response.headers.get("cache-control")).toContain("immutable");
+  });
+
+  test("a stored copy inside the window serves without rendering", async () => {
+    const blob = blobOf(GOAL_CONFIG);
+    seedStored(blob, [1, 1, 1], 60_000);
+    storeEnabled = true;
+
+    const response = await call(`${IMAGE}/${blob}.png`);
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 1, 1]));
+    expect(renders).toHaveLength(0);
+  });
+
+  test("a stale copy is served immediately and refreshed behind it", async () => {
+    const blob = blobOf(GOAL_CONFIG);
+    const key = storage.imageKeyFor(blob);
+    seedStored(blob, [1, 1, 1], 6 * 60 * 1000);
+    storeEnabled = true;
+
+    // The supporter gets the old bar rather than waiting on a browser.
+    const response = await call(`${IMAGE}/${blob}.png`);
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 1, 1]));
+
+    await settled(() => renders.length > 0);
+    expect(renders).toEqual([GOAL_CONFIG]);
+    // Overwritten in place, so the bucket never grows a copy per window.
+    expect(stored.size).toBe(1);
+    expect(stored.get(key)?.data).toEqual(PNG);
+  });
+
+  test("a copy of unknown age counts as stale", async () => {
+    const blob = blobOf(GOAL_CONFIG);
+    stored.set(storage.imageKeyFor(blob), { data: new Uint8Array([1]), storedAt: null });
+    storeEnabled = true;
+
+    await call(`${IMAGE}/${blob}.png`);
+    await settled(() => renders.length > 0);
+    expect(renders).toHaveLength(1);
+  });
+
+  test("a goal-less copy never goes stale, and is not asked its age", async () => {
+    const blob = blobOf({ color: "#ff0000" });
+    seedStored(blob, [9], 400 * 24 * 60 * 60 * 1000);
+    storeEnabled = true;
+
+    await call(`${IMAGE}/${blob}.png`);
+    await settled(() => renders.length > 0);
+    expect(renders).toHaveLength(0);
+    // The extra HEAD is only worth paying for on the images that expire.
+    expect(askedWriteTime).toBe(false);
+  });
+
+  test("a goal image is asked its age", async () => {
+    const blob = blobOf(GOAL_CONFIG);
+    seedStored(blob, [1], 60_000);
+    storeEnabled = true;
+
+    await call(`${IMAGE}/${blob}.png`);
+    expect(askedWriteTime).toBe(true);
+  });
+
+  test("requests inside the same stale window share one render", async () => {
+    const blob = blobOf(GOAL_CONFIG);
+    seedStored(blob, [1, 1, 1], 6 * 60 * 1000);
+    storeEnabled = true;
+    // The first render is held open, so the later requests arrive while it is
+    // genuinely still running rather than after it happened to finish.
+    let release = () => {};
+    renderGate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+
+    await Promise.all([
+      call(`${IMAGE}/${blob}.png`),
+      call(`${IMAGE}/${blob}.png`),
+      call(`${IMAGE}/${blob}.png`),
+    ]);
+    expect(renders).toHaveLength(1);
+
+    release();
+    await settled(() => stored.get(storage.imageKeyFor(blob))?.data.length === PNG.length);
+    expect(stored.get(storage.imageKeyFor(blob))?.data).toEqual(PNG);
+  });
+
+  test("a failed background refresh keeps serving the stale copy", async () => {
+    const blob = blobOf(GOAL_CONFIG);
+    seedStored(blob, [1, 1, 1], 6 * 60 * 1000);
+    storeEnabled = true;
+    renderError = new Error("no browser available");
+
+    const response = await call(`${IMAGE}/${blob}.png`);
+    expect(response.status).toBe(200);
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array([1, 1, 1]));
+    await settled(() => renders.length > 0);
+    expect(stored.get(storage.imageKeyFor(blob))?.data).toEqual(new Uint8Array([1, 1, 1]));
   });
 });
 
@@ -134,6 +267,15 @@ describe("GET /widget/render", () => {
     // The close control is widget chrome; a static image is the button alone.
     expect(html).toContain('"enabled":false');
     expect(html).not.toContain('"enabled":true');
+  });
+
+  test("keeps the goal and points the widget at the origin serving the page", async () => {
+    const response = await call(`/widget/render?c=${blobOf(GOAL_CONFIG)}`);
+    const html = await response.text();
+    // The goal survives, so the render captures a real progress bar.
+    expect(html).toContain('"goal":"qg_abc"');
+    // And its lookup stays in-process rather than reaching the production API.
+    expect(html).toContain('"api":"http://localhost"');
   });
 
   test("rejects an undecodable blob", async () => {
@@ -238,6 +380,6 @@ describe("S3 credential resolution", () => {
     });
     expect(store).not.toBeNull();
     // Reads against the unreachable endpoint degrade to null.
-    expect(await store!.get("img/widget/missing.png")).toBeNull();
+    expect(await store!.get("img/widget/missing.png", false)).toBeNull();
   });
 });

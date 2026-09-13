@@ -4,9 +4,22 @@
  * so the zone password is resolved once through the Core API and cached.
  * A deployment without an API key still serves images (they just re-render).
  */
+export interface StoredImage {
+  data: Uint8Array<ArrayBuffer>;
+  /**
+   * When the copy was written, for the images that expire. Null when the
+   * bucket did not say, which counts as stale rather than fresh.
+   */
+  storedAt: number | null;
+}
+
 export interface WidgetImageStore {
-  /** Stored bytes or null when the key is absent or unreachable. */
-  get(key: string): Promise<Uint8Array<ArrayBuffer> | null>;
+  /**
+   * The stored copy, or null when the key is absent or unreachable. The write
+   * time costs an extra HEAD, so it is only asked for by the images that
+   * expire; everything else leaves it null and never looks.
+   */
+  get(key: string, withWriteTime: boolean): Promise<StoredImage | null>;
   /** Best-effort write; a failed store only costs a later re-render. */
   put(key: string, data: Uint8Array<ArrayBuffer>): Promise<void>;
 }
@@ -73,9 +86,11 @@ export async function imageStoreFromEnv(
     endpoint: env.BUNNY_S3_ENDPOINT ?? `https://${credentials.hostname}`,
   });
   return {
-    async get(key) {
+    async get(key, withWriteTime) {
       try {
-        return new Uint8Array(await s3.file(key).arrayBuffer());
+        const file = s3.file(key);
+        const storedAt = withWriteTime ? await writeTime(file) : null;
+        return { data: new Uint8Array(await file.arrayBuffer()), storedAt };
       } catch {
         // A missing key and an unreachable bucket look the same here: both
         // fall back to a fresh render.
@@ -90,6 +105,19 @@ export async function imageStoreFromEnv(
       }
     },
   };
+}
+
+/**
+ * The object's write time, from a HEAD. Null when the bucket answers without
+ * one, which the caller treats as stale.
+ */
+async function writeTime(file: Bun.S3File): Promise<number | null> {
+  try {
+    const at = (await file.stat()).lastModified.getTime();
+    return Number.isFinite(at) ? at : null;
+  } catch {
+    return null;
+  }
 }
 
 export function imageKeyFor(blob: string): string {

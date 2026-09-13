@@ -109,6 +109,49 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       white-space: pre-line;
       overflow-wrap: anywhere;
     }
+    .quietjar-widget__meter {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 2px;
+    }
+    /* Track and fill are both the panel's own text colour, the track faded, so
+       the bar reads on a light brand colour as well as a dark one. The fade is
+       a pseudo-element because opacity on the track would take the fill with
+       it. */
+    .quietjar-widget__meter-track {
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .quietjar-widget__meter-track::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: ${text};
+      opacity: 0.25;
+    }
+    .quietjar-widget__meter-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: ${text};
+      transition: width 0.3s ease;
+    }
+    .quietjar-widget__meter-label {
+      font-family: ${labelFontFamily};
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.3;
+      opacity: 0.85;
+    }
     .quietjar-widget__action {
       flex: none;
       padding: 8px 14px;
@@ -241,6 +284,9 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
         transform: none;
       }
       .quietjar-widget__button {
+        transition: none;
+      }
+      .quietjar-widget__meter-fill {
         transition: none;
       }
     }

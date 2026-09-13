@@ -466,6 +466,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
         site: config.site,
         amount: chosen,
         returnUrl: returnUrl(),
+        goal: config.goal,
       });
 
       const stripe = stripeConstructor(session.publishableKey, { stripeAccount: session.account });

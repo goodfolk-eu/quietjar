@@ -228,6 +228,8 @@ export interface DonationSessionInput {
   /** The page the supporter is on; Stripe returns them here after a redirect. */
   returnUrl: string;
   siteKey: string;
+  /** Goal the donation counts toward, when the widget named a usable one. */
+  goalId: string | null;
   productName: string;
 }
 
@@ -241,6 +243,10 @@ export async function createDonationSession(
   config: StripeConfig,
   input: DonationSessionInput,
 ): Promise<{ id: string; clientSecret: string }> {
+  const metadata = {
+    quietjar_site: input.siteKey,
+    ...(input.goalId === null ? {} : { quietjar_goal: input.goalId }),
+  };
   const session = await stripeClient(config).checkout.sessions.create(
     {
       ui_mode: "elements",
@@ -257,9 +263,9 @@ export async function createDonationSession(
       ],
       payment_intent_data: {
         application_fee_amount: applicationFee(input.amount),
-        metadata: { quietjar_site: input.siteKey },
+        metadata,
       },
-      metadata: { quietjar_site: input.siteKey },
+      metadata,
       return_url: `${input.returnUrl}${input.returnUrl.includes("?") ? "&" : "?"}qj_donation={CHECKOUT_SESSION_ID}`,
     },
     { stripeAccount: input.accountId },

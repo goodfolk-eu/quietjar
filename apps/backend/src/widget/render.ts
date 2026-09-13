@@ -12,7 +12,8 @@ const CLIP_PADDING = 12;
 const VIEWPORT_WIDTH = 480;
 const VIEWPORT_HEIGHT = 360;
 /** Mirrors FACE_SELECTOR in apps/widget/src/mount.ts; the backend cannot
-    import the widget workspace, so the copy is kept in sync by hand. */
+    import the widget workspace, so the copy is kept in sync by hand. The goal
+    meter's class names in FACE_SCRIPT below are mirrored the same way. */
 const FACE_SELECTOR = ".quietjar-widget__button, .quietjar-widget__panel";
 const MOUNT_TIMEOUT_ATTEMPTS = 30;
 const MOUNT_POLL_MS = 100;
@@ -22,6 +23,12 @@ interface FaceRect {
   y: number;
   width: number;
   height: number;
+  /**
+   * Whether a goal meter, if there is one, has finished filling. The label is
+   * empty until the progress lands, which leaves it zero-height, so measuring
+   * before this is true would clip the bar out of the capture.
+   */
+  settled: boolean;
 }
 
 /**
@@ -58,13 +65,34 @@ function chromeInstalled(): boolean {
   return false;
 }
 
+/**
+ * A widget with no meter is settled the moment it mounts, so a pill or a
+ * goal-less card takes the same single poll it always did. With a meter, the
+ * filled label is the signal the progress arrived, and comparing the bar's
+ * rendered width against the percentage on its own style attribute waits out
+ * the fill transition without needing a DevTools bridge.
+ */
 const FACE_SCRIPT = `(() => {
   const root = document.querySelector("[data-quietjar-host]")?.shadowRoot;
   const face = root?.querySelector(${JSON.stringify(FACE_SELECTOR)});
   if (!face) return null;
   const rect = face.getBoundingClientRect();
   if (rect.width < 2 || rect.height < 2) return null;
-  return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+  const meter = root.querySelector(".quietjar-widget__meter");
+  const label = meter?.querySelector(".quietjar-widget__meter-label");
+  const track = meter?.querySelector(".quietjar-widget__meter-track");
+  const fill = meter?.querySelector(".quietjar-widget__meter-fill");
+  let settled = true;
+  if (meter) {
+    if (!label || label.textContent === "" || !track || !fill) {
+      settled = false;
+    } else {
+      const width = track.getBoundingClientRect().width;
+      const target = width * (parseFloat(fill.style.width) || 0) / 100;
+      settled = Math.abs(fill.getBoundingClientRect().width - target) < 0.5;
+    }
+  }
+  return { x: rect.x, y: rect.y, width: rect.width, height: rect.height, settled };
 })()`;
 
 /** The page served by the widget routes; it mounts the widget from the blob. */
@@ -73,12 +101,17 @@ function renderPageUrl(origin: string, config: object): string {
   return `${origin}/widget/render?c=${encodeURIComponent(blob)}`;
 }
 
-async function waitUntilMounted(view: Bun.WebView): Promise<FaceRect> {
+async function waitUntilReady(view: Bun.WebView): Promise<FaceRect> {
+  let last: FaceRect | null = null;
   for (let attempt = 0; attempt < MOUNT_TIMEOUT_ATTEMPTS; attempt += 1) {
     const rect = (await view.evaluate(FACE_SCRIPT)) as FaceRect | null;
-    if (rect) return rect;
+    if (rect?.settled) return rect;
+    if (rect) last = rect;
     await Bun.sleep(MOUNT_POLL_MS);
   }
+  // A goal whose progress never answers still gets its card captured; a plain
+  // card without a bar beats no image at all.
+  if (last) return last;
   throw new Error("widget face did not render");
 }
 
@@ -118,7 +151,7 @@ async function renderOnce(config: object): Promise<Uint8Array<ArrayBuffer>> {
   });
   try {
     await view.navigate(renderPageUrl(`http://127.0.0.1:${port}`, config));
-    const face = await waitUntilMounted(view);
+    const face = await waitUntilReady(view);
     return await captureFace(view, face);
   } finally {
     view.close();

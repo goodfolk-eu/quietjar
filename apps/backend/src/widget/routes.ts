@@ -1,16 +1,33 @@
 import { existsSync } from "node:fs";
 import { Elysia, t } from "elysia";
+import { GOAL_PROGRESS_TTL_MS } from "../goals/window";
 import { renderWidgetImage } from "./render";
-import { decodeImageConfig, imageKeyFor, imageStoreFromEnv, MAX_BLOB_LENGTH } from "./storage";
+import {
+  decodeImageConfig,
+  imageKeyFor,
+  imageStoreFromEnv,
+  MAX_BLOB_LENGTH,
+  type StoredImage,
+  type WidgetImageStore,
+} from "./storage";
 
 /**
- * The image route is embedded as <img> across the web: no credentials, no
- * CORS involvement, and every response is cacheable by construction because
- * the config blob in the query fully determines the bytes.
+ * The image route is embedded as <img> across the web: no credentials and no
+ * CORS involvement. A config without a goal is cacheable forever, because the
+ * blob in the path fully determines the bytes. A goal makes the bytes depend
+ * on how much has been raised, so those expire on the same five minute window
+ * as the progress endpoint and the bar can never lag the live meter by more
+ * than one of them.
  */
-const IMAGE_CACHE_CONTROL = "public, max-age=31536000, immutable";
+const IMMUTABLE_CACHE_CONTROL = "public, max-age=31536000, immutable";
+const GOAL_CACHE_CONTROL = `public, max-age=${GOAL_PROGRESS_TTL_MS / 1000}`;
 
-/** Local bundle shipped in the Docker image; the deployed bundle otherwise. */
+/**
+ * Local bundle shipped in the Docker image; the deployed bundle otherwise.
+ * Both the container and the dev script set WIDGET_BUNDLE_PATH, because
+ * without it the render page screenshots the deployed widget and a feature
+ * that only exists locally silently fails to appear in the image.
+ */
 function bundleSource(): string | null {
   const path = process.env.WIDGET_BUNDLE_PATH;
   return path && existsSync(path) ? path : null;
@@ -18,13 +35,21 @@ function bundleSource(): string | null {
 
 const FALLBACK_BUNDLE_URL = "https://quietjar.com/js/latest/quietjar.js";
 
-function png(data: Uint8Array<ArrayBuffer>): Response {
+function png(data: Uint8Array<ArrayBuffer>, cacheControl: string): Response {
   return new Response(data, {
-    headers: { "content-type": "image/png", "cache-control": IMAGE_CACHE_CONTROL },
+    headers: { "content-type": "image/png", "cache-control": cacheControl },
   });
 }
 
-function renderPage(blob: string): Response {
+/** The goal the config names, or null when it names none. */
+function goalOf(config: unknown): string | null {
+  const goal = (config as { goal?: unknown }).goal;
+  if (typeof goal !== "string") return null;
+  const trimmed = goal.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+function renderPage(blob: string, origin: string): Response {
   const config = decodeImageConfig(blob);
   if (!config) {
     return new Response("invalid widget config", { status: 400 });
@@ -37,6 +62,10 @@ function renderPage(blob: string): Response {
     ...(typeof close === "object" && close !== null ? close : {}),
     enabled: false,
   };
+  // The renderer loads this page from the backend serving it, so pointing the
+  // widget at the same origin keeps the goal lookup in-process instead of
+  // reaching the production API from a dev box or from CI.
+  patchable.api = origin;
   // Script-tag safety: the config is attacker-controlled input in principle.
   const json = JSON.stringify(patchable)
     .replace(/</g, "\\u003c")
@@ -60,6 +89,35 @@ function bundle(): Response {
   });
 }
 
+/**
+ * A bucket that did not report a write time counts as stale, so the bar
+ * refreshes rather than freezing on a copy whose age is unknown.
+ */
+function isStale(cached: StoredImage): boolean {
+  return cached.storedAt === null || Date.now() - cached.storedAt >= GOAL_PROGRESS_TTL_MS;
+}
+
+/**
+ * Keys with a background render already running. Without this, every request
+ * arriving inside the same stale window would queue its own browser: with
+ * immutable images a stampede happened once per config ever, but an expiring
+ * one comes round again every five minutes.
+ */
+const refreshing = new Set<string>();
+
+async function refresh(store: WidgetImageStore, key: string, config: object): Promise<void> {
+  if (refreshing.has(key)) return;
+  refreshing.add(key);
+  try {
+    await store.put(key, await renderWidgetImage(config));
+  } catch (err) {
+    // The stale copy keeps being served and the next window tries again.
+    console.error("[widget/image] background refresh failed:", (err as Error).message);
+  } finally {
+    refreshing.delete(key);
+  }
+}
+
 export const widgetRoutes = new Elysia()
   .get(
     // The config blob is the path, not a query string: BunnyCDN keys its cache
@@ -73,14 +131,26 @@ export const widgetRoutes = new Elysia()
       if (!config) {
         return new Response("invalid widget config", { status: 400 });
       }
+      const expires = goalOf(config) !== null;
+      const cacheControl = expires ? GOAL_CACHE_CONTROL : IMMUTABLE_CACHE_CONTROL;
+      const key = imageKeyFor(blob);
+
       if (store) {
-        const cached = await store.get(imageKeyFor(blob));
-        if (cached) return png(cached);
+        const cached = await store.get(key, expires);
+        if (cached) {
+          // Stale bar: the old bytes still go out now and a fresh render
+          // overwrites the same key in the background, so no request waits on a
+          // browser and the stored copy never multiplies into one object per
+          // window.
+          if (expires && isStale(cached)) void refresh(store, key, config);
+          return png(cached.data, cacheControl);
+        }
       }
+
       const image = await renderWidgetImage(config);
       // The response goes out first; the stored copy serves future misses.
-      if (store) void store.put(imageKeyFor(blob), image);
-      return png(image);
+      if (store) void store.put(key, image);
+      return png(image, cacheControl);
     },
     {
       params: t.Object({
@@ -88,7 +158,7 @@ export const widgetRoutes = new Elysia()
       }),
     },
   )
-  .get("/widget/render", ({ query }) => renderPage(query.c), {
+  .get("/widget/render", ({ query, request }) => renderPage(query.c, new URL(request.url).origin), {
     query: t.Object({
       c: t.String({ minLength: 1, maxLength: MAX_BLOB_LENGTH }),
     }),
