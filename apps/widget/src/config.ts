@@ -155,7 +155,7 @@ export const DEFAULT_CLOSE_ENABLED = true;
 export const DEFAULT_CLOSE_AFTER: CloseAfterMode = "session";
 export const DEFAULT_CLOSE_DAYS = 7;
 export const DEFAULT_DONATION_HIDE_DAYS = 30;
-export const DEFAULT_COLOR = "#0284c7";
+export const DEFAULT_COLOR = "#0369a1";
 export const DEFAULT_CORNER: Corner = "bottom-right";
 
 export const CLOSE_AFTER_MODES: readonly CloseAfterMode[] = ["session", "days", "never", "forever"];

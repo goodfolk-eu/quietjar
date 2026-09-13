@@ -191,7 +191,7 @@ describe("resolveConfig", () => {
 
   test("falls back to default color for invalid color", () => {
     expect(resolveConfig({ style: { color: "red" } }).color).toBe(DEFAULT_COLOR);
-    expect(resolveConfig(undefined).color).toBe("#0284c7");
+    expect(resolveConfig(undefined).color).toBe("#0369a1");
   });
 
   test("accepts shorthand and long hex colors", () => {

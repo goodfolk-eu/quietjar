@@ -52,13 +52,15 @@ const closeAfters = CLOSE_AFTER_MODES.map((mode: CloseAfterMode) => ({
 
 // The swatch colour is a utility class rather than a style attribute so it
 // survives the site's style-src policy, which has no unsafe-inline.
+// Every preset clears 4.5:1 against the white label the widget puts on it, so
+// no swatch ends up with washed-out text.
 const presetColors = [
   { hex: "#0f172a", swatch: "bg-[#0f172a]" },
-  { hex: "#e11d48", swatch: "bg-[#e11d48]" },
-  { hex: "#f59e0b", swatch: "bg-[#f59e0b]" },
-  { hex: "#059669", swatch: "bg-[#059669]" },
-  { hex: "#0284c7", swatch: "bg-[#0284c7]" },
-  { hex: "#7c3aed", swatch: "bg-[#7c3aed]" },
+  { hex: "#0369a1", swatch: "bg-[#0369a1]" },
+  { hex: "#047857", swatch: "bg-[#047857]" },
+  { hex: "#be123c", swatch: "bg-[#be123c]" },
+  { hex: "#c2410c", swatch: "bg-[#c2410c]" },
+  { hex: "#6d28d9", swatch: "bg-[#6d28d9]" },
 ];
 
 const fieldClass =
