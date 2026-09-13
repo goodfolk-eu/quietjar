@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { returnUrlWithMarker } from "../pay/origin";
 
 export interface StripeConfig {
   secretKey: string;
@@ -266,7 +267,7 @@ export async function createDonationSession(
         metadata,
       },
       metadata,
-      return_url: `${input.returnUrl}${input.returnUrl.includes("?") ? "&" : "?"}qj_donation={CHECKOUT_SESSION_ID}`,
+      return_url: returnUrlWithMarker(input.returnUrl),
     },
     { stripeAccount: input.accountId },
   );

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { applicationFee } from "../src/stripe/client";
 import { isValidAmount, RateLimiter } from "../src/pay/limits";
-import { isAllowedOrigin, isAllowedReturnUrl } from "../src/pay/origin";
+import { isAllowedOrigin, isAllowedReturnUrl, returnUrlWithMarker } from "../src/pay/origin";
 import { normalizeSiteUrl } from "../src/sites/url";
 
 const live = { allowLocalhost: false };
@@ -151,5 +151,31 @@ describe("normalizeSiteUrl", () => {
     expect(normalizeSiteUrl(null)).toBeNull();
     expect(normalizeSiteUrl("localhost")).toBeNull();
     expect(normalizeSiteUrl("ftp://example.com")).toBeNull();
+  });
+});
+
+describe("returnUrlWithMarker", () => {
+  test("adds the marker to the query string", () => {
+    expect(returnUrlWithMarker("https://example.com/blog")).toBe(
+      "https://example.com/blog?qj_donation={CHECKOUT_SESSION_ID}",
+    );
+  });
+
+  test("keeps the marker ahead of a hash route, where the widget can read it", () => {
+    expect(returnUrlWithMarker("https://example.com/#/")).toBe(
+      "https://example.com/?qj_donation={CHECKOUT_SESSION_ID}#/",
+    );
+    expect(returnUrlWithMarker("https://example.com/#/cards/rare")).toBe(
+      "https://example.com/?qj_donation={CHECKOUT_SESSION_ID}#/cards/rare",
+    );
+  });
+
+  test("keeps the page's own query and replaces a stale marker", () => {
+    expect(returnUrlWithMarker("https://example.com/?page=2")).toBe(
+      "https://example.com/?page=2&qj_donation={CHECKOUT_SESSION_ID}",
+    );
+    expect(returnUrlWithMarker("https://example.com/?qj_donation=cs_old")).toBe(
+      "https://example.com/?qj_donation={CHECKOUT_SESSION_ID}",
+    );
   });
 });

@@ -64,3 +64,18 @@ export function isAllowedReturnUrl(
   if (!url) return false;
   return isAllowedOrigin(url.origin, siteUrl, policy);
 }
+
+/** Placeholder Stripe swaps for the real id; URL-encoding would break it. */
+const SESSION_PLACEHOLDER = "__QJ_SESSION__";
+
+/**
+ * The page to come back to, with the donation marker on it. The marker has to
+ * land in the query string and not the fragment: a hash-routed page ends in
+ * `#/`, and naively appending `?qj_donation=...` would bury the marker inside
+ * the fragment, where the widget never sees it.
+ */
+export function returnUrlWithMarker(returnUrl: string): string {
+  const url = new URL(returnUrl);
+  url.searchParams.set("qj_donation", SESSION_PLACEHOLDER);
+  return url.toString().replace(SESSION_PLACEHOLDER, "{CHECKOUT_SESSION_ID}");
+}
