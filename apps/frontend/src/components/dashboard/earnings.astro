@@ -79,6 +79,10 @@ const selectOptions = {
   import ApexCharts from "apexcharts/core";
   import "apexcharts/bar";
   import "apexcharts/line";
+  // Ship Apex's stylesheet as a bundled CSS asset (see chart.injectStyleSheet
+  // below). Its runtime <style> injection has no nonce/hash we can whitelist,
+  // so the CSP blocks it.
+  import "apexcharts/dist/apexcharts.css";
   import "preline/plugins/select";
   import { api } from "@/lib/api";
   import { formatMoney } from "@/lib/money";
@@ -224,6 +228,10 @@ const selectOptions = {
         chart: {
           height: 300,
           type: isCumulative ? "line" : "bar",
+          // Apex otherwise appends <style id="apexcharts-css"> at render time,
+          // which the CSP's style-src-elem hash allowlist rejects. The same CSS
+          // comes in through the import above instead.
+          injectStyleSheet: false,
           toolbar: { show: false },
           zoom: { enabled: false },
         },

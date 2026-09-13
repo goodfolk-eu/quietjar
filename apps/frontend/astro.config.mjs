@@ -158,6 +158,10 @@ export default defineConfig({
     csp: {
       algorithm: "SHA-256",
       styleDirective: {
+        // ApexCharts sets inline `style` attributes on the SVG it builds, and
+        // the tooltip markup carries one too. Its runtime stylesheet injection
+        // is disabled in earnings.astro, so no element-level exception is
+        // needed and <style>/<link> stay hash-locked.
         resources: [{ resource: "'unsafe-inline'", kind: "attribute" }],
       },
       scriptDirective: {
