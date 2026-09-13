@@ -113,6 +113,101 @@ describe("GET /api/donations/earnings", () => {
   });
 });
 
+describe("GET /api/donations/earnings/series", () => {
+  async function series(period: string) {
+    return json(
+      await donationRoutes.handle(
+        request("GET", `/api/donations/earnings/series?period=${period}`),
+      ),
+    );
+  }
+
+  interface Point {
+    at: number;
+    net: number;
+  }
+
+  test("refuses a signed-out caller", async () => {
+    session.user = null;
+    const { status, body } = await series("30d");
+    expect(status).toBe(401);
+    expect(body.error).toBe("unauthorized");
+  });
+
+  test("sums each day into what was kept", async () => {
+    const now = Date.now();
+    await seedDonation({ amount: 1000, applicationFee: 50, net: 900, email: null, createdAt: now });
+    await seedDonation({ amount: 500, applicationFee: 25, net: 450, email: null, createdAt: now });
+
+    const { status, body } = await series("30d");
+    expect(status).toBe(200);
+    expect(body.currency).toBe("eur");
+    expect(body.bucket).toBe("day");
+
+    const points = body.points as Point[];
+    expect(points.at(-1)?.net).toBe(1350);
+  });
+
+  test("a day with no donation is a zero bucket, not a gap", async () => {
+    await seedDonation({
+      amount: 1000,
+      applicationFee: 50,
+      net: 900,
+      email: null,
+      createdAt: Date.now() - 3 * DAY_MS,
+    });
+
+    const points = (await series("30d")).body.points as Point[];
+    // 30 whole days back plus today.
+    expect(points).toHaveLength(31);
+    expect(points.every((point) => typeof point.net === "number")).toBe(true);
+    expect(points.filter((point) => point.net > 0)).toHaveLength(1);
+    expect(points.at(-1)?.net).toBe(0);
+  });
+
+  test("the period picks the bucket width", async () => {
+    expect((await series("30d")).body.bucket).toBe("day");
+    expect((await series("90d")).body.bucket).toBe("week");
+    expect((await series("all")).body.bucket).toBe("month");
+  });
+
+  test("the change is measured against the window before this one", async () => {
+    await seedDonation({
+      amount: 1000,
+      applicationFee: 50,
+      net: 900,
+      email: null,
+      createdAt: Date.now() - 40 * DAY_MS,
+    });
+
+    expect((await series("30d")).body.previous).toBe(900);
+
+    // Nothing precedes all time, so there is nothing to compare against.
+    expect((await series("all")).body.previous).toBeNull();
+  });
+
+  test("all time starts at the first donation, not at the epoch", async () => {
+    await seedDonation({
+      amount: 1000,
+      applicationFee: 50,
+      net: 900,
+      email: null,
+      createdAt: Date.now() - 40 * DAY_MS,
+    });
+
+    const points = (await series("all")).body.points as Point[];
+    expect(points.length).toBeLessThanOrEqual(3);
+    expect(points[0].at).toBeGreaterThan(Date.now() - 70 * DAY_MS);
+  });
+
+  test("a creator with no donations still gets an axis", async () => {
+    const { status, body } = await series("all");
+    expect(status).toBe(200);
+    expect(body.points as unknown[]).toHaveLength(1);
+    expect((body.points as Point[])[0].net).toBe(0);
+  });
+});
+
 describe("GET /api/donations/recent", () => {
   async function recent(offset?: number) {
     const suffix = offset === undefined ? "" : `?offset=${offset}`;

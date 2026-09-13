@@ -1,5 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { libsqlClient } from "../db";
+import type { DailyEarnings } from "../donations/series";
+
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface Donation {
   id: string;
@@ -175,4 +178,29 @@ export async function earningsSum(siteId: string, since: number): Promise<number
   });
   const row = result.rows[0] as unknown as { total: number } | undefined;
   return typeof row?.total === "number" ? row.total : 0;
+}
+
+/**
+ * What the creator kept per day, in minor units, oldest first, with a row only
+ * for days that saw a donation. Same net fallback as `earningsSum`.
+ */
+export async function earningsByDay(input: {
+  siteId: string;
+  since: number;
+  /** Exclusive, so back-to-back windows cannot both claim the same donation. */
+  until?: number;
+}): Promise<DailyEarnings[]> {
+  const result = await libsqlClient.execute({
+    sql: `SELECT CAST(created_at / ${DAY_MS} AS INTEGER) AS day,
+                 COALESCE(SUM(COALESCE(net, amount - application_fee)), 0) AS net
+          FROM donations
+          WHERE site_id = ? AND created_at >= ? AND (? IS NULL OR created_at < ?)
+          GROUP BY day
+          ORDER BY day`,
+    args: [input.siteId, input.since, input.until ?? null, input.until ?? null],
+  });
+  return result.rows.map((raw) => {
+    const row = raw as unknown as { day: number; net: number };
+    return { day: row.day, net: row.net };
+  });
 }

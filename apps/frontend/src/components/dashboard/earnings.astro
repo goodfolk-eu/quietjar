@@ -1,0 +1,333 @@
+---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const home = copy.home;
+
+const checkIcon =
+  '<svg class="shrink-0 size-3.5 text-gray-800" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const chevronIcon =
+  '<svg class="shrink-0 size-3.5 text-gray-800" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+
+const selectOptions = {
+  placeholder: home.periodPlaceholder,
+  toggleTag: `<button type="button" aria-expanded="false" aria-label="${home.earningsTitle}"></button>`,
+  toggleClasses:
+    "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-1.5 ps-2.5 pe-6 inline-flex shrink-0 justify-center items-center gap-x-1.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 before:absolute before:inset-0 before:z-1",
+  dropdownClasses:
+    "mt-2 z-50 w-40 p-1 space-y-0.5 overflow-hidden overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",
+  optionClasses:
+    "hs-selected:bg-gray-100 py-1.5 px-2 w-full text-[13px] text-gray-800 rounded-lg cursor-pointer hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100",
+  optionTemplate: `<div class="flex justify-between items-center w-full"><span data-title></span><span class="hidden hs-selected:block">${checkIcon}</span></div>`,
+  extraMarkup: `<div class="absolute top-1/2 end-2 cursor-pointer -translate-y-1/2">${chevronIcon}</div>`,
+};
+---
+
+<div
+  id="qj-earnings"
+  class="flex flex-col"
+  data-i18n={JSON.stringify({
+    kept: home.chartKept,
+    error: home.error,
+  })}
+>
+  <div class="flex items-center justify-between gap-3">
+    <h2 class="text-base font-semibold text-gray-800">{home.earningsTitle}</h2>
+
+    <div class="relative inline-block">
+      <select
+        id="qj-home-period"
+        data-hs-select={JSON.stringify(selectOptions)}
+        class="hidden"
+        aria-label={home.earningsTitle}
+      >
+        <option value="30d" selected>{home.period30}</option>
+        <option value="90d">{home.period90}</option>
+        <option value="all">{home.periodAll}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-2 flex items-center gap-2">
+    <span id="qj-home-kept" class="block font-medium text-xl text-gray-800 tabular-nums">
+      &hellip;
+    </span>
+    <span id="qj-home-kept-delta" class="flex justify-center items-center gap-x-1 text-sm"></span>
+  </div>
+
+  <div class="mt-3 flex items-center">
+    <input
+      type="checkbox"
+      id="qj-home-cumulative"
+      class="shrink-0 size-4 rounded-xs border-gray-200 accent-qj-accent"
+    />
+    <label for="qj-home-cumulative" class="ms-2 text-sm text-gray-500">{home.cumulative}</label>
+  </div>
+
+  <!-- Apex Bar Chart -->
+  <div id="qj-home-chart" class="mt-2 min-h-81"></div>
+
+  <p id="qj-home-chart-error" class="mt-2 text-sm text-gray-600" hidden>{home.error}</p>
+
+  <p class="mt-1 text-xs text-gray-500">{home.earningsHint}</p>
+</div>
+
+<script>
+  // Register only the two chart types this card draws. The "apexcharts" barrel
+  // registers every type instead, which costs another ~100 kB gzipped here.
+  // Optional features (toolbar, legend, annotations, export) stay out entirely.
+  import ApexCharts from "apexcharts/core";
+  import "apexcharts/bar";
+  import "apexcharts/line";
+  import "preline/plugins/select";
+  import { api } from "@/lib/api";
+  import { formatMoney } from "@/lib/money";
+
+  type Period = "30d" | "90d" | "all";
+  type Bucket = "day" | "week" | "month";
+
+  interface Point {
+    at: number;
+    net: number;
+  }
+
+  interface Series {
+    currency: string;
+    bucket: Bucket;
+    points: Point[];
+    previous: number | null;
+  }
+
+  interface Copy {
+    kept: string;
+    error: string;
+  }
+
+  const KEPT_COLOR = "#0b6b3a";
+  const LABEL_COLOR = "#565e59";
+  const GRID_COLOR = "#e9e5dc";
+  const FONT = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif";
+
+  const root = document.getElementById("qj-earnings");
+
+  void (async () => {
+    if (!root) return;
+
+    const copy = JSON.parse(root.dataset.i18n ?? "{}") as Copy;
+
+    const periodSelect = document.getElementById("qj-home-period") as HTMLSelectElement | null;
+    const cumulative = document.getElementById("qj-home-cumulative") as HTMLInputElement | null;
+    const keptValue = document.getElementById("qj-home-kept");
+    const keptDelta = document.getElementById("qj-home-kept-delta");
+    const mount = document.getElementById("qj-home-chart");
+    const failure = document.getElementById("qj-home-chart-error");
+
+    if (!(periodSelect && cumulative && keptValue && keptDelta && mount && failure)) return;
+
+    let chart: ApexCharts | null = null;
+    let latest: Series | null = null;
+
+    /** Bucket starts are UTC midnights, so they must be read back in UTC. */
+    function bucketLabel(at: number, bucket: Bucket): string {
+      const options: Intl.DateTimeFormatOptions =
+        bucket === "month"
+          ? { month: "short", year: "numeric", timeZone: "UTC" }
+          : { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" };
+      return new Intl.DateTimeFormat(undefined, options).format(new Date(at));
+    }
+
+    /** One decimal at most, so axis ticks do not print fractions of a cent. */
+    function short(major: number): string {
+      const abs = Math.abs(major);
+      if (abs >= 1000) return `${Math.round(abs / 100) / 10}k`;
+      return `${Math.round(abs * 10) / 10}`;
+    }
+
+    function runningTotal(values: number[]): number[] {
+      let sum = 0;
+      return values.map((value) => {
+        sum += value;
+        return sum;
+      });
+    }
+
+    const ARROW_UP =
+      '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>';
+    const ARROW_DOWN =
+      '<svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7 7-7-7"/><path d="M12 5v14"/></svg>';
+
+    /** How this period compares with the one before it. */
+    function renderDelta(target: HTMLElement, current: number, previous: number | null): void {
+      target.replaceChildren();
+      if (previous === null || previous === 0) return;
+
+      const change = ((current - previous) / Math.abs(previous)) * 100;
+      if (Math.abs(change) < 0.05) return;
+
+      const rising = change > 0;
+      const tone = rising ? "text-green-600" : "text-red-600";
+      target.className = `flex justify-center items-center gap-x-1 text-sm ${tone}`;
+      target.innerHTML = `${rising ? ARROW_UP : ARROW_DOWN}<span>${Math.abs(change).toFixed(1)}%</span>`;
+    }
+
+    /**
+     * Mirrors Preline's compare-two tooltip, but prints real currency instead of
+     * the helper's bare numbers. Importing the helper itself would pull a second
+     * copy of ApexCharts into the bundle, since Preline pins its own major.
+     */
+    function tooltip(title: string, rows: Array<{ name: string; color: string; value: string }>) {
+      const series = rows
+        .map(
+          (row, index) => `<div class="apexcharts-tooltip-series-group justify-between! w-full text-xs !flex order-${index + 1}">
+        <span class="flex items-center">
+          <span class="apexcharts-tooltip-marker w-2.5! h-2.5! me-1.5! rounded-xs!" style="background: ${row.color}"></span>
+          <div class="apexcharts-tooltip-text">
+            <div class="apexcharts-tooltip-y-group py-0.5!">
+              <span class="apexcharts-tooltip-text-y-value font-medium! text-gray-500 ms-auto!">${row.value}</span>
+            </div>
+          </div>
+        </span>
+        <span class="apexcharts-tooltip-text-y-label text-gray-500 ms-2">${row.name}</span>
+      </div>`,
+        )
+        .join("");
+
+      return `<div class="ms-0.5 mb-2 min-w-36 bg-white border border-gray-200 text-gray-800 rounded-lg shadow-md">
+      <div class="apexcharts-tooltip-title flex justify-between font-semibold text-sm! bg-white! border-gray-200! text-gray-800 rounded-t-lg">
+        <span>${title}</span>
+      </div>
+      ${series}
+    </div>`;
+    }
+
+    function axisLabelStyle(fontSize: string) {
+      return { colors: LABEL_COLOR, fontSize, fontFamily: FONT, fontWeight: 400 };
+    }
+
+    function options(data: Series, isCumulative: boolean): ApexCharts.ApexOptions {
+      const categories = data.points.map((point) => bucketLabel(point.at, data.bucket));
+      const kept = data.points.map((point) => point.net / 100);
+      const values = isCumulative ? runningTotal(kept) : kept;
+
+      const amount = (major: number) => formatMoney(Math.round(major * 100), data.currency);
+
+      // Spread rather than set to undefined: ApexCharts assigns these over its
+      // own defaults, so an explicit undefined leaves stroke/markers unset.
+      const mode: ApexCharts.ApexOptions = isCumulative
+        ? {
+            stroke: { curve: "straight", width: 2 },
+            markers: { size: 0, hover: { size: 4 } },
+          }
+        : {};
+
+      return {
+        chart: {
+          height: 300,
+          type: isCumulative ? "line" : "bar",
+          toolbar: { show: false },
+          zoom: { enabled: false },
+        },
+        series: [{ name: copy.kept, data: values }],
+        colors: [KEPT_COLOR],
+        fill: { type: "solid" },
+        ...mode,
+        plotOptions: { bar: { horizontal: false, columnWidth: "70%" } },
+        legend: { show: false },
+        dataLabels: { enabled: false },
+        xaxis: {
+          type: "category",
+          categories,
+          labels: { show: false },
+          axisTicks: { show: false },
+          axisBorder: { show: false },
+        },
+        yaxis: {
+          labels: {
+            align: "right",
+            minWidth: 0,
+            maxWidth: 140,
+            style: axisLabelStyle("12px"),
+            formatter: (value: number) => short(value),
+          },
+        },
+        tooltip: {
+          custom: ({ dataPointIndex }: { dataPointIndex: number }) =>
+            tooltip(categories[dataPointIndex] ?? "", [
+              { name: copy.kept, color: KEPT_COLOR, value: amount(values[dataPointIndex] ?? 0) },
+            ]),
+        },
+        grid: { strokeDashArray: 2, borderColor: GRID_COLOR },
+        responsive: [
+          {
+            breakpoint: 568,
+            options: {
+              chart: { height: 280 },
+              yaxis: {
+                labels: {
+                  style: axisLabelStyle("11px"),
+                  formatter: (value: number) => short(value),
+                },
+              },
+            },
+          },
+        ],
+      };
+    }
+
+    const draw = (): void => {
+      if (!latest) return;
+      chart?.destroy();
+      chart = new ApexCharts(mount, options(latest, cumulative.checked));
+      void chart.render();
+    };
+
+    const load = async (): Promise<void> => {
+      const { data, error } = await api.api.donations.earnings.series.get({
+        query: { period: periodSelect.value as Period },
+      });
+      // Elysia's inferred type unions the error returns with the success body.
+      const body = data as Series | undefined;
+
+      if (error || !body) {
+        failure.hidden = false;
+        keptValue.textContent = "–";
+        keptDelta.replaceChildren();
+        chart?.destroy();
+        chart = null;
+        latest = null;
+        return;
+      }
+
+      failure.hidden = true;
+      latest = body;
+
+      const kept = body.points.reduce((total, point) => total + point.net, 0);
+      keptValue.textContent = formatMoney(kept, body.currency);
+      renderDelta(keptDelta, kept, body.previous);
+
+      draw();
+    };
+
+    periodSelect.addEventListener("change", () => void load());
+    cumulative.addEventListener("change", () => draw());
+
+    await load();
+  })();
+</script>
+
+<style is:global>
+  /* ApexCharts styles its own tooltip container as a white bordered card, and
+     the markup we hand it is already one, so the container drew a second box
+     behind ours. Scoped to the chart so no other Preline tooltip is affected. */
+  #qj-home-chart .apexcharts-tooltip {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  #qj-home-chart .apexcharts-tooltip-arrow {
+    display: none;
+  }
+</style>
