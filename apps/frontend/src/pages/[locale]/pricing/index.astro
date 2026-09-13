@@ -12,11 +12,13 @@ import {
   RATES_CHECKED,
   rateFor,
 } from "@/lib/fees";
+import { localizedPath } from "@/lib/links";
 
 export { getStaticPaths } from "@/lib/locale-paths";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const page = copy.pricingPage;
+const comparePath = localizedPath("/compare/", Astro.currentLocale ?? "en");
 
 const defaultAmount = 5;
 const defaultMethod = rateFor("card");
@@ -301,10 +303,11 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
         <button
           type="button"
           data-auth-mode="signup"
+          data-dashboard-label={copy.nav.dashboard}
           class="cursor-pointer rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
           {page.closing.cta}
         </button>
-        <a href="/compare/" class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
+        <a href={comparePath} class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
           {page.closing.secondary} →
         </a>
       </div>
@@ -373,10 +376,4 @@ if (root) {
   render();
 }
 
-document.querySelectorAll("[data-auth-mode]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const mode = btn.getAttribute("data-auth-mode") as "login" | "signup";
-    window.__quietjarAuthOpen?.(mode);
-  });
-});
 </script>

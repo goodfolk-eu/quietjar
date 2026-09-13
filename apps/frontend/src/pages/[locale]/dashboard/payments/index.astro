@@ -152,7 +152,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
 <script>
   import { currencyForCountry } from "@quietjar/backend/currency";
   import { api } from "@/lib/api";
-
+  import { rememberSiteKey } from "@/lib/session";
   type StepKey = "identity" | "ideal" | "payouts";
   type StepState = "todo" | "pending" | "done" | "unavailable";
   type StepIssue = "verificationFailed" | "invalidInformation" | "needsAttention";
@@ -493,6 +493,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
 
     const site = (await api.api.sites.current.get()).data?.site;
     if (site) {
+      rememberSiteKey(site.publicKey);
       details.country = site.country ?? "";
       details.entityType = site.entityType ?? "individual";
       details.currency = site.currency;

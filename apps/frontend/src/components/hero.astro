@@ -22,6 +22,7 @@ const hero = copy.hero;
           <div class="mt-2 flex flex-wrap items-center gap-5">
             <button
               data-auth-mode="signup"
+              data-dashboard-label={copy.nav.dashboard}
               type="button"
               class="cursor-pointer rounded-sm bg-qj-accent px-[26px] py-[15px] text-center text-[15px] font-semibold text-white transition hover:bg-qj-accent-alt">
               {hero.ctaPrimary}
@@ -79,11 +80,3 @@ const hero = copy.hero;
   }
 </style>
 
-<script>
-document.querySelectorAll("[data-auth-mode]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const mode = btn.getAttribute("data-auth-mode") as "login" | "signup";
-    window.__quietjarAuthOpen?.(mode);
-  });
-});
-</script>

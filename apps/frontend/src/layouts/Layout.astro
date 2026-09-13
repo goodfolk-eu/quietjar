@@ -61,5 +61,28 @@ const structuredData = {
         content-visibility: auto;
       }
     </style>
+    <script>
+      import { hasSessionCookie } from "@/lib/session";
+      import { localizedPath } from "@/lib/links";
+
+      // The client script has no Astro.currentLocale, so it reads the locale
+      // off the page - the same value Astro rendered into <html lang="...">.
+      const dashboardPath = localizedPath("/dashboard/", document.documentElement.lang);
+
+      document.querySelectorAll<HTMLButtonElement>("[data-auth-mode]").forEach((btn) => {
+        if (hasSessionCookie()) {
+          const label = btn.dataset.dashboardLabel;
+          if (label) btn.textContent = label;
+        }
+        btn.addEventListener("click", () => {
+          if (hasSessionCookie()) {
+            window.location.href = dashboardPath;
+            return;
+          }
+          const mode = btn.getAttribute("data-auth-mode") as "login" | "signup";
+          window.__quietjarAuthOpen?.(mode);
+        });
+      });
+    </script>
   </body>
 </html>

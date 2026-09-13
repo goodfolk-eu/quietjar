@@ -3,15 +3,203 @@
     "eyebrow": "For developers",
     "title": "A support button for your docs site.",
     "sub": "One script tag. No layout shift. It steps back after someone gives.",
-    "snippet": "<script src=\"https://quietjar.com/js/latest/quietjar.js\"></script>\n<div data-quietjar=\"you\"></div>",
+    "snippet": "<script>\n  window.QuietJar = {\n    \"site\": \"qj_your_site_id\",\n    \"currency\": \"eur\",\n    \"amounts\": [3, 5, 10],\n    \"labels\": {\n      \"headline\": \"Support this site\",\n      \"body\": \"Enjoying the docs? Buy us a coffee.\",\n      \"action\": \"Tip\"\n    },\n    \"style\": { \"color\": \"#0369a1\", \"font\": \"rounded\" },\n    \"close\": { \"enabled\": true, \"after\": \"session\" },\n    \"position\": { \"corner\": \"bottom-right\" }\n  };\n</script>\n<script src=\"https://quietjar.com/js/latest/quietjar.js\" async></script>",
     "install": {
       "title": "Install",
       "steps": [
-        "Add the script to your page.",
-        "Place the div where the button should live.",
-        "Pick a style in the dashboard."
+        "Copy the snippet and paste it into your page's HTML.",
+        "Fill in your site id from the dashboard. If you are logged in on this site, it is already filled in.",
+        "Adjust the settings below. Every one of them has a default, so the snippet works as pasted."
       ],
-      "frameworks": "Plain HTML shown here. Astro, Hugo, Docusaurus, and VitePress work the same way: the script goes in the layout, the div in the page."
+      "frameworks": "Plain HTML shown here. Astro, Hugo, Docusaurus, and VitePress work the same way: the snippet goes in the layout or in the page.",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "settings": {
+      "title": "Settings reference",
+      "intro": "The widget reads its settings from a window.QuietJar object on the page, before the script tag loads. Every setting has a default; site is the only one with a visible consequence when it is missing.",
+      "siteNote": "Logged in on this site? Your own site id is filled into the snippet above. Your personalized snippet is also on the widget page in the dashboard.",
+      "columns": {
+        "setting": "Setting",
+        "type": "Type",
+        "required": "Required",
+        "default": "Default",
+        "description": "What it does"
+      },
+      "rows": [
+        {
+          "name": "site",
+          "type": "string",
+          "required": "yes",
+          "default": "—",
+          "description": "Your public site key from the dashboard. Without it the widget renders, but the checkout cannot take payments."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": "no",
+          "default": "eur",
+          "description": "ISO 4217 three-letter code, case-insensitive. The bounds and preset amounts follow the currency. An unknown code falls back to eur."
+        },
+        {
+          "name": "goal",
+          "type": "string",
+          "required": "no",
+          "default": "—",
+          "description": "A goal id from the dashboard. When set, the card renders a progress meter for it."
+        },
+        {
+          "name": "amounts",
+          "type": "number[]",
+          "required": "no",
+          "default": "per-currency presets",
+          "description": "Amounts offered in the checkout, in major units. At most 4 are kept, deduplicated and sorted. Entries that are not finite numbers or sit outside the currency's bounds are dropped; if none survive, the presets are used."
+        },
+        {
+          "name": "labels.headline",
+          "type": "string",
+          "required": "no",
+          "default": "—",
+          "description": "The button label. When unset, the widget renders as an icon-only pill whose accessible name falls back to \"Support this site\"."
+        },
+        {
+          "name": "labels.body",
+          "type": "string",
+          "required": "no",
+          "default": "—",
+          "description": "The card body. When set, the widget renders as a card with a headline and an action button instead of a pill button."
+        },
+        {
+          "name": "labels.icon",
+          "type": "string",
+          "required": "no",
+          "default": "piggy",
+          "description": "The icon on the button: any text glyph, or piggy for the pig mark. An empty string removes the icon. A value longer than 8 characters falls back to the default."
+        },
+        {
+          "name": "labels.action",
+          "type": "string",
+          "required": "no",
+          "default": "Tip",
+          "description": "The card's action button label."
+        },
+        {
+          "name": "labels.close",
+          "type": "string",
+          "required": "no",
+          "default": "Dismiss",
+          "description": "The accessible name of the close control."
+        },
+        {
+          "name": "labels.thanks",
+          "type": "string",
+          "required": "no",
+          "default": "Thank you for your support",
+          "description": "Shown in the checkout once a tip succeeds."
+        },
+        {
+          "name": "labels.other",
+          "type": "string",
+          "required": "no",
+          "default": "Other",
+          "description": "The label of the free-entry amount option."
+        },
+        {
+          "name": "labels.minimize",
+          "type": "string",
+          "required": "no",
+          "default": "Minimize",
+          "description": "The accessible name of the control that collapses the checkout."
+        },
+        {
+          "name": "style.color",
+          "type": "string",
+          "required": "no",
+          "default": "#0369a1",
+          "description": "The accent color as a hex value: #rgb, #rgba, #rrggbb or #rrggbbaa. Anything else falls back to the default."
+        },
+        {
+          "name": "style.font",
+          "type": "string",
+          "required": "no",
+          "default": "rounded",
+          "description": "One of system, serif, rounded, mono or inherit. inherit uses the page's own font stack. Anything else falls back to rounded."
+        },
+        {
+          "name": "style.css",
+          "type": "string",
+          "required": "no",
+          "default": "—",
+          "description": "Raw CSS appended after the widget's own stylesheet, for overrides the settings above cannot express."
+        },
+        {
+          "name": "close.enabled",
+          "type": "boolean",
+          "required": "no",
+          "default": "true",
+          "description": "Whether the close control visitors can use to dismiss the widget is shown."
+        },
+        {
+          "name": "close.after",
+          "type": "string",
+          "required": "no",
+          "default": "session",
+          "description": "What a visitor closing the widget does to its visibility. session: hidden until the next visit. days: hidden for close.days. never: reappears on the next page load. forever: never shown again. Anything else falls back to session."
+        },
+        {
+          "name": "close.days",
+          "type": "number",
+          "required": "no",
+          "default": "7",
+          "description": "Days hidden after closing. Only used when close.after is days. A whole number of one or more; anything else falls back to 7."
+        },
+        {
+          "name": "donation.hideDays",
+          "type": "number",
+          "required": "no",
+          "default": "30",
+          "description": "Days hidden after a completed donation, so the widget does not ask again right away. Same whole-number rule as close.days."
+        },
+        {
+          "name": "position.corner",
+          "type": "string",
+          "required": "no",
+          "default": "bottom-right",
+          "description": "Where the widget floats: bottom-right, bottom-center, bottom-left, top-right, top-center or top-left. Anything else falls back to bottom-right."
+        },
+        {
+          "name": "mount.target",
+          "type": "string or HTMLElement",
+          "required": "no",
+          "default": "—",
+          "description": "A CSS selector or element the widget mounts into, inside the page's flow, instead of floating in the fixed corner. Invalid or missing falls back to the corner."
+        }
+      ],
+      "examplesTitle": "Examples",
+      "examples": [
+        {
+          "name": "amounts",
+          "line": "amounts: [3, 5, 10] offers three preset buttons in the checkout, shown in the site's currency."
+        },
+        {
+          "name": "close.after",
+          "line": "close.after: \"days\" with close.days: 7 hides the widget for a week after a visitor dismisses it."
+        },
+        {
+          "name": "labels.icon",
+          "line": "labels.icon: \"☕\" puts a coffee cup on the button. labels.icon: \"\" removes the icon entirely."
+        },
+        {
+          "name": "position.corner",
+          "line": "position.corner: \"bottom-center\" floats the widget at the bottom center of the viewport."
+        },
+        {
+          "name": "mount.target",
+          "line": "mount.target: \"#donate-slot\" places the widget inline inside that element instead of the floating corner."
+        }
+      ],
+      "invalidTitle": "Invalid and missing values",
+      "invalid": "Nothing fails loudly. Every setting falls back to the default listed above when it is missing or invalid, and unusable amounts entries are dropped rather than shown. The only value with visible consequences when missing is site: the widget renders, but the checkout cannot take payments."
     },
     "performance": {
       "title": "Performance",

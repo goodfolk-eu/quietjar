@@ -15,6 +15,7 @@ const cta = copy.cta;
     </p>
     <div class="mt-1.5 flex flex-col items-center gap-3.5 sm:flex-row">
       <button type="button" data-auth-mode="signup"
+      data-dashboard-label={copy.nav.dashboard}
         class="cursor-pointer rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
         {cta.primary}
       </button>
@@ -24,12 +25,3 @@ const cta = copy.cta;
     </div>
   </div>
 </section>
-
-<script>
-document.querySelectorAll("[data-auth-mode]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const mode = btn.getAttribute("data-auth-mode") as "login" | "signup";
-    window.__quietjarAuthOpen?.(mode);
-  });
-});
-</script>

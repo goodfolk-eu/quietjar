@@ -1,8 +1,10 @@
 ---
 import { dictionary } from "@/i18n/t";
+import { localizedPath } from "@/lib/links";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const pricing = copy.pricing;
+const pricingPath = localizedPath("/pricing/", Astro.currentLocale ?? "en");
 ---
 
 <section id="pricing">
@@ -23,11 +25,12 @@ const pricing = copy.pricing;
         <span class="text-[16px] text-white/72">{pricing.planPriceNote}</span>
       </div>
       <p class="max-w-[38ch] text-[15px] leading-[1.6] text-white/80">{pricing.note}</p>
-      <a href="/[locale]/pricing/" class="self-start text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
+      <a href={pricingPath} class="self-start text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
         {pricing.link} →
       </a>
       <button
         data-auth-mode="signup"
+        data-dashboard-label={copy.nav.dashboard}
         type="button"
         class="mt-1 cursor-pointer self-start rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
         {pricing.cta}
@@ -36,11 +39,3 @@ const pricing = copy.pricing;
   </div>
 </section>
 
-<script>
-document.querySelectorAll("[data-auth-mode]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const mode = btn.getAttribute("data-auth-mode") as "login" | "signup";
-    window.__quietjarAuthOpen?.(mode);
-  });
-});
-</script>
