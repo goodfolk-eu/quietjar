@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
 import { auth } from "../auth";
+import { registerWalletDomains, stripeConfigFromEnv } from "../stripe/client";
 import { getConnectionByUserId } from "../stripe/store";
 import {
   type Country,
@@ -93,6 +94,12 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
       const entityType = connection ? site.entityType : (body.entityType as EntityType | null);
 
       await updateSite(userId, { currency: body.currency, siteUrl, country, entityType });
+
+      // A creator who moves their widget to another domain would otherwise
+      // keep the old domain's wallets and get none on the new one.
+      const config = stripeConfigFromEnv();
+      if (connection && config) await registerWalletDomains(config, connection.accountId, siteUrl);
+
       return {
         site: {
           publicKey: site.publicKey,

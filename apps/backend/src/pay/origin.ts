@@ -24,15 +24,34 @@ function parseOrigin(value: string): URL | null {
   }
 }
 
+const twinHostname = (hostname: string): string =>
+  hostname.startsWith("www.") ? hostname.slice(4) : `www.${hostname}`;
+
 /** The registered origin plus its www/apex twin, which visitors reach interchangeably. */
 export function allowedOrigins(siteUrl: string | null): string[] {
   if (!siteUrl) return [];
   const url = parseOrigin(siteUrl);
   if (!url) return [];
 
-  const twin = url.hostname.startsWith("www.") ? url.hostname.slice(4) : `www.${url.hostname}`;
   const port = url.port === "" ? "" : `:${url.port}`;
-  return [`${url.protocol}//${url.hostname}${port}`, `${url.protocol}//${twin}${port}`];
+  return [
+    `${url.protocol}//${url.hostname}${port}`,
+    `${url.protocol}//${twinHostname(url.hostname)}${port}`,
+  ];
+}
+
+/**
+ * The hostnames to register with Stripe so wallets appear in the payment
+ * sheet. Stripe hides Apple Pay, Google Pay and Link until the domain showing
+ * the Payment Element is registered, and it matches on the hostname alone, so
+ * both the www and apex spellings need registering for the same reason
+ * `allowedOrigins` accepts both.
+ */
+export function walletDomains(siteUrl: string | null): string[] {
+  if (!siteUrl) return [];
+  const url = parseOrigin(siteUrl);
+  if (!url) return [];
+  return [url.hostname, twinHostname(url.hostname)];
 }
 
 export function isAllowedOrigin(

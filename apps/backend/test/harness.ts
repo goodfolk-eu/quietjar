@@ -50,7 +50,7 @@ export const stripeState = {
   throwOnLink: null as Error | null,
   missingAccount: false,
   /** What the fake charge's balance transaction nets down to. Null = unknown. */
-  chargeNet: null as number | null,
+  chargeAmounts: null as { net: number | null; applicationFee: number | null } | null,
   /** The event constructWebhookEvent hands to the webhook route. */
   webhookEvent: null as Record<string, unknown> | null,
   /** The checkout session Stripe answers with on a status lookup. */
@@ -96,6 +96,9 @@ mock.module("../src/stripe/client", () => ({
     record("retrieveAccount", { accountId });
     return account();
   },
+  registerWalletDomains: async (_config: unknown, accountId: string, siteUrl: string | null) => {
+    record("registerWalletDomains", { accountId, siteUrl });
+  },
   requestIdealCapability: async (_config: unknown, accountId: string) => {
     record("requestIdealCapability", { accountId });
     return account();
@@ -109,9 +112,9 @@ mock.module("../src/stripe/client", () => ({
     record("createLoginLink", { accountId });
     return stripeState.loginUrl;
   },
-  chargeNet: async (_config: unknown, accountId: string, paymentIntentId: string) => {
-    record("chargeNet", { accountId, paymentIntentId });
-    return stripeState.chargeNet;
+  chargeAmounts: async (_config: unknown, accountId: string, paymentIntentId: string) => {
+    record("chargeAmounts", { accountId, paymentIntentId });
+    return stripeState.chargeAmounts ?? { net: null, applicationFee: null };
   },
   constructWebhookEvent: async () => {
     if (stripeState.webhookEvent === null) throw new Error("not used");
@@ -131,7 +134,7 @@ export function resetStripe(): void {
   stripeState.throwOnCreate = null;
   stripeState.throwOnLink = null;
   stripeState.missingAccount = false;
-  stripeState.chargeNet = null;
+  stripeState.chargeAmounts = null;
   stripeState.webhookEvent = null;
   stripeState.donationSession = null;
 }

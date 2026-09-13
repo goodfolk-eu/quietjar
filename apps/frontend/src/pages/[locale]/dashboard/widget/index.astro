@@ -70,7 +70,11 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
 <DashboardLayout title={widget.title}>
   <Container>
-    <p class="text-sm text-gray-600">{widget.intro}</p>
+    <p class="text-sm text-gray-600">
+      {widget.intro}&nbsp;
+      {widget.embedSettingsHint}&nbsp;
+      <a href={developersPath} class="font-semibold text-qj-green-deep transition hover:text-gray-800">{widget.embedSettingsLink}</a>.
+    </p>
 
     <div
       id="qj-widget-settings"

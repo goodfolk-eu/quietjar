@@ -215,9 +215,7 @@
         { "name": "Apple Pay", "line": "Appears on iPhone, iPad, and Mac. One tap with Face ID." },
         { "name": "Google Pay", "line": "Appears in Chrome and on Android. One tap, no forms." },
         { "name": "Cards", "line": "Visa, Mastercard, Amex. The fallback that always works." },
-        { "name": "iDEAL", "line": "For visitors with a Dutch bank. They pay in their own banking app." },
-        { "name": "Bancontact", "line": "For visitors in Belgium. Their own bank, their own app." },
-        { "name": "SEPA", "line": "Bank transfer for the rest of Europe, for the amounts cards make awkward." }
+        { "name": "iDEAL", "line": "For visitors with a Dutch bank. They pay in their own banking app." }
       ]
     },
     "goals": {

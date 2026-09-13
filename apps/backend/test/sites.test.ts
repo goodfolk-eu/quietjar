@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { json, request, resetStripe, session } from "./harness";
+import { calledWith, json, request, resetStripe, session } from "./harness";
 
 const { ensureSchema } = await import("../src/schema");
 const { libsqlClient } = await import("../src/db");
@@ -161,6 +161,25 @@ describe("PUT /api/sites/current", () => {
     const site = body.site as Record<string, unknown>;
     expect(site.country).toBe("NL");
     expect(site.entityType).toBe("individual");
+  });
+
+  // Stripe hides wallets until the domain showing the Payment Element is
+  // registered on the connected account.
+  test("registers the new domain for wallets when the URL changes", async () => {
+    await get();
+    await createConnection({ userId: "user_1", accountId: "acct_test" });
+    await put(payload({ siteUrl: "other.example" }));
+
+    expect(calledWith("registerWalletDomains")).toEqual({
+      accountId: "acct_test",
+      siteUrl: "https://other.example",
+    });
+  });
+
+  test("does not reach for Stripe before an account exists", async () => {
+    await get();
+    await put(payload());
+    expect(calledWith("registerWalletDomains")).toBeUndefined();
   });
 
   test("still allows currency and site URL to change after connecting", async () => {

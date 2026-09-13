@@ -56,10 +56,10 @@ describe("payment container", () => {
     trigger.click();
 
     const submit = panel.querySelector<HTMLButtonElement>(".quietjar-panel__submit");
-    expect(submit?.textContent).toBe("Support €3");
-
-    panel.querySelectorAll<HTMLButtonElement>(".quietjar-panel__amount")[1].click();
     expect(submit?.textContent).toBe("Support €7");
+
+    panel.querySelectorAll<HTMLButtonElement>(".quietjar-panel__amount")[0].click();
+    expect(submit?.textContent).toBe("Support €3");
   });
 
   test("the other option reveals a free-entry field and waits for a value", () => {

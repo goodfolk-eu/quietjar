@@ -9,6 +9,7 @@ import {
   createLoginLink,
   createOnboardingLink,
   isMissingAccount,
+  registerWalletDomains,
   requestIdealCapability,
   retrieveAccount,
   stripeConfigFromEnv,
@@ -65,6 +66,9 @@ async function syncOnboarding(accountId: string, userId: string) {
     idealEligible: supportsIdeal(site?.country),
   });
   await saveOnboarding(accountId, onboarding);
+  // The usual order is site URL first, account second, so this is where most
+  // creators get their domain registered for wallets.
+  await registerWalletDomains(config, accountId, site?.siteUrl ?? null);
   return onboarding;
 }
 
@@ -117,6 +121,10 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
           accountId,
           deriveOnboarding(account, { idealEligible: supportsIdeal(site.country) }),
         );
+        // The site URL is known to exist by now, so the wallets are ready
+        // before the creator takes their first payment rather than after
+        // whichever status refresh happens to come first.
+        await registerWalletDomains(config, accountId, site.siteUrl);
       } catch (err) {
         console.error("[stripe/connect] account creation failed:", err);
         set.status = 502;

@@ -1,7 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { applicationFee } from "../src/stripe/client";
 import { isValidAmount, RateLimiter } from "../src/pay/limits";
-import { isAllowedOrigin, isAllowedReturnUrl, returnUrlWithMarker } from "../src/pay/origin";
+import {
+  isAllowedOrigin,
+  isAllowedReturnUrl,
+  returnUrlWithMarker,
+  walletDomains,
+} from "../src/pay/origin";
 import { normalizeSiteUrl } from "../src/sites/url";
 
 const live = { allowLocalhost: false };
@@ -177,5 +182,24 @@ describe("returnUrlWithMarker", () => {
     expect(returnUrlWithMarker("https://example.com/?qj_donation=cs_old")).toBe(
       "https://example.com/?qj_donation={CHECKOUT_SESSION_ID}",
     );
+  });
+});
+
+describe("walletDomains", () => {
+  test("registers both the apex and the www spelling", () => {
+    expect(walletDomains("https://example.com")).toEqual(["example.com", "www.example.com"]);
+    expect(walletDomains("https://www.example.com")).toEqual(["www.example.com", "example.com"]);
+  });
+
+  test("keeps a subdomain as it is, alongside its www twin", () => {
+    expect(walletDomains("https://blog.example.com")).toEqual([
+      "blog.example.com",
+      "www.blog.example.com",
+    ]);
+  });
+
+  test("has nothing to register without a usable site URL", () => {
+    expect(walletDomains(null)).toEqual([]);
+    expect(walletDomains("not a url")).toEqual([]);
   });
 });

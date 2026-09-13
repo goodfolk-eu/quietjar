@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { calledWith, json, request, resetStripe, session, stripeState } from "./harness";
+import { getDonationBySessionId } from "../src/pay/store";
 
 // The harness sets the database URL and registers mock.module replacements
 // before any src module loads; static imports would hoist past that setup.
@@ -459,10 +460,13 @@ describe("POST /api/stripe/webhook", () => {
   }
 
   test("records the donation with the supporter's email and the charge's net", async () => {
-    stripeState.chargeNet = 890;
+    stripeState.chargeAmounts = { net: 890, applicationFee: 110 };
     const { status } = await postWebhook(donationEvent());
     expect(status).toBe(200);
-    expect(calledWith("chargeNet")).toEqual({ accountId: "acct_test", paymentIntentId: expect.any(String) });
+    expect(calledWith("chargeAmounts")).toEqual({
+      accountId: "acct_test",
+      paymentIntentId: expect.any(String),
+    });
 
     const { body } = await listed();
     const donations = body.donations as Array<Record<string, unknown>>;
@@ -472,8 +476,19 @@ describe("POST /api/stripe/webhook", () => {
     expect((await earnings("all")).body.net).toBe(890);
   });
 
-  test("a failed net lookup still records the donation", async () => {
-    stripeState.chargeNet = null;
+  // The fee the pricing scheme charged is the one we report, not our own rate:
+  // it carries Stripe's processing cost, which the creator absorbs.
+  test("records the fee Stripe settled rather than a recomputed one", async () => {
+    stripeState.chargeAmounts = { net: 890, applicationFee: 110 };
+    const event = donationEvent();
+    await postWebhook(event);
+
+    const sessionId = (event.data as { object: { id: string } }).object.id;
+    expect((await getDonationBySessionId(sessionId))?.applicationFee).toBe(110);
+  });
+
+  test("a failed lookup still records the donation, falling back to our own rate", async () => {
+    stripeState.chargeAmounts = null;
     await postWebhook(donationEvent());
     expect((await earnings("all")).body.net).toBe(950);
   });

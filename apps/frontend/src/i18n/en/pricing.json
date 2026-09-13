@@ -23,10 +23,10 @@
       "customLabel": "Other amount",
       "methodLabel": "Payment method",
       "methods": {
-        "card": "Card",
-        "ideal": "iDEAL",
-        "wallet": "Apple Pay or Google Pay",
-        "sepa": "SEPA"
+        "card": "EEA card or wallet",
+        "cardUk": "UK card or wallet",
+        "cardInternational": "Non-EEA card or wallet",
+        "ideal": "iDEAL"
       },
       "rows": {
         "pays": "Your supporter pays",
@@ -68,7 +68,7 @@
       "items": [
         {
           "q": "Which payment methods can my supporters use?",
-          "a": "Cards, Apple Pay, Google Pay, iDEAL, and SEPA. Your supporters see the method they already use, not an unfamiliar form."
+          "a": "Cards, Apple Pay, Google Pay, and iDEAL. Your supporters see the method they already use, not an unfamiliar form."
         },
         {
           "q": "When does the money arrive?",

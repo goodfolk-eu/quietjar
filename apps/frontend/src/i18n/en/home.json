@@ -44,7 +44,7 @@
   },
   "logos": {
     "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
-    "methods": ["Apple Pay", "Visa", "Mastercard", "Amex", "iDEAL", "Bancontact", "SEPA"],
+    "methods": ["Apple Pay", "Google Pay", "Visa", "Mastercard", "Amex", "iDEAL"],
     "moreLabel": "+ Local methods"
   },
   "polite": {
@@ -129,7 +129,7 @@
       },
       {
         "q": "What payment methods can my supporters use?",
-        "a": "Apple Pay, Google Pay, cards, iDEAL, Bancontact, and SEPA. Your visitors see the method they already use, not a card form."
+        "a": "Apple Pay, Google Pay, cards, and iDEAL. Your visitors see the method they already use, not a card form."
       },
       {
         "q": "Will my visitors trust paying on my site?",

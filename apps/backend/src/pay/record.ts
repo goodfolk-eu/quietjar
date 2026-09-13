@@ -1,7 +1,7 @@
 import type Stripe from "stripe";
 import { goalForSite } from "../goals/store";
 import { getSiteByPublicKey } from "../sites/store";
-import { applicationFee, chargeNet, stripeConfigFromEnv } from "../stripe/client";
+import { applicationFee, chargeAmounts, stripeConfigFromEnv } from "../stripe/client";
 import { recordDonation } from "./store";
 
 /**
@@ -28,12 +28,14 @@ export async function recordCompletedDonation(
   const goalId = session.metadata?.quietjar_goal;
   const goal = goalId ? await goalForSite(goalId, site.id) : null;
 
-  // When Stripe is slow or the net cannot be read, the row still records and
-  // the dashboard falls back to gross minus our fee for it.
+  // The settled figures are read back rather than computed: the platform
+  // pricing scheme sizes the fee by payment method, so the amount alone does
+  // not say what we took. When Stripe is slow or the charge cannot be read the
+  // row still records, falling back to our own rate for reporting.
   const config = stripeConfigFromEnv();
-  const net =
+  const settled =
     config && typeof session.payment_intent === "string"
-      ? await chargeNet(config, accountId, session.payment_intent).catch(() => null)
+      ? await chargeAmounts(config, accountId, session.payment_intent).catch(() => null)
       : null;
 
   await recordDonation({
@@ -43,9 +45,9 @@ export async function recordCompletedDonation(
     paymentIntentId: typeof session.payment_intent === "string" ? session.payment_intent : null,
     amount: session.amount_total,
     currency: session.currency,
-    applicationFee: applicationFee(session.amount_total),
+    applicationFee: settled?.applicationFee ?? applicationFee(session.amount_total),
     email: session.customer_details?.email ?? null,
-    net,
+    net: settled?.net ?? null,
     goalId: goal?.id ?? null,
   });
 }

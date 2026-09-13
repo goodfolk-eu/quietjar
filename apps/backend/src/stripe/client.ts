@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { returnUrlWithMarker } from "../pay/origin";
+import { returnUrlWithMarker, walletDomains } from "../pay/origin";
 
 export interface StripeConfig {
   secretKey: string;
@@ -154,16 +154,24 @@ export async function createLoginLink(config: StripeConfig, accountId: string): 
   return link.url;
 }
 
+export interface ChargeAmounts {
+  /** What the creator keeps, after our fee. */
+  net: number | null;
+  /** The fee we actually collected, which the pricing scheme decides. */
+  applicationFee: number | null;
+}
+
 /**
- * What the creator keeps from a direct charge. The connected account's balance
- * transaction nets the gross amount down by our application fee and Stripe's
- * own processing cost, which is the only place that cost is stated.
+ * What a direct charge settled to. Both figures come from the connected
+ * account's balance transaction, which is the only place they are stated:
+ * the application fee is sized by the platform pricing scheme rather than by
+ * us, so it cannot be recomputed from the amount.
  */
-export async function chargeNet(
+export async function chargeAmounts(
   config: StripeConfig,
   accountId: string,
   paymentIntentId: string,
-): Promise<number | null> {
+): Promise<ChargeAmounts> {
   const intent = await stripeClient(config).paymentIntents.retrieve(
     paymentIntentId,
     { expand: ["latest_charge.balance_transaction"] },
@@ -172,7 +180,8 @@ export async function chargeNet(
   const charge = typeof intent.latest_charge === "object" ? intent.latest_charge : null;
   const transaction =
     charge && typeof charge.balance_transaction === "object" ? charge.balance_transaction : null;
-  return transaction?.net ?? null;
+  const fee = transaction?.fee_details.find((detail) => detail.type === "application_fee");
+  return { net: transaction?.net ?? null, applicationFee: fee?.amount ?? null };
 }
 
 /**
@@ -196,6 +205,35 @@ export async function retrieveDonationSession(
   }
 }
 
+/**
+ * Registers the creator's site with Stripe so wallets can appear in the
+ * payment sheet. Without this Apple Pay, Google Pay and Link are hidden and
+ * the supporter only ever sees cards and iDEAL.
+ *
+ * The registration belongs to the connected account, because a direct charge
+ * makes the creator the merchant of record. Creating a domain that already
+ * exists returns the existing one, so this is safe to call on every sync, and
+ * a failure is only ever a missing wallet -- never a blocked payment -- so it
+ * is logged rather than raised.
+ */
+export async function registerWalletDomains(
+  config: StripeConfig,
+  accountId: string,
+  siteUrl: string | null,
+): Promise<void> {
+  const client = stripeClient(config);
+  for (const domain of walletDomains(siteUrl)) {
+    try {
+      await client.paymentMethodDomains.create(
+        { domain_name: domain },
+        { stripeAccount: accountId },
+      );
+    } catch (err) {
+      console.error(`[stripe/wallets] could not register ${domain}:`, err);
+    }
+  }
+}
+
 export async function constructWebhookEvent(
   config: StripeConfig,
   payload: string,
@@ -214,7 +252,13 @@ export function isTestMode(config: StripeConfig): boolean {
   return config.secretKey.startsWith("sk_test_") || config.secretKey.startsWith("rk_test_");
 }
 
-/** QuietJar's share of a donation, in basis points. */
+/**
+ * QuietJar's share of a donation, in basis points.
+ *
+ * Stripe's platform pricing scheme is what actually charges the fee, so this
+ * is only a fallback for reporting when the settled fee cannot be read back.
+ * Keep it in step with the scheme's default rule.
+ */
 export const FEE_BPS = 500;
 
 export function applicationFee(amountInMinorUnits: number): number {
@@ -262,10 +306,10 @@ export async function createDonationSession(
           },
         },
       ],
-      payment_intent_data: {
-        application_fee_amount: applicationFee(input.amount),
-        metadata,
-      },
+      // No application_fee_amount: an explicit fee overrides the platform
+      // pricing scheme, and the scheme is what adds Stripe's processing cost
+      // to our own 5% so the creator absorbs it, as the pricing page promises.
+      payment_intent_data: { metadata },
       metadata,
       return_url: returnUrlWithMarker(input.returnUrl),
     },

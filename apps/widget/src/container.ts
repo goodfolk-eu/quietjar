@@ -103,7 +103,9 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
 
   let open = false;
   let donated = false;
-  let amount = config.amounts[0];
+  // The middle preset is the default: the first reads as the cheap-out option,
+  // and anchoring one step up nudges the typical tip without forcing it.
+  let amount = config.amounts[1] ?? config.amounts[0];
   const mountedElements: StripeElement[] = [];
   const lightMounts: HTMLElement[] = [];
 

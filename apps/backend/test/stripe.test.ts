@@ -219,6 +219,18 @@ describe("POST /api/stripe/refresh-status", () => {
   });
 });
 
+describe("wallet domain registration", () => {
+  test("registers the site's domain when the account is connected", async () => {
+    await completeStepOne();
+    await post("/connect");
+
+    expect(calledWith("registerWalletDomains")).toEqual({
+      accountId: "acct_test",
+      siteUrl: expect.any(String),
+    });
+  });
+});
+
 describe("GET /api/stripe/connection", () => {
   test("refuses a signed-out caller", async () => {
     session.user = null;
