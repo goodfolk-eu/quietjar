@@ -7,6 +7,7 @@ import type { QuietJarConfig } from "@quietjar/widget/config";
 declare global {
   interface Window {
     __quietjarAuthOpen?: (mode: "login" | "signup" | string) => void;
+    __quietjarFeedbackOpen?: () => void;
     QuietJar?: QuietJarConfig;
   }
 }

@@ -1,4 +1,5 @@
 import enCompare from "./en/compare.json";
+import enDashboardFeedback from "./en/dashboard/feedback.json";
 import enDashboardGoals from "./en/dashboard/goals.json";
 import enDashboardHome from "./en/dashboard/home.json";
 import enDashboard from "./en/dashboard/index.json";
@@ -21,6 +22,7 @@ const dictionaries = {
     ...enDashboardGoals,
     ...enDashboardPayments,
     ...enDashboardProfile,
+    ...enDashboardFeedback,
     ...enLegal,
     ...enDevelopers,
     ...enCompare,

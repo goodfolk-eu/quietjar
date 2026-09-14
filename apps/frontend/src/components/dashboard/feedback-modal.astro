@@ -1,0 +1,142 @@
+---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const feedback = copy.feedback;
+
+const MAX_LENGTH = 4000;
+---
+
+<div
+  id="qj-feedback-overlay"
+  class="fixed inset-0 z-80 hidden items-center justify-center bg-black/40 p-4"
+  data-i18n={JSON.stringify(feedback)}
+>
+  <div class="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+    <button
+      id="qj-feedback-close"
+      type="button"
+      aria-label={feedback.close}
+      class="absolute right-4 top-4 cursor-pointer text-2xl leading-none text-slate-600 hover:text-slate-700"
+      >&times;</button
+    >
+
+    <h2 class="text-2xl font-bold text-gray-900">{feedback.title}</h2>
+    <p class="mt-1 text-sm text-slate-600">{feedback.subtitle}</p>
+
+    <form id="qj-feedback-form" class="mt-5">
+      <label for="qj-feedback-message" class="block text-sm font-medium text-gray-700">
+        {feedback.label}
+      </label>
+      <textarea
+        id="qj-feedback-message"
+        name="message"
+        rows="5"
+        required
+        maxlength={MAX_LENGTH}
+        placeholder={feedback.placeholder}
+        class="mt-1 w-full rounded-md border-2 border-gray-300 px-4 py-3 ring-gray-100 outline-hidden placeholder:text-gray-400 focus:border-gray-600 focus:ring-4"
+      ></textarea>
+
+      <p id="qj-feedback-status" class="mt-3 min-h-[1.25rem] text-sm text-red-500" role="status" aria-live="polite"></p>
+
+      <button
+        id="qj-feedback-send"
+        type="submit"
+        class="mt-1 w-full cursor-pointer rounded-sm bg-qj-green px-5 py-2.5 text-white transition hover:bg-qj-green-press disabled:pointer-events-none disabled:opacity-50"
+      >
+        {feedback.send}
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  import { api } from "@/lib/api";
+
+  const overlay = document.getElementById("qj-feedback-overlay");
+  const form = document.getElementById("qj-feedback-form") as HTMLFormElement | null;
+  const messageEl = document.getElementById("qj-feedback-message") as HTMLTextAreaElement | null;
+  const statusEl = document.getElementById("qj-feedback-status");
+  const sendEl = document.getElementById("qj-feedback-send") as HTMLButtonElement | null;
+  const closeEl = document.getElementById("qj-feedback-close") as HTMLButtonElement | null;
+
+  if (overlay && form && messageEl && statusEl && sendEl && closeEl) {
+    const box = overlay;
+    const message = messageEl;
+    const status = statusEl;
+    const send = sendEl;
+    const copy = JSON.parse(overlay.dataset.i18n ?? "{}") as {
+      send: string;
+      sending: string;
+      sent: string;
+      empty: string;
+      failed: string;
+      rateLimited: string;
+    };
+
+    function setStatus(text: string, tone: "error" | "success"): void {
+      status.textContent = text;
+      status.classList.toggle("text-red-500", tone === "error");
+      status.classList.toggle("text-green-600", tone === "success");
+    }
+
+    function open(): void {
+      message.value = "";
+      setStatus("", "error");
+      send.disabled = false;
+      send.textContent = copy.send;
+      box.classList.remove("hidden");
+      box.classList.add("flex");
+      setTimeout(() => message.focus(), 0);
+    }
+
+    function close(): void {
+      box.classList.add("hidden");
+      box.classList.remove("flex");
+    }
+
+    window.__quietjarFeedbackOpen = open;
+
+    closeEl.addEventListener("click", close);
+    overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) close();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !overlay.classList.contains("hidden")) close();
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const text = message.value.trim();
+      if (!text) {
+        setStatus(copy.empty, "error");
+        message.focus();
+        return;
+      }
+
+      send.disabled = true;
+      send.textContent = copy.sending;
+      setStatus("", "error");
+
+      const { error } = await api.api.feedback.post({
+        message: text,
+        page: window.location.pathname,
+      });
+
+      if (error) {
+        send.disabled = false;
+        send.textContent = copy.send;
+        // Widened because Eden only infers the validation status into the union.
+        const status: number = error.status;
+        setStatus(status === 429 ? copy.rateLimited : copy.failed, "error");
+        return;
+      }
+
+      send.textContent = copy.send;
+      setStatus(copy.sent, "success");
+      message.value = "";
+      setTimeout(close, 2000);
+    });
+  }
+</script>

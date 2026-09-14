@@ -2,6 +2,7 @@ import { auth } from "../auth";
 import { sendEmail } from "../email";
 import { claimDonationNotice, listPendingNotifications } from "../pay/store";
 import { formatMoney } from "../sites/currency";
+import { escapeHtml } from "./html";
 
 /**
  * How long a donation is left alone before it is announced. The supporter's
@@ -15,19 +16,6 @@ const BATCH_SIZE = 200;
 
 /** A long name would push everything useful out of an inbox's subject column. */
 const SUBJECT_NAME_LIMIT = 40;
-
-const HTML_ESCAPES: Record<string, string> = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;",
-};
-
-/** The name and message are supporter-supplied, so nothing reaches the body raw. */
-function escapeHtml(value: string): string {
-  return value.replace(/[&<>"']/g, (char) => HTML_ESCAPES[char]);
-}
 
 function frontendOrigin(): string {
   return process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";

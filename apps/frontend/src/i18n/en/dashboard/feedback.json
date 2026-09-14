@@ -1,0 +1,17 @@
+{
+  "feedback": {
+    "open": "Feedback",
+    "support": "Support",
+    "title": "Send us feedback",
+    "subtitle": "Tell us what is working, what is not, or what you need. It goes straight to our support inbox and we read every one.",
+    "label": "Your message",
+    "placeholder": "What is on your mind?",
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Thanks. We have got it and will come back to you by email.",
+    "close": "Close",
+    "empty": "Write a message first.",
+    "failed": "Could not send. Try again.",
+    "rateLimited": "That is a lot of feedback. Try again later."
+  }
+}
