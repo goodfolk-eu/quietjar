@@ -22,13 +22,53 @@ export const session: { user: { id: string; email: string } | null } = {
   user: { id: "user_1", email: "creator@example.com" },
 };
 
+export interface StoredUser {
+  id: string;
+  email: string;
+  notifyOnDonation?: boolean | null;
+}
+
+/**
+ * The BetterAuth user table, by id. Code that reads a creator's account goes
+ * through the internal adapter rather than our own SQL, so the rows it would
+ * find live here.
+ */
+export const users: Record<string, StoredUser> = {};
+
 mock.module("../src/auth", () => ({
   auth: {
     api: {
       getSession: async () => (session.user ? { user: session.user } : null),
     },
+    $context: Promise.resolve({
+      internalAdapter: {
+        findUserById: async (userId: string) => users[userId] ?? null,
+      },
+    }),
   },
 }));
+
+/** Every email the code under test asked to send, in order. */
+export const sentEmails: { to: string; subject: string; html: string }[] = [];
+
+/** Set to make the next send throw, standing in for a rejected mail API call. */
+export const emailState = { failNextSend: false };
+
+mock.module("../src/email", () => ({
+  sendEmail: async (to: string, subject: string, html: string) => {
+    if (emailState.failNextSend) {
+      emailState.failNextSend = false;
+      throw new Error("send failed");
+    }
+    sentEmails.push({ to, subject, html });
+  },
+}));
+
+export function resetEmail(): void {
+  sentEmails.length = 0;
+  emailState.failNextSend = false;
+  for (const id of Object.keys(users)) delete users[id];
+}
 
 export interface StripeCall {
   name: string;

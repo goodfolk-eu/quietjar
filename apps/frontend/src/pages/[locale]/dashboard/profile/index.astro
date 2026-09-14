@@ -1,0 +1,132 @@
+---
+import Container from "@/components/container.astro";
+import { dictionary } from "@/i18n/t";
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+
+export { getStaticPaths } from "@/lib/locale-paths";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const profile = copy.profile;
+
+const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
+const labelClass = "block text-sm font-medium text-gray-700";
+const hintClass = "mt-1 text-xs text-gray-500";
+---
+
+<DashboardLayout title={profile.title}>
+  <Container>
+    <p class="text-sm text-gray-600">{profile.intro}</p>
+
+    <div id="qj-profile" class="mt-5 max-w-2xl space-y-5" data-i18n={JSON.stringify(profile)}>
+      <p
+        id="qj-profile-notice"
+        class="hidden rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700"
+      >
+      </p>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{profile.account}</h2>
+
+        <div class="mt-4">
+          <span class={labelClass}>{profile.name}</span>
+          <p id="qj-profile-name" class="mt-1 text-sm text-gray-800"></p>
+        </div>
+
+        <div class="mt-4">
+          <span class={labelClass}>{profile.email}</span>
+          <p id="qj-profile-email" class="mt-1 text-sm text-gray-800"></p>
+        </div>
+      </section>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{profile.notifications}</h2>
+
+        <div class="mt-4 flex items-start justify-between gap-4">
+          <div>
+            <label for="qj-notify" class={labelClass}>{profile.notifyOnDonation}</label>
+            <p class={hintClass}>{profile.notifyOnDonationHint}</p>
+          </div>
+
+          <label for="qj-notify" class="relative mt-0.5 inline-flex shrink-0 cursor-pointer items-center">
+            <input
+              id="qj-notify"
+              type="checkbox"
+              role="switch"
+              disabled
+              class="peer sr-only disabled:cursor-not-allowed"
+            />
+            <span
+              class="h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-gray-800 peer-focus-visible:ring-3 peer-focus-visible:ring-gray-100 peer-disabled:opacity-50"
+            ></span>
+            <span
+              class="pointer-events-none absolute start-0.5 size-5 rounded-full bg-white shadow-2xs transition-transform peer-checked:translate-x-5"
+            ></span>
+          </label>
+        </div>
+
+        <p id="qj-profile-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </Container>
+</DashboardLayout>
+
+<script>
+  import { authClient } from "@/lib/api";
+
+  const root = document.getElementById("qj-profile");
+  const nameEl = document.getElementById("qj-profile-name");
+  const emailEl = document.getElementById("qj-profile-email");
+  const noticeEl = document.getElementById("qj-profile-notice");
+  const statusEl = document.getElementById("qj-profile-status");
+  const toggleEl = document.getElementById("qj-notify") as HTMLInputElement | null;
+
+  if (root && nameEl && emailEl && noticeEl && statusEl && toggleEl) {
+    // Re-bound inside the guard so the null checks above narrow them for the
+    // helpers below, which are hoisted past the check.
+    const name = nameEl;
+    const email = emailEl;
+    const notice = noticeEl;
+    const status = statusEl;
+    const toggle = toggleEl;
+    const copy = JSON.parse(root.dataset.i18n ?? "{}") as {
+      saving: string;
+      saved: string;
+      saveFailed: string;
+      loadFailed: string;
+    };
+
+    async function load(): Promise<void> {
+      const { data: session } = await authClient.getSession();
+      const user = session?.user;
+      if (!user) {
+        notice.textContent = copy.loadFailed;
+        notice.classList.remove("hidden");
+        return;
+      }
+      name.textContent = user.name;
+      email.textContent = user.email;
+      // Accounts created before the setting existed read back null, and the
+      // default is on, so only an explicit false means off.
+      toggle.checked = user.notifyOnDonation !== false;
+      toggle.disabled = false;
+    }
+
+    async function save(): Promise<void> {
+      const wanted = toggle.checked;
+      toggle.disabled = true;
+      status.textContent = copy.saving;
+      const { error } = await authClient.updateUser({ notifyOnDonation: wanted });
+      toggle.disabled = false;
+      if (error) {
+        toggle.checked = !wanted;
+        status.textContent = copy.saveFailed;
+        return;
+      }
+      status.textContent = copy.saved;
+    }
+
+    toggle.addEventListener("change", () => void save());
+
+    void load();
+  }
+</script>

@@ -120,6 +120,77 @@ export async function saveDonationDetails(input: {
   });
 }
 
+/**
+ * A donation that has not had its notification email sent yet, with
+ * everything the email needs: the creator it belongs to, and the supporter's
+ * own words when they left any.
+ */
+export interface PendingNotification {
+  sessionId: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  name: string | null;
+  message: string | null;
+}
+
+/**
+ * Donations still waiting for their notification email. `before` holds back
+ * the ones just made: the supporter's name and message are typed on the
+ * thank-you step after the payment, so a donation read too early would be
+ * announced without the words the creator most wants to see.
+ *
+ * Oldest first, so a backlog drains in the order the donations arrived.
+ */
+export async function listPendingNotifications(input: {
+  before: number;
+  limit: number;
+}): Promise<PendingNotification[]> {
+  const result = await libsqlClient.execute({
+    sql: `SELECT d.session_id, s.user_id, d.amount, d.currency,
+                 det.name, det.message
+          FROM donations d
+          JOIN sites s ON s.id = d.site_id
+          LEFT JOIN donation_details det ON det.session_id = d.session_id
+          WHERE d.notified_at IS NULL AND d.created_at < ?
+          ORDER BY d.created_at, d.id
+          LIMIT ?`,
+    args: [input.before, input.limit],
+  });
+  return result.rows.map((raw) => {
+    const row = raw as unknown as {
+      session_id: string;
+      user_id: string;
+      amount: number;
+      currency: string;
+      name: string | null;
+      message: string | null;
+    };
+    return {
+      sessionId: row.session_id,
+      userId: row.user_id,
+      amount: row.amount,
+      currency: row.currency,
+      name: row.name,
+      message: row.message,
+    };
+  });
+}
+
+/**
+ * Takes ownership of a donation's notification, returning false when someone
+ * else already has it. This is what keeps one donation to one email: two
+ * overlapping sweeps, or two containers, race on this single statement and
+ * only one of them wins.
+ */
+export async function claimDonationNotice(sessionId: string, at: number): Promise<boolean> {
+  const result = await libsqlClient.execute({
+    sql: "UPDATE donations SET notified_at = ? WHERE session_id = ? AND notified_at IS NULL",
+    args: [at, sessionId],
+  });
+  return result.rowsAffected === 1;
+}
+
 /** One row of the dashboard's recent list, with the supporter's details. */
 export interface RecentDonation {
   amount: number;

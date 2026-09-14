@@ -220,3 +220,19 @@ export function amountBounds(currency: string): AmountBounds {
 export function toMinorUnits(amount: number): number {
   return Math.round(amount * 100);
 }
+
+/**
+ * Formats minor units as currency, falling back to a plain code for unknown
+ * ISO codes. The locale is fixed rather than the host's: this runs on the
+ * server, where the container's locale says nothing about the reader.
+ */
+export function formatMoney(minor: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: currency.toUpperCase(),
+    }).format(minor / 100);
+  } catch {
+    return `${currency.toUpperCase()} ${(minor / 100).toFixed(2)}`;
+  }
+}

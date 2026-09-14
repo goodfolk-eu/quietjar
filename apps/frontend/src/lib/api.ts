@@ -1,7 +1,7 @@
 import { treaty } from "@elysiajs/eden";
 import type { App } from "@quietjar/backend/eden";
 import { createAuthClient } from "better-auth/client";
-import { emailOTPClient } from "better-auth/client/plugins";
+import { emailOTPClient, inferAdditionalFields } from "better-auth/client/plugins";
 
 /**
  * Frontend origin as the API base. In local dev the Astro server proxies
@@ -26,5 +26,14 @@ export const api = treaty<App>(API_ORIGIN, {
 /** Typed BetterAuth client for the passwordless email-OTP flow. */
 export const authClient = createAuthClient({
   baseURL: API_ORIGIN,
-  plugins: [emailOTPClient()],
+  plugins: [
+    emailOTPClient(),
+    // Declared as a schema rather than inferred from the backend's auth
+    // instance, so the frontend types do not pull in the server config.
+    inferAdditionalFields({
+      user: {
+        notifyOnDonation: { type: "boolean" },
+      },
+    }),
+  ],
 });

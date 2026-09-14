@@ -1,8 +1,10 @@
 import { cors } from "@elysiajs/cors";
+import { cron, Patterns } from "@elysiajs/cron";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
 import { donationRoutes } from "./donations/routes";
 import { goalRoutes, publicGoalRoutes } from "./goals/routes";
+import { sendPendingDonationEmails } from "./notify/donation";
 import { payRoutes } from "./pay/routes";
 import { ensureSchema } from "./schema";
 import { siteRoutes } from "./sites/routes";
@@ -52,7 +54,18 @@ export const app = new Elysia()
   .use(payRoutes)
   .use(goalRoutes)
   .use(publicGoalRoutes)
-  .use(widgetRoutes);
+  .use(widgetRoutes)
+  // Donation emails are sent here rather than from the payment webhook, so a
+  // mail failure can never touch a payment. `protect` drops a tick whose
+  // predecessor is still running instead of letting two sweeps overlap.
+  .use(
+    cron({
+      name: "donationEmails",
+      pattern: Patterns.EVERY_5_MINUTES,
+      protect: true,
+      run: () => void sendPendingDonationEmails(),
+    }),
+  );
 
 const port = Number(process.env.PORT ?? 3000);
 

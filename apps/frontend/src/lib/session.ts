@@ -11,6 +11,21 @@ export function hasSessionCookie(): boolean {
   return document.cookie.split(";").some((c) => c.trim().startsWith(`${AUTH_MARKER}=`));
 }
 
+/**
+ * Drops the marker so a stale one cannot keep offering a dashboard the
+ * session can no longer open. The backend scopes the cookie to the frontend's
+ * parent domain over https and leaves it host-only in local dev, and a cookie
+ * only expires against a matching Domain, so both forms are cleared.
+ */
+export function clearSessionCookie(): void {
+  if (typeof document === "undefined") return;
+  const expired = `${AUTH_MARKER}=; Max-Age=0; path=/`;
+  // biome-ignore-start lint/suspicious/noDocumentCookie: the Cookie Store API it suggests is Chromium-only, and Safari is a first-class target here.
+  document.cookie = expired;
+  document.cookie = `${expired}; domain=${location.hostname}`;
+  // biome-ignore-end lint/suspicious/noDocumentCookie: see above
+}
+
 const SITE_KEY = "qj_site_key";
 
 /** The public site key rides in localStorage so public pages can fill it into the embed snippet without an API call. */

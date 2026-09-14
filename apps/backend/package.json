@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@elysiajs/cors": "latest",
+    "@elysiajs/cron": "latest",
     "@elysiajs/eden": "latest",
     "@libsql/client": "0.8.1",
     "@libsql/kysely-libsql": "^0.4.1",

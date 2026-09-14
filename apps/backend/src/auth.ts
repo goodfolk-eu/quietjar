@@ -89,6 +89,9 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       newsletterOptIn: { type: "boolean", defaultValue: false, input: true },
+      // On for everyone, including accounts created before the column existed:
+      // those rows read back null, which `notifiesOnDonation` treats as on.
+      notifyOnDonation: { type: "boolean", defaultValue: true, input: true },
     },
   },
   plugins: [

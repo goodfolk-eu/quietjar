@@ -57,7 +57,26 @@ const COLUMN_MIGRATIONS = [
   { table: "donations", name: "email", type: "TEXT" },
   { table: "donations", name: "net", type: "INTEGER" },
   { table: "donations", name: "goal_id", type: "TEXT" },
+  { table: "donations", name: "notified_at", type: "INTEGER" },
 ] as const;
+
+/**
+ * better-auth 1.7.0 through 1.7.2 created `account.issuer` as NOT NULL behind a
+ * unique index, and 1.7.3 stopped writing it: accounts are matched on
+ * `providerId` and `accountId` again, so any insert would now fail the
+ * constraint. The upgrade guide's fix is to drop the index and then the
+ * column, in that order. Both statements are no-ops once applied.
+ *
+ * https://www.better-auth.com/docs/guides/1-7-upgrade-guide
+ */
+async function dropBetterAuthIssuer(): Promise<void> {
+  await libsqlClient.execute("DROP INDEX IF EXISTS account_issuer_accountId_uidx");
+  try {
+    await libsqlClient.execute("ALTER TABLE account DROP COLUMN issuer");
+  } catch (err) {
+    if (!(err instanceof Error && /no such (column|table)/i.test(err.message))) throw err;
+  }
+}
 
 export async function ensureSchema(): Promise<void> {
   for (const statement of MIGRATIONS) {
@@ -70,4 +89,5 @@ export async function ensureSchema(): Promise<void> {
       if (!(err instanceof Error && /duplicate column name/i.test(err.message))) throw err;
     }
   }
+  await dropBetterAuthIssuer();
 }

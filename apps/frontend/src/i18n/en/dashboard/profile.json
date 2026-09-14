@@ -1,0 +1,16 @@
+{
+  "profile": {
+    "title": "Profile",
+    "intro": "Your account, and what we email you about.",
+    "account": "Account",
+    "name": "Name",
+    "email": "Email",
+    "notifications": "Notifications",
+    "notifyOnDonation": "Email me when I receive a donation",
+    "notifyOnDonationHint": "One email per donation, to the address above. It covers every donation to you, whichever site or widget it came from.",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "saveFailed": "Could not save. Try again.",
+    "loadFailed": "Your profile could not be loaded. Reload the page to try again."
+  }
+}

@@ -25,6 +25,7 @@ const dashboardPath = localizedPath("/dashboard/", locale);
 const paymentsPath = localizedPath("/dashboard/payments/", locale);
 const widgetPath = localizedPath("/dashboard/widget/", locale);
 const goalsPath = localizedPath("/dashboard/goals/", locale);
+const profilePath = localizedPath("/dashboard/profile/", locale);
 
 const navLinkClass = (href: string, exact = false) => {
   const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
@@ -112,6 +113,27 @@ const navLinkClass = (href: string, exact = false) => {
                   <p id="qj-user-email" class="text-sm font-medium text-gray-800"></p>
                 </div>
                 <div class="p-1.5 space-y-0.5">
+                  <a
+                    href={profilePath}
+                    class="flex w-full text-start items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+                  >
+                    <svg
+                      class="shrink-0 size-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    {copy.dashboard.profile}
+                  </a>
                   <button
                     type="button"
                     id="qj-sign-out"
@@ -322,9 +344,13 @@ const navLinkClass = (href: string, exact = false) => {
       import "preline/plugins/overlay";
       import "preline/plugins/dropdown";
       import { authClient } from "@/lib/api.ts";
+      import { clearSessionCookie } from "@/lib/session.ts";
 
       const { data: session } = await authClient.getSession();
       if (!session?.user) {
+        // The marker cookie is what makes the homepage offer a dashboard, so
+        // leaving it behind would send the visitor straight back here.
+        clearSessionCookie();
         window.location.replace("/");
         throw new Error("redirecting");
       }
