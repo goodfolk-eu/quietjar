@@ -16,17 +16,27 @@ const frontendOrigin = process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321
 const dashboardOrigins = [frontendOrigin, "http://localhost:4321"];
 
 /**
+ * Routes that are public by design: they read no cookies, so their answer is
+ * the same for every caller and for every origin. The goal CRUD lives under
+ * /api/goals and is deliberately not on this list.
+ */
+function isPublicWidgetPath(path: string): boolean {
+  return (
+    path.startsWith("/api/pay") ||
+    path.startsWith("/api/widget/goal") ||
+    path.startsWith("/api/widget/image")
+  );
+}
+
+/**
  * The dashboard is the only origin allowed to make credentialed calls. The
- * widget's payment routes and its goal meter are public by design and read no
- * cookies, so they answer any origin; everything else stays on the allowlist
- * so a third-party page can never reach a session-backed endpoint. The goal
- * CRUD lives under /api/goals and is deliberately not on this list.
+ * public widget routes answer any origin; everything else stays on the
+ * allowlist so a third-party page can never reach a session-backed endpoint.
  */
 function isAllowedRequestOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (origin && dashboardOrigins.includes(origin)) return true;
-  const path = new URL(request.url).pathname;
-  return path.startsWith("/api/pay") || path.startsWith("/api/widget/goal");
+  return isPublicWidgetPath(new URL(request.url).pathname);
 }
 
 export const app = new Elysia()
@@ -37,7 +47,31 @@ export const app = new Elysia()
       allowedHeaders: ["Content-Type"],
     }),
   )
-  .get("/health", () => ({ ok: true, time: new Date().toISOString() }))
+  /**
+   * The CORS plugin is configured for the dashboard, so it stamps every
+   * response as credentialed and varying by Origin, and echoes the caller's
+   * own header names back in expose-headers. On the public widget routes that
+   * is both wrong -- `allow-credentials: true` next to `allow-origin: *` is a
+   * pairing browsers reject -- and expensive: a CDN reads a credentialed,
+   * Origin-varying response as belonging to one caller and refuses to cache
+   * it, which is why the five minute goal progress cache never took effect at
+   * the edge. These routes read no cookies, so they say so plainly and the
+   * response becomes byte-identical for everyone.
+   */
+  .onRequest(({ request, set }) => {
+    if (!isPublicWidgetPath(new URL(request.url).pathname)) return;
+    set.headers["access-control-allow-origin"] = "*";
+    delete set.headers["access-control-allow-credentials"];
+    delete set.headers["access-control-expose-headers"];
+    delete set.headers.vary;
+  })
+  // Without a cache-control of its own the CDN applies its 30 day default, and
+  // a health check that answers `ok` from the edge long after the container
+  // stopped answering at all is worse than no health check.
+  .get("/health", ({ set }) => {
+    set.headers["cache-control"] = "no-cache";
+    return { ok: true, time: new Date().toISOString() };
+  })
   // Typed protected endpoint: returns the signed-in user or 401.
   .get("/api/me", async ({ request, set }) => {
     const session = await auth.api.getSession({ headers: request.headers });
