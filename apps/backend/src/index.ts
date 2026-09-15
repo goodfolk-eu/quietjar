@@ -48,30 +48,40 @@ export const app = new Elysia()
     }),
   )
   /**
-   * The CORS plugin is configured for the dashboard, so it stamps every
-   * response as credentialed and varying by Origin, and echoes the caller's
-   * own header names back in expose-headers. On the public widget routes that
-   * is both wrong -- `allow-credentials: true` next to `allow-origin: *` is a
-   * pairing browsers reject -- and expensive: a CDN reads a credentialed,
-   * Origin-varying response as belonging to one caller and refuses to cache
-   * it, which is why the five minute goal progress cache never took effect at
-   * the edge. These routes read no cookies, so they say so plainly and the
+   * Caching is opt-in, because the CDN in front of this container applies a 30
+   * day default to any response that arrives without a `cache-control` of its
+   * own, and its cache key includes neither the session cookie nor the query
+   * string. A single session-backed response that reaches the edge is
+   * therefore served to every later caller, signed in or not. Defaulting to
+   * `no-store` means a new session-backed route is private until someone
+   * deliberately publishes it, rather than leaking until someone notices.
+   *
+   * The public routes opt in by setting their own `cache-control`, and they
+   * also need the credentialed CORS headers stripped. The plugin above is
+   * configured for the dashboard, so it stamps every response as credentialed
+   * and varying by Origin and echoes the caller's own header names back in
+   * expose-headers. On a public route that is both wrong --
+   * `allow-credentials: true` next to `allow-origin: *` is a pairing browsers
+   * reject -- and self-defeating: a credentialed, Origin-varying response is
+   * one the CDN reads as belonging to a single caller and declines to cache,
+   * which is why the goal meter's five minute cache never took effect at the
+   * edge. These routes read no cookies, so they say so plainly and their
    * response becomes byte-identical for everyone.
    */
   .onRequest(({ request, set }) => {
-    if (!isPublicWidgetPath(new URL(request.url).pathname)) return;
+    if (!isPublicWidgetPath(new URL(request.url).pathname)) {
+      set.headers["cache-control"] = "no-store";
+      return;
+    }
     set.headers["access-control-allow-origin"] = "*";
     delete set.headers["access-control-allow-credentials"];
     delete set.headers["access-control-expose-headers"];
     delete set.headers.vary;
   })
-  // Without a cache-control of its own the CDN applies its 30 day default, and
-  // a health check that answers `ok` from the edge long after the container
-  // stopped answering at all is worse than no health check.
-  .get("/health", ({ set }) => {
-    set.headers["cache-control"] = "no-cache";
-    return { ok: true, time: new Date().toISOString() };
-  })
+  // A health check that answers `ok` from the edge long after the container
+  // stopped answering at all is worse than no health check, so it relies on
+  // the `no-store` default above rather than opting in.
+  .get("/health", () => ({ ok: true, time: new Date().toISOString() }))
   // Typed protected endpoint: returns the signed-in user or 401.
   .get("/api/me", async ({ request, set }) => {
     const session = await auth.api.getSession({ headers: request.headers });
