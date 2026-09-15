@@ -15,7 +15,7 @@
       "url": "your-site.com",
       "live": "Live, not a picture",
       "presets": [
-        { "key": "docs", "label": "Docs site", "headline": "Enjoying the docs?", "body": "Keeps the docs free and current.", "action": "Sponsor", "color": "#F8F6F0", "font": "rounded" },
+        { "key": "docs", "label": "Docs site", "headline": "Enjoying the docs?", "body": "Keeps the docs free and current.", "action": "Donate", "color": "#0C6C3A", "font": "rounded" },
         { "key": "blog", "label": "Personal blog", "headline": "Enjoying the read?", "body": "Funds more posts like this one.", "action": "Tip", "color": "#8a5a2b", "font": "serif" },
         { "key": "magazine", "label": "Magazine", "headline": "Enjoying this issue?", "body": "Funds the next issue.", "action": "Support", "color": "#c4372b", "font": "system" }
       ]

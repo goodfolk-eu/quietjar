@@ -74,7 +74,7 @@ export async function createConnectedAccount(
       },
     },
     defaults: {
-      // The creator already told us both of these on the payments page, so
+      // The creator already told us both of these on the payout page, so
       // onboarding opens with them settled rather than asking again.
       currency: input.currency,
       responsibilities: { fees_collector: "application", losses_collector: "application" },

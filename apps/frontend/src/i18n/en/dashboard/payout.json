@@ -1,6 +1,6 @@
 {
-  "payments": {
-    "title": "Payments",
+  "payout": {
+    "title": "Payout",
     "intro": "Set up payments so your widget can receive tips.",
     "stepsTitle": "Your setup",
     "openDashboard": "Open payout dashboard",

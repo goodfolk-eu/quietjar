@@ -38,7 +38,7 @@ function frontendOrigin(): string {
 function stepUrls(step: Step): { refreshUrl: string; returnUrl: string } {
   // Hardcoded to the "en" locale prefix: the backend has no notion of a
   // user's locale today. Revisit once a second locale actually exists.
-  const base = `${frontendOrigin()}/en/dashboard/payments`;
+  const base = `${frontendOrigin()}/en/dashboard/payout`;
   return {
     refreshUrl: `${base}?stripe=refresh&step=${step}`,
     returnUrl: `${base}?stripe=return`,

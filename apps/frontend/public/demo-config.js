@@ -9,9 +9,9 @@ window.QuietJar = {
   labels: {
     headline: "Enjoying the docs?",
     body: "Keeps the docs free and current.",
-    action: "Sponsor",
+    action: "Donate",
   },
-  style: { color: "#F8F6F0", font: "rounded" },
+  style: { color: "#0C6C3A", font: "rounded" },
   close: { enabled: false },
   position: { corner: "bottom-right" },
   mount: { target: "#qj-demo-slot" },

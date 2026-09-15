@@ -7,7 +7,7 @@ import DashboardLayout from "@/layouts/DashboardLayout.astro";
 export { getStaticPaths } from "@/lib/locale-paths";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
-const payments = copy.payments;
+const payout = copy.payout;
 
 // Imported from the backend rather than mirrored, so a new country or currency
 // is one edit. Both lists are plain constants with no runtime dependencies.
@@ -25,26 +25,26 @@ const currencies = SUPPORTED_CURRENCIES.map((code) => ({
 
 // Step one is ours; the rest are Stripe's, and only they carry a status badge.
 const steps = [
-  { key: "identity", copy: payments.steps.identity },
-  { key: "ideal", copy: payments.steps.ideal },
-  { key: "payouts", copy: payments.steps.payouts },
+  { key: "identity", copy: payout.steps.identity },
+  { key: "ideal", copy: payout.steps.ideal },
+  { key: "payouts", copy: payout.steps.payouts },
 ];
 
 const fieldClass =
   "mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:border-gray-600 focus:outline-hidden focus:ring-3 focus:ring-gray-100";
 const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 const buttonClass =
-  "rounded-lg bg-gray-800 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-900 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50";
+  "rounded-lg bg-qj-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50";
 const stepClass = "rounded-lg border border-gray-200 p-4";
 const labelClass = "block text-sm font-medium text-gray-700";
 const hintClass = "mt-1 text-xs text-gray-500";
 ---
 
-<DashboardLayout title={payments.title}>
+<DashboardLayout title={payout.title}>
   <Container>
-    <p class="text-sm text-gray-600">{payments.intro}</p>
+    <p class="text-sm text-gray-600">{payout.intro}</p>
 
-    <div id="qj-payments" class="mt-5 max-w-2xl space-y-5" data-i18n={JSON.stringify(payments)}>
+    <div id="qj-payout" class="mt-5 max-w-2xl space-y-5" data-i18n={JSON.stringify(payout)}>
       <p
         id="qj-pay-banner"
         class="hidden rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700"
@@ -52,47 +52,47 @@ const hintClass = "mt-1 text-xs text-gray-500";
       </p>
 
       <section id="qj-pay-steps" class={cardClass}>
-        <h2 class="text-base font-semibold text-gray-800">{payments.stepsTitle}</h2>
+        <h2 class="text-base font-semibold text-gray-800">{payout.stepsTitle}</h2>
         <ol class="mt-5 space-y-4">
           <li class={stepClass} data-step="details">
             <div class="flex items-start justify-between gap-3">
-              <h3 class="text-sm font-semibold text-gray-800">{payments.steps.details.title}</h3>
+              <h3 class="text-sm font-semibold text-gray-800">{payout.steps.details.title}</h3>
               <span class="hidden shrink-0 rounded-full px-3 py-1 text-xs font-medium" data-badge></span>
             </div>
 
             {/* The form and the summary are the same step in two states: open
                 while the payment account does not exist, closed once it does. */}
             <div id="qj-details-form">
-              <p class="mt-1 text-sm text-gray-600">{payments.steps.details.todo}</p>
+              <p class="mt-1 text-sm text-gray-600">{payout.steps.details.todo}</p>
 
               <div class="mt-4">
-                <label for="qj-pay-country" class={labelClass}>{payments.country}</label>
-                <p class={hintClass}>{payments.countryHint}</p>
+                <label for="qj-pay-country" class={labelClass}>{payout.country}</label>
+                <p class={hintClass}>{payout.countryHint}</p>
                 <select id="qj-pay-country" required class={fieldClass}>
-                  <option value="">{payments.countryPlaceholder}</option>
+                  <option value="">{payout.countryPlaceholder}</option>
                   {countries.map((country) => <option value={country.value}>{country.label}</option>)}
                 </select>
               </div>
 
               <div class="mt-4">
-                <label for="qj-pay-entity" class={labelClass}>{payments.accountType}</label>
+                <label for="qj-pay-entity" class={labelClass}>{payout.accountType}</label>
                 <select id="qj-pay-entity" required class={fieldClass}>
-                  <option value="individual">{payments.accountTypeIndividual}</option>
-                  <option value="company">{payments.accountTypeCompany}</option>
+                  <option value="individual">{payout.accountTypeIndividual}</option>
+                  <option value="company">{payout.accountTypeCompany}</option>
                 </select>
               </div>
 
               <div class="mt-4">
-                <label for="qj-currency" class={labelClass}>{payments.currency}</label>
-                <p class={hintClass}>{payments.currencyHint}</p>
+                <label for="qj-currency" class={labelClass}>{payout.currency}</label>
+                <p class={hintClass}>{payout.currencyHint}</p>
                 <select id="qj-currency" class={fieldClass}>
                   {currencies.map((currency) => <option value={currency.value}>{currency.label}</option>)}
                 </select>
               </div>
 
               <div class="mt-4">
-                <label for="qj-site-url" class={labelClass}>{payments.siteUrlLabel}</label>
-                <p class={hintClass}>{payments.siteUrlHint}</p>
+                <label for="qj-site-url" class={labelClass}>{payout.siteUrlLabel}</label>
+                <p class={hintClass}>{payout.siteUrlHint}</p>
                 <input
                   id="qj-site-url"
                   type="text"
@@ -106,10 +106,10 @@ const hintClass = "mt-1 text-xs text-gray-500";
               <p id="qj-site-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
 
               <button type="button" id="qj-pay-connect" disabled class={`${buttonClass} mt-4 w-full`}>
-                {payments.connect}
+                {payout.connect}
               </button>
               <p id="qj-pay-gate" class="mt-2 text-center text-xs text-gray-500">
-                {payments.detailsIncomplete}
+                {payout.detailsIncomplete}
               </p>
             </div>
 
@@ -120,7 +120,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
                 id="qj-details-edit"
                 class="mt-2 text-sm text-qj-blue underline underline-offset-2"
               >
-                {payments.edit}
+                {payout.edit}
               </button>
             </div>
           </li>
@@ -142,7 +142,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
           }
         </ol>
         <button type="button" id="qj-pay-dashboard" class="mt-5 hidden text-sm text-qj-blue underline underline-offset-2">
-          {payments.openDashboard}
+          {payout.openDashboard}
         </button>
       </section>
     </div>
@@ -195,7 +195,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
     errorSiteNotConfigured: string;
   }
 
-  const root = document.getElementById("qj-payments");
+  const root = document.getElementById("qj-payout");
   const stepsCard = document.getElementById("qj-pay-steps");
 
   void (async () => {

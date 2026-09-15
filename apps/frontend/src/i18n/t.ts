@@ -3,7 +3,7 @@ import enDashboardFeedback from "./en/dashboard/feedback.json";
 import enDashboardGoals from "./en/dashboard/goals.json";
 import enDashboardHome from "./en/dashboard/home.json";
 import enDashboard from "./en/dashboard/index.json";
-import enDashboardPayments from "./en/dashboard/payments.json";
+import enDashboardPayout from "./en/dashboard/payout.json";
 import enDashboardProfile from "./en/dashboard/profile.json";
 import enDashboardWidget from "./en/dashboard/widget.json";
 import enDevelopers from "./en/developers.json";
@@ -20,7 +20,7 @@ const dictionaries = {
     ...enDashboardHome,
     ...enDashboardWidget,
     ...enDashboardGoals,
-    ...enDashboardPayments,
+    ...enDashboardPayout,
     ...enDashboardProfile,
     ...enDashboardFeedback,
     ...enLegal,
