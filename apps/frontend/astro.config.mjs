@@ -105,7 +105,9 @@ const integrations = [
   }),
   sitemapIndexLastmod({ chunkLastmods: buildChunkLastmods(lastmodMap) }),
   robotsTxt({
-    host: true,
+    // No `host: true` — the `Host:` directive is non-standard (Yandex-only,
+    // deprecated there since 2018) and Google Search Console flags it as an
+    // ignored rule.
     policy: [
       { userAgent: "*", disallow: ["/en/dashboard/", "/api/"] },
       // Each AI agent gets its own group, which overrides the wildcard group
