@@ -1,0 +1,8 @@
+{
+  "@type": "WebPage",
+  "name": "QuietJar - Accept support without sending people away",
+  "description": "Let your supporters pay without leaving your page. Two taps, no redirect, and it steps back once someone has given.",
+  "publisher": { "@type": "Organization", "@id": "https://quietjar.com/#organization" },
+  "about": { "@type": "WebApplication", "@id": "https://quietjar.com/#webapplication" },
+  "image": "https://quietjar.com/og-image.png"
+}

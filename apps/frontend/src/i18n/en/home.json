@@ -15,9 +15,33 @@
       "url": "your-site.com",
       "live": "Live, not a picture",
       "presets": [
-        { "key": "docs", "label": "Docs site", "headline": "Enjoying the docs?", "body": "Keeps the docs free and current.", "action": "Donate", "color": "#0C6C3A", "font": "rounded" },
-        { "key": "blog", "label": "Personal blog", "headline": "Enjoying the read?", "body": "Funds more posts like this one.", "action": "Tip", "color": "#8a5a2b", "font": "serif" },
-        { "key": "magazine", "label": "Magazine", "headline": "Enjoying this issue?", "body": "Funds the next issue.", "action": "Support", "color": "#c4372b", "font": "system" }
+        {
+          "key": "docs",
+          "label": "Docs site",
+          "headline": "Enjoying the docs?",
+          "body": "Keeps the docs free and current.",
+          "action": "Donate",
+          "color": "#0C6C3A",
+          "font": "rounded"
+        },
+        {
+          "key": "blog",
+          "label": "Personal blog",
+          "headline": "Enjoying the read?",
+          "body": "Funds more posts like this one.",
+          "action": "Tip",
+          "color": "#8a5a2b",
+          "font": "serif"
+        },
+        {
+          "key": "magazine",
+          "label": "Magazine",
+          "headline": "Enjoying this issue?",
+          "body": "Funds the next issue.",
+          "action": "Support",
+          "color": "#c4372b",
+          "font": "system"
+        }
       ]
     }
   },
@@ -44,7 +68,14 @@
   },
   "logos": {
     "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
-    "methods": ["Apple Pay", "Google Pay", "Visa", "Mastercard", "Amex", "iDEAL"],
+    "methods": [
+      "Apple Pay",
+      "Google Pay",
+      "Visa",
+      "Mastercard",
+      "Amex",
+      "iDEAL"
+    ],
     "moreLabel": "+ Local methods"
   },
   "polite": {
@@ -96,56 +127,104 @@
     "title": "Questions, answered.",
     "items": [
       {
-        "q": "What is QuietJar?",
-        "a": "A small, polished support button you drop onto your own website, so your supporters can pay without leaving your page."
+        "@type": "Question",
+        "name": "What is QuietJar?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A small, polished support button you drop onto your own website, so your supporters can pay without leaving your page."
+        }
       },
       {
-        "q": "Do I need a separate account or page for my visitors?",
-        "a": "No. The button works right on your site. There is an optional hosted page for people who prefer one, but you do not need it."
+        "@type": "Question",
+        "name": "Do I need a separate account or page for my visitors?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The button works right on your site. There is an optional hosted page for people who prefer one, but you do not need it."
+        }
       },
       {
-        "q": "How is this different from the donation tools I already know?",
-        "a": "Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish.",
+        "@type": "Question",
+        "name": "How is this different from the donation tools I already know?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish."
+        },
         "linkLabel": "See the comparison",
         "linkHref": "/compare/"
       },
       {
-        "q": "Can I use it alongside GitHub Sponsors or Patreon?",
-        "a": "Yes. GitHub Sponsors is the right default on your repo. QuietJar is for your site, where most of your readers actually are. Use both."
+        "@type": "Question",
+        "name": "Can I use it alongside GitHub Sponsors or Patreon?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. GitHub Sponsors is the right default on your repo. QuietJar is for your site, where most of your readers actually are. Use both."
+        }
       },
       {
-        "q": "Will it slow down my site?",
-        "a": "No. QuietJar is built to be fast. It loads lightly and does not weigh your page down."
+        "@type": "Question",
+        "name": "Will it slow down my site?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. QuietJar is built to be fast. It loads lightly and does not weigh your page down."
+        }
       },
       {
-        "q": "What does it cost?",
-        "a": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. Donations are €1 to €500. It costs you nothing until it is earning you something.",
+        "@type": "Question",
+        "name": "What does it cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. Donations are €1 to €500. It costs you nothing until it is earning you something."
+        },
         "linkLabel": "See the pricing page",
         "linkHref": "/pricing/"
       },
       {
-        "q": "When do I get paid?",
-        "a": "Stripe pays out your balance to your bank account automatically every day. No manual step needed."
+        "@type": "Question",
+        "name": "When do I get paid?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Stripe pays out your balance to your bank account automatically every day. No manual step needed."
+        }
       },
       {
-        "q": "What payment methods can my supporters use?",
-        "a": "Apple Pay, Google Pay, cards, and iDEAL. Your visitors see the method they already use, not a card form."
+        "@type": "Question",
+        "name": "What payment methods can my supporters use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Apple Pay, Google Pay, cards, and iDEAL. Your visitors see the method they already use, not a card form."
+        }
       },
       {
-        "q": "Will my visitors trust paying on my site?",
-        "a": "They pay through the same regulated rails as any checkout. What they see is Apple Pay, Google Pay, or their own bank's iDEAL screen. Nothing unfamiliar, nothing to type."
+        "@type": "Question",
+        "name": "Will my visitors trust paying on my site?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "They pay through the same regulated rails as any checkout. What they see is Apple Pay, Google Pay, or their own bank's iDEAL screen. Nothing unfamiliar, nothing to type."
+        }
       },
       {
-        "q": "What happens after someone supports me?",
-        "a": "QuietJar steps back. After someone gives, the button takes a break: 30 days by default, and you choose how long. Your biggest supporters get thanked instead of nagged."
+        "@type": "Question",
+        "name": "What happens after someone supports me?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "QuietJar steps back. After someone gives, the button takes a break: 30 days by default, and you choose how long. Your biggest supporters get thanked instead of nagged."
+        }
       },
       {
-        "q": "Is my data and my supporters' data in the EU?",
-        "a": "Yes. Payments and data stay on European infrastructure, and there is no cookie banner because there is nothing to consent to."
+        "@type": "Question",
+        "name": "Is my data and my supporters' data in the EU?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Payments and data stay on European infrastructure, and there is no cookie banner because there is nothing to consent to."
+        }
       },
       {
-        "q": "How do I add it to my site?",
-        "a": "Paste a small piece of code, pick your design, and it is live. It takes minutes, and it fits the look of your page."
+        "@type": "Question",
+        "name": "How do I add it to my site?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Paste a small piece of code, pick your design, and it is live. It takes minutes, and it fits the look of your page."
+        }
       }
     ]
   },

@@ -1,0 +1,34 @@
+{
+  "@type": "Organization",
+  "@id": "https://quietjar.com/#organization",
+  "name": "QuietJar",
+  "url": "https://quietjar.com",
+  "sameAs": ["https://www.linkedin.com/company/quietjar"],
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Sander Nagtegaal",
+      "sameAs": ["https://www.linkedin.com/in/centrical/"]
+    },
+    {
+      "@type": "Person",
+      "name": "Marcel Panse",
+      "sameAs": ["https://www.linkedin.com/in/marcelpanse/"]
+    }
+  ],
+  "parentOrganization": {
+    "@type": "Organization",
+    "name": "Goodfolk",
+    "legalName": "Goodfolk B.V.",
+    "url": "https://goodfolk.eu",
+    "sameAs": ["https://www.linkedin.com/company/goodfolk-eu"]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Panamalaan 8-D",
+    "postalCode": "1019 AZ",
+    "addressLocality": "Amsterdam",
+    "addressCountry": "NL"
+  },
+  "logo": "https://quietjar.com/brand/logo-blue-600.png"
+}

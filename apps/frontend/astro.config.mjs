@@ -191,9 +191,15 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss(), apiProxy(), prelineSideEffects()],
     build: {
-      // Keep small assets (font subsets) as real files instead of data: URIs,
-      // so font-src 'self' is enough and no data: source is needed in the CSP.
-      assetsInlineLimit: 0,
+      // Keep fonts as real files instead of data: URIs, so font-src 'self' is
+      // enough and no data: source is needed in the CSP. A flat 0 here used to
+      // do that, but Astro's page-CSS inlining ("auto" mode) reuses this same
+      // limit to decide whether a page's small CSS chunk gets inlined as a
+      // <style> tag - with 0 it never does, so even a 1 KB stylesheet shipped
+      // as a separate render-blocking request. Only font files opt out here;
+      // everything else (CSS chunks included) falls back to the normal 4 KiB
+      // default.
+      assetsInlineLimit: (filePath) => (/\.(woff2?|ttf|otf|eot)$/i.test(filePath) ? false : undefined),
     },
   },
 });

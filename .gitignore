@@ -38,6 +38,9 @@ lerna-debug.log*
 # Testing / coverage
 coverage/
 .nyc_output/
+
+# Lighthouse audit history (kept locally so runs can be compared to a baseline)
+lighthouse-reports/
 *.lcov
 
 # Editors & IDEs

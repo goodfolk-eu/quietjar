@@ -6,17 +6,21 @@ import Features from "@/components/features.astro";
 import Hero from "@/components/hero.astro";
 import Polite from "@/components/polite.astro";
 import Pricing from "@/components/pricing.astro";
+import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
 ---
 
 <Layout
   title="QuietJar - A donation button that lives on your site"
-  description="Let your supporters pay without leaving your page. Two taps, no redirect, and it steps back once someone has given.">
+  description="Let your supporters pay without leaving your page. Two taps, no redirect, and it steps back once someone has given."
+  faq={copy.faq.items}>
   <Hero />
   <Features />
   <Polite />
   <Craft />
   <Pricing />
-  <Faq />
+  <Faq eyebrow={copy.faq.eyebrow} title={copy.faq.title} items={copy.faq.items} />
   <Cta />
 </Layout>

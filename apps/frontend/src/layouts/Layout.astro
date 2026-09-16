@@ -1,30 +1,123 @@
 ---
 import Footer from "@/components/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
+import organizationEn from "@/i18n/data/en/organization.json";
+import webApplicationEn from "@/i18n/data/en/webApplication.json";
+import webPageEn from "@/i18n/data/en/webPage.json";
 import { dictionary } from "@/i18n/t";
+import { buildFlatRateOffer, pathnameShowsCommercialTerms, stripHtml } from "@/lib/schema-refs";
 import "../styles/global.css";
+
+interface Question {
+  "@type": string;
+  name: string;
+  acceptedAnswer: { "@type": string; text: string };
+  linkLabel?: string;
+  linkHref?: string;
+}
 
 interface Props {
   title?: string;
   description?: string;
+  canonical?: string;
+  noindex?: boolean;
+  webPage?: Record<string, unknown>;
+  organization?: Record<string, unknown>;
+  webApplication?: Record<string, unknown>;
+  faq?: Question[];
+  additionalSchema?: Record<string, unknown>[];
 }
+
+// One base-node set per locale. Add an entry here (and the matching
+// src/i18n/data/<locale>/*.json files) when a second locale ships - falling
+// back to `en` keeps the graph correct rather than silently missing until
+// someone notices, but it does mean a new locale must be added here
+// explicitly rather than being picked up automatically.
+const SCHEMA_BASE_NODES: Record<
+  string,
+  {
+    webPage: Record<string, unknown>;
+    organization: Record<string, unknown>;
+    webApplication: Record<string, unknown>;
+  }
+> = {
+  en: {
+    webPage: webPageEn as Record<string, unknown>,
+    organization: organizationEn as Record<string, unknown>,
+    webApplication: webApplicationEn as Record<string, unknown>,
+  },
+};
 
 const locale = Astro.currentLocale ?? "en";
 const copy = dictionary(locale);
 
-const { title = copy.meta.defaultTitle, description = copy.meta.defaultDescription } = Astro.props;
+const {
+  webPage: BASE_WEBPAGE,
+  organization: BASE_ORGANIZATION,
+  webApplication: BASE_WEBAPPLICATION,
+} = SCHEMA_BASE_NODES[locale] ?? SCHEMA_BASE_NODES.en;
+
+const {
+  title: titleProp = copy.meta.defaultTitle,
+  description: descriptionProp = copy.meta.defaultDescription,
+  canonical: canonicalProp,
+  noindex = false,
+  webPage: webPageOverride,
+  organization: organizationOverride,
+  webApplication: webApplicationOverride,
+  faq,
+  additionalSchema,
+} = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://quietjar.com");
-const canonical = new URL(Astro.url.pathname, siteUrl);
+const canonical = canonicalProp
+  ? new URL(canonicalProp, siteUrl)
+  : new URL(Astro.url.pathname, siteUrl);
+
+// Copy is authored plain today, but strip defensively before it reaches
+// either the meta tags or the graph - title/description are shared across
+// both, so this is the one place that needs to hold.
+const title = stripHtml(titleProp);
+const description = stripHtml(descriptionProp);
 
 const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
 
+// The visible accordion needs the raw items (its own linkLabel/linkHref,
+// answers rendered as HTML); the graph gets a sanitized copy so it never
+// carries UI-only fields or leaks markup into the JSON-LD payload.
+const faqForGraph = faq?.map(
+  ({ linkLabel: _linkLabel, linkHref: _linkHref, acceptedAnswer, ...question }) => ({
+    ...question,
+    acceptedAnswer: { ...acceptedAnswer, text: stripHtml(acceptedAnswer.text) },
+  }),
+);
+
+const webPageNode: Record<string, unknown> = {
+  ...BASE_WEBPAGE,
+  ...webPageOverride,
+  name: title,
+  description,
+  url: canonical.href,
+  "@id": canonical.href,
+  inLanguage: locale,
+};
+if (faqForGraph && faqForGraph.length > 0) {
+  webPageNode.hasPart = { "@type": "FAQPage", mainEntity: faqForGraph };
+}
+
+const organizationNode: Record<string, unknown> = { ...BASE_ORGANIZATION, ...organizationOverride };
+
+const webApplicationNode: Record<string, unknown> = {
+  ...BASE_WEBAPPLICATION,
+  ...webApplicationOverride,
+};
+if (pathnameShowsCommercialTerms(Astro.url.pathname)) {
+  webApplicationNode.offers = [buildFlatRateOffer()];
+}
+
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "QuietJar",
-  url: canonical.origin,
-  description: copy.meta.defaultDescription,
+  "@graph": [webPageNode, organizationNode, webApplicationNode, ...(additionalSchema ?? [])],
 };
 ---
 
@@ -33,12 +126,34 @@ const structuredData = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/schibsted-grotesk/SchibstedGrotesk-VariableFont.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/ibm-plex-sans/IBMPlexSans-VariableFont.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/jetbrains-mono/JetBrainsMono-VariableFont.woff2"
+      crossorigin
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{makeTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonical.href} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="QuietJar" />

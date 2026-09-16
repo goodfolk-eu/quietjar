@@ -10,9 +10,11 @@ interface Props {
   description: string;
   lastUpdated: Date;
   currentSlug: string;
+  faq?: { "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }[];
+  additionalSchema?: Record<string, unknown>[];
 }
 
-const { title, description, lastUpdated, currentSlug } = Astro.props;
+const { title, description, lastUpdated, currentSlug, faq, additionalSchema } = Astro.props;
 
 const locale = Astro.currentLocale ?? "en";
 const copy = dictionary(locale);
@@ -38,7 +40,12 @@ const formattedDate = lastUpdated.toLocaleDateString("en-CA", {
 });
 ---
 
-<Layout title={title} description={description}>
+<Layout
+  title={title}
+  description={description}
+  webPage={{ dateModified: lastUpdated.toISOString().slice(0, 10) }}
+  faq={faq}
+  additionalSchema={additionalSchema}>
   <Container>
     <div class="mx-auto max-w-[1020px]">
     <div class="grid gap-12 py-16 lg:grid-cols-[210px_1fr] lg:gap-[60px] lg:py-24">

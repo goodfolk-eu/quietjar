@@ -67,32 +67,60 @@
       "title": "Questions",
       "items": [
         {
-          "q": "Which payment methods can my supporters use?",
-          "a": "Cards, Apple Pay, Google Pay, and iDEAL. Your supporters see the method they already use, not an unfamiliar form."
+          "@type": "Question",
+          "name": "Which payment methods can my supporters use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cards, Apple Pay, Google Pay, and iDEAL. Your supporters see the method they already use, not an unfamiliar form."
+          }
         },
         {
-          "q": "When does the money arrive?",
-          "a": "Stripe pays out your balance to your bank account automatically, every day. There is no manual step on your side."
+          "@type": "Question",
+          "name": "When does the money arrive?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stripe pays out your balance to your bank account automatically, every day. There is no manual step on your side."
+          }
         },
         {
-          "q": "Does the fee change with volume?",
-          "a": "No. There are no tiers and no minimum. Everyone pays the same 5%, from the first payment onward."
+          "@type": "Question",
+          "name": "Does the fee change with volume?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. There are no tiers and no minimum. Everyone pays the same 5%, from the first payment onward."
+          }
         },
         {
-          "q": "Who pays the payment processing cost?",
-          "a": "You do, at Stripe's cost, on top of our 5%. Cheaper methods like iDEAL leave you more, and your supporters never see a surcharge."
+          "@type": "Question",
+          "name": "Who pays the payment processing cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You do, at Stripe's cost, on top of our 5%. Cheaper methods like iDEAL leave you more, and your supporters never see a surcharge."
+          }
         },
         {
-          "q": "Do my supporters need an account?",
-          "a": "No. They pay on your page in a couple of taps, with nothing to sign up for."
+          "@type": "Question",
+          "name": "Do my supporters need an account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. They pay on your page in a couple of taps, with nothing to sign up for."
+          }
         },
         {
-          "q": "What about refunds and chargebacks?",
-          "a": "Refunds go through Stripe like any other payment. We are finalizing the exact policy before launch - get in touch if you need one sooner."
+          "@type": "Question",
+          "name": "What about refunds and chargebacks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Refunds go through Stripe like any other payment. We are finalizing the exact policy before launch - get in touch if you need one sooner."
+          }
         },
         {
-          "q": "How is this different from a hosted donation page with a free tier?",
-          "a": "Most free tiers still send your supporter to someone else's page to pay. The real question is not the fee - it is how many visitors finish the trip after that redirect.",
+          "@type": "Question",
+          "name": "How is this different from a hosted donation page with a free tier?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most free tiers still send your supporter to someone else's page to pay. The real question is not the fee - it is how many visitors finish the trip after that redirect."
+          },
           "linkLabel": "See the comparison",
           "linkHref": "/compare/"
         }
