@@ -128,6 +128,57 @@ describe("deep link mount", () => {
   });
 });
 
+describe("reached goal", () => {
+  const originalFetch = globalThis.fetch;
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  function respondWithProgress(raised: number, target: number): void {
+    globalThis.fetch = (async () =>
+      new Response(JSON.stringify({ raised, target, currency: "eur" }))) as unknown as typeof fetch;
+  }
+
+  test("does not mount when the goal is reached and the widget hides", async () => {
+    respondWithProgress(10_000, 10_000);
+    // A lookup is memoised per goal, so each test needs its own id.
+    (window as { QuietJar?: unknown }).QuietJar = { site: "qj_test", goal: "qg_hidden" };
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    expect(document.querySelector("[data-quietjar-host]")).toBeNull();
+  });
+
+  test("mounts a running goal that would hide once reached", async () => {
+    respondWithProgress(2500, 10_000);
+    (window as { QuietJar?: unknown }).QuietJar = { site: "qj_test", goal: "qg_open" };
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    const host = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    expect(host).not.toBeNull();
+    const fill = host?.shadowRoot?.querySelector(".quietjar-widget__meter-fill") as HTMLElement;
+    expect(fill.style.width).toBe("25%");
+  });
+
+  test("a deep link opens the panel even on a reached goal", async () => {
+    respondWithProgress(10_000, 10_000);
+    setURL("?qj_open=1");
+    (window as { QuietJar?: unknown }).QuietJar = { site: "qj_test", goal: "qg_deep" };
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    const host = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    const panel = host?.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+    expect(panel?.hidden).toBe(false);
+    expect(window.location.search).toBe("");
+  });
+});
+
 describe("modal presentation", () => {
   test("container.open centers the panel over a backdrop", () => {
     const host = mountWidget(resolveConfig({ site: "qj_test" }));

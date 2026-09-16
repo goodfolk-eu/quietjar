@@ -1,7 +1,8 @@
 import { type QuietJarConfig, resolveConfig } from "./config";
 import { isDismissed } from "./dismiss";
 import { donationHideActive } from "./donation";
-import { mountWidget, paymentContainer } from "./mount";
+import { fetchGoalProgress, widgetHidden } from "./goal";
+import { type MountOptions, mountWidget, paymentContainer } from "./mount";
 import { clearOpenParam, shouldAutoOpen } from "./open";
 import { pendingSessionId, resolveReturn } from "./return";
 
@@ -11,7 +12,7 @@ declare global {
   }
 }
 
-export function mount(): void {
+export async function mount(): Promise<void> {
   const config = resolveConfig(window.QuietJar);
   // A deep link from a static image opens the panel no matter what state the
   // widget is in: the supporter clicked a donate button to get here.
@@ -19,7 +20,18 @@ export function mount(): void {
   if (!autoOpen && (isDismissed() || donationHideActive())) {
     return;
   }
-  const host = mountWidget(config, { persistDismissal: true });
+  const options: MountOptions = { persistDismissal: true };
+  // Whether a reached goal hides the widget or only drops its bar, the answer
+  // only arrives with the progress, so the face waits for it rather than
+  // appearing and then changing shape. A bar that stays on regardless needs no
+  // such wait, and neither does a deep link, which shows the widget either way
+  // and should not hold the panel back on a lookup.
+  if (!autoOpen && config.goal !== "" && config.goalReached !== "show-with-bar") {
+    const progress = await fetchGoalProgress(config.api, config.goal);
+    if (widgetHidden(config.goalReached, progress)) return;
+    options.progress = progress;
+  }
+  const host = mountWidget(config, options);
   const container = paymentContainer(host);
   if (!container) return;
 
@@ -49,7 +61,7 @@ export function mount(): void {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", mount, { once: true });
+  document.addEventListener("DOMContentLoaded", () => void mount(), { once: true });
 } else {
-  mount();
+  void mount();
 }

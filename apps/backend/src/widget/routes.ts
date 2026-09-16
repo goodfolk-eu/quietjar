@@ -62,6 +62,13 @@ function renderPage(blob: string, origin: string): Response {
     ...(typeof close === "object" && close !== null ? close : {}),
     enabled: false,
   };
+  // A widget that hides itself on a reached goal leaves no face to capture and
+  // the render would time out, so the image keeps the widget and only drops
+  // its bar. Hiding is also the default, so an unset value is forced the same
+  // way; only an owner who asked to keep the bar keeps it.
+  if (patchable.goalReached !== "show-with-bar") {
+    patchable.goalReached = "show";
+  }
   // The renderer loads this page from the backend serving it, so pointing the
   // widget at the same origin keeps the goal lookup in-process instead of
   // reaching the production API from a dev box or from CI.

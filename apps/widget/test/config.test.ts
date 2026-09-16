@@ -13,6 +13,7 @@ import {
   DEFAULT_CORNER,
   DEFAULT_CURRENCY,
   DEFAULT_FONT,
+  DEFAULT_GOAL_REACHED,
   DEFAULT_ICON,
   DEFAULT_MINIMIZE_LABEL,
   DEFAULT_OTHER_LABEL,
@@ -22,6 +23,7 @@ import {
   ICON_PRESETS,
   resolveConfig,
   type CloseAfterMode,
+  type GoalReachedMode,
   type QuietJarConfig,
 } from "../src/config";
 
@@ -32,6 +34,7 @@ describe("resolveConfig", () => {
       api: DEFAULT_API,
       currency: DEFAULT_CURRENCY,
       goal: "",
+      goalReached: DEFAULT_GOAL_REACHED,
       amounts: amountScale(DEFAULT_CURRENCY).presets,
       thanksLabel: DEFAULT_THANKS_LABEL,
       otherLabel: DEFAULT_OTHER_LABEL,
@@ -81,6 +84,7 @@ describe("resolveConfig", () => {
       api: "https://api.example.com",
       currency: "gbp",
       goal: "",
+      goalReached: DEFAULT_GOAL_REACHED,
       amounts: [2, 5, 10],
       thanksLabel: DEFAULT_THANKS_LABEL,
       otherLabel: DEFAULT_OTHER_LABEL,
@@ -100,6 +104,17 @@ describe("resolveConfig", () => {
       corner: "top-left",
       target: "#widget",
     });
+  });
+
+  test("a reached goal hides the widget unless the owner asked otherwise", () => {
+    expect(resolveConfig(undefined).goalReached).toBe(DEFAULT_GOAL_REACHED);
+    expect(resolveConfig({ goal: "qg_1", goalReached: "show" }).goalReached).toBe("show");
+    expect(resolveConfig({ goal: "qg_1", goalReached: "show-with-bar" }).goalReached).toBe(
+      "show-with-bar",
+    );
+    expect(resolveConfig({ goalReached: "keep" as GoalReachedMode }).goalReached).toBe(
+      DEFAULT_GOAL_REACHED,
+    );
   });
 
   test("day counts accept a whole number of one or more and fall back otherwise", () => {

@@ -455,6 +455,68 @@ describe("mountWidget", () => {
       expect(host.shadowRoot?.querySelector(".quietjar-widget__action")).not.toBeNull();
     });
 
+    test("a reached goal keeps its filled bar when the owner asked for it", () => {
+      const progress = { raised: 12_000, target: 10_000, currency: "eur" };
+      const host = mountWidget(
+        resolveConfig({ goal: "qg_kept_bar", goalReached: "show-with-bar" }),
+        { progress },
+      );
+
+      const root = host.shadowRoot;
+      const fill = root?.querySelector(".quietjar-widget__meter-fill") as HTMLElement;
+      expect(fill.style.width).toBe("100%");
+      expect(root?.querySelector(".quietjar-widget__meter-label")?.textContent).toBe(
+        "Goal reached, \u20ac120 raised",
+      );
+    });
+
+    test("a reached goal drops the bar and keeps the card with a body", () => {
+      const host = mountWidget(
+        resolveConfig({
+          goal: "qg_no_bar",
+          goalReached: "show",
+          labels: { body: "Every coffee helps" },
+        }),
+        { progress: { raised: 10_000, target: 10_000, currency: "eur" } },
+      );
+
+      const root = host.shadowRoot;
+      expect(meter(host)).toBeNull();
+      expect(root?.querySelector(".quietjar-widget__body")?.textContent).toBe(
+        "Every coffee helps",
+      );
+      expect(root?.querySelector(".quietjar-widget__action")).not.toBeNull();
+    });
+
+    test("a reached goal with nothing else to say falls back to the pill", () => {
+      const host = mountWidget(resolveConfig({ goal: "qg_pill", goalReached: "show" }), {
+        progress: { raised: 10_000, target: 10_000, currency: "eur" },
+      });
+
+      const root = host.shadowRoot;
+      expect(root?.querySelector(".quietjar-widget__button")).not.toBeNull();
+      expect(root?.querySelector(".quietjar-widget__panel")).toBeNull();
+      expect(meter(host)).toBeNull();
+    });
+
+    test("progress that could not be read renders the pill rather than an empty bar", () => {
+      const host = mountWidget(resolveConfig({ goal: "qg_null", goalReached: "show" }), {
+        progress: null,
+      });
+
+      expect(host.shadowRoot?.querySelector(".quietjar-widget__button")).not.toBeNull();
+      expect(meter(host)).toBeNull();
+    });
+
+    test("a running goal keeps its bar when the widget would hide once reached", () => {
+      const host = mountWidget(resolveConfig({ goal: "qg_running", goalReached: "hide" }), {
+        progress: { raised: 2500, target: 10_000, currency: "eur" },
+      });
+
+      const fill = host.shadowRoot?.querySelector(".quietjar-widget__meter-fill") as HTMLElement;
+      expect(fill.style.width).toBe("25%");
+    });
+
     test("does not ask for progress when no goal is configured", () => {
       let asked = false;
       globalThis.fetch = (async () => {

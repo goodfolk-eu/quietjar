@@ -278,6 +278,29 @@ describe("GET /widget/render", () => {
     expect(html).toContain('"api":"http://localhost"');
   });
 
+  test("a widget that hides on a reached goal still renders, without its bar", async () => {
+    const response = await call(
+      `/widget/render?c=${blobOf({ goal: "qg_abc", goalReached: "hide" })}`,
+    );
+    const html = await response.text();
+    // Nothing would be left to screenshot otherwise.
+    expect(html).toContain('"goalReached":"show"');
+    expect(html).not.toContain('"goalReached":"hide"');
+  });
+
+  test("an older snippet without the setting is forced off hiding too", async () => {
+    const response = await call(`/widget/render?c=${blobOf(GOAL_CONFIG)}`);
+    // Hiding is the widget's default, so leaving it unset would break the image.
+    expect(await response.text()).toContain('"goalReached":"show"');
+  });
+
+  test("keeps a bar the owner asked to stay on", async () => {
+    const response = await call(
+      `/widget/render?c=${blobOf({ goal: "qg_abc", goalReached: "show-with-bar" })}`,
+    );
+    expect(await response.text()).toContain('"goalReached":"show-with-bar"');
+  });
+
   test("rejects an undecodable blob", async () => {
     const response = await call(`/widget/render?c=${encodeURIComponent("!!!")}`);
     expect(response.status).toBe(400);

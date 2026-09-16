@@ -1,6 +1,14 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import "./setup";
-import { fetchGoalProgress, isGoalMet, meterLabel, meterRatio } from "../src/goal";
+import {
+  barVisible,
+  fetchGoalProgress,
+  type GoalProgress,
+  isGoalMet,
+  meterLabel,
+  meterRatio,
+  widgetHidden,
+} from "../src/goal";
 
 const originalFetch = globalThis.fetch;
 
@@ -56,6 +64,42 @@ describe("meterRatio", () => {
   test("a target of nothing cannot be divided into, and is not met", () => {
     expect(meterRatio({ raised: 500, target: 0, currency: "eur" })).toBe(0);
     expect(isGoalMet({ raised: 500, target: 0, currency: "eur" })).toBe(false);
+  });
+});
+
+describe("reached behaviour", () => {
+  const met: GoalProgress = { raised: 12_000, target: 10_000, currency: "eur" };
+  const running: GoalProgress = { raised: 4500, target: 10_000, currency: "eur" };
+
+  test("only the hide mode takes a reached widget off the page", () => {
+    expect(widgetHidden("hide", met)).toBe(true);
+    expect(widgetHidden("show", met)).toBe(false);
+    expect(widgetHidden("show-with-bar", met)).toBe(false);
+  });
+
+  test("a goal still running keeps the widget whatever the mode", () => {
+    expect(widgetHidden("hide", running)).toBe(false);
+    expect(widgetHidden("show", running)).toBe(false);
+  });
+
+  test("progress that cannot be read never hides the widget", () => {
+    expect(widgetHidden("hide", null)).toBe(false);
+  });
+
+  test("a reached goal keeps its bar only for the show-with-bar mode", () => {
+    expect(barVisible("show-with-bar", met)).toBe(true);
+    expect(barVisible("show", met)).toBe(false);
+    expect(barVisible("hide", met)).toBe(false);
+  });
+
+  test("a goal still running shows its bar whatever the mode", () => {
+    expect(barVisible("hide", running)).toBe(true);
+    expect(barVisible("show", running)).toBe(true);
+    expect(barVisible("show-with-bar", running)).toBe(true);
+  });
+
+  test("there is no bar to draw without readable progress", () => {
+    expect(barVisible("show-with-bar", null)).toBe(false);
   });
 });
 

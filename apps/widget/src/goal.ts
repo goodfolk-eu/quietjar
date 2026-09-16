@@ -1,3 +1,4 @@
+import type { GoalReachedMode } from "./config";
 import { formatAmount } from "./money";
 
 export interface GoalProgress {
@@ -48,6 +49,24 @@ async function loadGoalProgress(api: string, goalId: string): Promise<GoalProgre
 
 export function isGoalMet(progress: GoalProgress): boolean {
   return progress.target > 0 && progress.raised >= progress.target;
+}
+
+/**
+ * Whether a reached goal takes the widget off the page. Progress that could
+ * not be read is never treated as reached: a lookup that fails would otherwise
+ * close giving on a site whose goal is still running.
+ */
+export function widgetHidden(mode: GoalReachedMode, progress: GoalProgress | null): boolean {
+  return mode === "hide" && progress !== null && isGoalMet(progress);
+}
+
+/**
+ * Whether the card carries the progress bar. Without readable progress there
+ * is nothing to draw, so the bar goes rather than sitting there empty.
+ */
+export function barVisible(mode: GoalReachedMode, progress: GoalProgress | null): boolean {
+  if (progress === null) return false;
+  return !isGoalMet(progress) || mode === "show-with-bar";
 }
 
 /** How full the bar is, 0 to 1. A met or overshot goal fills it exactly. */

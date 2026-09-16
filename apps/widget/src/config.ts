@@ -12,6 +12,9 @@ export type Corner =
 /** What a visitor closing the widget does to its visibility. */
 export type CloseAfterMode = "session" | "days" | "never" | "forever";
 
+/** What the widget does once its goal has been reached. */
+export type GoalReachedMode = "hide" | "show" | "show-with-bar";
+
 export interface QuietJarConfig {
   /** Public site key from the dashboard; without it the widget cannot collect. */
   site?: string;
@@ -20,6 +23,8 @@ export interface QuietJarConfig {
   currency?: string;
   /** Goal id from the dashboard; renders the progress meter on the card. */
   goal?: string;
+  /** What the widget does once the goal is reached. Ignored without a goal. */
+  goalReached?: GoalReachedMode;
   /** Amounts offered in the payment container, in major units. */
   amounts?: number[];
   labels?: {
@@ -57,6 +62,8 @@ export interface ResolvedConfig {
   currency: string;
   /** Empty when unset; otherwise the card renders a progress meter for it. */
   goal: string;
+  /** What the widget does once the goal is reached. */
+  goalReached: GoalReachedMode;
   amounts: number[];
   /** Shown in the container once a tip succeeds. */
   thanksLabel: string;
@@ -153,12 +160,14 @@ export function amountScale(currency: string): CurrencyScale {
 }
 export const DEFAULT_CLOSE_ENABLED = true;
 export const DEFAULT_CLOSE_AFTER: CloseAfterMode = "session";
+export const DEFAULT_GOAL_REACHED: GoalReachedMode = "hide";
 export const DEFAULT_CLOSE_DAYS = 7;
 export const DEFAULT_DONATION_HIDE_DAYS = 30;
 export const DEFAULT_COLOR = "#0369a1";
 export const DEFAULT_CORNER: Corner = "bottom-right";
 
 export const CLOSE_AFTER_MODES: readonly CloseAfterMode[] = ["session", "days", "never", "forever"];
+export const GOAL_REACHED_MODES: readonly GoalReachedMode[] = ["hide", "show", "show-with-bar"];
 const CORNERS: readonly Corner[] = [
   "bottom-right",
   "bottom-center",
@@ -182,6 +191,7 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
   const color = input?.style?.color;
   const css = input?.style?.css;
   const corner = input?.position?.corner;
+  const goalReached = input?.goalReached;
   const target = input?.mount?.target;
 
   // Amounts are bounded per currency, so the currency has to settle first.
@@ -192,6 +202,9 @@ export function resolveConfig(input: QuietJarConfig | undefined): ResolvedConfig
     api: resolveApi(input?.api),
     currency,
     goal: typeof input?.goal === "string" ? input.goal.trim() : "",
+    goalReached: GOAL_REACHED_MODES.includes(goalReached as GoalReachedMode)
+      ? (goalReached as GoalReachedMode)
+      : DEFAULT_GOAL_REACHED,
     amounts: resolveAmounts(input?.amounts, currency),
     thanksLabel: label(input?.labels?.thanks, DEFAULT_THANKS_LABEL),
     otherLabel: label(input?.labels?.other, DEFAULT_OTHER_LABEL),

@@ -8,8 +8,11 @@ import {
   DEFAULT_COLOR,
   DEFAULT_CORNER,
   DEFAULT_FONT,
+  DEFAULT_GOAL_REACHED,
   DEFAULT_HEADLINE,
   FONT_PRESETS,
+  GOAL_REACHED_MODES,
+  type GoalReachedMode,
   ICON_LIBRARY,
   ICON_PRESETS,
   PIGGY_ICON,
@@ -43,6 +46,12 @@ const corners = [
   },
   { value: "bottom-right", label: widget.corners.bottomRight, dot: "bottom-1 end-1" },
 ];
+
+// The goal-reached dropdown, in mode order.
+const goalReacheds = GOAL_REACHED_MODES.map((mode: GoalReachedMode) => ({
+  value: mode,
+  label: widget.goalReacheds[mode],
+}));
 
 // The close-after dropdown, in mode order.
 const closeAfters = CLOSE_AFTER_MODES.map((mode: CloseAfterMode) => ({
@@ -207,6 +216,22 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
             {widget.goalEmpty}
             <a href={goalsPath} class="font-medium text-gray-800 underline">{widget.goalEmptyLink}</a>
           </p>
+        </div>
+
+        <div class="mt-6" id="qj-goal-reached-wrap" hidden>
+          <label for="qj-goal-reached" class="block text-sm font-medium text-gray-700">
+            {widget.goalReached}
+          </label>
+          <p class="mt-1 text-xs text-gray-500">{widget.goalReachedHint}</p>
+          <select id="qj-goal-reached" class={`${fieldClass} mt-2`}>
+            {
+              goalReacheds.map((mode) => (
+                <option value={mode.value} selected={mode.value === DEFAULT_GOAL_REACHED}>
+                  {mode.label}
+                </option>
+              ))
+            }
+          </select>
         </div>
 
         <div class="mt-6">
@@ -582,7 +607,12 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   import { API_ORIGIN, api } from "@/lib/api";
   import { FACE_SELECTOR, mountWidget } from "@quietjar/widget/embed";
   import { rememberSiteKey } from "@/lib/session";
-  import type { CloseAfterMode, Corner, FontChoice } from "@quietjar/widget/config";
+  import type {
+    CloseAfterMode,
+    Corner,
+    FontChoice,
+    GoalReachedMode,
+  } from "@quietjar/widget/config";
   import {
     DEFAULT_ACTION_LABEL,
     DEFAULT_CLOSE_ENABLED,
@@ -590,6 +620,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     DEFAULT_COLOR,
     DEFAULT_CORNER,
     DEFAULT_FONT,
+    DEFAULT_GOAL_REACHED,
     DEFAULT_HEADLINE,
     DEFAULT_ICON,
     PIGGY_ICON,
@@ -613,6 +644,8 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   const donationDaysInput = document.getElementById("qj-donation-days") as HTMLInputElement | null;
   const goalSelect = document.getElementById("qj-goal") as HTMLSelectElement | null;
   const goalEmptyEl = document.getElementById("qj-goal-empty");
+  const goalReachedSelect = document.getElementById("qj-goal-reached") as HTMLSelectElement | null;
+  const goalReachedWrap = document.getElementById("qj-goal-reached-wrap");
   const snippetEl = document.getElementById("qj-snippet");
   const snippetMdEl = document.getElementById("qj-snippet-md");
   const snippetHtmlEl = document.getElementById("qj-snippet-html");
@@ -637,6 +670,8 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     donationDaysInput &&
     goalSelect &&
     goalEmptyEl &&
+    goalReachedSelect &&
+    goalReachedWrap &&
     snippetEl &&
     snippetMdEl &&
     snippetHtmlEl &&
@@ -651,6 +686,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     const closeDaysWrapEl = closeDaysWrap;
     const goalEmpty = goalEmptyEl;
     const goalField = goalSelect;
+    const goalReachedWrapEl = goalReachedWrap;
     const labels = JSON.parse(root.dataset.i18n ?? "{}") as {
       copy: string;
       copied: string;
@@ -676,6 +712,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       closeDays: "",
       donationHideDays: "",
       goal: "",
+      goalReached: DEFAULT_GOAL_REACHED as GoalReachedMode,
     };
 
     const cornerButtons = root.querySelectorAll<HTMLButtonElement>("[data-corner]");
@@ -707,6 +744,9 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         donation: { hideDays: numeric(state.donationHideDays) },
         position: { corner: state.corner },
         goal: state.goal,
+        // The preview keeps the bar whatever the setting says: a goal that is
+        // already met would otherwise empty the frame the owner is styling in.
+        goalReached: "show-with-bar",
       });
 
     // One config object drives every snippet: the script embeds it verbatim,
@@ -730,7 +770,9 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         },
         donation: { hideDays: config.donationHideDays },
         position: { corner: config.corner },
-        ...(config.goal === "" ? {} : { goal: config.goal }),
+        // Read off the state rather than the resolved config, which the
+        // preview pins to "show-with-bar".
+        ...(config.goal === "" ? {} : { goal: config.goal, goalReached: state.goalReached }),
       };
     }
 
@@ -803,6 +845,10 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     function syncCloseControls(): void {
       closeDaysWrapEl.hidden = !state.closeEnabled || state.closeAfter !== "days";
+    }
+
+    function syncGoalControls(): void {
+      goalReachedWrapEl.hidden = state.goal === "";
     }
 
     async function loadSite(): Promise<void> {
@@ -917,6 +963,12 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     goalSelect.addEventListener("change", () => {
       state.goal = goalSelect.value;
+      syncGoalControls();
+      render();
+    });
+
+    goalReachedSelect.addEventListener("change", () => {
+      state.goalReached = goalReachedSelect.value as GoalReachedMode;
       render();
     });
 
@@ -1004,6 +1056,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     }
 
     syncCloseControls();
+    syncGoalControls();
     render();
   }
 </script>

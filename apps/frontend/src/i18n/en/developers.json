@@ -49,6 +49,13 @@
           "description": "A goal id from the dashboard. When set, the card renders a progress meter for it."
         },
         {
+          "name": "goalReached",
+          "type": "string",
+          "required": "no",
+          "default": "hide",
+          "description": "What the widget does once the goal is reached. hide: the widget stops rendering, so the page no longer asks. show: the widget stays and keeps taking donations, without the bar. show-with-bar: the widget stays and keeps the filled bar. Ignored without a goal, and anything else falls back to hide."
+        },
+        {
           "name": "amounts",
           "type": "number[]",
           "required": "no",

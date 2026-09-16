@@ -7,7 +7,7 @@ import {
 } from "./config";
 import { createPaymentContainer, type PaymentContainer } from "./container";
 import { persistDismissal } from "./dismiss";
-import { fetchGoalProgress, meterLabel, meterRatio } from "./goal";
+import { barVisible, fetchGoalProgress, type GoalProgress, meterLabel, meterRatio } from "./goal";
 import { widgetStyles } from "./styles";
 
 const HOST_SELECTOR = "[data-quietjar-host]";
@@ -25,6 +25,12 @@ export interface MountOptions {
    * the widget rather than filling the window. Defaults to the viewport.
    */
   viewport?: HTMLElement;
+  /**
+   * Goal progress the caller already holds. Passing it, null included, builds
+   * the final face in one go instead of mounting a bar that fills a moment
+   * later, which is what lets a reached goal choose its shape up front.
+   */
+  progress?: GoalProgress | null;
   /**
    * Element the host is inserted into, for a preview that frames the widget.
    * Unlike the config's mount target this keeps the floating corner
@@ -65,13 +71,22 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
     ? "quietjar-widget quietjar-widget--inline"
     : `quietjar-widget quietjar-widget--${config.corner}`;
   // A goal needs the vertical room only the card has, so it turns the pill into
-  // one even when the owner wrote no body text.
-  const face = config.body !== "" || config.goal !== "" ? cardPanel(config) : pillButton(config);
+  // one even when the owner wrote no body text. With the progress already in
+  // hand a reached goal can drop the bar, and the card with it.
+  const bar =
+    options.progress === undefined
+      ? config.goal !== ""
+      : barVisible(config.goalReached, options.progress);
+  const face = config.body !== "" || bar ? cardPanel(config, bar) : pillButton(config);
   widget.append(face);
 
   const meter = face.querySelector<HTMLElement>(METER_SELECTOR);
   if (meter) {
-    void fillMeter(meter, config);
+    if (options.progress === undefined) {
+      void fillMeter(meter, config);
+    } else if (options.progress !== null) {
+      paintMeter(meter, options.progress);
+    }
   }
 
   const trigger =
@@ -147,7 +162,7 @@ function pillButton(config: ResolvedConfig): HTMLButtonElement {
 
 // With a body the widget is an informational card instead of a clickable
 // pill: bold headline, multi-line body, and an action button on the right.
-function cardPanel(config: ResolvedConfig): HTMLElement {
+function cardPanel(config: ResolvedConfig, bar: boolean): HTMLElement {
   const panel = document.createElement("div");
   panel.className = "quietjar-widget__panel";
 
@@ -173,7 +188,7 @@ function cardPanel(config: ResolvedConfig): HTMLElement {
     text.append(body);
   }
 
-  if (config.goal !== "") {
+  if (bar) {
     text.append(meterRow());
   }
 
@@ -213,10 +228,14 @@ function meterRow(): HTMLElement {
 
 async function fillMeter(meter: HTMLElement, config: ResolvedConfig): Promise<void> {
   const progress = await fetchGoalProgress(config.api, config.goal);
-  if (!progress) {
+  if (progress === null || !barVisible(config.goalReached, progress)) {
     meter.remove();
     return;
   }
+  paintMeter(meter, progress);
+}
+
+function paintMeter(meter: HTMLElement, progress: GoalProgress): void {
   const fill = meter.querySelector<HTMLElement>(".quietjar-widget__meter-fill");
   const label = meter.querySelector<HTMLElement>(".quietjar-widget__meter-label");
   if (fill) fill.style.width = `${meterRatio(progress) * 100}%`;

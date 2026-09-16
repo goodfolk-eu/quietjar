@@ -43,6 +43,13 @@
     "goalNone": "No goal",
     "goalEmpty": "You have no goals yet.",
     "goalEmptyLink": "Add one",
+    "goalReached": "When the goal is reached",
+    "goalReachedHint": "What the widget does once the target is met.",
+    "goalReacheds": {
+      "hide": "Hide the widget",
+      "show": "Keep the widget, without the bar",
+      "show-with-bar": "Keep the widget, with the bar"
+    },
     "actionLabel": "Button label",
     "actionLabelHint": "Text on the card's button. Only used when a body is set.",
     "closeEnabled": "Close button",
