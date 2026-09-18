@@ -12,9 +12,9 @@ QuietJar, we, and us mean GoodFolk B.V. i.o.
 ## Acceptance of these terms
 
 Before you create an account, we show you these terms and our fee of 5% per
-donation, VAT included. You accept both by ticking the box before you choose "Send
-code". If you accept on behalf of an organization, you confirm that you are
-authorized to bind it.
+donation with a minimum of EUR 0.50, VAT included. You accept both by ticking
+the box before you choose "Send code". If you accept on behalf of an
+organization, you confirm that you are authorized to bind it.
 
 ## Description of the service
 
@@ -69,7 +69,9 @@ ask for donations, and for the way you use what you receive.
 ## Fees and payment
 
 QuietJar costs nothing up front. There is no monthly fee and no plan. Our fee is
-5% of each donation, VAT included.
+5% of each donation with a minimum of EUR 0.50 per donation, VAT included. There
+is no upper limit, and we pay the payment processing costs ourselves, so no other
+deduction is made from what you receive.
 
 Stripe collects each donation into your connected account. Our fee is transferred
 to us through Stripe as an application fee; we never hold your donations. What

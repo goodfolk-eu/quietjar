@@ -1,5 +1,5 @@
 import { locales } from "@/i18n/config";
-import { QUIETJAR_RATE } from "@/lib/fees";
+import { MINIMUM_FEE, QUIETJAR_RATE } from "@/lib/fees";
 
 /**
  * Bare @id references, for any node that needs to point at the Organization
@@ -31,17 +31,17 @@ export function stripHtml(text: string): string {
 }
 
 /**
- * QuietJar has no tiered plans - one flat take-rate applies to every
- * donation. This is the only place that rate is turned into schema.org
- * commercial markup, sourced from fees.ts so the number can't drift from
- * what the pricing page actually charges.
+ * QuietJar has no tiered plans - one rate applies to every donation, with a
+ * floor that binds below EUR 10. This is the only place that rule is turned
+ * into schema.org commercial markup, sourced from fees.ts so the numbers can't
+ * drift from what the pricing page states.
  */
 export function buildFlatRateOffer() {
   return {
     "@type": "Offer",
     price: "0",
     priceCurrency: "EUR",
-    description: `Free to install. QuietJar takes ${QUIETJAR_RATE * 100}% of donations received, no fixed fee.`,
+    description: `Free to install. QuietJar takes ${QUIETJAR_RATE * 100}% of each donation received, minimum €${MINIMUM_FEE.toFixed(2)}, with no cap and no payment processing charged on top.`,
   };
 }
 

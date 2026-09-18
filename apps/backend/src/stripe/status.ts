@@ -1,3 +1,4 @@
+import { LOCAL_METHOD_CAPABILITIES } from "../sites/currency";
 import type { V2Account } from "./client";
 
 /**
@@ -15,11 +16,11 @@ export type StepState = "todo" | "pending" | "done" | "unavailable";
  */
 export type StepIssue = "verificationFailed" | "invalidInformation" | "needsAttention";
 
-export type StepKey = "identity" | "ideal" | "payouts";
+export type StepKey = "identity" | "localMethods" | "payouts";
 
 export interface OnboardingStatus {
   identity: StepState;
-  ideal: StepState;
+  localMethods: StepState;
   payouts: StepState;
   issues: Partial<Record<StepKey, StepIssue>>;
 }
@@ -27,6 +28,10 @@ export interface OnboardingStatus {
 interface Capability {
   status?: "active" | "pending" | "restricted" | "unsupported";
 }
+
+type MerchantCapabilities = Record<string, Capability | undefined> & {
+  stripe_balance?: { payouts?: Capability };
+};
 
 /**
  * Stripe returns null for a capability it has never been asked about, which
@@ -53,8 +58,8 @@ function toIssue(code: string): StepIssue {
 
 function stepForCapability(capability: string): StepKey | null {
   if (capability === "card_payments") return "identity";
-  if (capability === "ideal_payments") return "ideal";
   if (capability === "stripe_balance.payouts") return "payouts";
+  if (LOCAL_METHOD_CAPABILITIES.includes(capability)) return "localMethods";
   return null;
 }
 
@@ -78,22 +83,43 @@ function collectIssues(account: V2Account): Partial<Record<StepKey, StepIssue>> 
 
 export interface DeriveOptions {
   /**
-   * False when the account's country cannot request iDEAL at all. Stripe only
-   * reports that once the capability has been asked for, and asking adds
-   * identity-number and liveness requirements to the account, so the answer is
-   * predicted from the country instead of bought with a request.
+   * The local methods the account's country can request at all. Stripe only
+   * reports that once a capability has been asked for, and asking for iDEAL
+   * adds verification requirements to the account, so the answer is predicted
+   * from the country instead of bought with a request.
    */
-  idealEligible: boolean;
+  eligibleCapabilities: readonly string[];
+}
+
+/**
+ * One step for the whole group, reporting the least finished member. These
+ * methods are best-effort: taking donations needs card payments and payouts,
+ * so a single method stuck in review must never read as unfinished onboarding.
+ */
+function localMethodsState(
+  capabilities: MerchantCapabilities | undefined,
+  eligible: readonly string[],
+): StepState {
+  if (eligible.length === 0) return "unavailable";
+  const states = eligible.map((name) => toStepState(capabilities?.[name]));
+  // Our country table can be staler than Stripe's own answer, so a country we
+  // thought eligible can still come back unsupported across the board.
+  if (states.every((state) => state === "unavailable")) return "unavailable";
+  if (states.every((state) => state === "done" || state === "unavailable")) return "done";
+  if (states.some((state) => state === "pending")) return "pending";
+  return "todo";
 }
 
 export function deriveOnboarding(
   account: V2Account,
-  options: DeriveOptions = { idealEligible: true },
+  options: DeriveOptions = { eligibleCapabilities: LOCAL_METHOD_CAPABILITIES },
 ): OnboardingStatus {
-  const capabilities = account.configuration?.merchant?.capabilities;
+  const capabilities = account.configuration?.merchant?.capabilities as
+    | MerchantCapabilities
+    | undefined;
   return {
     identity: toStepState(capabilities?.card_payments),
-    ideal: options.idealEligible ? toStepState(capabilities?.ideal_payments) : "unavailable",
+    localMethods: localMethodsState(capabilities, options.eligibleCapabilities),
     payouts: toStepState(capabilities?.stripe_balance?.payouts),
     issues: collectIssues(account),
   };

@@ -476,9 +476,9 @@ describe("POST /api/stripe/webhook", () => {
     expect((await earnings("all")).body.net).toBe(890);
   });
 
-  // The fee the pricing scheme charged is the one we report, not our own rate:
-  // it carries Stripe's processing cost, which the creator absorbs.
-  test("records the fee Stripe settled rather than a recomputed one", async () => {
+  // The platform pricing scheme decides the fee, so the settled figure is the
+  // only one we report; nothing here recomputes it.
+  test("records the fee Stripe settled", async () => {
     stripeState.chargeAmounts = { net: 890, applicationFee: 110 };
     const event = donationEvent();
     await postWebhook(event);
@@ -487,10 +487,19 @@ describe("POST /api/stripe/webhook", () => {
     expect((await getDonationBySessionId(sessionId))?.applicationFee).toBe(110);
   });
 
-  test("a failed lookup still records the donation, falling back to our own rate", async () => {
+  test("a failed lookup records the donation with the fee left unknown", async () => {
     stripeState.chargeAmounts = null;
-    await postWebhook(donationEvent());
-    expect((await earnings("all")).body.net).toBe(950);
+    const event = donationEvent();
+    await postWebhook(event);
+
+    const sessionId = (event.data as { object: { id: string } }).object.id;
+    const donation = await getDonationBySessionId(sessionId);
+    expect(donation?.amount).toBe(1000);
+    // Guessing would put a second copy of Stripe's rule in our code. The
+    // donation counts for nothing until a backfill reads the real figures.
+    expect(donation?.applicationFee).toBeNull();
+    expect(donation?.net).toBeNull();
+    expect((await earnings("all")).body.net).toBe(0);
   });
 
   test("an unpaid session records nothing", async () => {

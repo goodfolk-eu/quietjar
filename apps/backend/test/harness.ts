@@ -124,9 +124,6 @@ mock.module("../src/stripe/client", () => ({
     return { id: "cs_test_harness", clientSecret: "cs_test_harness_secret" };
   },
   isMissingAccount: () => stripeState.missingAccount,
-  // Pure and network-free, so it mirrors the real implementation rather than
-  // faking it -- mock.module is global and pay.test.ts asserts on the real one.
-  applicationFee: (amountInMinorUnits: number) => Math.floor((amountInMinorUnits * 500) / 10_000),
   createConnectedAccount: async (_config: unknown, input: unknown) => {
     record("createConnectedAccount", input);
     if (stripeState.throwOnCreate) throw stripeState.throwOnCreate;
@@ -139,8 +136,12 @@ mock.module("../src/stripe/client", () => ({
   registerWalletDomains: async (_config: unknown, accountId: string, siteUrl: string | null) => {
     record("registerWalletDomains", { accountId, siteUrl });
   },
-  requestIdealCapability: async (_config: unknown, accountId: string) => {
-    record("requestIdealCapability", { accountId });
+  requestLocalPaymentCapabilities: async (
+    _config: unknown,
+    accountId: string,
+    capabilities: readonly string[],
+  ) => {
+    record("requestLocalPaymentCapabilities", { accountId, capabilities });
     return account();
   },
   createOnboardingLink: async (_config: unknown, input: unknown) => {

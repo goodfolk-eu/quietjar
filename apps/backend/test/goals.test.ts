@@ -262,7 +262,7 @@ describe("donation attribution", () => {
     await createConnection({ userId: "user_1", accountId: "acct_test" });
     await saveOnboarding("acct_test", {
       identity: "done",
-      ideal: "done",
+      localMethods: "done",
       payouts: "done",
       issues: {},
     });

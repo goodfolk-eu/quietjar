@@ -115,10 +115,11 @@
   "pricing": {
     "eyebrow": "Pricing",
     "title": "We only win when you do.",
-    "description": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. It costs you nothing until it is earning you something.",
+    "description": "No monthly fee. No plans to compare. QuietJar takes 5% of each donation, minimum €0.50, and pays the card fees. It costs you nothing until it is earning you something.",
     "planPrice": "5%",
+    "planMinimum": "minimum €0.50",
     "planPriceNote": "of what you receive",
-    "note": "No monthly fee, no cap. Payment processing comes on top, at cost, and your supporters are never charged extra.",
+    "note": "No monthly fee, no cap. We pay the card fees ourselves, and your supporters are never charged extra.",
     "link": "See exactly what you keep",
     "cta": "Add it to your site"
   },
@@ -173,7 +174,7 @@
         "name": "What does it cost?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No monthly fee. No plans to compare. QuietJar takes 5% of what you receive. Donations are €1 to €500. It costs you nothing until it is earning you something."
+          "text": "No monthly fee. No plans to compare. QuietJar takes 5% of each donation, minimum €0.50, and pays the card fees. Donations are €1 to €500. It costs you nothing until it is earning you something."
         },
         "linkLabel": "See the pricing page",
         "linkHref": "/pricing/"

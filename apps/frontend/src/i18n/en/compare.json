@@ -24,7 +24,7 @@
     "table": {
       "head": ["", "Platform fee", "Monthly fee", "Payment happens on your page", "Apple Pay", "iDEAL and Bancontact", "Steps back after giving", "Who can use it"],
       "rows": [
-        ["QuietJar", "5% (Sep 2026)", "None", "Yes", "Yes", "Yes", "Yes", "Anyone with a site"],
+        ["QuietJar", "5%, min €0.50, all-in (Sep 2026)", "None", "Yes", "Yes", "Yes", "Yes", "Anyone with a site"],
         ["Ko-fi", "5% tips by default, 0% on Gold plan (Sep 2026)", "Gold plan optional", "No", "No", "No", "No", "Anyone"],
         ["Buy Me a Coffee", "5% (Sep 2026)", "None", "No", "Limited", "No", "No", "Anyone"],
         ["Stripe direct", "0% platform, processing on top (Sep 2026)", "None", "If you build it", "Yes", "Yes", "No", "Anyone technical"],
@@ -32,6 +32,6 @@
       ]
     },
     "footnote": "Fees checked September 2026. Tell us if something changed.",
-    "footnote2": "Processing fees apply on top for every row."
+    "footnote2": "QuietJar's rate is all-in: we pay the card fees. For every other row, processing is charged on top."
   }
 }

@@ -1,7 +1,7 @@
 import type Stripe from "stripe";
 import { goalForSite } from "../goals/store";
 import { getSiteByPublicKey } from "../sites/store";
-import { applicationFee, chargeAmounts, stripeConfigFromEnv } from "../stripe/client";
+import { chargeAmounts, stripeConfigFromEnv } from "../stripe/client";
 import { recordDonation } from "./store";
 
 /**
@@ -29,9 +29,10 @@ export async function recordCompletedDonation(
   const goal = goalId ? await goalForSite(goalId, site.id) : null;
 
   // The settled figures are read back rather than computed: the platform
-  // pricing scheme sizes the fee by payment method, so the amount alone does
-  // not say what we took. When Stripe is slow or the charge cannot be read the
-  // row still records, falling back to our own rate for reporting.
+  // pricing scheme is the only place the fee rule lives, and restating it here
+  // would be a second copy free to drift from it. A donation Stripe cannot tell
+  // us about still records, with both figures left unknown rather than guessed;
+  // `backfill-donation.ts` re-runs this to fill them in.
   const config = stripeConfigFromEnv();
   const settled =
     config && typeof session.payment_intent === "string"
@@ -45,7 +46,7 @@ export async function recordCompletedDonation(
     paymentIntentId: typeof session.payment_intent === "string" ? session.payment_intent : null,
     amount: session.amount_total,
     currency: session.currency,
-    applicationFee: settled?.applicationFee ?? applicationFee(session.amount_total),
+    applicationFee: settled?.applicationFee ?? null,
     email: session.customer_details?.email ?? null,
     net: settled?.net ?? null,
     goalId: goal?.id ?? null,

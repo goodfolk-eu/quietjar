@@ -28,7 +28,7 @@ const MIGRATIONS = [
     payment_intent_id TEXT,
     amount INTEGER NOT NULL,
     currency TEXT NOT NULL,
-    application_fee INTEGER NOT NULL,
+    application_fee INTEGER,
     created_at INTEGER NOT NULL
   )`,
   `CREATE TABLE IF NOT EXISTS goals (

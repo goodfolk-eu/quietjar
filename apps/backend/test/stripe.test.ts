@@ -90,20 +90,20 @@ describe("POST /api/stripe/connect", () => {
     expect(stripeCalls.map((call) => call.name)).toEqual(["createOnboardingLink"]);
   });
 
-  test("marks iDEAL unavailable up front for a country that cannot have it", async () => {
+  test("marks local methods unavailable up front for a country that cannot have any", async () => {
     await completeStepOne({ country: "BR", currency: "brl" });
     await post("/connect");
     const { body } = await get("/connection");
     const connection = body.connection as { onboarding: Record<string, string> };
-    expect(connection.onboarding.ideal).toBe("unavailable");
+    expect(connection.onboarding.localMethods).toBe("unavailable");
   });
 
-  test("leaves iDEAL to Stripe for a country that can have it", async () => {
+  test("leaves local methods to Stripe for a country that can have them", async () => {
     await completeStepOne({ country: "NL" });
     await post("/connect");
     const { body } = await get("/connection");
     const connection = body.connection as { onboarding: Record<string, string> };
-    expect(connection.onboarding.ideal).toBe("todo");
+    expect(connection.onboarding.localMethods).toBe("todo");
   });
 
   test("reports a Stripe failure without leaving a connection behind", async () => {
@@ -156,38 +156,43 @@ describe("POST /api/stripe/onboarding-link", () => {
     expect(link.fields).toBe("eventually_due");
   });
 
-  test("refuses iDEAL for an ineligible country without calling Stripe", async () => {
+  test("refuses local methods for an ineligible country without calling Stripe", async () => {
     await completeStepOne({ country: "BR", currency: "brl" });
     await post("/connect");
     resetStripe();
 
-    const { status, body } = await post("/onboarding-link", { step: "ideal" });
+    const { status, body } = await post("/onboarding-link", { step: "localMethods" });
     expect(status).toBe(409);
-    expect(body.error).toBe("ideal_unavailable");
-    // Requesting the capability would add identity and liveness requirements
-    // to the account, so an ineligible country must not reach Stripe at all.
+    expect(body.error).toBe("local_methods_unavailable");
+    // Requesting iDEAL would add verification requirements to the account, so
+    // an ineligible country must not reach Stripe at all.
     expect(stripeCalls).toHaveLength(0);
   });
 
-  test("requests the capability for an eligible country", async () => {
+  test("requests only the capabilities the country can have", async () => {
     await completeStepOne({ country: "NL" });
     await post("/connect");
     resetStripe();
 
-    const { status } = await post("/onboarding-link", { step: "ideal" });
+    const { status } = await post("/onboarding-link", { step: "localMethods" });
     expect(status).toBe(200);
-    expect(calledWith("requestIdealCapability")).toEqual({ accountId: "acct_test" });
+    const call = calledWith("requestLocalPaymentCapabilities") as {
+      accountId: string;
+      capabilities: string[];
+    };
+    expect(call.accountId).toBe("acct_test");
+    expect(call.capabilities).toContain("ideal_payments");
+    expect(call.capabilities).toContain("bancontact_payments");
   });
 
-  test("passes on Stripe's own refusal of iDEAL", async () => {
+  test("one method Stripe refuses does not fail the whole group", async () => {
     await completeStepOne({ country: "NL" });
     await post("/connect");
     resetStripe();
     stripeState.account.capabilities = { ideal_payments: "unsupported" };
 
-    const { status, body } = await post("/onboarding-link", { step: "ideal" });
-    expect(status).toBe(409);
-    expect(body.error).toBe("ideal_unavailable");
+    const { status } = await post("/onboarding-link", { step: "localMethods" });
+    expect(status).toBe(200);
   });
 
   test("rejects a step that is not one of the three", async () => {
@@ -204,7 +209,7 @@ describe("POST /api/stripe/refresh-status", () => {
     expect(body.error).toBe("not_connected");
   });
 
-  test("re-reads the account and keeps the country's iDEAL verdict", async () => {
+  test("re-reads the account and keeps the country's local method verdict", async () => {
     await completeStepOne({ country: "BR", currency: "brl" });
     await post("/connect");
     resetStripe();
@@ -215,7 +220,7 @@ describe("POST /api/stripe/refresh-status", () => {
     const connection = body.connection as { onboarding: Record<string, string> };
     expect(connection.onboarding.identity).toBe("done");
     // Stripe says active, but the account's country cannot offer it.
-    expect(connection.onboarding.ideal).toBe("unavailable");
+    expect(connection.onboarding.localMethods).toBe("unavailable");
   });
 });
 

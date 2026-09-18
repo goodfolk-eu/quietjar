@@ -26,7 +26,7 @@ const currencies = SUPPORTED_CURRENCIES.map((code) => ({
 // Step one is ours; the rest are Stripe's, and only they carry a status badge.
 const steps = [
   { key: "identity", copy: payout.steps.identity },
-  { key: "ideal", copy: payout.steps.ideal },
+  { key: "localMethods", copy: payout.steps.localMethods },
   { key: "payouts", copy: payout.steps.payouts },
 ];
 
@@ -153,7 +153,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
   import { currencyForCountry } from "@quietjar/backend/currency";
   import { api } from "@/lib/api";
   import { rememberSiteKey } from "@/lib/session";
-  type StepKey = "identity" | "ideal" | "payouts";
+  type StepKey = "identity" | "localMethods" | "payouts";
   type StepState = "todo" | "pending" | "done" | "unavailable";
   type StepIssue = "verificationFailed" | "invalidInformation" | "needsAttention";
   type Onboarding = Record<StepKey, StepState> & {
@@ -191,7 +191,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
     bannerReturn: string;
     errorGeneric: string;
     errorNotConfigured: string;
-    errorIdealUnavailable: string;
+    errorLocalMethodsUnavailable: string;
     errorSiteNotConfigured: string;
   }
 
@@ -395,9 +395,9 @@ const hintClass = "mt-1 text-xs text-gray-500";
     });
 
     function renderSteps(status: Onboarding | null): void {
-      const onboarding = status ?? { identity: "todo", ideal: "todo", payouts: "todo", issues: {} };
+      const onboarding = status ?? { identity: "todo", localMethods: "todo", payouts: "todo", issues: {} };
 
-      for (const key of ["identity", "ideal", "payouts"] as StepKey[]) {
+      for (const key of ["identity", "localMethods", "payouts"] as StepKey[]) {
         const item = stepsCard?.querySelector<HTMLElement>(`[data-step="${key}"]`);
         if (!item) continue;
         const state = onboarding[key];
@@ -436,7 +436,9 @@ const hintClass = "mt-1 text-xs text-gray-500";
         if (restartIfConnectionReset(body)) return;
         if (error || !body?.url) {
           const message =
-            body?.error === "ideal_unavailable" ? copy.errorIdealUnavailable : copy.errorGeneric;
+            body?.error === "local_methods_unavailable"
+              ? copy.errorLocalMethodsUnavailable
+              : copy.errorGeneric;
           showBanner(message, true);
           button.disabled = false;
           return;

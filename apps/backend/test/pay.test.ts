@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { applicationFee } from "../src/stripe/client";
 import { isValidAmount, RateLimiter } from "../src/pay/limits";
 import {
   isAllowedOrigin,
@@ -133,13 +132,6 @@ describe("RateLimiter", () => {
   });
 });
 
-describe("applicationFee", () => {
-  test("takes 5 percent, rounded down to the minor unit", () => {
-    expect(applicationFee(500)).toBe(25);
-    expect(applicationFee(199)).toBe(9);
-    expect(applicationFee(100)).toBe(5);
-  });
-});
 
 describe("normalizeSiteUrl", () => {
   test("keeps the origin and drops everything else", () => {

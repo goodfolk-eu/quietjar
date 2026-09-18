@@ -1,42 +1,55 @@
 {
   "pricingPage": {
     "meta": {
-      "title": "QuietJar pricing - 5% per donation, no monthly fee",
-      "description": "QuietJar takes 5% of each payment you receive. No monthly fee, no plans, no cap. See exactly what you keep on any amount and payment method."
+      "title": "QuietJar pricing - 5% per donation, minimum €0.50",
+      "description": "QuietJar takes 5% of each donation, minimum €0.50, and pays all the card fees. No monthly fee, no plans, no cap. See exactly what you keep on any amount."
     },
     "hero": {
       "eyebrow": "Pricing",
       "number": "5%",
-      "heading": "Of each payment you receive. That is the whole price.",
-      "sub": "No monthly fee. No setup fee. No plans, no cap. Payment processing is billed at cost, on top, and your supporters never pay a cent more.",
+      "minimum": "minimum €0.50",
+      "heading": "Of each donation you receive. That is the whole price.",
+      "sub": "Never less than €0.50, and never more than 5%. We pay the card fees ourselves, so what you receive does not depend on how your supporter chose to pay.",
       "trustBar": [
-        "Flat 5%, no tiers",
-        "No monthly fee",
-        "Processing at cost, never marked up",
+        "5%, minimum €0.50",
+        "No monthly fee, no cap",
+        "We pay all the card fees",
         "Paid out daily, automatically"
       ]
     },
     "example": {
       "title": "What you keep",
-      "intro": "Pick an amount and how your supporter likes to pay, and see exactly what lands in your account.",
+      "intro": "Pick an amount and see exactly what lands in your account. Nothing else comes off.",
       "amountLabel": "Amount",
       "customLabel": "Other amount",
-      "methodLabel": "Payment method",
-      "methods": {
-        "card": "EEA card or wallet",
-        "cardUk": "UK card or wallet",
-        "cardInternational": "Non-EEA card or wallet",
-        "ideal": "iDEAL"
-      },
       "rows": {
         "pays": "Your supporter pays",
-        "processing": "Payment processing",
         "quietjar": "QuietJar",
         "receive": "You receive"
       },
-      "footnote": "These are Stripe's published EU rates, passed on at cost with nothing added. Rates can change, so check the current",
-      "footnoteLink": "Stripe pricing",
-      "noscriptIntro": "A few common amounts, on card and iDEAL, without the calculator:"
+      "minimumLabel": "minimum",
+      "noscriptIntro": "A few common amounts, without the calculator:"
+    },
+    "methods": {
+      "title": "How your supporters can pay",
+      "text": "Whatever they reach for, you receive the same. The cost difference is ours, not yours.",
+      "items": [
+        "Visa",
+        "Mastercard",
+        "American Express",
+        "Cartes Bancaires",
+        "Apple Pay",
+        "Google Pay",
+        "Link",
+        "iDEAL",
+        "Bancontact",
+        "EPS",
+        "Revolut Pay",
+        "BLIK",
+        "Satispay",
+        "Pay by Bank"
+      ],
+      "note": "Which methods appear depends on where your account is registered and where your supporter is."
     },
     "why": {
       "title": "Why it is worth it",
@@ -71,7 +84,7 @@
           "name": "Which payment methods can my supporters use?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Cards, Apple Pay, Google Pay, and iDEAL. Your supporters see the method they already use, not an unfamiliar form."
+            "text": "Cards, Apple Pay, Google Pay, Link, and local methods like iDEAL, Bancontact, EPS, Revolut Pay and BLIK. Your supporters see the method they already use, not an unfamiliar form."
           }
         },
         {
@@ -87,15 +100,23 @@
           "name": "Does the fee change with volume?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. There are no tiers and no minimum. Everyone pays the same 5%, from the first payment onward."
+            "text": "No. There are no tiers and no cap. Everyone pays the same 5%, from the first donation onward, with a €0.50 minimum on the small ones."
           }
         },
         {
           "@type": "Question",
-          "name": "Who pays the payment processing cost?",
+          "name": "Why is there a €0.50 minimum?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "You do, at Stripe's cost, on top of our 5%. Cheaper methods like iDEAL leave you more, and your supporters never see a surcharge."
+            "text": "Every donation costs us something to process, and on a €1 donation 5% does not cover it. The floor applies to donations up to €10, since 5% of €10 is exactly €0.50, and the percentage takes over above that."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who pays the card fees?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We do. They come out of our 5%, not out of your balance. That is why a donation on a non-EU credit card leaves you exactly as much as the same donation on iDEAL."
           }
         },
         {

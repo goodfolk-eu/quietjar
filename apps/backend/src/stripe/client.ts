@@ -67,7 +67,9 @@ export async function createConnectedAccount(
         // Prefilled so Stripe stops asking each creator to pick an industry.
         // Card network classification only; it has no bearing on tax.
         mcc: "5815",
-        capabilities: { card_payments: { requested: true } },
+        // Link needs no country gate and adds no verification requirements,
+        // unlike the local methods requested later from the payout page.
+        capabilities: { card_payments: { requested: true }, link_payments: { requested: true } },
       },
       recipient: {
         capabilities: { stripe_balance: { stripe_transfers: { requested: true } } },
@@ -92,15 +94,21 @@ export function retrieveAccount(config: StripeConfig, accountId: string): Promis
 }
 
 /**
- * Ask Stripe to enable iDEAL. This adds requirements (identity number, liveness
- * check) that the next onboarding link collects.
+ * Ask Stripe to enable the local payment methods the account's country allows.
+ *
+ * Only iDEAL adds verification requirements of its own (a tax ID for sole
+ * proprietors), which the next onboarding link collects. The rest need nothing
+ * beyond what card payments already asked for, so they ride along on the same
+ * request rather than each earning an onboarding step.
  */
-export function requestIdealCapability(
+export function requestLocalPaymentCapabilities(
   config: StripeConfig,
   accountId: string,
+  capabilities: readonly string[],
 ): Promise<V2Account> {
+  const requested = Object.fromEntries(capabilities.map((name) => [name, { requested: true }]));
   return stripeClient(config).v2.core.accounts.update(accountId, {
-    configuration: { merchant: { capabilities: { ideal_payments: { requested: true } } } },
+    configuration: { merchant: { capabilities: requested } },
     include: [...INCLUDE],
   });
 }
@@ -252,19 +260,6 @@ export function isTestMode(config: StripeConfig): boolean {
   return config.secretKey.startsWith("sk_test_") || config.secretKey.startsWith("rk_test_");
 }
 
-/**
- * QuietJar's share of a donation, in basis points.
- *
- * Stripe's platform pricing scheme is what actually charges the fee, so this
- * is only a fallback for reporting when the settled fee cannot be read back.
- * Keep it in step with the scheme's default rule.
- */
-export const FEE_BPS = 500;
-
-export function applicationFee(amountInMinorUnits: number): number {
-  return Math.floor((amountInMinorUnits * FEE_BPS) / 10_000);
-}
-
 export interface DonationSessionInput {
   accountId: string;
   /** Amount in the currency's minor units. */
@@ -307,8 +302,7 @@ export async function createDonationSession(
         },
       ],
       // No application_fee_amount: an explicit fee overrides the platform
-      // pricing scheme, and the scheme is what adds Stripe's processing cost
-      // to our own 5% so the creator absorbs it, as the pricing page promises.
+      // pricing scheme, and the scheme is the only place the fee rule lives.
       payment_intent_data: { metadata },
       metadata,
       return_url: returnUrlWithMarker(input.returnUrl),

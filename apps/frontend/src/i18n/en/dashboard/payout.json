@@ -49,13 +49,13 @@
         "done": "Your widget can receive card tips.",
         "action": "Continue"
       },
-      "ideal": {
-        "title": "Enable iDEAL",
-        "todo": "Let supporters pay with iDEAL. You will be asked for an identity number and a short liveness check.",
-        "pending": "Your iDEAL request is being reviewed.",
-        "done": "Supporters can pay with iDEAL.",
-        "unavailable": "iDEAL is not available for accounts in your country.",
-        "action": "Enable iDEAL"
+      "localMethods": {
+        "title": "Enable local payment methods",
+        "todo": "Let supporters pay the way they already do: iDEAL, Bancontact, EPS, Revolut Pay and more. iDEAL asks sole proprietors for a tax identification number.",
+        "pending": "Your request is being reviewed. Card payments already work in the meantime.",
+        "done": "Supporters can pay with the local methods available where they are.",
+        "unavailable": "Local payment methods are not available for accounts in your country.",
+        "action": "Enable local methods"
       },
       "payouts": {
         "title": "Get paid out",
@@ -68,7 +68,7 @@
     "bannerReturn": "Thanks. We are checking your setup.",
     "errorGeneric": "Something went wrong. Please try again.",
     "errorNotConfigured": "Payments are not set up yet. Please try again later.",
-    "errorIdealUnavailable": "iDEAL is not available for accounts in your country.",
+    "errorLocalMethodsUnavailable": "Local payment methods are not available for accounts in your country.",
     "errorSiteNotConfigured": "Fill in your details above before you set up payments."
   }
 }

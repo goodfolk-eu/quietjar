@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { auth } from "../auth";
 import { recordCompletedDonation } from "../pay/record";
-import { supportsIdeal } from "../sites/currency";
+import { localMethodCapabilities } from "../sites/currency";
 import { getSiteByUserId } from "../sites/store";
 import {
   constructWebhookEvent,
@@ -10,7 +10,7 @@ import {
   createOnboardingLink,
   isMissingAccount,
   registerWalletDomains,
-  requestIdealCapability,
+  requestLocalPaymentCapabilities,
   retrieveAccount,
   stripeConfigFromEnv,
   webhookSecretFromEnv,
@@ -24,7 +24,7 @@ import {
   saveOnboarding,
 } from "./store";
 
-type Step = "identity" | "ideal" | "payouts";
+type Step = "identity" | "localMethods" | "payouts";
 
 function frontendOrigin(): string {
   return process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
@@ -63,7 +63,7 @@ async function syncOnboarding(accountId: string, userId: string) {
   if (!config) return null;
   const site = await getSiteByUserId(userId);
   const onboarding = deriveOnboarding(await retrieveAccount(config, accountId), {
-    idealEligible: supportsIdeal(site?.country),
+    eligibleCapabilities: localMethodCapabilities(site?.country),
   });
   await saveOnboarding(accountId, onboarding);
   // The usual order is site URL first, account second, so this is where most
@@ -119,7 +119,9 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
         await createConnection({ userId, accountId });
         await saveOnboarding(
           accountId,
-          deriveOnboarding(account, { idealEligible: supportsIdeal(site.country) }),
+          deriveOnboarding(account, {
+            eligibleCapabilities: localMethodCapabilities(site.country),
+          }),
         );
         // The site URL is known to exist by now, so the wallets are ready
         // before the creator takes their first payment rather than after
@@ -174,21 +176,26 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
       const site = await getSiteByUserId(userId);
 
       const step = body.step as Step;
-      if (step === "ideal") {
-        // Requesting the capability is what makes Stripe answer, and the answer
-        // costs the creator extra requirements. If the country cannot have it,
-        // say so without asking.
-        if (!supportsIdeal(site?.country)) {
+      if (step === "localMethods") {
+        // Requesting the capabilities is what makes Stripe answer, and iDEAL's
+        // answer costs the creator extra requirements. If the country cannot
+        // have any of them, say so without asking.
+        const eligible = localMethodCapabilities(site?.country);
+        if (eligible.length === 0) {
           set.status = 409;
-          return { error: "ideal_unavailable" };
+          return { error: "local_methods_unavailable" };
         }
         try {
-          const account = await requestIdealCapability(config, connection.accountId);
-          const onboarding = deriveOnboarding(account, { idealEligible: true });
+          const account = await requestLocalPaymentCapabilities(
+            config,
+            connection.accountId,
+            eligible,
+          );
+          const onboarding = deriveOnboarding(account, { eligibleCapabilities: eligible });
           await saveOnboarding(connection.accountId, onboarding);
-          if (onboarding.ideal === "unavailable") {
+          if (onboarding.localMethods === "unavailable") {
             set.status = 409;
-            return { error: "ideal_unavailable" };
+            return { error: "local_methods_unavailable" };
           }
         } catch (err) {
           if (isMissingAccount(err)) {
@@ -224,7 +231,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
     },
     {
       body: t.Object({
-        step: t.Union([t.Literal("identity"), t.Literal("ideal"), t.Literal("payouts")]),
+        step: t.Union([t.Literal("identity"), t.Literal("localMethods"), t.Literal("payouts")]),
       }),
     },
   )

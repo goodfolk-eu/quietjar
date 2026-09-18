@@ -6,12 +6,9 @@ import {
   breakdown,
   formatEuro,
   MAX_AMOUNT,
-  METHOD_RATES,
   MIN_AMOUNT,
   PRESET_AMOUNTS,
   QUIETJAR_RATE,
-  RATES_CHECKED,
-  rateFor,
 } from "@/lib/fees";
 import { localizedPath } from "@/lib/links";
 
@@ -21,15 +18,12 @@ const copy = dictionary(Astro.currentLocale ?? "en");
 const page = copy.pricingPage;
 const comparePath = localizedPath("/compare/", Astro.currentLocale ?? "en");
 
-const defaultAmount = 5;
-const defaultMethod = rateFor("card");
-const initial = breakdown(defaultAmount, defaultMethod);
+// The point where the floor hands over to the percentage, so stepping either
+// way from it shows the other half of the rule.
+const defaultAmount = 10;
+const initial = breakdown(defaultAmount);
 const quietjarPercent = `${QUIETJAR_RATE * 100}%`;
-
-// Static fallback for browsers without JavaScript: the presets on the two
-// most common methods.
-const noscriptMethods = [rateFor("card"), rateFor("ideal")];
-const methodName = (key: string) => page.example.methods[key as keyof typeof page.example.methods];
+const initialFeeLabel = initial.atMinimum ? page.example.minimumLabel : quietjarPercent;
 
 const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
 ---
@@ -47,6 +41,7 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
             <p class="font-display text-[clamp(112px,15vw,220px)] font-bold leading-[0.82] tracking-[-0.05em] text-qj-ink">
               {page.hero.number}
             </p>
+            <p class="mt-2 font-mono text-[13px] uppercase tracking-[0.1em] text-qj-body">{page.hero.minimum}</p>
           </div>
           <div class="flex flex-col gap-6">
             <h1 class="max-w-[22ch] text-balance font-display text-[clamp(28px,3.2vw,42px)] font-bold leading-[1.12] tracking-[-0.028em] text-qj-ink">
@@ -113,10 +108,9 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
       data-min={MIN_AMOUNT}
       data-max={MAX_AMOUNT}
       data-default-amount={defaultAmount}
-      data-default-method={defaultMethod.key}>
-      <!-- The instrument: amount and method, in one bordered card with a
-           left accent stripe, so it reads as one control panel rather than
-           two loose lists of chips. -->
+      data-minimum-label={page.example.minimumLabel}>
+      <!-- The instrument: the amount, in one bordered card with a left accent
+           stripe, facing the answer panel beside it. -->
       <div class="flex h-full flex-col gap-7 rounded-lg border border-qj-line-card border-l-[3px] border-l-qj-accent bg-white p-7 sm:p-8">
         <div class="flex flex-col gap-3">
           <span id="qj-amount-label" class="font-mono text-[11.5px] uppercase tracking-[0.1em] text-qj-body">{page.example.amountLabel}</span>
@@ -149,29 +143,11 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
           </label>
         </div>
 
-        <fieldset class="flex flex-col gap-3 border-0 p-0">
-          <legend class="mb-1 font-mono text-[11.5px] uppercase tracking-[0.1em] text-qj-body">{page.example.methodLabel}</legend>
-          <div class="grid grid-cols-2 gap-2">
-            {
-              METHOD_RATES.map((method) => (
-                <label class="cursor-pointer rounded-sm border border-qj-line-card bg-qj-paper px-3 py-2.5 text-center text-[14px] font-medium text-qj-ink transition hover:border-qj-accent has-checked:border-qj-accent has-checked:bg-qj-accent has-checked:text-white has-focus-visible:outline-2 has-focus-visible:outline-qj-accent has-focus-visible:outline-offset-2">
-                  <input
-                    type="radio"
-                    name="qj-method"
-                    value={method.key}
-                    checked={method.key === defaultMethod.key}
-                    class="sr-only"
-                  />
-                  {methodName(method.key)}
-                </label>
-              ))
-            }
-          </div>
-        </fieldset>
       </div>
 
-      <!-- The answer: the figure that matters, first and biggest, with the
-           receipt as supporting detail underneath. -->
+      <!-- The answer: the figure that matters, first and biggest, with the two
+           lines that get to it underneath. The rate label flips to "minimum"
+           below EUR 10, where the floor is what actually binds. -->
       <div class="flex h-full flex-col justify-center gap-6 rounded-lg bg-qj-field p-8 text-white sm:p-9" aria-live="polite">
         <div>
           <span class="font-mono text-[11.5px] uppercase tracking-[0.1em] text-qj-field-mint">{page.example.rows.receive}</span>
@@ -187,27 +163,14 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
           </div>
           <div class="flex items-baseline justify-between gap-6 py-2">
             <dt class="text-white/72">
-              {page.example.rows.processing}
-              <span class="ml-1.5 font-mono text-[12px] text-qj-field-mint" data-out="rate">{defaultMethod.display}</span>
-            </dt>
-            <dd class="font-mono tabular-nums">−<span data-out="processing">{formatEuro(initial.processing)}</span></dd>
-          </div>
-          <div class="flex items-baseline justify-between gap-6 py-2">
-            <dt class="text-white/72">
               {page.example.rows.quietjar}
-              <span class="ml-1.5 font-mono text-[12px] text-qj-field-mint">{quietjarPercent}</span>
+              <span class="ml-1.5 font-mono text-[12px] text-qj-field-mint" data-out="rate">{initialFeeLabel}</span>
             </dt>
             <dd class="font-mono tabular-nums">−<span data-out="quietjar">{formatEuro(initial.quietjar)}</span></dd>
           </div>
         </dl>
       </div>
     </div>
-
-    <p class="mt-6 max-w-[60ch] text-[13.5px] leading-[1.6] text-qj-body">
-      {page.example.footnote}{" "}
-      <a href="https://stripe.com/nl/pricing" rel="noopener" class="font-semibold">{page.example.footnoteLink}</a>
-      <span class="font-mono text-[12px]"> ({RATES_CHECKED})</span>
-    </p>
 
     <noscript>
       <p class="mt-8 text-[15px] leading-[1.6] text-qj-body">{page.example.noscriptIntro}</p>
@@ -216,26 +179,43 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
           <thead>
             <tr class="border-b border-qj-line-3">
               <th scope="col" class="px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-qj-body">{page.example.rows.pays}</th>
-              {noscriptMethods.map((m) => (
-                <th scope="col" class="px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-qj-body">
-                  {page.example.rows.receive} · {methodName(m.key)}
-                </th>
-              ))}
+              <th scope="col" class="px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-qj-body">{page.example.rows.quietjar}</th>
+              <th scope="col" class="px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-qj-body">{page.example.rows.receive}</th>
             </tr>
           </thead>
           <tbody>
             {PRESET_AMOUNTS.map((amount) => (
               <tr class="border-b border-qj-line-2">
                 <td class="px-3 py-3 font-semibold text-qj-ink">{formatEuro(amount)}</td>
-                {noscriptMethods.map((m) => (
-                  <td class="px-3 py-3 tabular-nums text-qj-body">{formatEuro(breakdown(amount, m).net)}</td>
-                ))}
+                <td class="px-3 py-3 tabular-nums text-qj-body">{formatEuro(breakdown(amount).quietjar)}</td>
+                <td class="px-3 py-3 tabular-nums text-qj-body">{formatEuro(breakdown(amount).net)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
     </noscript>
+
+    <!-- What supporters can pay with, inside the same block: it is the other
+         half of the same promise, that the method never changes the answer. -->
+    <div class="mt-[clamp(40px,5vw,64px)] flex flex-col gap-5 border-t border-qj-line-soft pt-[clamp(32px,4vw,48px)]">
+      <div class="max-w-[640px]">
+        <h3 class="text-balance font-display text-[clamp(20px,2.2vw,26px)] font-bold leading-[1.15] tracking-[-0.022em] text-qj-ink">
+          {page.methods.title}
+        </h3>
+        <p class="mt-2.5 max-w-[52ch] text-pretty text-[15.5px] leading-[1.62] text-qj-body">{page.methods.text}</p>
+      </div>
+      <ul class="flex flex-wrap gap-2.5">
+        {
+          page.methods.items.map((item) => (
+            <li class="rounded-sm border border-qj-line-card bg-white px-3.5 py-2 text-[14px] font-medium text-qj-ink">
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="max-w-[60ch] text-[13.5px] leading-[1.6] text-qj-body">{page.methods.note}</p>
+    </div>
   </section>
 
   <!-- 3. Why it is worth it -->
@@ -294,34 +274,31 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
 </Layout>
 
 <script>
-import { breakdown, clampAmount, formatEuro, rateFor } from "../../../lib/fees.ts";
+import { breakdown, clampAmount, formatEuro, QUIETJAR_RATE } from "../../../lib/fees.ts";
 
 const root = document.querySelector<HTMLElement>("[data-qj-calc]");
 
 if (root) {
   const presets = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-preset]"));
   const custom = root.querySelector<HTMLInputElement>("[data-custom]");
-  const radios = Array.from(root.querySelectorAll<HTMLInputElement>('input[name="qj-method"]'));
   // Some values (the rate label, in particular) are shown in more than one
   // place in the redesigned layout, so every [data-out] match gets updated,
   // not just the first.
   const out = (name: string) => Array.from(root.querySelectorAll<HTMLElement>(`[data-out="${name}"]`));
 
-  const defaultMethodKey = root.dataset.defaultMethod ?? "card";
-  let amount = Number(root.dataset.defaultAmount ?? 5);
+  const minimumLabel = root.dataset.minimumLabel ?? "minimum";
+  const percentLabel = `${QUIETJAR_RATE * 100}%`;
+  let amount = Number(root.dataset.defaultAmount ?? 10);
 
   function render() {
-    const methodKey = radios.find((r) => r.checked)?.value ?? defaultMethodKey;
-    const method = rateFor(methodKey);
-    const result = breakdown(amount, method);
+    const result = breakdown(amount);
     const set = (name: string, value: string) => {
       for (const el of out(name)) el.textContent = value;
     };
     set("amount", formatEuro(result.amount));
-    set("processing", formatEuro(result.processing));
     set("quietjar", formatEuro(result.quietjar));
     set("net", formatEuro(result.net));
-    set("rate", method.display);
+    set("rate", result.atMinimum ? minimumLabel : percentLabel);
     presets.forEach((btn) => {
       btn.setAttribute("aria-pressed", String(Number(btn.dataset.preset) === result.amount));
     });
@@ -348,8 +325,6 @@ if (root) {
     amount = clamped;
     render();
   });
-
-  radios.forEach((radio) => radio.addEventListener("change", render));
 
   render();
 }

@@ -12,7 +12,8 @@ export interface Donation {
   paymentIntentId: string | null;
   amount: number;
   currency: string;
-  applicationFee: number;
+  /** What Stripe told us it took. Null when the charge could not be read. */
+  applicationFee: number | null;
   /** Comes from the payment, so the supporter is never asked for it again. */
   email: string | null;
   /** What the creator kept. Null on rows written before it was captured. */
@@ -30,7 +31,7 @@ interface Row {
   payment_intent_id: string | null;
   amount: number;
   currency: string;
-  application_fee: number;
+  application_fee: number | null;
   email: string | null;
   net: number | null;
   goal_id: string | null;
@@ -73,7 +74,7 @@ export async function recordDonation(input: {
   paymentIntentId: string | null;
   amount: number;
   currency: string;
-  applicationFee: number;
+  applicationFee: number | null;
   email: string | null;
   net: number | null;
   goalId: string | null;
@@ -243,8 +244,9 @@ export async function listDonations(input: {
 
 /**
  * What the creator kept over a period, in minor units. Rows captured before
- * net existed fall back to the gross minus our fee; Stripe's own cost is
- * missing from those. All time is `since: 0`.
+ * net existed fall back to the gross minus the fee. A row Stripe never told us
+ * about has neither, and contributes nothing until `backfill-donation.ts` fills
+ * it in. All time is `since: 0`.
  */
 export async function earningsSum(siteId: string, since: number): Promise<number> {
   const result = await libsqlClient.execute({

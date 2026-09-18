@@ -221,8 +221,10 @@
       "items": [
         { "name": "Apple Pay", "line": "Appears on iPhone, iPad, and Mac. One tap with Face ID." },
         { "name": "Google Pay", "line": "Appears in Chrome and on Android. One tap, no forms." },
-        { "name": "Cards", "line": "Visa, Mastercard, Amex. The fallback that always works." },
-        { "name": "iDEAL", "line": "For visitors with a Dutch bank. They pay in their own banking app." }
+        { "name": "Cards", "line": "Visa, Mastercard, Amex, Cartes Bancaires. The fallback that always works." },
+        { "name": "Link", "line": "Stripe's own wallet. Returning supporters pay without retyping a card." },
+        { "name": "iDEAL", "line": "For visitors with a Dutch bank. They pay in their own banking app." },
+        { "name": "Local methods", "line": "Bancontact, EPS, Revolut Pay, BLIK, Satispay, Pay by Bank, where available." }
       ]
     },
     "goals": {
@@ -231,7 +233,7 @@
     },
     "fees": {
       "title": "What we take",
-      "text": "5% per payment. No monthly fee. Paid out daily to your bank account, automatically."
+      "text": "5% per donation, minimum \u20ac0.50. No monthly fee, no cap, and we pay the card fees. Paid out daily to your bank account, automatically."
     },
     "feesLink": "Full pricing",
     "alternatives": {
