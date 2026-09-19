@@ -83,7 +83,7 @@ describe("pushSubscriber", () => {
       data: {
         email: "jane@example.com",
         external_id: "user_1",
-        data: { productChersus: "true" },
+        data: { productQuietJar: "true" },
       },
     });
   });

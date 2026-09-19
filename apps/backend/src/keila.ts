@@ -48,7 +48,7 @@ export async function submitSubscriber(
         email: user.email,
         external_id: user.id,
         data: {
-          productChersus: "true",
+          productQuietJar: "true",
         },
       },
     }),
