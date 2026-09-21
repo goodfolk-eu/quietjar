@@ -14,3 +14,6 @@ Client-side embed widget, installed by site owners as a single `<script>` tag. W
   origin defaults to `https://api.quietjar.com`; `dev-config.json` points it at the local backend.
 - Clicking the button opens the payment container (`src/container.ts`), which loads Stripe.js into
   the host page on first open and mounts the Payment Element inside the shadow root.
+- Calling `QuietJar.open()` (the script attaches it onto the config object) opens the panel:
+  anchored to the widget when it is mounted, centered like a deep link open otherwise. It always
+  opens, past every suppression.

@@ -8,11 +8,39 @@ import { pendingSessionId, resolveReturn } from "./return";
 
 declare global {
   interface Window {
-    QuietJar?: QuietJarConfig;
+    QuietJar?: QuietJarConfig & { open?(): void };
   }
 }
 
+// The mounted widget host. Undefined while the widget is not on the page: a
+// suppressed boot never mounts, and a visitor closing the widget removes it.
+let host: HTMLElement | undefined;
+
+// An owner-invoked open always opens the checkout. When the widget is not on
+// the page it mounts again past every suppression, and the panel centers like
+// a deep link open.
+function openPanel(): void {
+  if (host?.isConnected) {
+    paymentContainer(host)?.open();
+    return;
+  }
+  host = mountWidget(resolveConfig(window.QuietJar), { persistDismissal: true });
+  const container = paymentContainer(host);
+  container?.open({ modal: true });
+}
+
+// Attached when the script runs and again on every mount, so a config object
+// assigned after the script loaded still gains the method.
+function exposeOpen(): void {
+  window.QuietJar ??= {};
+  const target = window.QuietJar as QuietJarConfig & { open?(): void };
+  target.open = openPanel;
+}
+
+exposeOpen();
+
 export async function mount(): Promise<void> {
+  exposeOpen();
   const config = resolveConfig(window.QuietJar);
   // A deep link from a static image opens the panel no matter what state the
   // widget is in: the supporter clicked a donate button to get here.
@@ -31,7 +59,7 @@ export async function mount(): Promise<void> {
     if (widgetHidden(config.goalReached, progress)) return;
     options.progress = progress;
   }
-  const host = mountWidget(config, options);
+  host = mountWidget(config, options);
   const container = paymentContainer(host);
   if (!container) return;
 

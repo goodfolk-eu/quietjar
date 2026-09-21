@@ -8,6 +8,6 @@ declare global {
   interface Window {
     __quietjarAuthOpen?: (mode: "login" | "signup" | string) => void;
     __quietjarFeedbackOpen?: () => void;
-    QuietJar?: QuietJarConfig;
+    QuietJar?: QuietJarConfig & { open?(): void };
   }
 }

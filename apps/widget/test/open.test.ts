@@ -200,3 +200,143 @@ describe("modal presentation", () => {
     expect(backdrop?.dataset.state).toBe("closed");
   });
 });
+
+describe("programmatic open", () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  function openPanel(): void {
+    window.QuietJar?.open?.();
+  }
+
+  test("attaches open onto the config object", async () => {
+    withSite();
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    expect(typeof window.QuietJar?.open).toBe("function");
+  });
+
+  test("opens the anchored panel like a click on the button", async () => {
+    withSite();
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    const host = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    if (!host) throw new Error("widget did not mount");
+    openPanel();
+
+    const panel = host.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+    expect(paymentContainer(host)?.isOpen()).toBe(true);
+    expect(panel?.hidden).toBe(false);
+    expect(panel?.classList.contains("quietjar-panel--modal")).toBe(false);
+    expect(host.shadowRoot?.querySelector(".quietjar-backdrop")).toBeNull();
+  });
+
+  test("opens centered past a stored dismissal", async () => {
+    withSite();
+    sessionStorage.setItem("quietjar-dismissed", "1");
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    expect(document.querySelector("[data-quietjar-host]")).toBeNull();
+    openPanel();
+
+    const host = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    const panel = host?.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+    const backdrop = host?.shadowRoot?.querySelector<HTMLElement>(".quietjar-backdrop");
+    expect(panel?.hidden).toBe(false);
+    expect(panel?.classList.contains("quietjar-panel--modal")).toBe(true);
+    expect(backdrop?.dataset.state).toBe("open");
+  });
+
+  test("opens centered past a donation suppression", async () => {
+    withSite();
+    localStorage.setItem(
+      "quietjar-donated",
+      JSON.stringify({
+        date: new Date().toISOString(),
+        site: "qj_test",
+        hideUntil: new Date(Date.now() + DAY_MS).toISOString(),
+      }),
+    );
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    expect(document.querySelector("[data-quietjar-host]")).toBeNull();
+    openPanel();
+
+    const panel = document
+      .querySelector<HTMLElement>("[data-quietjar-host]")
+      ?.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+    expect(panel?.hidden).toBe(false);
+    expect(panel?.classList.contains("quietjar-panel--modal")).toBe(true);
+  });
+
+  test("opens even on a reached goal", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response(
+        JSON.stringify({ raised: 10_000, target: 10_000, currency: "eur" }),
+      )) as unknown as typeof fetch;
+    try {
+      (window as { QuietJar?: unknown }).QuietJar = { site: "qj_test", goal: "qg_call" };
+      document.body.innerHTML = "";
+      const mount = await loadMount();
+      await mount();
+
+      expect(document.querySelector("[data-quietjar-host]")).toBeNull();
+      openPanel();
+
+      const panel = document
+        .querySelector<HTMLElement>("[data-quietjar-host]")
+        ?.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+      expect(panel?.hidden).toBe(false);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  test("remounts and centers after the visitor closed the widget", async () => {
+    withSite();
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    const first = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    if (!first) throw new Error("widget did not mount");
+    first.shadowRoot?.querySelector<HTMLElement>(".quietjar-widget__close")?.click();
+    expect(document.querySelector("[data-quietjar-host]")).toBeNull();
+
+    openPanel();
+
+    const second = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    expect(second).not.toBeNull();
+    expect(second).not.toBe(first);
+    const panel = second?.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+    expect(panel?.hidden).toBe(false);
+    expect(panel?.classList.contains("quietjar-panel--modal")).toBe(true);
+  });
+
+  test("a second call while open changes nothing", async () => {
+    withSite();
+    document.body.innerHTML = "";
+    const mount = await loadMount();
+    await mount();
+
+    const host = document.querySelector<HTMLElement>("[data-quietjar-host]");
+    if (!host) throw new Error("widget did not mount");
+    openPanel();
+    const panel = host.shadowRoot?.querySelector<HTMLElement>(".quietjar-panel");
+    expect(panel?.classList.contains("quietjar-panel--modal")).toBe(false);
+
+    openPanel();
+
+    expect(document.querySelectorAll("[data-quietjar-host]").length).toBe(1);
+    expect(paymentContainer(host)?.isOpen()).toBe(true);
+    expect(panel?.classList.contains("quietjar-panel--modal")).toBe(false);
+  });
+});

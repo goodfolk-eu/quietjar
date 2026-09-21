@@ -123,8 +123,12 @@ const presetStyles = Object.fromEntries(
     >;
 
     // Captured before any preset runs, so every tab composes from the
-    // production config instead of the previous tab's restyle.
-    const baseConfig = window.QuietJar ? structuredClone(window.QuietJar) : undefined;
+    // production config instead of the previous tab's restyle. The widget
+    // attaches an open() method to the config object, which structuredClone
+    // rejects, so the copy drops functions with a JSON round trip.
+    const baseConfig = window.QuietJar
+      ? (JSON.parse(JSON.stringify(window.QuietJar)) as QuietJarConfig)
+      : undefined;
 
     for (const button of presetButtons) {
       button.addEventListener("click", () => {

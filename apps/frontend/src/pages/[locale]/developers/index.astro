@@ -136,17 +136,8 @@ const comparePath = localizedPath("/compare/", locale);
       </section>
 
       <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.fees.title}</h2>
-        <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.fees.text}</p>
-        <a href={pricingPath} class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.feesLink}</a>
-      </section>
-
-      <section class="flex flex-col gap-4">
-        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.alternatives.title}</h2>
-        {dev.alternatives.paragraphs.map((paragraph) => (
-          <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{paragraph}</p>
-        ))}
-        <a href={comparePath} class="self-start text-[14px] font-semibold text-qj-green-deep transition hover:text-qj-ink">{dev.compareLink}</a>
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.programmatic.title}</h2>
+        <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.programmatic.text}</p>
       </section>
 
       <div class="border-t border-qj-line pt-10">

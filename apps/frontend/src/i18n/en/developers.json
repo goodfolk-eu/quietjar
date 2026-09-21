@@ -231,20 +231,10 @@
       "title": "Goals",
       "text": "Give the button a public target and a bar that fills toward it: hosting for the year, the next release, a new microphone. Concrete goals lift the amounts people choose. Set one in the dashboard next to the button's style."
     },
-    "fees": {
-      "title": "What we take",
-      "text": "5% per donation, minimum \u20ac0.50. No monthly fee, no cap, and we pay the card fees. Paid out daily to your bank account, automatically."
+    "programmatic": {
+      "title": "Open the panel from your own code",
+      "text": "Wire the checkout to your own call to action: the end of an article, a finished download, a tag manager. Call window.QuietJar.open() anywhere on the page and the panel opens right there. It sits next to the widget when that is visible, and centers on the page when it is not. The call always opens, even for visitors the widget stepped back for."
     },
-    "feesLink": "Full pricing",
-    "alternatives": {
-      "title": "Alternatives, honestly",
-      "paragraphs": [
-        "GitHub Sponsors is the right default for your repo, and it takes 0%. It lives on github.com, both sides need a GitHub account, and support is recurring by default. That is exactly why your website needs its own button: most of your readers never open the repo. Use both.",
-        "You can build this on Stripe yourself, and their embedded checkout is good. You will own the button, the states, the step-back logic, the design matching, and the upkeep. Count the weekends. Our fee exists to buy back that time, not to tax anyone's generosity.",
-        "Ko-fi takes 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay, which is the drop this whole product exists to remove."
-      ]
-    },
-    "compareLink": "See the full comparison",
     "cta": "Add it to your site"
   }
 }
