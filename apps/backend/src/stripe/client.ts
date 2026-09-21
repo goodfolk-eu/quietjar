@@ -33,6 +33,10 @@ export function stripeClient(config: StripeConfig): Stripe {
  */
 const INCLUDE = ["configuration.merchant", "requirements"] as const;
 
+/** Every capability name the v2 merchant configuration accepts. */
+export type MerchantCapability =
+  keyof NonNullable<Stripe.V2.Core.AccountUpdateParams.Configuration.Merchant.Capabilities>;
+
 export type V2Account = Stripe.V2.Core.Account;
 
 export interface CreateAccountInput {
@@ -104,7 +108,7 @@ export function retrieveAccount(config: StripeConfig, accountId: string): Promis
 export function requestLocalPaymentCapabilities(
   config: StripeConfig,
   accountId: string,
-  capabilities: readonly string[],
+  capabilities: readonly MerchantCapability[],
 ): Promise<V2Account> {
   const requested = Object.fromEntries(capabilities.map((name) => [name, { requested: true }]));
   return stripeClient(config).v2.core.accounts.update(accountId, {

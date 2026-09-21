@@ -59,7 +59,7 @@ function toIssue(code: string): StepIssue {
 function stepForCapability(capability: string): StepKey | null {
   if (capability === "card_payments") return "identity";
   if (capability === "stripe_balance.payouts") return "payouts";
-  if (LOCAL_METHOD_CAPABILITIES.includes(capability)) return "localMethods";
+  if ((LOCAL_METHOD_CAPABILITIES as readonly string[]).includes(capability)) return "localMethods";
   return null;
 }
 

@@ -1,3 +1,5 @@
+import type { MerchantCapability } from "../stripe/client";
+
 /**
  * Countries a creator can run a connected account from, and the currency each
  * one collects in.
@@ -113,8 +115,12 @@ export const SUPPORTED_COUNTRIES = Object.keys(BY_COUNTRY) as Country[];
  * Only iDEAL adds verification requirements beyond card payments. Methods that
  * charge the connected account a standing fee are deliberately absent, because
  * the creator is promised one deduction per donation and nothing else.
+ *
+ * Keys are checked against Stripe's v2 merchant capabilities: a name that only
+ * exists on v1 accounts (Satispay, for one) is rejected as an unknown parameter
+ * for the whole batch, taking the other methods down with it.
  */
-const CAPABILITY_COUNTRIES: Record<string, ReadonlySet<string>> = {
+const CAPABILITY_COUNTRIES = {
   ideal_payments: new Set<string>([
     "AT",
     "AU",
@@ -354,43 +360,6 @@ const CAPABILITY_COUNTRIES: Record<string, ReadonlySet<string>> = {
     "SK",
     "US",
   ]),
-  satispay_payments: new Set<string>([
-    "AT",
-    "AU",
-    "BE",
-    "BG",
-    "CA",
-    "CH",
-    "CY",
-    "CZ",
-    "DE",
-    "DK",
-    "EE",
-    "ES",
-    "FI",
-    "FR",
-    "GB",
-    "GR",
-    "HR",
-    "HU",
-    "IE",
-    "IT",
-    "LI",
-    "LT",
-    "LU",
-    "LV",
-    "MT",
-    "NL",
-    "NO",
-    "PL",
-    "PT",
-    "RO",
-    "SE",
-    "SG",
-    "SI",
-    "SK",
-    "US",
-  ]),
   pay_by_bank_payments: new Set<string>([
     "AT",
     "AU",
@@ -428,9 +397,13 @@ const CAPABILITY_COUNTRIES: Record<string, ReadonlySet<string>> = {
     "SK",
     "US",
   ]),
-};
+} satisfies Partial<Record<MerchantCapability, ReadonlySet<string>>>;
 
-export const LOCAL_METHOD_CAPABILITIES = Object.keys(CAPABILITY_COUNTRIES);
+export type LocalMethodCapability = keyof typeof CAPABILITY_COUNTRIES;
+
+export const LOCAL_METHOD_CAPABILITIES = Object.keys(
+  CAPABILITY_COUNTRIES,
+) as LocalMethodCapability[];
 
 /**
  * What a single donation may be, in major units.
@@ -489,7 +462,9 @@ export function isSupportedCountry(value: unknown): value is Country {
 }
 
 /** The local method capabilities an account in this country may request. */
-export function localMethodCapabilities(country: string | undefined | null): string[] {
+export function localMethodCapabilities(
+  country: string | undefined | null,
+): LocalMethodCapability[] {
   if (!country) return [];
   const code = country.toUpperCase();
   return LOCAL_METHOD_CAPABILITIES.filter((name) => CAPABILITY_COUNTRIES[name].has(code));
