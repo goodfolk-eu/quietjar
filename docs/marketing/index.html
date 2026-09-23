@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuietJar marketing kit</title>
+<style>
+  :root {
+    --paper: #faf9f6;
+    --ink: #171a18;
+    --body: #565e59;
+    --accent: #0b6b3a;
+    --accent-alt: #08542d;
+    --mint: #f2f7f3;
+    --line: #e0dccf;
+    --field: #14201c;
+    --field-deep: #0e1714;
+    --field-mint: #86c4a3;
+    --code: #f8f6f0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  header.kit { padding: 56px 0 24px; }
+  header.kit h1 { font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  header.kit p { color: var(--body); max-width: 640px; margin: 0 0 20px; }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 0; }
+  nav.toc a { color: var(--accent); text-decoration: none; font-size: 14px; }
+  nav.toc a:hover { color: var(--accent-alt); text-decoration: underline; }
+  main section { padding: 36px 0 8px; }
+  .kicker { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 4px; }
+  h2 { font-size: 24px; line-height: 1.25; margin: 0 0 6px; letter-spacing: -0.01em; }
+  section > .lead { color: var(--body); margin: 0 0 20px; max-width: 640px; }
+  h3 { font-size: 17px; margin: 28px 0 10px; }
+  p.note { color: var(--body); font-size: 14px; margin: 12px 0 0; }
+
+  .block {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px 12px;
+    margin: 0 0 12px;
+  }
+  .block-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .block-label { font-size: 13px; font-weight: 600; }
+  .block-meta { font-size: 12px; color: var(--body); margin-left: auto; white-space: nowrap; }
+  .block-text { margin: 0; font-size: 15px; }
+  .block-text.multi {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+    font-size: 13px; line-height: 1.55; white-space: pre-wrap; color: var(--ink);
+  }
+  .block.quote { background: var(--code); }
+  .block.quote .block-text { font-style: italic; }
+
+  button.copy {
+    appearance: none; border: 1px solid var(--line); background: #ffffff; color: var(--accent);
+    font: inherit; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; cursor: pointer;
+  }
+  button.copy:hover { border-color: var(--accent); }
+  button.copy.ok { color: var(--accent-alt); border-color: var(--accent); background: var(--mint); }
+  .btn-all {
+    appearance: none; border: 1px solid var(--accent); background: var(--accent); color: #ffffff;
+    font: inherit; font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  }
+  .btn-all:hover { background: var(--accent-alt); border-color: var(--accent-alt); }
+  .btn-all.ok { background: var(--accent-alt); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; }
+  figure.asset {
+    margin: 0; background: #ffffff; border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px; display: flex; flex-direction: column; gap: 10px;
+  }
+  figure.asset .thumb { min-height: 90px; display: grid; place-items: center; }
+  figure.asset .thumb.tile-dark { background: var(--field); border-radius: 6px; padding: 18px; }
+  figure.asset img { max-width: 100%; max-height: 160px; height: auto; }
+  figure.asset figcaption { font-size: 12px; color: var(--body); display: flex; flex-direction: column; gap: 8px; }
+  figure.asset .file { font-family: ui-monospace, Menlo, monospace; color: var(--ink); word-break: break-all; }
+  figure.asset .actions { display: flex; gap: 8px; align-items: center; }
+  figure.asset .actions a { color: var(--accent); font-size: 12px; font-weight: 600; text-decoration: none; border: 1px solid var(--line); padding: 3px 10px; border-radius: 6px; }
+  figure.asset .actions a:hover { border-color: var(--accent); }
+  figure.asset.wide { grid-column: 1 / -1; }
+
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 14px; }
+  .swatch { background: #ffffff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .swatch .chip { height: 64px; border-bottom: 1px solid var(--line); }
+  .swatch .info { padding: 10px 12px; font-size: 12px; }
+  .swatch .info strong { display: block; font-size: 13px; }
+  .swatch .info code { font-family: ui-monospace, Menlo, monospace; color: var(--body); }
+
+  table.saynot { border-collapse: collapse; width: 100%; font-size: 14px; margin-top: 12px; }
+  table.saynot th, table.saynot td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.saynot th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--body); }
+  table.saynot td.no { color: var(--body); }
+
+  footer.kit { padding: 40px 0 56px; color: var(--body); font-size: 13px; }
+  footer.kit a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="kit">
+  <div class="wrap">
+    <h1>QuietJar marketing kit</h1>
+    <p>Copy-ready material for listings, social posts, press, and partner sites. Every text block has a copy button, every image has download and copy actions. All copy uses the house voice: lead with conversion, no hype, no exclamation marks.</p>
+    <button class="btn-all" id="copy-all">Copy all text blocks as JSON</button>
+    <nav class="toc">
+      <a href="#identity">Identity</a>
+      <a href="#titles">Titles and meta</a>
+      <a href="#pitches">Pitches</a>
+      <a href="#bios">Bios and listings</a>
+      <a href="#posts">Social posts</a>
+      <a href="#facts">Key facts and links</a>
+      <a href="#faq">FAQ answers</a>
+      <a href="#logo">Logos and assets</a>
+      <a href="#screens">Screenshots</a>
+      <a href="#colors">Colors</a>
+      <a href="#voice">Voice rules</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="identity">
+    <p class="kicker">Identity</p>
+    <h2>Name, one-liner, taglines</h2>
+    <p class="lead">QuietJar, one word, capital Q and J in prose. Lowercase "quietjar" in the wordmark and the domain. Never "Quiet Jar" or "QJ".</p>
+
+    <div class="block" data-label="Product name">
+      <div class="block-head"><span class="block-label">Product name</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar</p>
+    </div>
+
+    <div class="block" data-label="One-liner">
+      <div class="block-head"><span class="block-label">One-liner</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar lets people support the sites they love without leaving them.</p>
+    </div>
+
+    <div class="block" data-label="Tagline 1 (meta and headers)">
+      <div class="block-head"><span class="block-label">Tagline 1 (meta and headers)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">A donation button that lives on your site, so your supporters never leave it</p>
+    </div>
+
+    <div class="block" data-label="Tagline 2">
+      <div class="block-head"><span class="block-label">Tagline 2</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Accept support without sending people away</p>
+    </div>
+
+    <div class="block" data-label="Tagline 3">
+      <div class="block-head"><span class="block-label">Tagline 3</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">The quiet way to accept support on your own site</p>
+    </div>
+
+    <div class="block" data-label="Tagline 4 (site hero eyebrow)">
+      <div class="block-head"><span class="block-label">Tagline 4 (site hero eyebrow)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">A support button that lives on your site</p>
+    </div>
+
+    <div class="block" data-label="Category name">
+      <div class="block-head"><span class="block-label">Category name</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">on-page donation button, or embedded support button</p>
+    </div>
+  </section>
+
+  <section id="titles">
+    <p class="kicker">Titles and meta</p>
+    <h2>Page titles and descriptions</h2>
+    <p class="lead">As used on the site. Keep titles under 60 characters and descriptions under 155 so search results do not truncate them.</p>
+
+    <div class="block" data-label="Default page title">
+      <div class="block-head"><span class="block-label">Default page title</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar - Accept support without sending people away</p>
+    </div>
+
+    <div class="block" data-label="Homepage title">
+      <div class="block-head"><span class="block-label">Homepage title</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar - A donation button that lives on your site</p>
+    </div>
+
+    <div class="block" data-label="Default meta description">
+      <div class="block-head"><span class="block-label">Default meta description</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Let your supporters pay without leaving your page. Two taps, no redirect, and it steps back once someone has given.</p>
+    </div>
+
+    <div class="block" data-label="Alternative meta description">
+      <div class="block-head"><span class="block-label">Alternative meta description</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar is an on-page donation button. Supporters pay on your site in two taps, with Apple Pay, cards, and iDEAL. No monthly fee.</p>
+    </div>
+
+    <div class="block" data-label="Short meta description">
+      <div class="block-head"><span class="block-label">Short meta description</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Accept support on your own site. No redirect, no monthly fee.</p>
+    </div>
+  </section>
+
+  <section id="pitches">
+    <p class="kicker">Pitches</p>
+    <h2>Short pitch to full boilerplate</h2>
+    <p class="lead">The redirect is where willing supporters fall away. Every pitch leads with that; the rest supports it.</p>
+
+    <div class="block" data-label="One-sentence pitch">
+      <div class="block-head"><span class="block-label">One-sentence pitch</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar is the support button that keeps people on your page: two taps, right on your site, with the payment methods they already use.</p>
+    </div>
+
+    <div class="block" data-label="Short pitch (about 25 words)">
+      <div class="block-head"><span class="block-label">Short pitch (about 25 words)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar is a support button for your own website. Your supporters pay on your page, in two taps, and never get sent anywhere else.</p>
+    </div>
+
+    <div class="block" data-label="Medium pitch (about 65 words)">
+      <div class="block-head"><span class="block-label">Medium pitch (about 65 words)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar is the support button that keeps people on your page. Hosted platforms send visitors off to someone else's site to pay, and the redirect is where willing supporters fall away. QuietJar completes the payment on your page, in two taps, with Apple Pay, Google Pay, cards, and iDEAL. It asks once, says thank you, and then leaves your supporters alone.</p>
+    </div>
+
+    <div class="block" data-label="Boilerplate (about 110 words)">
+      <div class="block-head"><span class="block-label">Boilerplate (about 110 words)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">QuietJar is an on-page support button for people who own their own website: open source developers, writers, musicians, and anyone who earns support from an audience on a site they control. Instead of sending supporters to a hosted profile, QuietJar completes the payment on the page where the wanting happens, in two taps, with Apple Pay, Google Pay, cards, and iDEAL. It is engineered like a payments SDK: 11.7 kB gzipped, about 40 ms to load, no layout shift. After someone gives, the button steps back instead of nagging. There is no monthly fee; QuietJar takes 5% of what you receive and covers card fees. QuietJar is built in the EU, on European rails and hosting.</p>
+    </div>
+
+    <div class="block" data-label="About blurb (about 50 words)">
+      <div class="block-head"><span class="block-label">About blurb (about 50 words)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar makes an on-page support button for people who own their own website. Supporters pay on the page they are already reading, in two taps, with the methods they already use. No monthly fee; QuietJar takes 5% of what you receive.</p>
+    </div>
+
+    <h3>First sentence by audience</h3>
+    <div class="block" data-label="For maintainers">
+      <div class="block-head"><span class="block-label">For maintainers</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">A support button for your docs site. One script tag. No layout shift.</p>
+    </div>
+    <div class="block" data-label="For writers and creators">
+      <div class="block-head"><span class="block-label">For writers and creators</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Let your readers support you without leaving your page.</p>
+    </div>
+    <div class="block" data-label="For publishers">
+      <div class="block-head"><span class="block-label">For publishers</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Turn a support button into a campaign. Set a goal, show progress, cover the real cost.</p>
+    </div>
+
+    <h3>Outreach email for Ko-fi and Buy Me a Coffee users</h3>
+    <p class="note">Same email works for both audiences. The comparison number assumes their 5% platform fee plus card processing on top; adjust before sending.</p>
+
+    <div class="block" data-label="Email subject (modern alternative)">
+      <div class="block-head"><span class="block-label">Email subject (modern alternative)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">A modern alternative to Ko-fi and Buy Me a Coffee</p>
+    </div>
+
+    <div class="block" data-label="Email subject (cheaper)">
+      <div class="block-head"><span class="block-label">Email subject (cheaper)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">A cheaper support button with goal tracking</p>
+    </div>
+
+    <div class="block" data-label="Email body">
+      <div class="block-head"><span class="block-label">Email body</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">Hi,
+
+I built something you might like. It is called QuietJar, a support button for your website, it is a modern alternative to Ko-fi and Buy Me a Coffee.
+
+It works the way a modern checkout works: Apple Pay, Google Pay, cards, iDEAL, and it loads in about 40 ms.
+
+It is also cheaper. No monthly fee. Only 5% of what you receive, incl card fees, and your supporters never pay extra. On a $10 donation you get $9.50 instead of about $8.90.
+
+There is goal tracking too. It converts into donations way better because people give more when there is a concrete target to chip in for, and the progress bar fills as money comes in.
+
+Try it out for free. You can have it live in a few minutes: https://quietjar.com
+
+Marcel</p>
+    </div>
+  </section>
+
+  <section id="bios">
+    <p class="kicker">Bios and listings</p>
+    <h2>Profiles and directories</h2>
+    <p class="lead">Sized for each platform's limits. X allows 160 characters in the bio; Product Hunt taglines cap at 60.</p>
+
+    <div class="block" data-label="X and Bluesky bio">
+      <div class="block-head"><span class="block-label">X and Bluesky bio</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">The support button that lives on your site. Your supporters pay on your page, in two taps. No redirect, no monthly fee.</p>
+    </div>
+
+    <div class="block" data-label="LinkedIn description">
+      <div class="block-head"><span class="block-label">LinkedIn description</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">QuietJar keeps supporters on your page. The support button completes payment on your site in two taps, with the wallets and local methods people already use. No monthly fee: 5% of what you receive, card fees covered. Built for people who own their own website.</p>
+    </div>
+
+    <div class="block" data-label="GitHub organization bio">
+      <div class="block-head"><span class="block-label">GitHub organization bio</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">The support button that lives on your site. On-page checkout, polite by design, built like a payments SDK.</p>
+    </div>
+
+    <div class="block" data-label="Product Hunt tagline">
+      <div class="block-head"><span class="block-label">Product Hunt tagline</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Accept support without sending people away</p>
+    </div>
+
+    <div class="block" data-label="Product Hunt description">
+      <div class="block-head"><span class="block-label">Product Hunt description</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">QuietJar is a support button for your own website. Instead of sending people to a hosted page to pay, it completes the payment on your page in two taps, with Apple Pay, Google Pay, cards, and iDEAL.
+
+It is engineered like a payments SDK: 11.7 kB gzipped, about 40 ms to load, no layout shift, configurable down to the CSS. After someone gives, the button steps back instead of asking again. Goals can show a public target with a progress bar.
+
+There is no monthly fee. QuietJar takes 5% of what you receive and covers card fees.</p>
+    </div>
+  </section>
+
+  <section id="posts">
+    <p class="kicker">Social posts</p>
+    <h2>Ready-to-paste posts</h2>
+    <p class="lead">Same voice, shorter. Observations over announcements. Each post maps to one of the three pillars: on-page conversion, polite by design, built like a payments SDK.</p>
+
+    <div class="block" data-label="Launch post (X and Bluesky)">
+      <div class="block-head"><span class="block-label">Launch post (X and Bluesky)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Every redirect to a separate page loses the people who wanted to give. QuietJar keeps the payment on your page: two taps, no redirect, no monthly fee.</p>
+    </div>
+
+    <div class="block" data-label="Launch post (LinkedIn)">
+      <div class="block-head"><span class="block-label">Launch post (LinkedIn)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">If you run a site and people want to support you, the redirect is the problem.
+
+Someone decides to give. They click. A new tab opens on someone else's platform. It loads slowly, it looks unfamiliar, and a good share of them close it before the checkout appears.
+
+QuietJar finishes the payment on your page instead. Two taps. Apple Pay, Google Pay, cards, iDEAL. It looks like part of your site because it is built to.
+
+Then it steps back. Once someone has given, the button goes quiet instead of asking again.
+
+No monthly fee. 5% of what you receive, card fees covered.
+
+quietjar.com</p>
+    </div>
+
+    <div class="block" data-label="Politeness post">
+      <div class="block-head"><span class="block-label">Politeness post</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Your most loyal visitors see support buttons every day and learn to look straight past them. QuietJar asks once, says thank you, and steps back for 30 days. Your best supporters get thanked, not pestered.</p>
+    </div>
+
+    <div class="block" data-label="Goals post">
+      <div class="block-head"><span class="block-label">Goals post</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">"Support me" is vague. "Help cover the server bill" is a goal. QuietJar buttons can show a public target with a progress bar, and the bar fills as money comes in.</p>
+    </div>
+
+    <div class="block" data-label="Developer post">
+      <div class="block-head"><span class="block-label">Developer post</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">One script tag. 11.7 kB gzipped, about 40 ms, no layout shift. The support button matches your design down to the CSS and completes payment on your page in two taps.</p>
+    </div>
+  </section>
+
+  <section id="facts">
+    <p class="kicker">Key facts and links</p>
+    <h2>The numbers, ready to paste</h2>
+    <p class="lead">Current as of September 2026. Copy the whole list or the single fact you need.</p>
+
+    <div class="block" data-label="Key facts (plain text list)">
+      <div class="block-head"><span class="block-label">Key facts (plain text list)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">Pricing: 5% of what you receive, minimum €0.50 per donation. No monthly fee, no cap. Card fees are on us; supporters are never charged extra.
+Payouts: manual from the dashboard once your available balance reaches €50 (or the local equivalent).
+Amounts: donations from €1 to €500.
+Performance: 11.7 kB gzipped, loads in about 40 ms, no layout shift.
+Payment methods: Apple Pay, Google Pay, Visa, Mastercard, Amex, iDEAL, plus local methods.
+Politeness: after someone gives, the button steps back for 30 days by default. You choose how long.
+Goals: set a public target with a progress bar. Goals drive +50% more conversions.
+Install: one script tag, live in minutes, configurable down to the CSS.
+Privacy: payments and data stay on European infrastructure. No cookie banner, because there is nothing to consent to.
+Hosted page: an optional hosted page for people who prefer a shareable link.</p>
+    </div>
+
+    <div class="block" data-label="Links (plain text)">
+      <div class="block-head"><span class="block-label">Links (plain text)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">Site: https://quietjar.com
+Developers: https://quietjar.com/developers/
+Pricing: https://quietjar.com/pricing/
+Features: https://quietjar.com/features/
+Compare with Ko-fi: https://quietjar.com/compare/ko-fi/
+Compare with Buy Me a Coffee: https://quietjar.com/compare/buymeacoffee/
+Widget script: https://quietjar.com/js/latest/quietjar.js</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <p class="kicker">FAQ answers</p>
+    <h2>Answers, ready to paste</h2>
+    <p class="lead">The answers that come up most in support and community threads. These match the site FAQ word for word.</p>
+
+    <div class="block" data-label="What is QuietJar?">
+      <div class="block-head"><span class="block-label">What is QuietJar?</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">A small, polished support button you drop onto your own website, so your supporters can pay without leaving your page.</p>
+    </div>
+
+    <div class="block" data-label="What does it cost?">
+      <div class="block-head"><span class="block-label">What does it cost?</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">No monthly fee. No plans to compare. QuietJar takes 5% of each donation, minimum €0.50, and pays the card fees. Donations are €1 to €500. It costs you nothing until it is earning you something.</p>
+    </div>
+
+    <div class="block" data-label="When do I get paid?">
+      <div class="block-head"><span class="block-label">When do I get paid?</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Donations reach your QuietJar balance after a few days. Once your available balance reaches 50 EUR (or the local equivalent), pay it out to your bank account from your dashboard with one click.</p>
+    </div>
+
+    <div class="block" data-label="Will it slow down my site?">
+      <div class="block-head"><span class="block-label">Will it slow down my site?</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">No. The script is 11.7 kB gzipped, loads in about 40 ms and causes no layout shift.</p>
+    </div>
+
+    <div class="block" data-label="How is this different from the tools I know?">
+      <div class="block-head"><span class="block-label">How is this different from the tools I know?</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish.</p>
+    </div>
+
+    <div class="block" data-label="Will my visitors trust paying on my site?">
+      <div class="block-head"><span class="block-label">Will my visitors trust paying on my site?</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text">They pay through the same regulated rails as any checkout. What they see is Apple Pay, Google Pay, or their own bank's iDEAL screen. Nothing unfamiliar, nothing to type.</p>
+    </div>
+  </section>
+
+  <section id="logo">
+    <p class="kicker">Logos and assets</p>
+    <h2>Logos in every size</h2>
+    <p class="lead">SVG for print and web embedding, PNG for places that need a raster file. Ink versions for light backgrounds, white versions for dark ones. The mark is square; the lockup adds the wordmark.</p>
+    <p class="note">Image copy uses the clipboard and needs this page served over http. From a plain file open, use Download instead. SVG code copy works everywhere.</p>
+
+    <h3>SVG, copy the code or download the file</h3>
+    <div class="grid">
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-mark-ink.svg" alt="quietjar logo mark, ink" width="76" height="76"></div>
+        <figcaption>
+          <span class="file">logo-mark-ink.svg</span>
+          <span class="actions"><button class="copy" data-copy-code="logo-mark-ink.svg">Copy code</button><a href="assets/logo-mark-ink.svg" download>Download</a></span>
+        </figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb tile-dark"><img src="assets/logo-mark-white.svg" alt="quietjar logo mark, white" width="76" height="76"></div>
+        <figcaption>
+          <span class="file">logo-mark-white.svg</span>
+          <span class="actions"><button class="copy" data-copy-code="logo-mark-white.svg">Copy code</button><a href="assets/logo-mark-white.svg" download>Download</a></span>
+        </figcaption>
+      </figure>
+      <figure class="asset wide">
+        <div class="thumb"><img src="assets/logo-lockup-ink.svg" alt="quietjar wordmark with logo mark, ink on light" width="211" height="63"></div>
+        <figcaption>
+          <span class="file">logo-lockup-ink.svg (quiet in green, jar in ink, for light backgrounds)</span>
+          <span class="actions"><button class="copy" data-copy-code="logo-lockup-ink.svg">Copy code</button><a href="assets/logo-lockup-ink.svg" download>Download</a></span>
+        </figcaption>
+      </figure>
+      <figure class="asset wide">
+        <div class="thumb tile-dark"><img src="assets/logo-lockup-white.svg" alt="quietjar wordmark with logo mark, white on dark" width="211" height="63"></div>
+        <figcaption>
+          <span class="file">logo-lockup-white.svg (all white, for dark backgrounds)</span>
+          <span class="actions"><button class="copy" data-copy-code="logo-lockup-white.svg">Copy code</button><a href="assets/logo-lockup-white.svg" download>Download</a></span>
+        </figcaption>
+      </figure>
+      <figure class="asset wide">
+        <div class="thumb"><img src="assets/logo-lockup-blue-green.svg" alt="quietjar wordmark with logo mark, blue and green" width="211" height="63"></div>
+        <figcaption>
+          <span class="file">logo-lockup-blue-green.svg (two-color mark, for partner and print contexts)</span>
+          <span class="actions"><button class="copy" data-copy-code="logo-lockup-blue-green.svg">Copy code</button><a href="assets/logo-lockup-blue-green.svg" download>Download</a></span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3>PNG sizes</h3>
+    <div class="grid">
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-mark-ink-512.png" alt="quietjar logo mark, ink, 512 pixels" width="64" height="64"></div>
+        <figcaption><span class="file">logo-mark-ink-512.png · 512 x 512</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-ink-512.png">Copy image</button><a href="assets/logo-mark-ink-512.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-mark-ink-192.png" alt="quietjar logo mark, ink, 192 pixels" width="64" height="64"></div>
+        <figcaption><span class="file">logo-mark-ink-192.png · 192 x 192</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-ink-192.png">Copy image</button><a href="assets/logo-mark-ink-192.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-mark-ink-64.png" alt="quietjar logo mark, ink, 64 pixels" width="64" height="64"></div>
+        <figcaption><span class="file">logo-mark-ink-64.png · 64 x 64</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-ink-64.png">Copy image</button><a href="assets/logo-mark-ink-64.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-mark-ink-32.png" alt="quietjar logo mark, ink, 32 pixels" width="32" height="32"></div>
+        <figcaption><span class="file">logo-mark-ink-32.png · 32 x 32</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-ink-32.png">Copy image</button><a href="assets/logo-mark-ink-32.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb tile-dark"><img src="assets/logo-mark-white-512.png" alt="quietjar logo mark, white, 512 pixels" width="64" height="64"></div>
+        <figcaption><span class="file">logo-mark-white-512.png · 512 x 512</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-white-512.png">Copy image</button><a href="assets/logo-mark-white-512.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb tile-dark"><img src="assets/logo-mark-white-192.png" alt="quietjar logo mark, white, 192 pixels" width="64" height="64"></div>
+        <figcaption><span class="file">logo-mark-white-192.png · 192 x 192</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-white-192.png">Copy image</button><a href="assets/logo-mark-white-192.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb tile-dark"><img src="assets/logo-mark-white-64.png" alt="quietjar logo mark, white, 64 pixels" width="64" height="64"></div>
+        <figcaption><span class="file">logo-mark-white-64.png · 64 x 64</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-white-64.png">Copy image</button><a href="assets/logo-mark-white-64.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb tile-dark"><img src="assets/logo-mark-white-32.png" alt="quietjar logo mark, white, 32 pixels" width="32" height="32"></div>
+        <figcaption><span class="file">logo-mark-white-32.png · 32 x 32</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-mark-white-32.png">Copy image</button><a href="assets/logo-mark-white-32.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset wide">
+        <div class="thumb"><img src="assets/logo-lockup-ink-1024.png" alt="quietjar lockup, ink, 1024 pixels wide" width="211" height="63"></div>
+        <figcaption><span class="file">logo-lockup-ink-1024.png · 1024 x 306</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-lockup-ink-1024.png">Copy image</button><a href="assets/logo-lockup-ink-1024.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-lockup-ink-512.png" alt="quietjar lockup, ink, 512 pixels wide" width="211" height="63"></div>
+        <figcaption><span class="file">logo-lockup-ink-512.png · 512 x 153</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-lockup-ink-512.png">Copy image</button><a href="assets/logo-lockup-ink-512.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-lockup-ink-256.png" alt="quietjar lockup, ink, 256 pixels wide" width="211" height="63"></div>
+        <figcaption><span class="file">logo-lockup-ink-256.png · 256 x 77</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-lockup-ink-256.png">Copy image</button><a href="assets/logo-lockup-ink-256.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb tile-dark"><img src="assets/logo-lockup-white-512.png" alt="quietjar lockup, white, 512 pixels wide" width="211" height="63"></div>
+        <figcaption><span class="file">logo-lockup-white-512.png · 512 x 153</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-lockup-white-512.png">Copy image</button><a href="assets/logo-lockup-white-512.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/logo-lockup-blue-green-512.png" alt="quietjar lockup, blue and green, 512 pixels wide" width="211" height="63"></div>
+        <figcaption><span class="file">logo-lockup-blue-green-512.png · 512 x 153</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/logo-lockup-blue-green-512.png">Copy image</button><a href="assets/logo-lockup-blue-green-512.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/favicon-32.png" alt="quietjar favicon, 32 pixels" width="32" height="32"></div>
+        <figcaption><span class="file">favicon-32.png · 32 x 32</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/favicon-32.png">Copy image</button><a href="assets/favicon-32.png" download>Download</a></span></figcaption>
+      </figure>
+    </div>
+
+    <h3>Usage notes</h3>
+    <div class="block" data-label="Logo usage rules (plain text)">
+      <div class="block-head"><span class="block-label">Logo usage rules (plain text)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">Ink mark and lockup: on light backgrounds (paper #faf9f6, white).
+White mark and lockup: on dark backgrounds (field #14201c, footer #0e1714).
+Blue-green lockup: two-color partner and print contexts on light backgrounds.
+Clear space: keep at least the height of the mark free on all sides.
+Minimum sizes: mark 16 px, lockup 120 px wide.
+Never stretch, recolor, or place the ink logo on a busy background.</p>
+    </div>
+  </section>
+
+  <section id="screens">
+    <p class="kicker">Screenshots</p>
+    <h2>Screenshots and social card</h2>
+    <p class="lead">The homepage on desktop and mobile, and the button with its two-tap checkout panel. The social card is sized for Open Graph and most link previews at 1200 x 630.</p>
+
+    <div class="grid">
+      <figure class="asset wide">
+        <div class="thumb"><img src="assets/og-image.png" alt="QuietJar social sharing card" width="1200" height="630" style="max-height:320px"></div>
+        <figcaption><span class="file">og-image.png · 1200 x 630 · social card</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/og-image.png">Copy image</button><a href="assets/og-image.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset wide">
+        <div class="thumb"><img src="assets/screenshots/home-desktop.png" alt="The QuietJar homepage on desktop" style="max-height:360px"></div>
+        <figcaption><span class="file">screenshots/home-desktop.png · 1440 x 900</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/screenshots/home-desktop.png">Copy image</button><a href="assets/screenshots/home-desktop.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/screenshots/home-mobile.png" alt="The QuietJar homepage on mobile" style="max-height:280px"></div>
+        <figcaption><span class="file">screenshots/home-mobile.png · 390 x 844</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/screenshots/home-mobile.png">Copy image</button><a href="assets/screenshots/home-mobile.png" download>Download</a></span></figcaption>
+      </figure>
+      <figure class="asset">
+        <div class="thumb"><img src="assets/screenshots/widget-open.png" alt="The QuietJar button with its two-tap checkout panel open" style="max-height:280px"></div>
+        <figcaption><span class="file">screenshots/widget-open.png · 1440 x 900</span>
+          <span class="actions"><button class="copy" data-copy-image="assets/screenshots/widget-open.png">Copy image</button><a href="assets/screenshots/widget-open.png" download>Download</a></span></figcaption>
+      </figure>
+    </div>
+
+    <h3>Alt text</h3>
+    <div class="block" data-label="Alt texts (plain text)">
+      <div class="block-head"><span class="block-label">Alt texts (plain text)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">Logo mark: quietjar logo mark
+Lockup: quietjar wordmark with logo mark
+Social card: QuietJar social sharing card
+Home desktop: The QuietJar homepage on desktop
+Home mobile: The QuietJar homepage on mobile
+Widget open: The QuietJar button with its two-tap checkout panel open</p>
+    </div>
+  </section>
+
+  <section id="colors">
+    <p class="kicker">Colors</p>
+    <h2>Palette</h2>
+    <p class="lead">One accent for interactive elements, otherwise neutral. Click a swatch name to copy the hex value.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#0b6b3a"></div><div class="info"><strong>Accent green</strong><code class="hex">#0b6b3a</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#08542d"></div><div class="info"><strong>Accent hover</strong><code class="hex">#08542d</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#171a18"></div><div class="info"><strong>Ink</strong><code class="hex">#171a18</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#565e59"></div><div class="info"><strong>Body text</strong><code class="hex">#565e59</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#faf9f6"></div><div class="info"><strong>Paper</strong><code class="hex">#faf9f6</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#f2f7f3"></div><div class="info"><strong>Mint</strong><code class="hex">#f2f7f3</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#e0dccf"></div><div class="info"><strong>Line</strong><code class="hex">#e0dccf</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#14201c"></div><div class="info"><strong>Field</strong><code class="hex">#14201c</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#0e1714"></div><div class="info"><strong>Field deep</strong><code class="hex">#0e1714</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#86c4a3"></div><div class="info"><strong>Field mint</strong><code class="hex">#86c4a3</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#003399"></div><div class="info"><strong>Blue</strong><code class="hex">#003399</code></div></div>
+    </div>
+  </section>
+
+  <section id="voice">
+    <p class="kicker">Voice rules</p>
+    <h2>How we talk</h2>
+    <p class="lead">Quiet confidence, not hype. Plain language, short lines, lead with conversion. When adapting any copy above, keep these rules.</p>
+
+    <div class="block" data-label="Voice rules (plain text)">
+      <div class="block-head"><span class="block-label">Voice rules (plain text)</span><span class="block-meta"></span><button class="copy">Copy</button></div>
+      <p class="block-text multi">Lead with the conversion argument: no redirect means more supporters.
+Plain benefit-led language for a non-technical reader.
+Short lines, breathing room, sentence case headings.
+No exclamation marks, no hype words, no charity framing.
+Say: support, supporters, button, steps back, goals.
+Not: tip, donate (outside search-facing titles), donors, fans, users, suppression, campaigns.
+Never: coffee, cups, beans, "buy me a", revolutionary, seamless, game-changing, empower, supercharge.
+QuietJar, one word, capital Q and J in prose; lowercase quietjar in the wordmark and domain.
+A senior engineer who is also a good host: competent, calm, a little dry, warm when it matters.</p>
+    </div>
+
+    <table class="saynot">
+      <thead><tr><th>Say</th><th>Not</th></tr></thead>
+      <tbody>
+        <tr><td>QuietJar, the button</td><td class="no">the widget (internal only)</td></tr>
+        <tr><td>you, site owners, creators</td><td class="no">users, merchants</td></tr>
+        <tr><td>supporters</td><td class="no">donors, fans, patrons, customers</td></tr>
+        <tr><td>support</td><td class="no">tip, donate, contribute, give</td></tr>
+        <tr><td>steps back</td><td class="no">suppression (developer page only)</td></tr>
+        <tr><td>goals</td><td class="no">campaigns, drives, fundraisers</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="svg-sources" hidden>
+    <script type="text/plain" data-file="logo-mark-ink.svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="14 -6.5 76 76" role="img" aria-label="quietjar">
+  <title>quietjar</title>
+  <mask id="qjm" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
+<clipPath id="qjmc"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
+<g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M68.5 64.2 L45.3 56.9 L70.6 81.1 Z"></path>
+<path d="M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z"></path>
+<path d="M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z"></path>
+<path d="M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z"></path>
+<path d="M140.7 33.3 L194.2 55.8 L138.1 73.2 Z"></path>
+<rect x="59.9" y="47.4" width="120.3" height="93.2" rx="44.6"></rect>
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z"></path>
+</g>
+<g clip-path="url(#qjmc)">
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"></path>
+<path d="M113.6 44.3 L127.1 35.7 L122.6 57.5 Z" fill="#000"></path>
+</g>
+<circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
+</mask>
+  <g transform="scale(0.35)"><rect x="0" y="0" width="240" height="180" fill="#171A18" mask="url(#qjm)"></rect></g>
+</svg></script>
+    <script type="text/plain" data-file="logo-mark-white.svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="14 -6.5 76 76" role="img" aria-label="quietjar">
+  <title>quietjar</title>
+  <mask id="qjm" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
+<clipPath id="qjmc"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
+<g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M68.5 64.2 L45.3 56.9 L70.6 81.1 Z"></path>
+<path d="M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z"></path>
+<path d="M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z"></path>
+<path d="M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z"></path>
+<path d="M140.7 33.3 L194.2 55.8 L138.1 73.2 Z"></path>
+<rect x="59.9" y="47.4" width="120.3" height="93.2" rx="44.6"></rect>
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z"></path>
+</g>
+<g clip-path="url(#qjmc)">
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"></path>
+<path d="M113.6 44.3 L127.1 35.7 L122.6 57.5 Z" fill="#000"></path>
+</g>
+<circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
+</mask>
+  <g transform="scale(0.35)"><rect x="0" y="0" width="240" height="180" fill="#FFFFFF" mask="url(#qjm)"></rect></g>
+</svg></script>
+    <script type="text/plain" data-file="logo-lockup-ink.svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="14 0 211 63" role="img" aria-label="quietjar">
+  <title>quietjar</title>
+  <mask id="qjm" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
+<clipPath id="qjmc"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
+<g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M68.5 64.2 L45.3 56.9 L70.6 81.1 Z"></path>
+<path d="M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z"></path>
+<path d="M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z"></path>
+<path d="M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z"></path>
+<path d="M140.7 33.3 L194.2 55.8 L138.1 73.2 Z"></path>
+<rect x="59.9" y="47.4" width="120.3" height="93.2" rx="44.6"></rect>
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z"></path>
+</g>
+<g clip-path="url(#qjmc)">
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"></path>
+<path d="M113.6 44.3 L127.1 35.7 L122.6 57.5 Z" fill="#000"></path>
+</g>
+<circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
+</mask>
+  <g transform="scale(0.35)"><rect x="0" y="0" width="240" height="180" fill="#171A18" mask="url(#qjm)"></rect></g>
+  <g transform="translate(86 42.9) scale(0.42)">
+    <path fill="#0B6B3A" d="M24.90 1.20L24.90 1.20Q18.30 1.20 13.20-2.05Q8.10-5.30 5.20-11.10Q2.30-16.90 2.30-24.40L2.30-24.40Q2.30-32 5.15-37.80Q8-43.60 13.10-46.85Q18.20-50.10 24.80-50.10L24.80-50.10Q31.20-50.10 36-47L36-47Q38-45.70 39.60-44L39.60-44L41-48.90L51.90-48.90L51.90 19L37.30 19L37.30-2.50Q36.70-2.10 36.20-1.80L36.20-1.80Q31.40 1.20 24.90 1.20ZM27.60-12.50L27.60-12.50Q32.10-12.50 35.05-15.85Q38-19.20 38-24.50L38-24.50Q38-29.70 35.05-33.05Q32.10-36.40 27.60-36.40Q23.10-36.40 20.15-33.05Q17.20-29.70 17.20-24.40L17.20-24.40Q17.20-19.20 20.15-15.85Q23.10-12.50 27.60-12.50ZM76.30 1.20L76.30 1.20Q70.90 1.20 67.55-0.40Q64.20-2 62.35-4.85Q60.50-7.70 59.85-11.35Q59.20-15 59.20-19.10L59.20-19.10L59.20-48.90L73.80-48.90L73.80-19.90Q73.80-15.80 75.50-14.45Q77.20-13.10 79.70-13.10L79.70-13.10Q81.90-13.10 84-13.85Q86.10-14.60 88.10-16.10L88.10-16.10Q89.20-16.80 90.10-17.80L90.10-17.80L90.10-48.90L104.80-48.90L104.80 0L93.90 0L92.20-5.60Q91.30-4.80 90.40-4.10L90.40-4.10Q87.20-1.60 83.70-0.20Q80.20 1.20 76.30 1.20ZM127.50-48.90L127.50 0L112.90 0L112.90-48.90L127.50-48.90ZM111.60-64.30L111.60-64.30Q111.60-68.20 113.95-70.60Q116.30-73 120.20-73L120.20-73Q124.10-73 126.45-70.60Q128.80-68.20 128.80-64.30L128.80-64.30Q128.80-60.50 126.45-58.15Q124.10-55.80 120.20-55.80L120.20-55.80Q116.30-55.80 113.95-58.15Q111.60-60.50 111.60-64.30ZM157.20 0.90L157.20 0.90Q149.90 0.90 144.35-2.20Q138.80-5.30 135.75-11Q132.70-16.70 132.70-24.40L132.70-24.40Q132.70-32 135.75-37.80Q138.80-43.60 144.35-46.85Q149.90-50.10 157.20-50.10L157.20-50.10Q164.70-50.10 170.20-46.70Q175.70-43.30 178.70-37.55Q181.70-31.80 181.70-24.60L181.70-24.60Q181.70-23.30 181.60-22.10Q181.50-20.90 181.40-20.20L181.40-20.20L146.20-20.20Q146.60-16 149.30-13.50L149.30-13.50Q152.40-10.40 158-10.40L158-10.40Q162.70-10.40 165.45-12.30Q168.20-14.20 170.10-17L170.10-17L180-11.50Q176.80-5.60 171-2.35Q165.20 0.90 157.20 0.90ZM146.40-30.60L146.40-30.60L168-30.60Q167.30-33.30 165.80-35.30L165.80-35.30Q163-38.80 157.30-38.80L157.30-38.80Q152.20-38.80 149.20-35.70L149.20-35.70Q147.10-33.60 146.40-30.60ZM208.40 0.80L208.40 0.80Q200.30 0.80 195.65-3.20Q191-7.20 191-16.30L191-16.30L191-35.50L183.40-35.50L183.40-48.90L190.80-48.90L193.80-60.70L205.60-60.70L205.60-48.90L216.50-48.90L216.50-35.50L205.60-35.50L205.60-19.50Q205.60-16.10 207.20-14.65Q208.80-13.20 211.40-13.20L211.40-13.20Q212.90-13.20 214.25-13.45Q215.60-13.70 216.50-14L216.50-14L216.50-0.30Q214.80 0.20 212.85 0.50Q210.90 0.80 208.40 0.80Z"/>
+    <path fill="#171A18" d="M224 19.50L224 19.50Q221.40 19.50 219.75 19.10Q218.10 18.70 217.60 18.50L217.60 18.50L217.60 6.20Q218.10 6.30 218.85 6.40Q219.60 6.50 220.70 6.50L220.70 6.50Q222.60 6.50 223.60 5.15Q224.60 3.80 224.60 1.50L224.60 1.50L224.60-48.90L239.20-48.90L239.20 4.10Q239.20 8.10 237.65 11.65Q236.10 15.20 232.75 17.35Q229.40 19.50 224 19.50ZM223.20-64.30L223.20-64.30Q223.20-68.20 225.55-70.60Q227.90-73 231.80-73L231.80-73Q235.70-73 238.05-70.60Q240.40-68.20 240.40-64.30L240.40-64.30Q240.40-60.50 238.05-58.15Q235.70-55.80 231.80-55.80L231.80-55.80Q227.90-55.80 225.55-58.15Q223.20-60.50 223.20-64.30ZM262.10 1.30L262.10 1.30Q256.80 1.30 252.75-0.75Q248.70-2.80 246.50-6.50Q244.30-10.20 244.30-15.10L244.30-15.10Q244.30-20.30 246.70-23.95Q249.10-27.60 253.15-29.60Q257.20-31.60 262.20-31.60L262.20-31.60Q269.30-31.60 273.70-28.50L273.70-28.50L273.70-31.30Q273.70-34 271.80-36Q269.90-38 265.70-38L265.70-38Q263-38 259.50-37.35Q256-36.70 252.30-34.90L252.30-34.90L248-45.30Q252.40-47.50 257.45-48.80Q262.50-50.10 267.80-50.10L267.80-50.10Q274.60-50.10 279.20-47.70Q283.80-45.30 286.05-40.90Q288.30-36.50 288.30-30.70L288.30-30.70L288.30 0L276.40 0L275.40-3.40Q274.70-2.70 273.90-2.10L273.90-2.10Q269.40 1.30 262.10 1.30ZM266.60-9.10L266.60-9.10Q269.90-9.10 271.85-10.80Q273.80-12.50 273.80-15.10L273.80-15.10Q273.80-17.90 271.85-19.50Q269.90-21.10 266.60-21.10Q263.30-21.10 261.40-19.50Q259.50-17.90 259.50-15.10L259.50-15.10Q259.50-12.50 261.40-10.80Q263.30-9.10 266.60-9.10ZM295.50-48.90L306.30-48.90L307.70-43.80Q308.20-44.30 308.80-44.80L308.80-44.80Q311-47 314.05-48.55Q317.10-50.10 320.30-50.10L320.30-50.10Q321.90-50.10 323.20-49.90Q324.50-49.70 325.30-49.20L325.30-49.20L325.30-35.90L322-35.90Q315.60-35.90 312-33.90L312-33.90Q310.90-33.30 310.10-32.50L310.10-32.50L310.10 0L295.50 0L295.50-48.90Z"/>
+  </g>
+</svg></script>
+    <script type="text/plain" data-file="logo-lockup-white.svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="14 0 211 63" role="img" aria-label="quietjar">
+  <title>quietjar</title>
+  <mask id="qjm" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
+<clipPath id="qjmc"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
+<g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M68.5 64.2 L45.3 56.9 L70.6 81.1 Z"></path>
+<path d="M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z"></path>
+<path d="M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z"></path>
+<path d="M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z"></path>
+<path d="M140.7 33.3 L194.2 55.8 L138.1 73.2 Z"></path>
+<rect x="59.9" y="47.4" width="120.3" height="93.2" rx="44.6"></rect>
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z"></path>
+</g>
+<g clip-path="url(#qjmc)">
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"></path>
+<path d="M113.6 44.3 L127.1 35.7 L122.6 57.5 Z" fill="#000"></path>
+</g>
+<circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
+</mask>
+  <g transform="scale(0.35)"><rect x="0" y="0" width="240" height="180" fill="#FFFFFF" mask="url(#qjm)"></rect></g>
+  <g transform="translate(86 42.9) scale(0.42)">
+    <path fill="#FFFFFF" d="M24.90 1.20L24.90 1.20Q18.30 1.20 13.20-2.05Q8.10-5.30 5.20-11.10Q2.30-16.90 2.30-24.40L2.30-24.40Q2.30-32 5.15-37.80Q8-43.60 13.10-46.85Q18.20-50.10 24.80-50.10L24.80-50.10Q31.20-50.10 36-47L36-47Q38-45.70 39.60-44L39.60-44L41-48.90L51.90-48.90L51.90 19L37.30 19L37.30-2.50Q36.70-2.10 36.20-1.80L36.20-1.80Q31.40 1.20 24.90 1.20ZM27.60-12.50L27.60-12.50Q32.10-12.50 35.05-15.85Q38-19.20 38-24.50L38-24.50Q38-29.70 35.05-33.05Q32.10-36.40 27.60-36.40Q23.10-36.40 20.15-33.05Q17.20-29.70 17.20-24.40L17.20-24.40Q17.20-19.20 20.15-15.85Q23.10-12.50 27.60-12.50ZM76.30 1.20L76.30 1.20Q70.90 1.20 67.55-0.40Q64.20-2 62.35-4.85Q60.50-7.70 59.85-11.35Q59.20-15 59.20-19.10L59.20-19.10L59.20-48.90L73.80-48.90L73.80-19.90Q73.80-15.80 75.50-14.45Q77.20-13.10 79.70-13.10L79.70-13.10Q81.90-13.10 84-13.85Q86.10-14.60 88.10-16.10L88.10-16.10Q89.20-16.80 90.10-17.80L90.10-17.80L90.10-48.90L104.80-48.90L104.80 0L93.90 0L92.20-5.60Q91.30-4.80 90.40-4.10L90.40-4.10Q87.20-1.60 83.70-0.20Q80.20 1.20 76.30 1.20ZM127.50-48.90L127.50 0L112.90 0L112.90-48.90L127.50-48.90ZM111.60-64.30L111.60-64.30Q111.60-68.20 113.95-70.60Q116.30-73 120.20-73L120.20-73Q124.10-73 126.45-70.60Q128.80-68.20 128.80-64.30L128.80-64.30Q128.80-60.50 126.45-58.15Q124.10-55.80 120.20-55.80L120.20-55.80Q116.30-55.80 113.95-58.15Q111.60-60.50 111.60-64.30ZM157.20 0.90L157.20 0.90Q149.90 0.90 144.35-2.20Q138.80-5.30 135.75-11Q132.70-16.70 132.70-24.40L132.70-24.40Q132.70-32 135.75-37.80Q138.80-43.60 144.35-46.85Q149.90-50.10 157.20-50.10L157.20-50.10Q164.70-50.10 170.20-46.70Q175.70-43.30 178.70-37.55Q181.70-31.80 181.70-24.60L181.70-24.60Q181.70-23.30 181.60-22.10Q181.50-20.90 181.40-20.20L181.40-20.20L146.20-20.20Q146.60-16 149.30-13.50L149.30-13.50Q152.40-10.40 158-10.40L158-10.40Q162.70-10.40 165.45-12.30Q168.20-14.20 170.10-17L170.10-17L180-11.50Q176.80-5.60 171-2.35Q165.20 0.90 157.20 0.90ZM146.40-30.60L146.40-30.60L168-30.60Q167.30-33.30 165.80-35.30L165.80-35.30Q163-38.80 157.30-38.80L157.30-38.80Q152.20-38.80 149.20-35.70L149.20-35.70Q147.10-33.60 146.40-30.60ZM208.40 0.80L208.40 0.80Q200.30 0.80 195.65-3.20Q191-7.20 191-16.30L191-16.30L191-35.50L183.40-35.50L183.40-48.90L190.80-48.90L193.80-60.70L205.60-60.70L205.60-48.90L216.50-48.90L216.50-35.50L205.60-35.50L205.60-19.50Q205.60-16.10 207.20-14.65Q208.80-13.20 211.40-13.20L211.40-13.20Q212.90-13.20 214.25-13.45Q215.60-13.70 216.50-14L216.50-14L216.50-0.30Q214.80 0.20 212.85 0.50Q210.90 0.80 208.40 0.80Z"/>
+    <path fill="#FFFFFF" d="M224 19.50L224 19.50Q221.40 19.50 219.75 19.10Q218.10 18.70 217.60 18.50L217.60 18.50L217.60 6.20Q218.10 6.30 218.85 6.40Q219.60 6.50 220.70 6.50L220.70 6.50Q222.60 6.50 223.60 5.15Q224.60 3.80 224.60 1.50L224.60 1.50L224.60-48.90L239.20-48.90L239.20 4.10Q239.20 8.10 237.65 11.65Q236.10 15.20 232.75 17.35Q229.40 19.50 224 19.50ZM223.20-64.30L223.20-64.30Q223.20-68.20 225.55-70.60Q227.90-73 231.80-73L231.80-73Q235.70-73 238.05-70.60Q240.40-68.20 240.40-64.30L240.40-64.30Q240.40-60.50 238.05-58.15Q235.70-55.80 231.80-55.80L231.80-55.80Q227.90-55.80 225.55-58.15Q223.20-60.50 223.20-64.30ZM262.10 1.30L262.10 1.30Q256.80 1.30 252.75-0.75Q248.70-2.80 246.50-6.50Q244.30-10.20 244.30-15.10L244.30-15.10Q244.30-20.30 246.70-23.95Q249.10-27.60 253.15-29.60Q257.20-31.60 262.20-31.60L262.20-31.60Q269.30-31.60 273.70-28.50L273.70-28.50L273.70-31.30Q273.70-34 271.80-36Q269.90-38 265.70-38L265.70-38Q263-38 259.50-37.35Q256-36.70 252.30-34.90L252.30-34.90L248-45.30Q252.40-47.50 257.45-48.80Q262.50-50.10 267.80-50.10L267.80-50.10Q274.60-50.10 279.20-47.70Q283.80-45.30 286.05-40.90Q288.30-36.50 288.30-30.70L288.30-30.70L288.30 0L276.40 0L275.40-3.40Q274.70-2.70 273.90-2.10L273.90-2.10Q269.40 1.30 262.10 1.30ZM266.60-9.10L266.60-9.10Q269.90-9.10 271.85-10.80Q273.80-12.50 273.80-15.10L273.80-15.10Q273.80-17.90 271.85-19.50Q269.90-21.10 266.60-21.10Q263.30-21.10 261.40-19.50Q259.50-17.90 259.50-15.10L259.50-15.10Q259.50-12.50 261.40-10.80Q263.30-9.10 266.60-9.10ZM295.50-48.90L306.30-48.90L307.70-43.80Q308.20-44.30 308.80-44.80L308.80-44.80Q311-47 314.05-48.55Q317.10-50.10 320.30-50.10L320.30-50.10Q321.90-50.10 323.20-49.90Q324.50-49.70 325.30-49.20L325.30-49.20L325.30-35.90L322-35.90Q315.60-35.90 312-33.90L312-33.90Q310.90-33.30 310.10-32.50L310.10-32.50L310.10 0L295.50 0L295.50-48.90Z"/>
+  </g>
+</svg></script>
+    <script type="text/plain" data-file="logo-lockup-blue-green.svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="14 0 211 63" role="img" aria-label="quietjar">
+  <title>quietjar</title>
+  <mask id="qjm" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="180">
+<clipPath id="qjmc"><rect x="56.9" y="44.4" width="126.3" height="99.2" rx="47.6"></rect></clipPath>
+<g fill="#fff" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M68.5 64.2 L45.3 56.9 L70.6 81.1 Z"></path>
+<path d="M78.4 121.2 L99.5 121.2 L87.5 157.1 L77.2 157.1 Z"></path>
+<path d="M140.5 121.2 L161.6 121.2 L162.8 157.1 L152.5 157.1 Z"></path>
+<path d="M193.3 80.6 L174.3 79 L163.5 131.5 L193.3 104.6 Z"></path>
+<path d="M140.7 33.3 L194.2 55.8 L138.1 73.2 Z"></path>
+<rect x="59.9" y="47.4" width="120.3" height="93.2" rx="44.6"></rect>
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z"></path>
+</g>
+<g clip-path="url(#qjmc)">
+<path d="M116.5 44.9 L147.6 17.8 L138.9 91 Z" fill="#000" stroke="#000" stroke-width="6" stroke-linejoin="round"></path>
+<path d="M113.6 44.3 L127.1 35.7 L122.6 57.5 Z" fill="#000"></path>
+</g>
+<circle cx="160.5" cy="80.5" r="7.2" fill="#000"></circle>
+</mask>
+  <g transform="scale(0.35)"><rect x="0" y="0" width="240" height="180" fill="#003399" mask="url(#qjm)"></rect></g>
+  <g transform="translate(86 42.9) scale(0.42)">
+    <path fill="#003399" d="M24.90 1.20L24.90 1.20Q18.30 1.20 13.20-2.05Q8.10-5.30 5.20-11.10Q2.30-16.90 2.30-24.40L2.30-24.40Q2.30-32 5.15-37.80Q8-43.60 13.10-46.85Q18.20-50.10 24.80-50.10L24.80-50.10Q31.20-50.10 36-47L36-47Q38-45.70 39.60-44L39.60-44L41-48.90L51.90-48.90L51.90 19L37.30 19L37.30-2.50Q36.70-2.10 36.20-1.80L36.20-1.80Q31.40 1.20 24.90 1.20ZM27.60-12.50L27.60-12.50Q32.10-12.50 35.05-15.85Q38-19.20 38-24.50L38-24.50Q38-29.70 35.05-33.05Q32.10-36.40 27.60-36.40Q23.10-36.40 20.15-33.05Q17.20-29.70 17.20-24.40L17.20-24.40Q17.20-19.20 20.15-15.85Q23.10-12.50 27.60-12.50ZM76.30 1.20L76.30 1.20Q70.90 1.20 67.55-0.40Q64.20-2 62.35-4.85Q60.50-7.70 59.85-11.35Q59.20-15 59.20-19.10L59.20-19.10L59.20-48.90L73.80-48.90L73.80-19.90Q73.80-15.80 75.50-14.45Q77.20-13.10 79.70-13.10L79.70-13.10Q81.90-13.10 84-13.85Q86.10-14.60 88.10-16.10L88.10-16.10Q89.20-16.80 90.10-17.80L90.10-17.80L90.10-48.90L104.80-48.90L104.80 0L93.90 0L92.20-5.60Q91.30-4.80 90.40-4.10L90.40-4.10Q87.20-1.60 83.70-0.20Q80.20 1.20 76.30 1.20ZM127.50-48.90L127.50 0L112.90 0L112.90-48.90L127.50-48.90ZM111.60-64.30L111.60-64.30Q111.60-68.20 113.95-70.60Q116.30-73 120.20-73L120.20-73Q124.10-73 126.45-70.60Q128.80-68.20 128.80-64.30L128.80-64.30Q128.80-60.50 126.45-58.15Q124.10-55.80 120.20-55.80L120.20-55.80Q116.30-55.80 113.95-58.15Q111.60-60.50 111.60-64.30ZM157.20 0.90L157.20 0.90Q149.90 0.90 144.35-2.20Q138.80-5.30 135.75-11Q132.70-16.70 132.70-24.40L132.70-24.40Q132.70-32 135.75-37.80Q138.80-43.60 144.35-46.85Q149.90-50.10 157.20-50.10L157.20-50.10Q164.70-50.10 170.20-46.70Q175.70-43.30 178.70-37.55Q181.70-31.80 181.70-24.60L181.70-24.60Q181.70-23.30 181.60-22.10Q181.50-20.90 181.40-20.20L181.40-20.20L146.20-20.20Q146.60-16 149.30-13.50L149.30-13.50Q152.40-10.40 158-10.40L158-10.40Q162.70-10.40 165.45-12.30Q168.20-14.20 170.10-17L170.10-17L180-11.50Q176.80-5.60 171-2.35Q165.20 0.90 157.20 0.90ZM146.40-30.60L146.40-30.60L168-30.60Q167.30-33.30 165.80-35.30L165.80-35.30Q163-38.80 157.30-38.80L157.30-38.80Q152.20-38.80 149.20-35.70L149.20-35.70Q147.10-33.60 146.40-30.60ZM208.40 0.80L208.40 0.80Q200.30 0.80 195.65-3.20Q191-7.20 191-16.30L191-16.30L191-35.50L183.40-35.50L183.40-48.90L190.80-48.90L193.80-60.70L205.60-60.70L205.60-48.90L216.50-48.90L216.50-35.50L205.60-35.50L205.60-19.50Q205.60-16.10 207.20-14.65Q208.80-13.20 211.40-13.20L211.40-13.20Q212.90-13.20 214.25-13.45Q215.60-13.70 216.50-14L216.50-14L216.50-0.30Q214.80 0.20 212.85 0.50Q210.90 0.80 208.40 0.80Z"/>
+    <path fill="#0B6B3A" d="M224 19.50L224 19.50Q221.40 19.50 219.75 19.10Q218.10 18.70 217.60 18.50L217.60 18.50L217.60 6.20Q218.10 6.30 218.85 6.40Q219.60 6.50 220.70 6.50L220.70 6.50Q222.60 6.50 223.60 5.15Q224.60 3.80 224.60 1.50L224.60 1.50L224.60-48.90L239.20-48.90L239.20 4.10Q239.20 8.10 237.65 11.65Q236.10 15.20 232.75 17.35Q229.40 19.50 224 19.50ZM223.20-64.30L223.20-64.30Q223.20-68.20 225.55-70.60Q227.90-73 231.80-73L231.80-73Q235.70-73 238.05-70.60Q240.40-68.20 240.40-64.30L240.40-64.30Q240.40-60.50 238.05-58.15Q235.70-55.80 231.80-55.80L231.80-55.80Q227.90-55.80 225.55-58.15Q223.20-60.50 223.20-64.30ZM262.10 1.30L262.10 1.30Q256.80 1.30 252.75-0.75Q248.70-2.80 246.50-6.50Q244.30-10.20 244.30-15.10L244.30-15.10Q244.30-20.30 246.70-23.95Q249.10-27.60 253.15-29.60Q257.20-31.60 262.20-31.60L262.20-31.60Q269.30-31.60 273.70-28.50L273.70-28.50L273.70-31.30Q273.70-34 271.80-36Q269.90-38 265.70-38L265.70-38Q263-38 259.50-37.35Q256-36.70 252.30-34.90L252.30-34.90L248-45.30Q252.40-47.50 257.45-48.80Q262.50-50.10 267.80-50.10L267.80-50.10Q274.60-50.10 279.20-47.70Q283.80-45.30 286.05-40.90Q288.30-36.50 288.30-30.70L288.30-30.70L288.30 0L276.40 0L275.40-3.40Q274.70-2.70 273.90-2.10L273.90-2.10Q269.40 1.30 262.10 1.30ZM266.60-9.10L266.60-9.10Q269.90-9.10 271.85-10.80Q273.80-12.50 273.80-15.10L273.80-15.10Q273.80-17.90 271.85-19.50Q269.90-21.10 266.60-21.10Q263.30-21.10 261.40-19.50Q259.50-17.90 259.50-15.10L259.50-15.10Q259.50-12.50 261.40-10.80Q263.30-9.10 266.60-9.10ZM295.50-48.90L306.30-48.90L307.70-43.80Q308.20-44.30 308.80-44.80L308.80-44.80Q311-47 314.05-48.55Q317.10-50.10 320.30-50.10L320.30-50.10Q321.90-50.10 323.20-49.90Q324.50-49.70 325.30-49.20L325.30-49.20L325.30-35.90L322-35.90Q315.60-35.90 312-33.90L312-33.90Q310.90-33.30 310.10-32.50L310.10-32.50L310.10 0L295.50 0L295.50-48.90Z"/>
+  </g>
+</svg></script>
+  </div>
+
+</main>
+
+<footer class="kit">
+  <div class="wrap">
+    <p>QuietJar marketing kit, generated September 2026. Assets live in the assets folder next to this file. Facts current as of the date above; check the pricing page before quoting numbers in paid placements.</p>
+    <p><a href="https://quietjar.com">quietjar.com</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  function flash(btn, text) {
+    var prev = btn.textContent;
+    btn.textContent = text;
+    btn.classList.add("ok");
+    setTimeout(function () {
+      btn.textContent = prev;
+      btn.classList.remove("ok");
+    }, 1600);
+  }
+
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function copyText(text, btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { flash(btn, "Copied"); },
+        function () { flash(btn, legacyCopy(text) ? "Copied" : "Copy failed"); }
+      );
+    } else {
+      flash(btn, legacyCopy(text) ? "Copied" : "Copy failed");
+    }
+  }
+
+  function copyImage(src, btn) {
+    fetch(src)
+      .then(function (res) { return res.blob(); })
+      .then(function (blob) {
+        if (!navigator.clipboard || !window.ClipboardItem) throw new Error("unsupported");
+        return navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]).then(function () {
+          flash(btn, "Copied");
+        });
+      })
+      .catch(function () {
+        flash(btn, "Use Download", 2200);
+      });
+  }
+
+  var svgSources = {};
+  document.querySelectorAll("script[type='text/plain'][data-file]").forEach(function (el) {
+    svgSources[el.getAttribute("data-file")] = el.textContent.trim();
+  });
+
+  document.querySelectorAll("button.copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.hasAttribute("data-copy-code")) {
+        var file = btn.getAttribute("data-copy-code");
+        copyText(svgSources[file] || "", btn);
+      } else if (btn.hasAttribute("data-copy-image")) {
+        copyImage(btn.getAttribute("data-copy-image"), btn);
+      } else {
+        var block = btn.closest(".block");
+        var textEl = block && block.querySelector(".block-text");
+        if (textEl) copyText(textEl.textContent.trim(), btn);
+      }
+    });
+  });
+
+  document.querySelectorAll(".block").forEach(function (block) {
+    var textEl = block.querySelector(".block-text");
+    var meta = block.querySelector(".block-meta");
+    if (!textEl || !meta) return;
+    var text = textEl.textContent.trim();
+    var chars = text.length;
+    var words = text.split(/\s+/).filter(Boolean).length;
+    meta.textContent = words + " words, " + chars + " chars";
+  });
+
+  document.querySelectorAll(".swatch .hex").forEach(function (hex) {
+    hex.style.cursor = "pointer";
+    hex.title = "Click to copy";
+    hex.addEventListener("click", function () {
+      var btn = document.createElement("button");
+      btn.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(btn);
+      copyText(hex.textContent, btn);
+      setTimeout(function () { document.body.removeChild(btn); }, 1800);
+    });
+  });
+
+  document.getElementById("copy-all").addEventListener("click", function () {
+    var btn = this;
+    var sections = document.querySelectorAll("main section");
+    var out = [];
+    sections.forEach(function (section) {
+      var name = (section.querySelector("h2") || {}).textContent || section.id;
+      section.querySelectorAll(".block").forEach(function (block) {
+        var label = block.querySelector(".block-label");
+        var textEl = block.querySelector(".block-text");
+        if (!label || !textEl) return;
+        out.push({ section: name.trim(), label: label.textContent.trim(), text: textEl.textContent.trim() });
+      });
+    });
+    copyText(JSON.stringify(out, null, 2), btn);
+  });
+})();
+</script>
+</body>
+</html>
