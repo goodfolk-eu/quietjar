@@ -1,0 +1,100 @@
+{
+  "featuresPage": {
+    "intro": {
+      "eyebrow": "Features",
+      "title": "Everything QuietJar does.",
+      "sub": "A donation button that lives on your site: static, fast, and polite. It loads in 40 ms, pays with the methods people already use, and steps back once someone has given."
+    },
+    "widget": {
+      "eyebrow": "The widget",
+      "title": "A static widget that loads in 40 ms.",
+      "description": "The button is one small script that loads without holding up your page. Your page stays exactly as fast as it was.",
+      "bullets": [
+        "Floats in a fixed corner layer, so it displaces nothing on your page",
+        "No tracking, no cookie banner, nothing to consent to"
+      ],
+      "stats": [
+        { "value": "40 ms", "label": "to load, cold cache" },
+        { "value": "11.7 kB", "label": "gzipped over the wire" },
+        { "value": "0", "label": "layout shift" }
+      ]
+    },
+    "setup": {
+      "eyebrow": "Setup",
+      "title": "Live on your site in three steps.",
+      "description": "Sign up, connect a bank account, and paste a short snippet. It takes a few minutes, and there is nothing to install or maintain.",
+      "bullets": [
+        "Works on any site that lets you paste HTML",
+        "Every setting has a default, so the snippet works as pasted",
+        "Style the button in your dashboard before you copy it"
+      ],
+      "steps": [
+        { "title": "Sign up", "description": "Enter your email and we send you a one-time code. No password." },
+        { "title": "Connect your bank", "description": "Add your site and the account your payouts go to." },
+        { "title": "Paste the snippet", "description": "Just before the closing body tag." }
+      ],
+      "snippet": "<script>\n  window.QuietJar = { site: \"qj_your_site_id\" };\n</script>\n<script\n  src=\"https://quietjar.com/js/latest/quietjar.js\"\n  async></script>"
+    },
+    "payments": {
+      "eyebrow": "Payments",
+      "title": "Pay the way people already pay.",
+      "description": "Apple Pay, Google Pay, cards, and local methods like iDEAL, Bancontact, and Revolut Pay, directly on your site. Two taps on desktop, the same on mobile. Nobody gets sent anywhere.",
+      "mock": {
+        "alt": "The QuietJar checkout on a docs site, offering iDEAL, card, Bancontact, Revolut Pay, and Pay By Bank for a €5 donation",
+        "caption": "Apple Pay and Google Pay appear on devices that support them."
+      }
+    },
+    "goals": {
+      "eyebrow": "Goals",
+      "title": "Add a goal for +50% more conversions.",
+      "description": "Give the button a public target and a bar that fills toward it: hosting for the year, the next release, a new microphone. Concrete goals lift the amounts people choose.",
+      "bullets": [
+        "Pick a target and the widget turns into a card with a progress meter",
+        "Choose what happens when the goal is reached: hide the widget, keep the button, or keep the bar",
+        "The meter updates as donations come in"
+      ],
+      "mock": {
+        "headline": "Enjoying the docs?",
+        "body": "Funds more posts like this one.",
+        "raised": "€214 of €500 raised",
+        "percent": "43%",
+        "action": "Donate"
+      }
+    },
+    "image": {
+      "eyebrow": "Dynamic image",
+      "title": "Works where scripts can't.",
+      "description": "A dynamic image that links straight into your donation panel. Drop it in your GitHub README or a newsletter, and it auto-updates with your goal progress.",
+      "bullets": [
+        "An img tag for READMEs, newsletters, anywhere a script can't run",
+        "Renders your real widget, so it auto-updates with your goal",
+        "Clicks straight into your donation panel"
+      ],
+      "mock": {
+        "file": "README.md",
+        "badge": "Support this site"
+      }
+    },
+    "configurable": {
+      "eyebrow": "Configurable",
+      "title": "Tuned to your site, down to the CSS.",
+      "description": "Position, color, font, icon, headline and body, when to show and hide, how long to stay hidden. And custom CSS if you want full control.",
+      "mock": {
+        "rows": [
+          { "label": "Position", "value": "Bottom right" },
+          { "label": "Color", "value": "#0369a1", "color": "#0369a1" },
+          { "label": "Font", "value": "Inherit from page" },
+          { "label": "Hide after a donation", "value": "30 days" },
+          { "label": "Custom CSS", "value": "On" }
+        ]
+      }
+    },
+    "cta": {
+      "title": "Ready in minutes.",
+      "description": "Connect your bank account, copy one script, and your supporters can pay without leaving your page.",
+      "primary": "Add it to your site",
+      "secondary": "See the pricing",
+      "secondaryHref": "/pricing/"
+    }
+  }
+}

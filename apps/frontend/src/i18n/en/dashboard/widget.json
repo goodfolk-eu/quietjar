@@ -73,7 +73,7 @@
     "generate": "Generate widget",
     "embedTitle": "Your widget snippet",
     "embedTabScript": "Script",
-    "embedTabImage": "Static image",
+    "embedTabImage": "Dynamic image",
     "embedIntro": "Paste this just before the closing body tag on every page that should show the button.",
     "embedSettingsHint": "Every script setting is documented on the",
     "embedSettingsLink": "settings reference",

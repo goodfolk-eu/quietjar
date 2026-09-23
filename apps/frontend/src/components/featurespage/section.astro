@@ -1,0 +1,42 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  bullets?: string[];
+  reverse?: boolean;
+}
+
+const { eyebrow, title, description, bullets = [], reverse = false } = Astro.props;
+---
+
+<section>
+  <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-[72px] border-t border-qj-line px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)]">
+    <div class:list={["flex flex-col gap-4", reverse && "lg:order-2"]}>
+      <span class="text-[13.5px] font-semibold tracking-[-0.005em] text-qj-accent">{eyebrow}</span>
+      <h2 class="text-balance font-display text-[clamp(28px,3.4vw,44px)] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
+        {title}
+      </h2>
+      <p class="max-w-[48ch] text-pretty text-[17px] leading-[1.62] text-qj-body">
+        {description}
+      </p>
+      {
+        bullets.length > 0 && (
+          <ul class="mt-1 flex flex-col gap-2.5 text-[15.5px] leading-[1.6] text-qj-body">
+            {bullets.map((bullet) => (
+              <li class="flex items-start gap-2.5">
+                <span class="pt-[5px] text-qj-accent" aria-hidden="true">
+                  ✓
+                </span>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+    <div class:list={["flex flex-col", reverse && "lg:order-1"]}>
+      <slot name="visual" />
+    </div>
+  </div>
+</section>

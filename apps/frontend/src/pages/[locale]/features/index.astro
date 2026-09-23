@@ -1,0 +1,70 @@
+---
+import Container from "@/components/container.astro";
+import Cta from "@/components/cta.astro";
+import MockGoal from "@/components/featurespage/mock-goal.astro";
+import MockPayments from "@/components/featurespage/mock-payments.astro";
+import MockReadme from "@/components/featurespage/mock-readme.astro";
+import MockSettings from "@/components/featurespage/mock-settings.astro";
+import MockSetup from "@/components/featurespage/mock-setup.astro";
+import PerfBand from "@/components/featurespage/perf-band.astro";
+import Section from "@/components/featurespage/section.astro";
+import Tile from "@/components/featurespage/tile.astro";
+import { dictionary } from "@/i18n/t";
+import Layout from "@/layouts/Layout.astro";
+import { localizedPath } from "@/lib/links";
+
+export { getStaticPaths } from "@/lib/locale-paths";
+
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+const fp = copy.featuresPage;
+const pricingHref = localizedPath(fp.cta.secondaryHref, locale);
+---
+
+<Layout
+  title="QuietJar features - Fast, polite, and configurable"
+  description="A static widget that loads in 40 ms, Apple Pay and local methods directly on your site, goals, dynamic images, and full configurability. No redirects, no tracking.">
+  <Container class="pt-[clamp(72px,9vw,120px)] pb-[clamp(56px,7vw,88px)]">
+    <div class="flex max-w-[720px] flex-col gap-4">
+      <span class="text-[13.5px] font-medium text-qj-green">{fp.intro.eyebrow}</span>
+      <h1 class="text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
+        {fp.intro.title}
+      </h1>
+      <p class="max-w-[52ch] text-pretty text-[17px] leading-[1.62] text-qj-ink-2">{fp.intro.sub}</p>
+    </div>
+  </Container>
+
+  <Section eyebrow={fp.goals.eyebrow} title={fp.goals.title} description={fp.goals.description} bullets={fp.goals.bullets} reverse>
+    <MockGoal slot="visual" />
+  </Section>
+
+  <Section eyebrow={fp.setup.eyebrow} title={fp.setup.title} description={fp.setup.description} bullets={fp.setup.bullets}>
+    <MockSetup slot="visual" />
+  </Section>
+
+  <PerfBand />
+
+  <Section eyebrow={fp.payments.eyebrow} title={fp.payments.title} description={fp.payments.description}>
+    <MockPayments slot="visual" />
+  </Section>
+
+  <section>
+    <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-[72px] border-t border-qj-line px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)] md:grid-cols-2 md:gap-12">
+      <Tile eyebrow={fp.image.eyebrow} title={fp.image.title} description={fp.image.description}>
+        <MockReadme />
+      </Tile>
+      <Tile eyebrow={fp.configurable.eyebrow} title={fp.configurable.title} description={fp.configurable.description}>
+        <MockSettings />
+      </Tile>
+    </div>
+  </section>
+
+
+  <Cta
+    title={fp.cta.title}
+    description={fp.cta.description}
+    primary={fp.cta.primary}
+    secondary={fp.cta.secondary}
+    secondaryHref={pricingHref}
+  />
+</Layout>

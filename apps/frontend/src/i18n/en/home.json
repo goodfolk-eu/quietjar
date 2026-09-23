@@ -4,10 +4,9 @@
     "title": "Your supporters never have to leave.",
     "description": "The moment someone wants to give, they can. Two taps, on your page, in your design - nobody gets sent anywhere.",
     "ctaPrimary": "Add it to your site",
-    "ctaSecondary": "See it in action",
     "trustBar": [
       "On-page checkout, no redirect",
-      "Free to start, no monthly fee",
+      "No monthly fee",
       "EU-hosted, no cookie banner",
       "Wallets, iDEAL & cards"
     ],
@@ -31,7 +30,9 @@
           "body": "Funds more posts like this one.",
           "action": "Tip",
           "color": "#8a5a2b",
-          "font": "serif"
+          "font": "serif",
+          "goal": "",
+          "icon": "♡"
         },
         {
           "key": "magazine",
@@ -40,7 +41,9 @@
           "body": "Funds the next issue.",
           "action": "Support",
           "color": "#c4372b",
-          "font": "system"
+          "font": "system",
+          "goal": "",
+          "icon": "★"
         }
       ]
     }
@@ -81,34 +84,46 @@
   "polite": {
     "eyebrow": "Built to respect your audience",
     "title": "It knows when to step back.",
-    "description": "Once someone has given, QuietJar stops asking. It remembers on our side, not in your visitor's browser, so it works in Safari too.",
-    "note": "Your fans get thanked, never chased.",
+    "description": "Banner fatigue is real. The longer a banner sits on your page, the more your regulars learn to look straight past it, and donations drop. QuietJar asks once, steps back after someone gives, and comes back at the right moment instead of nagging.",
+    "note": "Your supporters get thanked, never chased.",
     "feelLabel": "What it feels like to your most loyal supporter",
     "feelSteps": [
       "Supports you once",
       "A quiet \"thank you\"",
       "QuietJar steps back and stops asking",
-      "Comes back later to support you again"
+      "Next month, they support you again"
     ]
   },
   "craft": {
     "eyebrow": "Craft",
     "title": "Feels like part of your site, not an ad for someone else's.",
     "description": "Fast and precise, designed to look like you built it yourself. Paying feels effortless, like any well-made checkout.",
-    "perfReady": true,
     "features": [
       {
         "title": "Two-tap checkout",
         "description": "No forms to fill, no account to create. Just tap and it is done.",
-        "perf": "Loads in under 50 ms. 11.7 kB gzipped. No layout shift."
-      },
-      {
-        "title": "Matches your design",
-        "description": "Colors, corners, and feel fit your page, not an ad for someone else's."
+        "perf": "Loads in 40 ms. 11.7 kB gzipped. No layout shift."
       },
       {
         "title": "Familiar payment methods",
-        "description": "Apple Pay, cards, and more, right where your visitors already pay."
+        "description": "Apple Pay, Google Pay, cards, and local methods like iDEAL, right where your visitors already pay."
+      },
+      {
+        "title": "Goals that lift donations",
+        "description": "Give the button a public target. Goals drive +50% more conversions, and the bar fills as money comes in."
+      },
+      {
+        "title": "Dynamic images",
+        "description": "A dynamic image for GitHub READMEs and newsletters that auto-updates with your goal."
+      },
+      {
+        "title": "Configurable down to the CSS",
+        "description": "Position, color, font, icon, when to show and hide, how long to hide, plus custom CSS."
+      },
+      {
+        "title": "See all features",
+        "description": "Every capability, on one page.",
+        "href": "/features/"
       }
     ]
   },
@@ -166,7 +181,7 @@
         "name": "Will it slow down my site?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. QuietJar is built to be fast. It loads lightly and does not weigh your page down."
+          "text": "No. The script is 11.7 kB gzipped, loads in about 40 ms and causes no layout shift."
         }
       },
       {

@@ -24,6 +24,8 @@ const presetStyles = Object.fromEntries(
       action: preset.action,
       color: preset.color,
       font: preset.font as NonNullable<QuietJarConfig["style"]>["font"],
+      goal: preset.goal,
+      icon: preset.icon,
     },
   ]),
 );
@@ -119,16 +121,10 @@ const presetStyles = Object.fromEntries(
         action?: string;
         color?: string;
         font?: NonNullable<QuietJarConfig["style"]>["font"];
+        goal?: string;
+        icon?: string;
       }
     >;
-
-    // Captured before any preset runs, so every tab composes from the
-    // production config instead of the previous tab's restyle. The widget
-    // attaches an open() method to the config object, which structuredClone
-    // rejects, so the copy drops functions with a JSON round trip.
-    const baseConfig = window.QuietJar
-      ? (JSON.parse(JSON.stringify(window.QuietJar)) as QuietJarConfig)
-      : undefined;
 
     for (const button of presetButtons) {
       button.addEventListener("click", () => {
@@ -137,6 +133,13 @@ const presetStyles = Object.fromEntries(
           other.setAttribute("aria-pressed", String(other === button));
         }
 
+        // Read on click: demo-config.js is deferred and runs after this
+        // module. Presets never write back to window.QuietJar, so every tab
+        // composes from the production config. The widget attaches an open()
+        // method, which the JSON round trip drops.
+        const baseConfig = window.QuietJar
+          ? (JSON.parse(JSON.stringify(window.QuietJar)) as QuietJarConfig)
+          : undefined;
         if (!slot || !baseConfig) return;
         slot.querySelector("[data-quietjar-host]")?.remove();
         const preset = presetStyles[button.dataset.presetBtn ?? ""] ?? {};
@@ -148,12 +151,18 @@ const presetStyles = Object.fromEntries(
               headline: preset.headline ?? baseConfig.labels?.headline,
               body: preset.body ?? baseConfig.labels?.body,
               action: preset.action ?? baseConfig.labels?.action,
+              // An omitted icon keeps the base config's; an empty string
+              // renders the icon-less button for that tab.
+              icon: preset.icon ?? baseConfig.labels?.icon,
             },
             style: {
               ...baseConfig.style,
               color: preset.color ?? baseConfig.style?.color,
               font: preset.font ?? baseConfig.style?.font,
             },
+            // An omitted goal keeps the demo goal from the base config; an
+            // empty string clears the meter for that tab.
+            goal: preset.goal ?? baseConfig.goal,
           }),
         );
       });

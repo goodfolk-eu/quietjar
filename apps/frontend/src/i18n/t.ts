@@ -7,6 +7,7 @@ import enDashboardPayout from "./en/dashboard/payout.json";
 import enDashboardProfile from "./en/dashboard/profile.json";
 import enDashboardWidget from "./en/dashboard/widget.json";
 import enDevelopers from "./en/developers.json";
+import enFeatures from "./en/features.json";
 import enHome from "./en/home.json";
 import enLegal from "./en/legal.json";
 import enPricing from "./en/pricing.json";
@@ -25,6 +26,7 @@ const dictionaries = {
     ...enDashboardFeedback,
     ...enLegal,
     ...enDevelopers,
+    ...enFeatures,
     ...enCompare,
     ...enPricing,
   },

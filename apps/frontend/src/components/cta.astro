@@ -1,26 +1,40 @@
 ---
 import { dictionary } from "@/i18n/t";
 
+interface Props {
+  title?: string;
+  description?: string;
+  primary?: string;
+  secondary?: string;
+  secondaryHref?: string;
+}
+
 const copy = dictionary(Astro.currentLocale ?? "en");
-const cta = copy.cta;
+const {
+  title = copy.cta.title,
+  description = copy.cta.description,
+  primary = copy.cta.primary,
+  secondary = copy.cta.secondary,
+  secondaryHref = "#faq",
+} = Astro.props;
 ---
 
 <section class="relative overflow-hidden bg-qj-field">
   <div class="relative mx-auto flex max-w-[1180px] flex-col items-start gap-[22px] px-10 py-[clamp(72px,9vw,120px)]">
     <h2 class="max-w-[22ch] text-balance font-display text-[clamp(30px,3.8vw,48px)] font-bold leading-[1.05] tracking-[-0.028em] text-white">
-      {cta.title}
+      {title}
     </h2>
     <p class="max-w-[48ch] text-pretty text-[17px] leading-[1.62] text-white/80">
-      {cta.description}
+      {description}
     </p>
     <div class="mt-1.5 flex flex-col items-center gap-3.5 sm:flex-row">
       <button type="button" data-auth-mode="signup"
       data-dashboard-label={copy.nav.dashboard}
         class="cursor-pointer rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
-        {cta.primary}
+        {primary}
       </button>
-      <a href="#faq" class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
-        {cta.secondary}
+      <a href={secondaryHref} class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
+        {secondary}
       </a>
     </div>
   </div>

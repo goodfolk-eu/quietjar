@@ -1,9 +1,16 @@
 ---
 import { dictionary } from "@/i18n/t";
+import { localizedPath } from "@/lib/links";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const craft = copy.craft;
-const features = craft.features;
+const features = craft.features as ReadonlyArray<{
+  readonly title: string;
+  readonly description: string;
+  readonly perf?: string;
+  readonly href?: string;
+}>;
+const locale = Astro.currentLocale ?? "en";
 ---
 
 <section id="features">
@@ -20,23 +27,34 @@ const features = craft.features;
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
       {
-        features.map((item, i) => (
-          <div class="flex flex-col gap-2.5 rounded-lg border border-qj-line-card bg-white px-[30px] py-[34px]">
-            <span class="font-mono text-[11.5px] text-qj-accent">0{i + 1}</span>
-            <h3 class="font-display text-[21px] font-bold tracking-[-0.022em] text-qj-ink">
-              {item.title}
-            </h3>
-            <p class="text-[15px] leading-[1.6] text-qj-body">
-              {item.description}
-            </p>
-            {/* The measured line stays in the source but hidden until real numbers
-                exist. Set craft.perfReady to true in home.json once load-ms and
-                script-kb are measured on a real page. */}
-            {craft.perfReady && item.perf && (
-              <p class="mt-1 font-mono text-[12.5px] leading-[1.6] text-qj-body">{item.perf}</p>
-            )}
-          </div>
-        ))
+        features.map((item, i) =>
+          item.href ? (
+            <a
+              href={localizedPath(item.href, locale)}
+              class="flex flex-col gap-2.5 rounded-lg border-[1.5px] border-qj-accent-pale bg-white px-[30px] py-[34px] transition hover:border-qj-accent">
+              <span class="font-mono text-[11.5px] text-qj-accent">→</span>
+              <h3 class="font-display text-[21px] font-bold tracking-[-0.022em] text-qj-ink">
+                {item.title}
+              </h3>
+              <p class="text-[15px] leading-[1.6] text-qj-body">
+                {item.description}
+              </p>
+            </a>
+          ) : (
+            <div class="flex flex-col gap-2.5 rounded-lg border border-qj-line-card bg-white px-[30px] py-[34px]">
+              <span class="font-mono text-[11.5px] text-qj-accent">0{i + 1}</span>
+              <h3 class="font-display text-[21px] font-bold tracking-[-0.022em] text-qj-ink">
+                {item.title}
+              </h3>
+              <p class="text-[15px] leading-[1.6] text-qj-body">
+                {item.description}
+              </p>
+              {item.perf && (
+                <p class="mt-1 font-mono text-[12.5px] leading-[1.6] text-qj-body">{item.perf}</p>
+              )}
+            </div>
+          ),
+        )
       }
     </div>
   </div>

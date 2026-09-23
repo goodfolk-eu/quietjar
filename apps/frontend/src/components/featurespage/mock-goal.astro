@@ -1,0 +1,25 @@
+---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const mock = copy.featuresPage.goals.mock;
+---
+
+<div
+  class="flex flex-col gap-3.5 rounded-lg border border-qj-line-card bg-white px-7 py-7 shadow-[0_28px_56px_-26px_rgba(20,32,28,0.28)]"
+>
+  <div class="flex flex-col gap-1">
+    <span class="font-display text-[19px] font-bold tracking-[-0.02em] text-qj-ink">{mock.headline}</span>
+    <span class="text-[13.5px] text-qj-body">{mock.body}</span>
+  </div>
+  <div class="flex flex-col gap-1.5">
+    <div class="h-2 overflow-hidden rounded-full bg-qj-line-soft">
+      <div class="h-full w-[43%] rounded-full bg-qj-accent"></div>
+    </div>
+    <div class="flex items-center justify-between font-mono text-[11.5px] text-qj-body">
+      <span>{mock.raised}</span>
+      <span>{mock.percent}</span>
+    </div>
+  </div>
+  <span class="self-start rounded-sm bg-qj-accent px-4 py-2 text-[13.5px] font-semibold text-white">{mock.action}</span>
+</div>

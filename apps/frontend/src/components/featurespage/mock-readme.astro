@@ -1,0 +1,27 @@
+---
+import { dictionary } from "@/i18n/t";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const mock = copy.featuresPage.image.mock;
+---
+
+<div
+  class="overflow-hidden rounded-lg border border-qj-line-card bg-white shadow-[0_28px_56px_-26px_rgba(20,32,28,0.28)]"
+>
+  <div class="flex items-center gap-2 border-b border-qj-line-soft px-5 py-3.5">
+    <span class="font-mono text-[11.5px] text-qj-body">{mock.file}</span>
+  </div>
+  <div class="flex flex-col gap-2.5 px-5 py-6">
+    <div class="h-2 w-3/5 rounded-full bg-qj-line-soft"></div>
+    <div class="h-2 w-4/5 rounded-full bg-qj-line-soft"></div>
+    <div class="my-2.5 flex justify-center">
+      <div class="flex w-[220px] flex-col items-start rounded-sm bg-qj-accent px-3.5 py-2.5">
+        <span class="font-mono text-[11px] font-semibold text-white">{mock.badge}</span>
+        <div class="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-white/30">
+          <div class="h-full w-[43%] rounded-full bg-white"></div>
+        </div>
+      </div>
+    </div>
+    <div class="h-2 w-2/3 rounded-full bg-qj-line-soft"></div>
+  </div>
+</div>
