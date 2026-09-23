@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
@@ -11,6 +12,7 @@ import {
   buildChunkLastmods,
 } from "./src/lib/sitemap-lastmod.js";
 import { defaultLocale, locales } from "./src/i18n/config.ts";
+import { localizeLinks } from "./src/lib/localize-links.ts";
 
 /**
  * Backend origin forwarded to in local dev.
@@ -150,7 +152,7 @@ export default defineConfig({
     "/legal": "/en/legal/privacy-policy",
     "/en": "/",
   },
-  markdown: { syntaxHighlight: false },
+  markdown: { syntaxHighlight: false, processor: satteri({ hastPlugins: [localizeLinks] }) },
   i18n: {
     defaultLocale,
     locales: [...locales],
