@@ -1,17 +1,21 @@
 import { Elysia, t } from "elysia";
 import { auth } from "../auth";
 import { recordCompletedDonation } from "../pay/record";
-import { localMethodCapabilities } from "../sites/currency";
+import { localMethodCapabilities, payoutMinimum } from "../sites/currency";
 import { getSiteByUserId } from "../sites/store";
 import {
   constructWebhookEvent,
   createConnectedAccount,
   createLoginLink,
   createOnboardingLink,
+  createPayout,
   isMissingAccount,
+  type PayoutBalance,
   registerWalletDomains,
   requestLocalPaymentCapabilities,
   retrieveAccount,
+  retrieveBalance,
+  setManualPayouts,
   stripeConfigFromEnv,
   webhookSecretFromEnv,
 } from "./client";
@@ -116,6 +120,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
           businessUrl: site.siteUrl,
         });
         accountId = account.id;
+        await setManualPayouts(config, accountId);
         await createConnection({ userId, accountId });
         await saveOnboarding(
           accountId,
@@ -292,6 +297,83 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
       set.status = 502;
       return { error: "stripe_request_failed" };
     }
+  })
+  .get("/balance", async ({ request, set }) => {
+    const userId = await sessionUserId(request);
+    if (!userId) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+    const config = stripeConfigFromEnv();
+    if (!config) {
+      set.status = 503;
+      return { error: "stripe_not_configured" };
+    }
+    const connection = await getConnectionByUserId(userId);
+    const site = await getSiteByUserId(userId);
+    if (!(connection && site)) {
+      set.status = 400;
+      return { error: "not_connected" };
+    }
+    try {
+      const balance = await retrieveBalance(config, connection.accountId, site.currency);
+      return { ...balance, minimum: payoutMinimum(balance.currency) };
+    } catch (err) {
+      if (isMissingAccount(err)) {
+        await deleteConnection(userId);
+        set.status = CONNECTION_RESET.status;
+        return CONNECTION_RESET.body;
+      }
+      console.error("[stripe/balance] balance retrieval failed:", err);
+      set.status = 502;
+      return { error: "stripe_request_failed" };
+    }
+  })
+  // Always the whole available balance, read fresh here rather than taken from
+  // the client, so a double click finds the balance already spent.
+  .post("/payout", async ({ request, set }) => {
+    const userId = await sessionUserId(request);
+    if (!userId) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+    const config = stripeConfigFromEnv();
+    if (!config) {
+      set.status = 503;
+      return { error: "stripe_not_configured" };
+    }
+    const connection = await getConnectionByUserId(userId);
+    const site = await getSiteByUserId(userId);
+    if (!(connection && site)) {
+      set.status = 400;
+      return { error: "not_connected" };
+    }
+    let balance: PayoutBalance;
+    try {
+      balance = await retrieveBalance(config, connection.accountId, site.currency);
+    } catch (err) {
+      if (isMissingAccount(err)) {
+        await deleteConnection(userId);
+        set.status = CONNECTION_RESET.status;
+        return CONNECTION_RESET.body;
+      }
+      console.error("[stripe/payout] balance retrieval failed:", err);
+      set.status = 502;
+      return { error: "stripe_request_failed" };
+    }
+    const { available, currency } = balance;
+    if (available < payoutMinimum(currency)) {
+      set.status = 400;
+      return { error: "below_minimum" };
+    }
+    try {
+      await createPayout(config, connection.accountId, available, currency);
+    } catch (err) {
+      console.error("[stripe/payout] payout failed:", err);
+      set.status = 502;
+      return { error: "stripe_request_failed" };
+    }
+    return { amount: available, currency };
   })
   // Stripe verifies accounts asynchronously, so the steps only stay truthful if
   // account.updated is applied as it arrives.

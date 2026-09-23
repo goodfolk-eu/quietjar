@@ -95,6 +95,9 @@ export const stripeState = {
   webhookEvent: null as Record<string, unknown> | null,
   /** The checkout session Stripe answers with on a status lookup. */
   donationSession: null as Record<string, unknown> | null,
+  /** The connected account's balance, in minor units. */
+  balance: { available: 0, pending: 0, currency: "eur" },
+  throwOnPayout: null as Error | null,
 };
 
 function account() {
@@ -161,6 +164,18 @@ mock.module("../src/stripe/client", () => ({
     if (stripeState.webhookEvent === null) throw new Error("not used");
     return stripeState.webhookEvent;
   },
+  setManualPayouts: async (_config: unknown, accountId: string) => {
+    record("setManualPayouts", { accountId });
+  },
+  retrieveBalance: async (_config: unknown, accountId: string, currency: string) => {
+    record("retrieveBalance", { accountId, currency });
+    if (stripeState.missingAccount) throw new Error("missing account");
+    return { ...stripeState.balance };
+  },
+  createPayout: async (_config: unknown, accountId: string, amount: number, currency: string) => {
+    record("createPayout", { accountId, amount, currency });
+    if (stripeState.throwOnPayout) throw stripeState.throwOnPayout;
+  },
   retrieveDonationSession: async (_config: unknown, accountId: string, sessionId: string) => {
     record("retrieveDonationSession", { accountId, sessionId });
     return stripeState.donationSession;
@@ -178,6 +193,8 @@ export function resetStripe(): void {
   stripeState.chargeAmounts = null;
   stripeState.webhookEvent = null;
   stripeState.donationSession = null;
+  stripeState.balance = { available: 0, pending: 0, currency: "eur" };
+  stripeState.throwOnPayout = null;
 }
 
 export function calledWith(name: string): unknown | undefined {

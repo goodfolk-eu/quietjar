@@ -70,7 +70,7 @@ Payments run on the same regulated rails as any checkout. Supporters see Apple P
 Give the measured number: script size and load time.
 
 **When do I get paid?**
-Stripe pays out daily to your bank account, automatically.
+Whenever you like, from your dashboard, once your available balance reaches 50 EUR (or the local equivalent).
 
 ## Proof to gather before launch, ranked
 

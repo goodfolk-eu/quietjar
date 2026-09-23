@@ -1,7 +1,7 @@
 ---
 title: "Terms of service"
 description: "The terms governing use of the QuietJar widget, dashboard, and website: accounts, acceptable use, fees, data protection, and liability."
-lastUpdated: 2026-09-06
+lastUpdated: 2026-09-23
 order: 3
 ---
 
@@ -160,7 +160,8 @@ the law requires it. A suspension always comes with a reason and a way to respon
 
 After you terminate, the widget keeps working for 14 days, so donations already in
 progress can complete. Donations already collected are paid out through your
-connected account, minus amounts still owed. Provisions that by their nature
+connected account on your request, minus amounts still owed. Balances below the
+payout minimum can be requested through support. Provisions that by their nature
 survive, including data protection and governing law, survive termination.
 
 ## Changes to these terms

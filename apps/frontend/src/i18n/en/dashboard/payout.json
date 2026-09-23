@@ -2,6 +2,16 @@
   "payout": {
     "title": "Payout",
     "intro": "Set up payments so your widget can receive tips.",
+    "balance": {
+      "title": "Balance",
+      "available": "Available to pay out",
+      "pending": "{amount} on its way, available in a few days.",
+      "payOut": "Pay out",
+      "payingOut": "Paying out…",
+      "belowMinimum": "{missing} more to go before you can pay out (minimum {minimum}).",
+      "paidOut": "{amount} is on its way to your bank account.",
+      "errorBelowMinimum": "Your available balance is below the minimum. Try again once it has grown."
+    },
     "stepsTitle": "Your setup",
     "openDashboard": "Open payout dashboard",
     "country": "Country",

@@ -76,6 +76,7 @@ describe("POST /api/stripe/connect", () => {
       currency: "sek",
       businessUrl: "https://example.com",
     });
+    expect(calledWith("setManualPayouts")).toEqual({ accountId: stripeState.account.id });
   });
 
   test("stores the connection so a second call reuses the account", async () => {
@@ -260,5 +261,83 @@ describe("POST /api/stripe/login-link", () => {
     const { status, body } = await post("/login-link");
     expect(status).toBe(200);
     expect(body.url).toBe(stripeState.loginUrl);
+  });
+});
+
+describe("GET /api/stripe/balance", () => {
+  test("refuses a signed-out caller", async () => {
+    session.user = null;
+    expect((await get("/balance")).status).toBe(401);
+  });
+
+  test("refuses before an account exists", async () => {
+    const { status, body } = await get("/balance");
+    expect(status).toBe(400);
+    expect(body.error).toBe("not_connected");
+  });
+
+  test("returns the balance with the minimum for its currency", async () => {
+    await completeStepOne({ country: "SE", currency: "sek" });
+    await post("/connect");
+    stripeState.balance = { available: 12_000, pending: 3_000, currency: "sek" };
+    const { status, body } = await get("/balance");
+    expect(status).toBe(200);
+    expect(body).toEqual({ available: 12_000, pending: 3_000, currency: "sek", minimum: 60_000 });
+    expect(calledWith("retrieveBalance")).toEqual({
+      accountId: stripeState.account.id,
+      currency: "sek",
+    });
+  });
+
+  test("resets a connection whose account is gone", async () => {
+    await completeStepOne();
+    await post("/connect");
+    stripeState.missingAccount = true;
+    const { status, body } = await get("/balance");
+    expect(status).toBe(409);
+    expect(body.error).toBe("connection_reset");
+    expect(await getConnectionByUserId("user_1")).toBeNull();
+  });
+});
+
+describe("POST /api/stripe/payout", () => {
+  beforeEach(async () => {
+    await completeStepOne();
+    await post("/connect");
+  });
+
+  test("refuses a signed-out caller", async () => {
+    session.user = null;
+    expect((await post("/payout")).status).toBe(401);
+    expect(calledWith("createPayout")).toBeUndefined();
+  });
+
+  test("refuses a balance below the minimum", async () => {
+    stripeState.balance = { available: 4_999, pending: 10_000, currency: "eur" };
+    const { status, body } = await post("/payout");
+    expect(status).toBe(400);
+    expect(body.error).toBe("below_minimum");
+    expect(calledWith("createPayout")).toBeUndefined();
+  });
+
+  test("pays out the whole available balance once it reaches the minimum", async () => {
+    stripeState.balance = { available: 5_000, pending: 2_500, currency: "eur" };
+    const { status, body } = await post("/payout");
+    expect(status).toBe(200);
+    expect(body).toEqual({ amount: 5_000, currency: "eur" });
+    expect(calledWith("createPayout")).toEqual({
+      accountId: stripeState.account.id,
+      amount: 5_000,
+      currency: "eur",
+    });
+  });
+
+  test("keeps the connection when Stripe refuses the payout", async () => {
+    stripeState.balance = { available: 8_000, pending: 0, currency: "eur" };
+    stripeState.throwOnPayout = new Error("payouts not allowed");
+    const { status, body } = await post("/payout");
+    expect(status).toBe(502);
+    expect(body.error).toBe("stripe_request_failed");
+    expect(await getConnectionByUserId("user_1")).not.toBeNull();
   });
 });

@@ -184,7 +184,7 @@
         "name": "When do I get paid?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Stripe pays out your balance to your bank account automatically every day. No manual step needed."
+          "text": "Donations reach your QuietJar balance after a few days. Once your available balance reaches 50 EUR (or the local equivalent), pay it out to your bank account from your dashboard with one click."
         }
       },
       {

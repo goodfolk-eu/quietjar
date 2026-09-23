@@ -2,15 +2,12 @@
 import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
-import { localizedPath } from "@/lib/links";
 
 export { getStaticPaths } from "@/lib/locale-paths";
 
 const locale = Astro.currentLocale ?? "en";
 const copy = dictionary(locale);
 const dev = copy.developers;
-const pricingPath = localizedPath("/#pricing", locale);
-const comparePath = localizedPath("/compare/", locale);
 ---
 
 <Layout

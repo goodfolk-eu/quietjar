@@ -415,7 +415,7 @@ export const LOCAL_METHOD_CAPABILITIES = Object.keys(
  */
 const AMOUNT_BOUNDS = {
   aed: { min: 5, max: 2000 },
-  ars: { min: 1000, max: 500_000 },
+  ars: { min: 1000, max: 900_000 },
   aud: { min: 1, max: 800 },
   brl: { min: 5, max: 3000 },
   cad: { min: 1, max: 750 },
@@ -426,14 +426,14 @@ const AMOUNT_BOUNDS = {
   eur: { min: 1, max: 500 },
   gbp: { min: 1, max: 400 },
   hkd: { min: 5, max: 4000 },
-  idr: { min: 20_000, max: 8_000_000 },
-  ils: { min: 5, max: 2000 },
-  inr: { min: 100, max: 45_000 },
+  idr: { min: 20_000, max: 10_000_000 },
+  ils: { min: 5, max: 1750 },
+  inr: { min: 100, max: 55_000 },
   mxn: { min: 20, max: 10_000 },
   myr: { min: 5, max: 2500 },
   nok: { min: 5, max: 6000 },
   nzd: { min: 2, max: 900 },
-  php: { min: 100, max: 30_000 },
+  php: { min: 100, max: 35_000 },
   pln: { min: 5, max: 2000 },
   ron: { min: 5, max: 2500 },
   sek: { min: 5, max: 6000 },
@@ -442,6 +442,44 @@ const AMOUNT_BOUNDS = {
   usd: { min: 1, max: 500 },
   zar: { min: 20, max: 10_000 },
 } as const satisfies Record<Currency, { min: number; max: number }>;
+
+/**
+ * The smallest available balance a creator may pay out, in major units.
+ *
+ * Every payout costs a Stripe fee, and an account that pays out counts as
+ * active for Stripe's monthly per-account charge, so small balances wait until
+ * they are worth moving. Roughly 50 EUR, taken as a tenth of the donation
+ * ceiling so each figure stays a round local number.
+ */
+const PAYOUT_MINIMUMS = {
+  aed: 200,
+  ars: 90_000,
+  aud: 80,
+  brl: 300,
+  cad: 75,
+  chf: 50,
+  cop: 200_000,
+  czk: 1200,
+  dkk: 350,
+  eur: 50,
+  gbp: 40,
+  hkd: 400,
+  idr: 1_000_000,
+  ils: 175,
+  inr: 5500,
+  mxn: 1000,
+  myr: 250,
+  nok: 600,
+  nzd: 100,
+  php: 3500,
+  pln: 200,
+  ron: 250,
+  sek: 600,
+  sgd: 70,
+  thb: 1800,
+  usd: 50,
+  zar: 1000,
+} as const satisfies Record<Currency, number>;
 
 export interface AmountBounds {
   min: number;
@@ -472,6 +510,14 @@ export function localMethodCapabilities(
 
 export function amountBounds(currency: string): AmountBounds {
   return isSupportedCurrency(currency) ? AMOUNT_BOUNDS[currency] : AMOUNT_BOUNDS[DEFAULT_CURRENCY];
+}
+
+/** The payout minimum in minor units. */
+export function payoutMinimum(currency: string): number {
+  const minimum = isSupportedCurrency(currency)
+    ? PAYOUT_MINIMUMS[currency]
+    : PAYOUT_MINIMUMS[DEFAULT_CURRENCY];
+  return toMinorUnits(minimum);
 }
 
 /**

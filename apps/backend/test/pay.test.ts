@@ -102,8 +102,8 @@ describe("isValidAmount", () => {
     // 500 is the euro ceiling but well inside a low-value currency's range,
     // and 1 is a valid euro donation but below their floor.
     expect(isValidAmount(501, "inr")).toBe(true);
-    expect(isValidAmount(45_000, "inr")).toBe(true);
-    expect(isValidAmount(45_001, "inr")).toBe(false);
+    expect(isValidAmount(55_000, "inr")).toBe(true);
+    expect(isValidAmount(55_001, "inr")).toBe(false);
     expect(isValidAmount(1, "inr")).toBe(false);
     expect(isValidAmount(1, "czk")).toBe(false);
     expect(isValidAmount(20, "czk")).toBe(true);

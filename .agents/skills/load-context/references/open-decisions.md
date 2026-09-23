@@ -5,7 +5,7 @@ Everything unresolved, in one place. Check this before writing anything with a n
 ## Decided
 
 - **The exact fee and cap (2026-09-09).** 5% flat per payment, no per-transaction cap. Shipped on the homepage, developers page, and compare page.
-- **Payout schedule (2026-09-09).** Stripe's default: paid out daily to the creator's bank account, automatically. No manual payout action.
+- **Payout schedule (2026-09-23).** Manual payouts: the creator pays out the full available balance from the dashboard once it reaches 50 EUR (or the local equivalent). Replaces Stripe's daily automatic payouts, which cost a fee per payout and made nearly every account count as active for Stripe's monthly per-account charge.
 
 ## Blocking the redesign copy
 

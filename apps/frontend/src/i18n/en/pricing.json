@@ -14,7 +14,7 @@
         "5%, minimum €0.50",
         "No monthly fee, no cap",
         "We pay all the card fees",
-        "Paid out daily, automatically"
+        "Pay out whenever you like"
       ]
     },
     "example": {
@@ -74,7 +74,7 @@
     },
     "payouts": {
       "title": "Payouts",
-      "text": "Stripe pays your balance into your bank account automatically, every day. There is no manual step, and QuietJar charges nothing extra for it."
+      "text": "Pay out your balance to your bank account from your dashboard whenever it reaches 50 EUR (or the local equivalent). QuietJar charges nothing extra for it."
     },
     "faq": {
       "title": "Questions",
@@ -92,7 +92,7 @@
           "name": "When does the money arrive?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Stripe pays out your balance to your bank account automatically, every day. There is no manual step on your side."
+            "text": "Donations reach your QuietJar balance after a few days. Once your available balance reaches 50 EUR (or the local equivalent), pay it out to your bank account from your dashboard with one click."
           }
         },
         {

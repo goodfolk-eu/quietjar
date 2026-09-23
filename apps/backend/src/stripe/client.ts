@@ -166,6 +166,57 @@ export async function createLoginLink(config: StripeConfig, accountId: string): 
   return link.url;
 }
 
+/**
+ * Stops Stripe paying the balance out on its own schedule, so every payout
+ * starts from the dashboard. Payout settings on v2 accounts live in balance
+ * settings rather than on the account.
+ */
+export async function setManualPayouts(config: StripeConfig, accountId: string): Promise<void> {
+  await stripeClient(config).balanceSettings.update(
+    { payments: { payouts: { schedule: { interval: "manual" } } } },
+    { stripeAccount: accountId },
+  );
+}
+
+export interface PayoutBalance {
+  /** Minor units that can be paid out now. */
+  available: number;
+  /** Minor units still settling, which become available later. */
+  pending: number;
+  currency: string;
+}
+
+/**
+ * The balance in the creator's collecting currency. Stripe converts charges in
+ * a currency the account cannot settle into its default one, so when a creator
+ * has switched currency since onboarding the balance may hold only that one.
+ */
+export async function retrieveBalance(
+  config: StripeConfig,
+  accountId: string,
+  currency: string,
+): Promise<PayoutBalance> {
+  const balance = await stripeClient(config).balance.retrieve({}, { stripeAccount: accountId });
+  const settled =
+    balance.available.find((entry) => entry.currency === currency)?.currency ??
+    balance.available[0]?.currency ??
+    currency;
+  const sum = (entries: ReadonlyArray<{ amount: number; currency: string }>) =>
+    entries
+      .filter((entry) => entry.currency === settled)
+      .reduce((total, entry) => total + entry.amount, 0);
+  return { available: sum(balance.available), pending: sum(balance.pending), currency: settled };
+}
+
+export async function createPayout(
+  config: StripeConfig,
+  accountId: string,
+  amount: number,
+  currency: string,
+): Promise<void> {
+  await stripeClient(config).payouts.create({ amount, currency }, { stripeAccount: accountId });
+}
+
 export interface ChargeAmounts {
   /** What the creator keeps, after our fee. */
   net: number | null;

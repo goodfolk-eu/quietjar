@@ -51,6 +51,21 @@ const hintClass = "mt-1 text-xs text-gray-500";
       >
       </p>
 
+      <section id="qj-balance" class={`${cardClass} hidden`}>
+        <h2 class="text-base font-semibold text-gray-800">{payout.balance.title}</h2>
+        <div class="mt-4 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-sm text-gray-600">{payout.balance.available}</p>
+            <p id="qj-balance-available" class="mt-1 text-3xl font-semibold text-gray-800"></p>
+          </div>
+          <button type="button" id="qj-balance-payout" disabled class={buttonClass}>
+            {payout.balance.payOut}
+          </button>
+        </div>
+        <p id="qj-balance-minimum" class="mt-3 hidden text-sm text-gray-600"></p>
+        <p id="qj-balance-pending" class="mt-2 hidden text-xs text-gray-500"></p>
+      </section>
+
       <section id="qj-pay-steps" class={cardClass}>
         <h2 class="text-base font-semibold text-gray-800">{payout.stepsTitle}</h2>
         <ol class="mt-5 space-y-4">
@@ -152,6 +167,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
 <script>
   import { currencyForCountry } from "@quietjar/backend/currency";
   import { api } from "@/lib/api";
+  import { formatMoney } from "@/lib/money";
   import { rememberSiteKey } from "@/lib/session";
   type StepKey = "identity" | "localMethods" | "payouts";
   type StepState = "todo" | "pending" | "done" | "unavailable";
@@ -166,6 +182,15 @@ const hintClass = "mt-1 text-xs text-gray-500";
     error?: string;
   } | null;
 
+  type BalanceBody = {
+    available?: number;
+    pending?: number;
+    minimum?: number;
+    currency?: string;
+    amount?: number;
+    error?: string;
+  } | null;
+
   interface StepCopy {
     title: string;
     todo: string;
@@ -176,6 +201,14 @@ const hintClass = "mt-1 text-xs text-gray-500";
   }
 
   interface Copy {
+    balance: {
+      pending: string;
+      payOut: string;
+      payingOut: string;
+      belowMinimum: string;
+      paidOut: string;
+      errorBelowMinimum: string;
+    };
     connect: string;
     connecting: string;
     edit: string;
@@ -216,6 +249,11 @@ const hintClass = "mt-1 text-xs text-gray-500";
     const detailsLineField = document.getElementById("qj-details-line");
     const detailsEdit = document.getElementById("qj-details-edit");
     const dashboardButton = document.getElementById("qj-pay-dashboard") as HTMLButtonElement | null;
+    const balanceCard = document.getElementById("qj-balance");
+    const balanceAvailable = document.getElementById("qj-balance-available");
+    const balanceMinimum = document.getElementById("qj-balance-minimum");
+    const balancePending = document.getElementById("qj-balance-pending");
+    const payoutButton = document.getElementById("qj-balance-payout") as HTMLButtonElement | null;
 
     if (
       !(
@@ -394,6 +432,9 @@ const hintClass = "mt-1 text-xs text-gray-500";
       }
     });
 
+    // Steps re-render on every status refresh; the balance only needs one read.
+    let balanceRequested = false;
+
     function renderSteps(status: Onboarding | null): void {
       const onboarding = status ?? { identity: "todo", localMethods: "todo", payouts: "todo", issues: {} };
 
@@ -426,6 +467,33 @@ const hintClass = "mt-1 text-xs text-gray-500";
       }
 
       show(dashboardButton, onboarding.identity === "done");
+      if (onboarding.payouts === "done" && !balanceRequested) {
+        balanceRequested = true;
+        void loadBalance();
+      }
+    }
+
+    async function loadBalance(): Promise<void> {
+      const { data, error } = await api.api.stripe.balance.get();
+      const body = data as BalanceBody;
+      if (restartIfConnectionReset(body)) return;
+      if (error || body?.available === undefined || !body.currency) return;
+      renderBalance(body.available, body.pending ?? 0, body.minimum ?? 0, body.currency);
+    }
+
+    function renderBalance(available: number, pending: number, minimum: number, currency: string) {
+      if (!(balanceAvailable && balanceMinimum && balancePending && payoutButton)) return;
+      const money = (minor: number) => formatMoney(minor, currency);
+      balanceAvailable.textContent = money(available);
+      const missing = minimum - available;
+      payoutButton.disabled = missing > 0;
+      balanceMinimum.textContent = copy.balance.belowMinimum
+        .replace("{missing}", money(missing))
+        .replace("{minimum}", money(minimum));
+      show(balanceMinimum, missing > 0);
+      balancePending.textContent = copy.balance.pending.replace("{amount}", money(pending));
+      show(balancePending, pending > 0);
+      show(balanceCard, true);
     }
 
     async function redirectToStep(step: StepKey, button: HTMLButtonElement): Promise<void> {
@@ -467,6 +535,28 @@ const hintClass = "mt-1 text-xs text-gray-500";
         return;
       }
       window.open(body.url, "_blank", "noopener,noreferrer");
+    });
+
+    payoutButton?.addEventListener("click", async () => {
+      payoutButton.disabled = true;
+      payoutButton.textContent = copy.balance.payingOut;
+      try {
+        const { data, error } = await api.api.stripe.payout.post();
+        const body = data as BalanceBody;
+        if (restartIfConnectionReset(body)) return;
+        if (error || body?.amount === undefined || !body.currency) {
+          const message =
+            body?.error === "below_minimum" ? copy.balance.errorBelowMinimum : copy.errorGeneric;
+          showBanner(message, true);
+          return;
+        }
+        showBanner(copy.balance.paidOut.replace("{amount}", formatMoney(body.amount, body.currency)), false);
+      } catch {
+        showBanner(copy.errorGeneric, true);
+      } finally {
+        payoutButton.textContent = copy.balance.payOut;
+        await loadBalance();
+      }
     });
 
     connectButton.addEventListener("click", async () => {
