@@ -2,6 +2,7 @@
 import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
+import { localizedPath } from "@/lib/links";
 
 export { getStaticPaths } from "@/lib/locale-paths";
 
@@ -138,13 +139,24 @@ const dev = copy.developers;
       </section>
 
       <div class="border-t border-qj-line pt-10">
-        <button
-          data-auth-mode="signup"
-          data-dashboard-label={copy.nav.dashboard}
-          type="button"
-          class="cursor-pointer rounded-sm bg-qj-green px-6 py-3.5 text-center text-[15px] font-semibold text-white transition hover:bg-qj-green-press">
-          {dev.cta}
-        </button>
+        <div class="flex flex-col items-start gap-3.5 sm:flex-row sm:items-center">
+          <button
+            data-auth-mode="signup"
+            data-dashboard-label={copy.nav.dashboard}
+            type="button"
+            class="cursor-pointer rounded-sm bg-qj-green px-6 py-3.5 text-center text-[15px] font-semibold text-white transition hover:bg-qj-green-press">
+            {dev.cta}
+          </button>
+          {
+            dev.compareLinks.map((link) => (
+              <a
+                href={localizedPath(link.href, locale)}
+                class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-accent transition hover:text-qj-ink">
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
       </div>
     </div>
     </div>

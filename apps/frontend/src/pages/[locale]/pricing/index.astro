@@ -16,7 +16,7 @@ export { getStaticPaths } from "@/lib/locale-paths";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const page = copy.pricingPage;
-const comparePath = localizedPath("/compare/", Astro.currentLocale ?? "en");
+const developersPath = localizedPath("/developers/", Astro.currentLocale ?? "en");
 
 // The point where the floor hands over to the percentage, so stepping either
 // way from it shows the other half of the rule.
@@ -265,7 +265,7 @@ const sectionPad = "px-10 max-[1000px]:px-6 max-[560px]:px-5";
           class="cursor-pointer rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
           {page.closing.cta}
         </button>
-        <a href={comparePath} class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
+        <a href={developersPath} class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
           {page.closing.secondary} →
         </a>
       </div>

@@ -235,6 +235,10 @@
       "title": "Open the panel from your own code",
       "text": "Wire the checkout to your own call to action: the end of an article, a finished download, a tag manager. Call window.QuietJar.open() anywhere on the page and the panel opens right there. It sits next to the widget when that is visible, and centers on the page when it is not. The call always opens, even for visitors the widget stepped back for."
     },
-    "cta": "Add it to your site"
+    "cta": "Add it to your site",
+    "compareLinks": [
+      { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },
+      { "label": "QuietJar vs Buy Me a Coffee", "href": "/compare/buymeacoffee/" }
+    ]
   }
 }

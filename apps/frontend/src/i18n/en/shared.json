@@ -7,8 +7,7 @@
     "links": [
       { "title": "Features", "path": "/features/" },
       { "title": "Pricing", "path": "/pricing/" },
-      { "title": "Developers", "path": "/developers/" },
-      { "title": "Compare", "path": "/compare/" }
+      { "title": "Developers", "path": "/developers/" }
     ],
     "login": "Log in",
     "signup": "Add to your site",
@@ -25,8 +24,12 @@
       { "title": "Home", "path": "/" },
       { "title": "Pricing", "path": "/pricing/" },
       { "title": "Features", "path": "/features/" },
-      { "title": "Developers", "path": "/developers/" },
-      { "title": "Compare", "path": "/compare/" }
+      { "title": "Developers", "path": "/developers/" }
+    ],
+    "compareHeading": "Compare",
+    "compareLinks": [
+      { "title": "Ko-fi alternative", "path": "/compare/ko-fi/" },
+      { "title": "Buy Me a Coffee alternative", "path": "/compare/buymeacoffee/" }
     ],
     "copyright": "Copyright © {year} QuietJar · A quiet way to accept support.",
     "poweredBy": "Powered by"

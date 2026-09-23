@@ -165,8 +165,10 @@
           "@type": "Answer",
           "text": "Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish."
         },
-        "linkLabel": "See the comparison",
-        "linkHref": "/compare/"
+        "links": [
+          { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },
+          { "label": "QuietJar vs Buy Me a Coffee", "href": "/compare/buymeacoffee/" }
+        ]
       },
       {
         "@type": "Question",
@@ -191,8 +193,7 @@
           "@type": "Answer",
           "text": "No monthly fee. No plans to compare. QuietJar takes 5% of each donation, minimum €0.50, and pays the card fees. Donations are €1 to €500. It costs you nothing until it is earning you something."
         },
-        "linkLabel": "See the pricing page",
-        "linkHref": "/pricing/"
+        "links": [{ "label": "See the pricing page", "href": "/pricing/" }]
       },
       {
         "@type": "Question",
@@ -248,6 +249,7 @@
     "title": "Stop losing supporters on the way to the checkout.",
     "description": "Add the button to your site in minutes. No redirects. Just a quiet, polished way for your people to support you.",
     "primary": "Add it to your site",
-    "secondary": "Questions?"
+    "secondary": "See everything QuietJar does",
+    "secondaryHref": "/features/"
   }
 }

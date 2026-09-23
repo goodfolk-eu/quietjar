@@ -15,7 +15,7 @@ const {
   description = copy.cta.description,
   primary = copy.cta.primary,
   secondary = copy.cta.secondary,
-  secondaryHref = "#faq",
+  secondaryHref,
 } = Astro.props;
 ---
 
@@ -33,9 +33,11 @@ const {
         class="cursor-pointer rounded-sm bg-white px-6 py-3.5 text-center text-[15px] font-semibold text-qj-field transition hover:bg-qj-paper">
         {primary}
       </button>
-      <a href={secondaryHref} class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
-        {secondary}
-      </a>
+      {secondaryHref && (
+        <a href={secondaryHref} class="rounded-sm px-1 py-3.5 text-center text-[15px] font-semibold text-qj-field-mint transition hover:text-white">
+          {secondary}
+        </a>
+      )}
     </div>
   </div>
 </section>

@@ -12,8 +12,7 @@ interface Question {
   "@type": string;
   name: string;
   acceptedAnswer: { "@type": string; text: string };
-  linkLabel?: string;
-  linkHref?: string;
+  links?: { label: string; href: string }[];
 }
 
 interface Props {
@@ -82,15 +81,13 @@ const description = stripHtml(descriptionProp);
 
 const makeTitle = title.includes("QuietJar") ? title : `${title} | QuietJar`;
 
-// The visible accordion needs the raw items (its own linkLabel/linkHref,
-// answers rendered as HTML); the graph gets a sanitized copy so it never
-// carries UI-only fields or leaks markup into the JSON-LD payload.
-const faqForGraph = faq?.map(
-  ({ linkLabel: _linkLabel, linkHref: _linkHref, acceptedAnswer, ...question }) => ({
-    ...question,
-    acceptedAnswer: { ...acceptedAnswer, text: stripHtml(acceptedAnswer.text) },
-  }),
-);
+// The visible accordion needs the raw items (its own links, answers rendered
+// as HTML); the graph gets a sanitized copy so it never carries UI-only
+// fields or leaks markup into the JSON-LD payload.
+const faqForGraph = faq?.map(({ links: _links, acceptedAnswer, ...question }) => ({
+  ...question,
+  acceptedAnswer: { ...acceptedAnswer, text: stripHtml(acceptedAnswer.text) },
+}));
 
 const webPageNode: Record<string, unknown> = {
   ...BASE_WEBPAGE,

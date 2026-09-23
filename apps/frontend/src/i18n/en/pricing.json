@@ -142,15 +142,17 @@
             "@type": "Answer",
             "text": "Most free tiers still send your supporter to someone else's page to pay. The real question is not the fee - it is how many visitors finish the trip after that redirect."
           },
-          "linkLabel": "See the comparison",
-          "linkHref": "/compare/"
+          "links": [
+            { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },
+            { "label": "QuietJar vs Buy Me a Coffee", "href": "/compare/buymeacoffee/" }
+          ]
         }
       ]
     },
     "closing": {
       "text": "A quiet way to accept support, live on your site in minutes.",
       "cta": "Add it to your site",
-      "secondary": "How QuietJar compares"
+      "secondary": "How to add it to your site"
     }
   }
 }

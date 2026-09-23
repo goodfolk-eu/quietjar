@@ -8,8 +8,10 @@ import Polite from "@/components/polite.astro";
 import Pricing from "@/components/pricing.astro";
 import { dictionary } from "@/i18n/t";
 import Layout from "@/layouts/Layout.astro";
+import { localizedPath } from "@/lib/links";
 
-const copy = dictionary(Astro.currentLocale ?? "en");
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
 ---
 
 <Layout
@@ -22,5 +24,5 @@ const copy = dictionary(Astro.currentLocale ?? "en");
   <Craft />
   <Pricing />
   <Faq eyebrow={copy.faq.eyebrow} title={copy.faq.title} items={copy.faq.items} />
-  <Cta />
+  <Cta secondary={copy.cta.secondary} secondaryHref={localizedPath(copy.cta.secondaryHref, locale)} />
 </Layout>

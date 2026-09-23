@@ -11,6 +11,10 @@ const siteLinks = copy.footer.siteLinks.map((link) => ({
   ...link,
   path: localizedPath(link.path, locale),
 }));
+const compareLinks = copy.footer.compareLinks.map((link) => ({
+  ...link,
+  path: localizedPath(link.path, locale),
+}));
 
 const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${locale}/`)))
   .map((entry) => ({
@@ -41,6 +45,23 @@ const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${loc
           <ul class="mt-4 space-y-2.5">
             {
               siteLinks.map((link) => (
+                <li>
+                  <a href={link.path} class="text-[14px] text-white/70 hover:text-white">
+                    {link.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div>
+          <p class="text-[13px] font-semibold tracking-wide text-white/50 uppercase">
+            {copy.footer.compareHeading}
+          </p>
+          <ul class="mt-4 space-y-2.5">
+            {
+              compareLinks.map((link) => (
                 <li>
                   <a href={link.path} class="text-[14px] text-white/70 hover:text-white">
                     {link.title}
