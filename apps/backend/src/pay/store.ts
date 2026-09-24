@@ -102,6 +102,58 @@ export async function recordDonation(input: {
   });
 }
 
+/** A donation still waiting on its settled figures from Stripe. */
+export interface UnsettledDonation {
+  sessionId: string;
+  accountId: string;
+  paymentIntentId: string;
+}
+
+/**
+ * Donations recorded before Stripe could say what they settled to. Only ones
+ * with a payment intent qualify, since that is what the figures are read from.
+ * Oldest first, so a backlog drains in arrival order.
+ */
+export async function listUnsettledDonations(input: {
+  since: number;
+  limit: number;
+}): Promise<UnsettledDonation[]> {
+  const result = await libsqlClient.execute({
+    sql: `SELECT session_id, account_id, payment_intent_id
+          FROM donations
+          WHERE net IS NULL AND payment_intent_id IS NOT NULL AND created_at >= ?
+          ORDER BY created_at, id
+          LIMIT ?`,
+    args: [input.since, input.limit],
+  });
+  return result.rows.map((raw) => {
+    const row = raw as unknown as {
+      session_id: string;
+      account_id: string;
+      payment_intent_id: string;
+    };
+    return {
+      sessionId: row.session_id,
+      accountId: row.account_id,
+      paymentIntentId: row.payment_intent_id,
+    };
+  });
+}
+
+/** Only fills a gap: settled figures already on the row are never rewritten. */
+export async function settleDonation(input: {
+  sessionId: string;
+  net: number;
+  applicationFee: number | null;
+}): Promise<void> {
+  await libsqlClient.execute({
+    sql: `UPDATE donations
+            SET net = ?, application_fee = COALESCE(application_fee, ?)
+          WHERE session_id = ? AND net IS NULL`,
+    args: [input.net, input.applicationFee, input.sessionId],
+  });
+}
+
 /**
  * Written by the public details endpoint, which can fire before the webhook
  * has created the donation itself; the session id ties the two together. The

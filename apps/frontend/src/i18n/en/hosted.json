@@ -1,0 +1,17 @@
+{
+  "hosted": {
+    "metaTitle": "Support on QuietJar",
+    "supportFallback": "Support {name}",
+    "payHeading": "Choose an amount",
+    "payAction": "Support",
+    "goalHeading": "Goal",
+    "notAcceptingHeading": "Payments are not open yet",
+    "notAccepting": "{name} is still setting things up. Check back soon.",
+    "notFoundTitle": "This page does not exist",
+    "notFoundBody": "The address may have changed, or the page was never set up.",
+    "notFoundLink": "Go to QuietJar",
+    "loadFailed": "This page could not be loaded. Reload to try again.",
+    "poweredBy": "Tips handled by",
+    "createYourOwn": "Create your own page"
+  }
+}

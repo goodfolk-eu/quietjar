@@ -304,7 +304,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
     const details = { country: "", entityType: "individual", currency: "eur", siteUrl: "" };
 
     function detailsComplete(): boolean {
-      return details.country !== "" && details.siteUrl !== "" && details.currency !== "";
+      return details.country !== "" && details.currency !== "";
     }
 
     function restartIfConnectionReset(body: ConnectionBody): boolean {

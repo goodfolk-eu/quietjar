@@ -70,6 +70,21 @@ const apiProxy = () => ({
   },
 });
 
+/**
+ * Serves the hosted page shell for `/@<handle>` in dev, as the Bunny edge rule
+ * does in production. Vite's own `/@vite/...` and `/@fs/...` requests carry a
+ * second path segment, so the single-segment match leaves them alone.
+ */
+const hostedPageRewrite = () => ({
+  name: "quietjar-hosted-page-rewrite",
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (/^\/@[a-z0-9-]+\/?(?:\?.*)?$/i.test(req.url ?? "")) req.url = "/hosted/";
+      next();
+    });
+  },
+});
+
 const lastmodMap = buildLastmodMap();
 
 const AI_USER_AGENTS = [
@@ -103,7 +118,8 @@ const integrations = [
       if (authored) item.lastmod = authored;
       return item;
     },
-    filter: (page) => !page.includes("/dashboard") && !page.includes("/api/"),
+    filter: (page) =>
+      !page.includes("/dashboard") && !page.includes("/api/") && !page.includes("/hosted/"),
   }),
   sitemapIndexLastmod({ chunkLastmods: buildChunkLastmods(lastmodMap) }),
   robotsTxt({
@@ -173,7 +189,8 @@ export default defineConfig({
       },
       directives: [
         "default-src 'none'",
-        "img-src 'self' data: https://*.stripe.com",
+        // The API origin serves uploaded hosted page images.
+        "img-src 'self' data: " + apiOrigin + " https://*.stripe.com",
         "font-src 'self'",
         "connect-src 'self' " + apiOrigin + " https://api.stripe.com https://umami.quietjar.com",
         "object-src 'none'",
@@ -191,7 +208,7 @@ export default defineConfig({
     host: true,
   },
   vite: {
-    plugins: [tailwindcss(), apiProxy(), prelineSideEffects()],
+    plugins: [tailwindcss(), apiProxy(), hostedPageRewrite(), prelineSideEffects()],
     build: {
       // Keep fonts as real files instead of data: URIs, so font-src 'self' is
       // enough and no data: source is needed in the CSP. A flat 0 here used to

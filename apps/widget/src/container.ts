@@ -33,10 +33,11 @@ export interface ContainerOptions {
   /**
    * Element the container is placed against. The whole widget face, not just
    * its trigger, so the container clears a card instead of covering its text.
+   * Absent when embedded, where the page lays the panel out.
    */
-  anchor: HTMLElement;
+  anchor?: HTMLElement;
   /** Control that opened the container, and is returned to on minimize. */
-  trigger: HTMLElement;
+  trigger?: HTMLElement;
   /** Host element of the shadow root; the Stripe element mounts under it. */
   host: HTMLElement;
   /**
@@ -46,6 +47,11 @@ export interface ContainerOptions {
    * coordinates have to follow.
    */
   viewport?: HTMLElement;
+  /**
+   * Sits in the page flow and stays open, for a page whose whole purpose is
+   * the payment: no minimize control, no placement and nothing that closes it.
+   */
+  embedded?: boolean;
   onVisibilityChange?(open: boolean): void;
 }
 
@@ -60,10 +66,11 @@ export interface PaymentContainer {
 
 export function createPaymentContainer(options: ContainerOptions): PaymentContainer {
   const { config, anchor, trigger, host } = options;
+  const embedded = options.embedded === true;
 
   const panel = document.createElement("div");
-  panel.className = "quietjar-panel";
-  panel.setAttribute("role", "dialog");
+  panel.className = embedded ? "quietjar-panel quietjar-panel--embedded" : "quietjar-panel";
+  panel.setAttribute("role", embedded ? "region" : "dialog");
   panel.setAttribute("aria-label", config.headline !== "" ? config.headline : FOOTER_LABEL);
   // Closed from the start: without a state the panel's resting style is fully
   // visible, which flashes before the entrance animation can begin.
@@ -99,7 +106,9 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   footerLink.textContent = FOOTER_LABEL;
   footer.append(footerLink);
 
-  panel.append(head, body, footer);
+  // The page around an embedded panel carries its own title and footer.
+  if (embedded) panel.append(body);
+  else panel.append(head, body, footer);
 
   let open = false;
   let donated = false;
@@ -132,7 +141,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   }
 
   function reposition(): void {
-    if (!open) return;
+    if (!open || !anchor) return;
     const space = frame();
     const anchorRect = anchor.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
@@ -185,6 +194,12 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     clearTimeout(exitTimer);
     open = true;
     panel.hidden = false;
+    if (embedded) {
+      panel.dataset.state = "open";
+      renderAmountStep();
+      options.onVisibilityChange?.(true);
+      return;
+    }
     // Rendered at the closed offset first, so the browser has a value to
     // animate from once the state flips on the next frame.
     // Content first: the docked sheet's closed offset is a percentage of the
@@ -231,7 +246,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
   }
 
   function close(): void {
-    if (!open) return;
+    if (!open || embedded) return;
     open = false;
     panel.dataset.state = "closed";
     backdrop.dataset.state = "closed";
@@ -241,7 +256,7 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
     // Observing a panel that is animating out would fight the exit transform.
     sizeObserver?.disconnect();
     options.onVisibilityChange?.(false);
-    trigger.focus();
+    trigger?.focus();
 
     // The panel stays in the tree until it has slid out; tearing the Stripe
     // elements down first would blank it mid-animation.
@@ -533,8 +548,9 @@ export function createPaymentContainer(options: ContainerOptions): PaymentContai
           return;
         }
         // Redirect methods never reach this point: the browser has already
-        // left for the bank by the time confirm settles.
-        persistDonation(config.site, new Date(), config.donationHideDays);
+        // left for the bank by the time confirm settles. An embedded panel is
+        // not on the creator's site, so there is no widget there to step back.
+        if (!embedded) persistDonation(config.site, new Date(), config.donationHideDays);
         showThanks(session.sessionId);
       });
     } catch (err) {

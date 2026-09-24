@@ -439,6 +439,20 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       color: #0f172a;
       text-decoration: underline;
     }
+    /* Embedded: a block in the page's flow, always open. The page supplies
+       the card around it, so the panel drops its own chrome. */
+    .quietjar-panel--embedded {
+      position: static;
+      z-index: auto;
+      width: 100%;
+      max-height: none;
+      overflow: visible;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      transition: none;
+    }
     /* Docked to the bottom edge: on a phone there is no room to sit beside the
        button, and the button itself is hidden while the sheet is up. */
     .quietjar-panel--sheet {

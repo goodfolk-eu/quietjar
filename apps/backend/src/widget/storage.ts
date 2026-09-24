@@ -35,14 +35,19 @@ interface StorageZone {
   Name?: string;
   Password?: string;
   StorageHostname?: string;
+  /** The zone's regional S3 endpoint host; StorageHostname is the HTTP API, which S3 calls reject. */
+  S3Hostname?: string;
 }
 
 async function fetchZone(apiKey: string, bucket: string): Promise<StorageZone | null> {
   const url = `https://api.bunny.net/storagezone?search=${encodeURIComponent(bucket)}&perPage=1000`;
   const response = await fetch(url, { headers: { AccessKey: apiKey, accept: "application/json" } });
   if (!response.ok) return null;
-  const data = (await response.json()) as { Items?: StorageZone[] };
-  return data.Items?.find((zone) => zone.Name === bucket) ?? null;
+  // Bunny answers a plain array unless the request asks for a page, which
+  // wraps the zones in `Items`; both are accepted so neither breaks silently.
+  const data = (await response.json()) as StorageZone[] | { Items?: StorageZone[] };
+  const zones = Array.isArray(data) ? data : (data.Items ?? []);
+  return zones.find((zone) => zone.Name === bucket) ?? null;
 }
 
 /**
@@ -65,26 +70,34 @@ export async function resolveS3Credentials(
   if (zone?.Name !== bucket || !zone.Password) return null;
   const credentials = {
     password: zone.Password,
-    hostname: zone.StorageHostname ?? "storage.bunnycdn.com",
+    hostname: zone.S3Hostname ?? zone.StorageHostname ?? "storage.bunnycdn.com",
   };
   passwordCache.set(bucket, credentials);
   return credentials;
 }
 
-export async function imageStoreFromEnv(
+/** The Bunny storage zone as an S3 bucket, or null when it is not configured. */
+export async function bunnyS3FromEnv(
   env: Record<string, string | undefined> = process.env,
-): Promise<WidgetImageStore | null> {
+): Promise<Bun.S3Client | null> {
   const apiKey = env.BUNNY_API_KEY;
   const bucket = env.BUNNY_S3_BUCKET;
   if (!apiKey || !bucket) return null;
   const credentials = await resolveS3Credentials(apiKey, bucket);
   if (!credentials) return null;
-  const s3 = new Bun.S3Client({
+  return new Bun.S3Client({
     accessKeyId: bucket,
     secretAccessKey: credentials.password,
     bucket,
     endpoint: env.BUNNY_S3_ENDPOINT ?? `https://${credentials.hostname}`,
   });
+}
+
+export async function imageStoreFromEnv(
+  env: Record<string, string | undefined> = process.env,
+): Promise<WidgetImageStore | null> {
+  const s3 = await bunnyS3FromEnv(env);
+  if (!s3) return null;
   return {
     async get(key, withWriteTime) {
       try {

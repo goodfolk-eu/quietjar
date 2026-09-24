@@ -358,6 +358,21 @@ describe("S3 credential resolution", () => {
     expect(credentials).toEqual({ password: "zone-pw", hostname: "de.storage.bunnycdn.com" });
   });
 
+  test("resolves the zone from the plain array the API actually returns", async () => {
+    fakeFetch([
+      { Name: "other-zone", Password: "other-pw" },
+      {
+        Name: "zone-array",
+        Password: "zone-pw",
+        StorageHostname: "storage.bunnycdn.com",
+        S3Hostname: "de-s3.storage.bunnycdn.com",
+      },
+    ]);
+    const credentials = await storage.resolveS3Credentials("key", "zone-array");
+    // The S3 host, not the HTTP storage API host, which S3 requests are refused on.
+    expect(credentials).toEqual({ password: "zone-pw", hostname: "de-s3.storage.bunnycdn.com" });
+  });
+
   test("caches positive lookups per zone", async () => {
     let calls = 0;
     globalThis.fetch = (async () => {

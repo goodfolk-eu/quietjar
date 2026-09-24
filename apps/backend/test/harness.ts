@@ -139,6 +139,9 @@ mock.module("../src/stripe/client", () => ({
   registerWalletDomains: async (_config: unknown, accountId: string, siteUrl: string | null) => {
     record("registerWalletDomains", { accountId, siteUrl });
   },
+  updateBusinessUrl: async (_config: unknown, accountId: string, businessUrl: string) => {
+    record("updateBusinessUrl", { accountId, businessUrl });
+  },
   requestLocalPaymentCapabilities: async (
     _config: unknown,
     accountId: string,

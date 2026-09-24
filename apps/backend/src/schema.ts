@@ -47,6 +47,19 @@ const MIGRATIONS = [
     message TEXT,
     created_at INTEGER NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS hosted_pages (
+    site_id TEXT PRIMARY KEY,
+    handle TEXT NOT NULL UNIQUE,
+    display_name TEXT NOT NULL,
+    title TEXT,
+    description TEXT,
+    avatar_key TEXT,
+    cover_key TEXT,
+    color TEXT,
+    goal_id TEXT,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+  )`,
 ];
 
 /**

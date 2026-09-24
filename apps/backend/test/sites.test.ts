@@ -30,6 +30,7 @@ function payload(overrides: Record<string, unknown> = {}) {
 beforeEach(async () => {
   await libsqlClient.execute("DELETE FROM sites");
   await libsqlClient.execute("DELETE FROM stripe_connections");
+  await libsqlClient.execute("DELETE FROM hosted_pages");
   session.user = { id: "user_1", email: "creator@example.com" };
   resetStripe();
 });
@@ -52,6 +53,7 @@ describe("GET /api/sites/current", () => {
     expect(site.country).toBeNull();
     expect(site.entityType).toBeNull();
     expect(site.connected).toBe(false);
+    expect(site.hostedUrl).toBe(`${process.env.PUBLIC_FRONTEND_URL}/@creator`);
   });
 
   test("returns the same site on a second read", async () => {
@@ -174,6 +176,27 @@ describe("PUT /api/sites/current", () => {
       accountId: "acct_test",
       siteUrl: "https://other.example",
     });
+  });
+
+  test("moves the Stripe business URL to a newly added site", async () => {
+    await get();
+    await put(payload({ siteUrl: null }));
+    await createConnection({ userId: "user_1", accountId: "acct_test" });
+    await put(payload({ siteUrl: "example.com" }));
+
+    expect(calledWith("updateBusinessUrl")).toEqual({
+      accountId: "acct_test",
+      businessUrl: "https://example.com",
+    });
+  });
+
+  test("leaves the Stripe business URL alone when the site is unchanged", async () => {
+    await get();
+    await put(payload());
+    await createConnection({ userId: "user_1", accountId: "acct_test" });
+    await put(payload({ currency: "usd" }));
+
+    expect(calledWith("updateBusinessUrl")).toBeUndefined();
   });
 
   test("does not reach for Stripe before an account exists", async () => {

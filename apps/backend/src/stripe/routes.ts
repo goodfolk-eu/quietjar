@@ -1,5 +1,7 @@
 import { Elysia, t } from "elysia";
 import { auth } from "../auth";
+import { defaultDisplayName, ensureHostedPage } from "../hosted/store";
+import { businessUrlFor } from "../hosted/url";
 import { recordCompletedDonation } from "../pay/record";
 import { localMethodCapabilities, payoutMinimum } from "../sites/currency";
 import { getSiteByUserId } from "../sites/store";
@@ -103,10 +105,11 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
     // Everything the account is created with comes from the site row, so
     // there is nothing to create until the creator has filled step one.
     const site = await getSiteByUserId(userId);
-    if (!site?.siteUrl || !site.country || !site.entityType) {
+    if (!site?.country || !site.entityType) {
       set.status = 400;
       return { error: "site_not_configured" };
     }
+    const page = await ensureHostedPage(site.id, defaultDisplayName(user));
 
     const existing = await getConnectionByUserId(userId);
     let accountId = existing?.accountId;
@@ -117,7 +120,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
           email: user.email,
           entityType: site.entityType,
           currency: site.currency,
-          businessUrl: site.siteUrl,
+          businessUrl: businessUrlFor(site.siteUrl, page.handle),
         });
         accountId = account.id;
         await setManualPayouts(config, accountId);
@@ -128,9 +131,9 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
             eligibleCapabilities: localMethodCapabilities(site.country),
           }),
         );
-        // The site URL is known to exist by now, so the wallets are ready
-        // before the creator takes their first payment rather than after
-        // whichever status refresh happens to come first.
+        // Registered now, so the wallets are ready before the creator takes
+        // their first payment rather than after whichever status refresh
+        // happens to come first.
         await registerWalletDomains(config, accountId, site.siteUrl);
       } catch (err) {
         console.error("[stripe/connect] account creation failed:", err);

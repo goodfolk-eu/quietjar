@@ -13,6 +13,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./embed": "./src/mount.ts",
+    "./goal": "./src/goal.ts",
     "./config": "./src/config.ts"
   },
   "devDependencies": {

@@ -1,0 +1,340 @@
+---
+/**
+ * One static shell for every creator's hosted page. A CDN edge rule serves it
+ * for any `/@<handle>` path (a dev middleware in astro.config.mjs does the
+ * same locally), and the script reads the handle back off the address.
+ */
+import { DEFAULT_COLOR } from "@quietjar/widget/config";
+import Logo from "@/components/logo.astro";
+import { dictionary } from "@/i18n/t";
+import "../../styles/global.css";
+
+const copy = dictionary("en").hosted;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/schibsted-grotesk/SchibstedGrotesk-VariableFont.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/ibm-plex-sans/IBMPlexSans-VariableFont.woff2"
+      crossorigin
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <title>{copy.metaTitle}</title>
+    <script is:inline defer src="https://umami.quietjar.com/script.js" data-website-id="e7abeb3d-2681-4acb-a227-e3d70ad4fda0"></script>
+  </head>
+  <body class="flex min-h-screen flex-col bg-qj-paper font-sans text-qj-ink antialiased">
+    <div
+      id="qj-hosted-page"
+      class="flex-1"
+      data-state="loading"
+      data-i18n={JSON.stringify(copy)}
+      data-default-color={DEFAULT_COLOR}
+    >
+      <div class="qj-cover relative h-36 overflow-hidden sm:h-56">
+        <img id="qj-cover" alt="" class="hidden size-full object-cover" />
+      </div>
+
+      <main class="mx-auto w-full max-w-5xl px-4 pb-16 sm:px-6">
+        <div id="qj-missing" class="hidden py-24 text-center">
+          <h1 class="font-display text-3xl font-bold tracking-tight">{copy.notFoundTitle}</h1>
+          <p class="mt-3 text-qj-body">{copy.notFoundBody}</p>
+          <a href="/" class="mt-6 inline-block font-semibold text-qj-accent underline-offset-4 hover:underline">
+            {copy.notFoundLink}
+          </a>
+        </div>
+
+        <p id="qj-failed" class="hidden py-24 text-center text-qj-body">{copy.loadFailed}</p>
+
+        <div id="qj-content" class="qj-layout -mt-12 gap-x-10 gap-y-6 sm:-mt-16">
+          <header class="qj-intro">
+            <div
+              id="qj-avatar"
+              class="qj-skeleton relative flex size-24 items-center justify-center overflow-hidden rounded-full border-4 border-qj-paper bg-(--qj-page-accent) font-display text-3xl font-bold text-white shadow-sm sm:size-28"
+            >
+              <span id="qj-initials" aria-hidden="true"></span>
+              <img id="qj-avatar-image" alt="" class="absolute inset-0 hidden size-full object-cover" />
+            </div>
+            <p id="qj-name" class="qj-skeleton mt-5 min-h-5 text-sm font-semibold tracking-wide text-qj-body"></p>
+            <h1
+              id="qj-title"
+              class="qj-skeleton mt-1 min-h-10 font-display text-3xl leading-tight font-bold tracking-tight text-balance sm:text-4xl"
+            >
+            </h1>
+          </header>
+
+          <div class="qj-side space-y-6">
+            <section id="qj-goal" class="hidden rounded-2xl border border-qj-line-card bg-white p-5">
+              <div class="flex items-baseline justify-between gap-4">
+                <h2 class="text-sm font-semibold text-qj-body">{copy.goalHeading}</h2>
+                <span id="qj-goal-percent" class="font-display text-2xl font-bold text-(--qj-page-accent)"></span>
+              </div>
+              <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-qj-mint" aria-hidden="true">
+                <div id="qj-goal-fill" class="h-full w-0 rounded-full bg-(--qj-page-accent) transition-[width] duration-700 ease-out motion-reduce:transition-none"></div>
+              </div>
+              <p id="qj-goal-label" class="mt-2 text-sm text-qj-body"></p>
+            </section>
+
+            <aside>
+              <div class="rounded-2xl border border-qj-line-card bg-white p-5 shadow-[0_12px_40px_rgba(23,26,24,0.08)] sm:p-6">
+                <h2 id="qj-pay-heading" class="font-display text-lg font-bold">{copy.payHeading}</h2>
+                <div id="qj-panel" class="mt-4 min-h-40"></div>
+                <p id="qj-not-accepting" class="mt-2 hidden text-sm text-qj-body"></p>
+              </div>
+            </aside>
+          </div>
+
+          <p
+            id="qj-description"
+            class="qj-about hidden text-base leading-relaxed whitespace-pre-line text-qj-body sm:text-lg"
+          >
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <footer class="border-t border-qj-line py-6">
+      <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 text-sm text-qj-body sm:px-6">
+        <a href="/" class="flex items-center gap-2 transition hover:text-qj-ink">
+          {copy.poweredBy}
+          <Logo class="h-5 w-auto" />
+        </a>
+        <a href="/" class="font-medium text-qj-accent underline-offset-4 hover:underline">{copy.createYourOwn}</a>
+      </div>
+    </footer>
+
+    <style>
+      /* Phone order puts the goal and the payment right after the ask, and
+         the longer description underneath; on a wide screen they move into
+         their own column and stay in view while reading. */
+      .qj-layout {
+        display: grid;
+        grid-template-areas: "intro" "side" "about";
+      }
+      @media (min-width: 1024px) {
+        .qj-layout {
+          grid-template-columns: minmax(0, 1fr) 400px;
+          grid-template-areas: "intro side" "about side" ". side";
+          align-items: start;
+        }
+        /* The layout is pulled up over the cover by -mt-16 (4rem); this
+           clears it and leaves a gap below the band. */
+        .qj-side {
+          position: sticky;
+          top: 1.5rem;
+          margin-top: 5.5rem;
+        }
+      }
+      .qj-intro {
+        grid-area: intro;
+      }
+      .qj-side {
+        grid-area: side;
+      }
+      .qj-about {
+        grid-area: about;
+      }
+
+      /* Without a cover the band falls back to the accent, softened, so every
+         page still has a header without the creator uploading anything. */
+      .qj-cover {
+        background: linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--qj-page-accent) 85%, #000) 0%,
+          var(--qj-page-accent) 55%,
+          color-mix(in srgb, var(--qj-page-accent) 60%, #fff) 100%
+        );
+      }
+
+      [data-state="loading"] .qj-skeleton {
+        border-radius: 0.5rem;
+        background: var(--color-qj-line-soft);
+        color: transparent;
+      }
+      [data-state="loading"] #qj-avatar.qj-skeleton {
+        border-radius: 9999px;
+      }
+      [data-state="loading"] #qj-name {
+        width: 8rem;
+      }
+      [data-state="loading"] #qj-title {
+        width: min(24rem, 100%);
+      }
+      [data-state="missing"] #qj-content,
+      [data-state="failed"] #qj-content {
+        display: none;
+      }
+    </style>
+
+    <script>
+      import { resolveConfig } from "@quietjar/widget/config";
+      import { mountPanel } from "@quietjar/widget/embed";
+      import { fetchGoalProgress, meterLabel, meterRatio } from "@quietjar/widget/goal";
+      import { API_ORIGIN } from "@/lib/api-origin";
+
+      interface PublicPage {
+        displayName: string;
+        title: string | null;
+        description: string | null;
+        avatarUrl: string | null;
+        coverUrl: string | null;
+        color: string | null;
+        site: string;
+        currency: string;
+        goalId: string | null;
+        acceptingPayments: boolean;
+      }
+
+      const root = document.getElementById("qj-hosted-page");
+
+      function byId<T extends HTMLElement = HTMLElement>(id: string): T | null {
+        return document.getElementById(id) as T | null;
+      }
+
+      /** The handle from `/@handle`, tolerating a trailing slash. */
+      function handleFromPath(pathname: string): string | null {
+        const match = /^\/@([a-z0-9-]+)\/?$/i.exec(pathname);
+        return match ? match[1].toLowerCase() : null;
+      }
+
+      function initials(name: string): string {
+        const words = name.trim().split(/\s+/).filter(Boolean);
+        return words
+          .slice(0, 2)
+          .map((word) => Array.from(word)[0] ?? "")
+          .join("")
+          .toUpperCase();
+      }
+
+      if (root) {
+        const page = root;
+        const copy = JSON.parse(page.dataset.i18n ?? "{}") as {
+          supportFallback: string;
+          payAction: string;
+          notAcceptingHeading: string;
+          notAccepting: string;
+        };
+
+        function setAccent(color: string): void {
+          document.documentElement.style.setProperty("--qj-page-accent", color);
+        }
+
+        function setState(state: "ready" | "missing" | "failed"): void {
+          page.dataset.state = state;
+          byId("qj-missing")?.classList.toggle("hidden", state !== "missing");
+          byId("qj-failed")?.classList.toggle("hidden", state !== "failed");
+        }
+
+        function showImage(img: HTMLImageElement | null, path: string | null): void {
+          if (!img || path === null) return;
+          img.src = `${API_ORIGIN}${path}`;
+          img.classList.remove("hidden");
+        }
+
+        async function showGoal(goalId: string): Promise<void> {
+          const progress = await fetchGoalProgress(API_ORIGIN, goalId);
+          if (!progress) return;
+          const ratio = meterRatio(progress);
+          const label = byId("qj-goal-label");
+          const percent = byId("qj-goal-percent");
+          const fill = byId("qj-goal-fill");
+          if (label) label.textContent = meterLabel(progress);
+          if (percent) percent.textContent = `${Math.round(ratio * 100)}%`;
+          byId("qj-goal")?.classList.remove("hidden");
+          // Set on the next frame so the bar animates up from empty.
+          requestAnimationFrame(() => {
+            if (fill) fill.style.width = `${ratio * 100}%`;
+          });
+        }
+
+        function render(data: PublicPage): void {
+          const title = data.title ?? copy.supportFallback.replace("{name}", data.displayName);
+          const color = data.color ?? page.dataset.defaultColor ?? "#0369a1";
+          document.title = `${title} | ${data.displayName}`;
+          setAccent(color);
+
+          const name = byId("qj-name");
+          const heading = byId("qj-title");
+          const initialsEl = byId("qj-initials");
+          if (name) name.textContent = data.displayName;
+          if (heading) heading.textContent = title;
+          if (initialsEl) initialsEl.textContent = initials(data.displayName);
+          showImage(byId<HTMLImageElement>("qj-avatar-image"), data.avatarUrl);
+          showImage(byId<HTMLImageElement>("qj-cover"), data.coverUrl);
+
+          const description = byId("qj-description");
+          if (description && data.description) {
+            description.textContent = data.description;
+            description.classList.remove("hidden");
+          }
+
+          if (data.goalId) void showGoal(data.goalId);
+
+          const panel = byId("qj-panel");
+          if (!data.acceptingPayments) {
+            const heading = byId("qj-pay-heading");
+            if (heading) heading.textContent = copy.notAcceptingHeading;
+            const notice = byId("qj-not-accepting");
+            if (notice) {
+              notice.textContent = copy.notAccepting.replace("{name}", data.displayName);
+              notice.classList.remove("hidden");
+            }
+            panel?.remove();
+          } else if (panel) {
+            panel.classList.remove("min-h-40");
+            mountPanel(
+              resolveConfig({
+                site: data.site,
+                currency: data.currency,
+                api: API_ORIGIN,
+                goal: data.goalId ?? undefined,
+                labels: { headline: title, action: copy.payAction },
+                style: { color, font: "inherit" },
+              }),
+              panel,
+            );
+          }
+          setState("ready");
+        }
+
+        async function load(): Promise<void> {
+          setAccent(page.dataset.defaultColor ?? "#0369a1");
+          const handle = handleFromPath(window.location.pathname);
+          if (handle === null) {
+            setState("missing");
+            return;
+          }
+          try {
+            const response = await fetch(`${API_ORIGIN}/api/hosted/page/${encodeURIComponent(handle)}`);
+            if (response.status === 404) {
+              setState("missing");
+              return;
+            }
+            if (!response.ok) throw new Error(`status ${response.status}`);
+            const body = (await response.json()) as { page?: PublicPage };
+            if (!body.page) throw new Error("no page in response");
+            render(body.page);
+          } catch {
+            setState("failed");
+          }
+        }
+
+        void load();
+      }
+    </script>
+  </body>
+</html>

@@ -1,6 +1,8 @@
 import { Elysia, t } from "elysia";
 import { auth } from "../auth";
-import { registerWalletDomains, stripeConfigFromEnv } from "../stripe/client";
+import { defaultDisplayName, ensureHostedPage, getHostedPageBySiteId } from "../hosted/store";
+import { businessUrlFor, hostedPageUrl } from "../hosted/url";
+import { registerWalletDomains, stripeConfigFromEnv, updateBusinessUrl } from "../stripe/client";
 import { getConnectionByUserId } from "../stripe/store";
 import {
   type Country,
@@ -13,9 +15,11 @@ import {
 import { createSite, type EntityType, getSiteByUserId, updateSite } from "./store";
 import { normalizeSiteUrl } from "./url";
 
-async function sessionUserId(request: Request): Promise<string | null> {
+async function sessionUser(
+  request: Request,
+): Promise<{ id: string; name?: string | null; email: string } | null> {
   const session = await auth.api.getSession({ headers: request.headers });
-  return session?.user.id ?? null;
+  return session?.user ?? null;
 }
 
 const ENTITY_TYPES: EntityType[] = ["individual", "company"];
@@ -26,16 +30,18 @@ function isEntityType(value: unknown): value is EntityType {
 
 export const siteRoutes = new Elysia({ prefix: "/api/sites" })
   .get("/current", async ({ request, set }) => {
-    const userId = await sessionUserId(request);
-    if (!userId) {
+    const user = await sessionUser(request);
+    if (!user) {
       set.status = 401;
       return { error: "unauthorized" };
     }
+    const userId = user.id;
     // Created on first read: every signed-in creator needs a key before the
     // dashboard can show them a snippet. Country is unknown at this point, so
     // the currency starts on the default and follows the country once picked.
     const existing = await getSiteByUserId(userId);
     const site = existing ?? (await createSite({ userId, currency: DEFAULT_CURRENCY }));
+    const page = await ensureHostedPage(site.id, defaultDisplayName(user));
     // The country and entity type are baked into the Stripe account at
     // creation and cannot be changed afterwards, so the dashboard needs to know
     // whether to render them as fields or as a summary.
@@ -48,6 +54,7 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
         country: site.country,
         entityType: site.entityType,
         connected: connection !== null,
+        hostedUrl: hostedPageUrl(page.handle),
         currencies: [...SUPPORTED_CURRENCIES],
         countries: [...SUPPORTED_COUNTRIES],
       },
@@ -56,7 +63,7 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
   .put(
     "/current",
     async ({ request, set, body }) => {
-      const userId = await sessionUserId(request);
+      const userId = (await sessionUser(request))?.id;
       if (!userId) {
         set.status = 401;
         return { error: "unauthorized" };
@@ -98,7 +105,14 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
       // A creator who moves their widget to another domain would otherwise
       // keep the old domain's wallets and get none on the new one.
       const config = stripeConfigFromEnv();
-      if (connection && config) await registerWalletDomains(config, connection.accountId, siteUrl);
+      if (connection && config) {
+        await registerWalletDomains(config, connection.accountId, siteUrl);
+        if (siteUrl !== site.siteUrl) {
+          const page = await getHostedPageBySiteId(site.id);
+          const businessUrl = businessUrlFor(siteUrl, page?.handle ?? null);
+          if (businessUrl) await updateBusinessUrl(config, connection.accountId, businessUrl);
+        }
+      }
 
       return {
         site: {

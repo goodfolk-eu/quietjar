@@ -34,6 +34,7 @@ async function completeStepOne(overrides: Record<string, unknown> = {}) {
 beforeEach(async () => {
   await libsqlClient.execute("DELETE FROM sites");
   await libsqlClient.execute("DELETE FROM stripe_connections");
+  await libsqlClient.execute("DELETE FROM hosted_pages");
   session.user = { id: "user_1", email: "creator@example.com" };
   resetStripe();
 });
@@ -53,7 +54,6 @@ describe("POST /api/stripe/connect", () => {
   });
 
   test.each([
-    ["site URL", { siteUrl: null }],
     ["country", { country: null }],
     ["entity type", { entityType: null }],
   ])("refuses when the %s is missing", async (_label, missing) => {
@@ -77,6 +77,36 @@ describe("POST /api/stripe/connect", () => {
       businessUrl: "https://example.com",
     });
     expect(calledWith("setManualPayouts")).toEqual({ accountId: stripeState.account.id });
+  });
+
+  test("creates the account on the hosted page when there is no site", async () => {
+    const frontend = process.env.PUBLIC_FRONTEND_URL;
+    process.env.PUBLIC_FRONTEND_URL = "https://quietjar.test";
+    try {
+      await completeStepOne({ siteUrl: null });
+      const { status } = await post("/connect");
+      expect(status).toBe(200);
+      expect(calledWith("createConnectedAccount")).toMatchObject({
+        businessUrl: "https://quietjar.test/@creator",
+      });
+    } finally {
+      process.env.PUBLIC_FRONTEND_URL = frontend;
+    }
+  });
+
+  // Stripe rejects a business URL it cannot reach, so a local hosted page is
+  // left for onboarding to ask about instead.
+  test("leaves the business URL to onboarding when the hosted page is local", async () => {
+    const frontend = process.env.PUBLIC_FRONTEND_URL;
+    process.env.PUBLIC_FRONTEND_URL = "http://localhost:4321";
+    try {
+      await completeStepOne({ siteUrl: null });
+      const { status } = await post("/connect");
+      expect(status).toBe(200);
+      expect(calledWith("createConnectedAccount")).toMatchObject({ businessUrl: null });
+    } finally {
+      process.env.PUBLIC_FRONTEND_URL = frontend;
+    }
   });
 
   test("stores the connection so a second call reuses the account", async () => {

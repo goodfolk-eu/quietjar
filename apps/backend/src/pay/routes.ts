@@ -1,7 +1,8 @@
 import { Elysia, t } from "elysia";
 import { activeGoalForSite } from "../goals/store";
+import { getHostedPageBySiteId } from "../hosted/store";
 import { toMinorUnits } from "../sites/currency";
-import { getSiteByPublicKey } from "../sites/store";
+import { getSiteByPublicKey, type Site } from "../sites/store";
 import {
   createDonationSession,
   isMissingAccount,
@@ -12,6 +13,7 @@ import {
 } from "../stripe/client";
 import { getConnectionByUserId } from "../stripe/store";
 import {
+  callerIp,
   detailsPerIp,
   isValidAmount,
   MAX_MESSAGE_LENGTH,
@@ -28,19 +30,17 @@ function dashboardOrigin(): string {
   return process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
 }
 
-function callerIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  return request.headers.get("x-real-ip") ?? "unknown";
-}
-
-function siteHost(siteUrl: string | null): string {
-  if (!siteUrl) return "a website";
-  try {
-    return new URL(siteUrl).hostname;
-  } catch {
-    return "a website";
+/** The site's host when it has one, the name on the hosted page otherwise. */
+async function supportedName(site: Site): Promise<string> {
+  if (site.siteUrl) {
+    try {
+      return new URL(site.siteUrl).hostname;
+    } catch {
+      // Falls through to the hosted page name.
+    }
   }
+  const page = await getHostedPageBySiteId(site.id);
+  return page?.displayName ?? "a creator";
 }
 
 /**
@@ -111,7 +111,7 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
           returnUrl: body.returnUrl,
           siteKey: site.publicKey,
           goalId: goal?.id ?? null,
-          productName: `Support for ${siteHost(site.siteUrl)}`,
+          productName: `Support for ${await supportedName(site)}`,
         });
         return {
           sessionId: session.id,

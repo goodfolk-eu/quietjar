@@ -19,6 +19,12 @@ interface Window {
   resetAt: number;
 }
 
+export function callerIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
 /**
  * Fixed-window counter, held in memory. The backend runs as a single container,
  * so a shared store would buy nothing; a restart resetting the counters is an

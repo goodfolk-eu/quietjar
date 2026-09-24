@@ -58,12 +58,15 @@ export async function resolveReturn(options: {
   api: string;
   site: string;
   sessionId: string;
-  donationHideDays: number;
+  /** Null skips remembering the donation, for a panel that is not on the creator's site. */
+  donationHideDays: number | null;
 }): Promise<boolean> {
   for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
     try {
       if ((await fetchStatus(options.api, options.sessionId, options.site)) === "paid") {
-        persistDonation(options.site, new Date(), options.donationHideDays);
+        if (options.donationHideDays !== null) {
+          persistDonation(options.site, new Date(), options.donationHideDays);
+        }
         clearReturnParam();
         return true;
       }

@@ -21,6 +21,7 @@ import Container from "@/components/container.astro";
 import { dictionary } from "@/i18n/t";
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
 import { localizedPath } from "@/lib/links";
+import { presetColors } from "@/lib/preset-colors";
 
 export { getStaticPaths } from "@/lib/locale-paths";
 
@@ -58,19 +59,6 @@ const closeAfters = CLOSE_AFTER_MODES.map((mode: CloseAfterMode) => ({
   value: mode,
   label: widget.closeAfters[mode],
 }));
-
-// The swatch colour is a utility class rather than a style attribute so it
-// survives the site's style-src policy, which has no unsafe-inline.
-// Every preset clears 4.5:1 against the white label the widget puts on it, so
-// no swatch ends up with washed-out text.
-const presetColors = [
-  { hex: "#0f172a", swatch: "bg-[#0f172a]" },
-  { hex: "#0369a1", swatch: "bg-[#0369a1]" },
-  { hex: "#047857", swatch: "bg-[#047857]" },
-  { hex: "#be123c", swatch: "bg-[#be123c]" },
-  { hex: "#c2410c", swatch: "bg-[#c2410c]" },
-  { hex: "#6d28d9", swatch: "bg-[#6d28d9]" },
-];
 
 const fieldClass =
   "mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:border-gray-600 focus:outline-hidden focus:ring-3 focus:ring-gray-100";
@@ -554,6 +542,28 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
             </div>
             <div data-embed-panel="image" hidden>
               <p class="mt-3 text-sm text-gray-600">{widget.embedImageIntro}</p>
+              <div id="qj-link-target" class="mt-4 flex items-center gap-3" hidden>
+                <span class="text-xs font-semibold text-gray-500">{widget.linkTo}</span>
+                <div class="inline-flex rounded-lg border border-gray-200 p-0.5">
+                  <button
+                    type="button"
+                    data-link-target="site"
+                    aria-pressed="true"
+                    class="rounded-md px-3 py-1 text-xs font-medium text-gray-600 transition hover:text-gray-800 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:bg-gray-800 aria-pressed:text-white"
+                  >
+                    {widget.linkToSite}
+                  </button>
+                  <button
+                    type="button"
+                    data-link-target="hosted"
+                    aria-pressed="false"
+                    class="rounded-md px-3 py-1 text-xs font-medium text-gray-600 transition hover:text-gray-800 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 aria-pressed:bg-gray-800 aria-pressed:text-white"
+                  >
+                    {widget.linkToHosted}
+                  </button>
+                </div>
+              </div>
+              <p id="qj-link-hosted-only" class="mt-3 text-xs text-gray-500" hidden>{widget.linkHostedOnly}</p>
               <div class="mt-4 flex items-center justify-between">
                 <div class="text-xs font-semibold text-gray-500">{widget.embedMarkdownLabel}</div>
                 <button
@@ -578,6 +588,19 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
               </div>
               <pre
                 class="mt-2 whitespace-pre-wrap break-all rounded-lg bg-gray-900 p-4 text-xs leading-relaxed text-gray-100"><code id="qj-snippet-html"></code></pre>
+              <div class="mt-4 flex items-center justify-between">
+                <div class="text-xs font-semibold text-gray-500">{widget.shareLinkLabel}</div>
+                <button
+                  type="button"
+                  data-copy="share"
+                  class="rounded-lg bg-qj-green px-3 py-1.5 text-xs font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200"
+                >
+                  {widget.copy}
+                </button>
+              </div>
+              <pre
+                class="mt-2 whitespace-pre-wrap break-all rounded-lg bg-gray-900 p-4 text-xs leading-relaxed text-gray-100"><code id="qj-share-link"></code></pre>
+              <p class="mt-2 text-xs text-gray-500">{widget.shareLinkHint}</p>
             </div>
           </div>
         </div>
@@ -649,6 +672,9 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
   const snippetEl = document.getElementById("qj-snippet");
   const snippetMdEl = document.getElementById("qj-snippet-md");
   const snippetHtmlEl = document.getElementById("qj-snippet-html");
+  const shareLinkEl = document.getElementById("qj-share-link");
+  const linkTargetEl = document.getElementById("qj-link-target");
+  const linkHostedOnlyEl = document.getElementById("qj-link-hosted-only");
   const generateEl = document.getElementById("qj-generate") as HTMLButtonElement | null;
   const generateHintEl = document.getElementById("qj-generate-hint");
 
@@ -675,6 +701,9 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     snippetEl &&
     snippetMdEl &&
     snippetHtmlEl &&
+    shareLinkEl &&
+    linkTargetEl &&
+    linkHostedOnlyEl &&
     generateEl &&
     generateHintEl
   ) {
@@ -687,6 +716,8 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     const goalEmpty = goalEmptyEl;
     const goalField = goalSelect;
     const goalReachedWrapEl = goalReachedWrap;
+    const linkTargetRow = linkTargetEl;
+    const linkHostedOnly = linkHostedOnlyEl;
     const labels = JSON.parse(root.dataset.i18n ?? "{}") as {
       copy: string;
       copied: string;
@@ -694,10 +725,13 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     };
     const widgetSrc = root.dataset.widgetSrc ?? "";
 
-    const site = { publicKey: "", currency: "eur", siteUrl: "" };
+    const site = { publicKey: "", currency: "eur", siteUrl: "", hostedUrl: "" };
     // The snippet is only worth handing out once the widget can actually take
-    // money, which needs both a site address and a verified Stripe identity.
+    // money, which needs a verified Stripe identity.
     let identityDone = false;
+    // Where the image snippets send a click. Only a choice once a site
+    // address exists; without one the hosted page is the only destination.
+    let linkTarget: "site" | "hosted" = "site";
 
     const state = {
       headline: DEFAULT_HEADLINE,
@@ -798,7 +832,17 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 
     function deepLink(): string {
       const base = site.siteUrl;
-      return base === "" ? "" : `${base}${base.includes("?") ? "&" : "?"}qj_open=1`;
+      if (base === "" || linkTarget === "hosted") return site.hostedUrl;
+      return `${base}${base.includes("?") ? "&" : "?"}qj_open=1`;
+    }
+
+    function syncLinkTarget(): void {
+      const hasSite = site.siteUrl !== "";
+      linkTargetRow.hidden = !hasSite;
+      linkHostedOnly.hidden = hasSite;
+      for (const button of document.querySelectorAll<HTMLButtonElement>("[data-link-target]")) {
+        button.setAttribute("aria-pressed", String(button.dataset.linkTarget === linkTarget));
+      }
     }
 
     function altText(): string {
@@ -834,7 +878,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
     }
 
     function syncGenerate(): void {
-      const ready = site.publicKey !== "" && site.siteUrl !== "" && identityDone;
+      const ready = site.publicKey !== "" && identityDone;
       generateButton.disabled = !ready;
       generateHint.hidden = ready;
     }
@@ -859,7 +903,9 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       rememberSiteKey(loaded.publicKey);
       site.currency = loaded.currency;
       site.siteUrl = loaded.siteUrl ?? "";
+      site.hostedUrl = loaded.hostedUrl;
       syncGenerate();
+      syncLinkTarget();
       render();
     }
 
@@ -873,6 +919,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       if (snippetEl) snippetEl.textContent = snippet();
       if (snippetMdEl) snippetMdEl.textContent = markdownSnippet();
       if (snippetHtmlEl) snippetHtmlEl.textContent = htmlSnippet();
+      if (shareLinkEl) shareLinkEl.textContent = site.hostedUrl;
 
       for (const button of cornerButtons) {
         button.setAttribute("aria-pressed", String(button.dataset.corner === config.corner));
@@ -1016,6 +1063,7 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
       script: snippet,
       markdown: markdownSnippet,
       html: htmlSnippet,
+      share: () => site.hostedUrl,
     };
     const resetTimers = new Map<HTMLButtonElement, ReturnType<typeof setTimeout>>();
     // The embed modal is a sibling of the settings grid, so these are
@@ -1038,6 +1086,14 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
             button.textContent = labels.copy;
           }, 2000),
         );
+      });
+    }
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>("[data-link-target]")) {
+      button.addEventListener("click", () => {
+        linkTarget = button.dataset.linkTarget === "hosted" ? "hosted" : "site";
+        syncLinkTarget();
+        render();
       });
     }
 

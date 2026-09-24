@@ -5,8 +5,10 @@ import { auth } from "./auth";
 import { donationRoutes } from "./donations/routes";
 import { feedbackRoutes } from "./feedback/routes";
 import { goalRoutes, publicGoalRoutes } from "./goals/routes";
+import { hostedRoutes, publicHostedRoutes } from "./hosted/routes";
 import { sendPendingDonationEmails } from "./notify/donation";
 import { payRoutes } from "./pay/routes";
+import { settlePendingDonations } from "./pay/settle";
 import { ensureSchema } from "./schema";
 import { siteRoutes } from "./sites/routes";
 import { stripeRoutes } from "./stripe/routes";
@@ -24,7 +26,9 @@ function isPublicWidgetPath(path: string): boolean {
   return (
     path.startsWith("/api/pay") ||
     path.startsWith("/api/widget/goal") ||
-    path.startsWith("/api/widget/image")
+    path.startsWith("/api/widget/image") ||
+    path.startsWith("/api/hosted/page/") ||
+    path.startsWith("/api/hosted/image/")
   );
 }
 
@@ -100,6 +104,8 @@ export const app = new Elysia()
   .use(goalRoutes)
   .use(publicGoalRoutes)
   .use(widgetRoutes)
+  .use(hostedRoutes)
+  .use(publicHostedRoutes)
   .use(feedbackRoutes)
   // Donation emails are sent here rather than from the payment webhook, so a
   // mail failure can never touch a payment. `protect` drops a tick whose
@@ -110,6 +116,14 @@ export const app = new Elysia()
       pattern: Patterns.EVERY_5_MINUTES,
       protect: true,
       run: () => void sendPendingDonationEmails(),
+    }),
+  )
+  .use(
+    cron({
+      name: "settleDonations",
+      pattern: Patterns.EVERY_5_MINUTES,
+      protect: true,
+      run: () => void settlePendingDonations(),
     }),
   );
 

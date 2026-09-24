@@ -8,6 +8,7 @@ import {
 import { createPaymentContainer, type PaymentContainer } from "./container";
 import { persistDismissal } from "./dismiss";
 import { barVisible, fetchGoalProgress, type GoalProgress, meterLabel, meterRatio } from "./goal";
+import { pendingSessionId, resolveReturn } from "./return";
 import { widgetStyles } from "./styles";
 
 const HOST_SELECTOR = "[data-quietjar-host]";
@@ -130,6 +131,40 @@ export function mountWidget(config: ResolvedConfig, options: MountOptions = {}):
     containers.set(host, container);
   }
 
+  return host;
+}
+
+/**
+ * The payment panel alone, open in the target's flow, for a page that exists
+ * to take the payment. A supporter returning from a redirect payment method
+ * lands back here, so the thank you is picked up the same way the floating
+ * widget does it.
+ */
+export function mountPanel(config: ResolvedConfig, target: HTMLElement): HTMLElement {
+  const host = document.createElement("div");
+  host.setAttribute("data-quietjar-host", "");
+  host.style.cssText = "all: initial; display: block;";
+  target.append(host);
+
+  const root = host.attachShadow({ mode: "open" });
+  applyStyles(root, config.color, labelFontFamily(config.font, target), config.css);
+
+  const container = createPaymentContainer({ config, host, embedded: true });
+  root.append(container.element);
+  containers.set(host, container);
+  container.open();
+
+  const sessionId = pendingSessionId();
+  if (sessionId !== null && config.site !== "") {
+    void resolveReturn({
+      api: config.api,
+      site: config.site,
+      sessionId,
+      donationHideDays: null,
+    }).then((paid) => {
+      if (paid) container.showThanks(sessionId);
+    });
+  }
   return host;
 }
 

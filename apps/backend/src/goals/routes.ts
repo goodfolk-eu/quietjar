@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { auth } from "../auth";
-import { RateLimiter } from "../pay/limits";
+import { callerIp, RateLimiter } from "../pay/limits";
 import { goalRaised, raisedByGoal } from "../pay/store";
 import { toMinorUnits } from "../sites/currency";
 import { getSiteById, getSiteByUserId } from "../sites/store";
@@ -30,12 +30,6 @@ const PROGRESS_CACHE_CONTROL = `public, max-age=${GOAL_PROGRESS_TTL_MS / 1000}`;
 async function sessionUserId(request: Request): Promise<string | null> {
   const session = await auth.api.getSession({ headers: request.headers });
   return session?.user.id ?? null;
-}
-
-function callerIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  return request.headers.get("x-real-ip") ?? "unknown";
 }
 
 interface GoalBody {

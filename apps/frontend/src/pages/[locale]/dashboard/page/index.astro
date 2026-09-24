@@ -1,0 +1,578 @@
+---
+import { DEFAULT_COLOR } from "@quietjar/widget/config";
+import Container from "@/components/container.astro";
+import { dictionary } from "@/i18n/t";
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import { localizedPath } from "@/lib/links";
+import { presetColors } from "@/lib/preset-colors";
+
+export { getStaticPaths } from "@/lib/locale-paths";
+
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+const hosted = copy.hostedPage;
+const goalsPath = localizedPath("/dashboard/goals/", locale);
+const payoutPath = localizedPath("/dashboard/payout/", locale);
+
+const fieldClass =
+  "mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:border-gray-600 focus:outline-hidden focus:ring-3 focus:ring-gray-100";
+const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
+const buttonClass =
+  "rounded-lg bg-qj-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50";
+const secondaryButtonClass =
+  "rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-800 transition hover:bg-gray-50 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100 disabled:pointer-events-none disabled:opacity-50";
+const labelClass = "block text-sm font-medium text-gray-700";
+const hintClass = "mt-1 text-xs text-gray-500";
+
+const images = [
+  {
+    kind: "avatar",
+    label: hosted.avatar,
+    hint: hosted.avatarHint,
+    preview: "size-16 rounded-full",
+  },
+  { kind: "cover", label: hosted.cover, hint: hosted.coverHint, preview: "h-16 w-48 rounded-lg" },
+];
+---
+
+<DashboardLayout title={hosted.title}>
+  <Container>
+    <p class="text-sm text-gray-600">{hosted.intro}</p>
+
+    <div
+      id="qj-hosted"
+      class="mt-5 max-w-2xl space-y-5"
+      data-i18n={JSON.stringify(hosted)}
+      data-default-color={DEFAULT_COLOR}
+    >
+      <p
+        id="qj-hosted-notice"
+        class="hidden rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700"
+      >
+      </p>
+
+      <p
+        id="qj-hosted-payments"
+        class="hidden rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+      >
+        {hosted.paymentsNotReady}&nbsp;
+        <a href={payoutPath} class="font-semibold underline">{hosted.paymentsNotReadyLink}</a>
+      </p>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{hosted.shareTitle}</h2>
+        <div class="mt-3 flex items-center gap-2">
+          <input
+            id="qj-hosted-url"
+            type="text"
+            readonly
+            aria-label={hosted.shareTitle}
+            class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-mono text-sm text-gray-800 focus:outline-hidden"
+          />
+          <button id="qj-hosted-copy" type="button" class={buttonClass}>{hosted.copy}</button>
+          <a
+            id="qj-hosted-open"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            class={secondaryButtonClass}
+          >
+            {hosted.open}
+          </a>
+        </div>
+        <p class={`${hintClass} mt-2`}>{hosted.shareHint}</p>
+      </section>
+
+      <section class={cardClass}>
+        <label for="qj-hosted-handle" class="text-base font-semibold text-gray-800">{hosted.handleTitle}</label>
+        <p class={hintClass}>{hosted.handleHint}</p>
+        <div class="mt-3 flex items-center gap-2">
+          <div class="flex w-full items-center rounded-lg border border-gray-200 focus-within:border-gray-600 focus-within:ring-3 focus-within:ring-gray-100">
+            <span id="qj-hosted-prefix" class="ps-3 text-sm text-gray-500"></span>
+            <input
+              id="qj-hosted-handle"
+              type="text"
+              maxlength="30"
+              spellcheck="false"
+              autocomplete="off"
+              class="w-full rounded-e-lg border-0 bg-transparent py-2 pe-3 ps-0.5 text-sm text-gray-800 focus:outline-hidden"
+            />
+          </div>
+          <button id="qj-hosted-handle-save" type="button" disabled class={`${buttonClass} shrink-0`}>
+            {hosted.handleSave}
+          </button>
+        </div>
+        <p id="qj-hosted-handle-status" class="mt-2 text-xs text-gray-500" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{hosted.contentTitle}</h2>
+
+        <div class="mt-4">
+          <label for="qj-hosted-name" class={labelClass}>{hosted.displayName}</label>
+          <p class={hintClass}>{hosted.displayNameHint}</p>
+          <input id="qj-hosted-name" type="text" maxlength="60" class={fieldClass} />
+        </div>
+
+        <div class="mt-4">
+          <label for="qj-hosted-title" class={labelClass}>{hosted.pageTitle}</label>
+          <p class={hintClass}>{hosted.pageTitleHint}</p>
+          <input
+            id="qj-hosted-title"
+            type="text"
+            maxlength="100"
+            placeholder={hosted.pageTitlePlaceholder}
+            class={fieldClass}
+          />
+        </div>
+
+        <div class="mt-4">
+          <label for="qj-hosted-description" class={labelClass}>{hosted.description}</label>
+          <p class={hintClass}>{hosted.descriptionHint}</p>
+          <textarea id="qj-hosted-description" rows="4" maxlength="500" class={`${fieldClass} resize-y`}></textarea>
+        </div>
+
+        <div class="mt-4">
+          <label for="qj-hosted-goal" class={labelClass}>{hosted.goal}</label>
+          <p class={hintClass}>{hosted.goalHint}</p>
+          <select id="qj-hosted-goal" class={fieldClass}>
+            <option value="">{hosted.goalNone}</option>
+          </select>
+          <p id="qj-hosted-goal-empty" class="mt-2 hidden text-xs text-gray-500">
+            {hosted.goalEmpty}
+            <a href={goalsPath} class="font-medium text-gray-800 underline">{hosted.goalEmptyLink}</a>
+          </p>
+        </div>
+
+        <p id="qj-hosted-status" class="mt-4 text-xs text-gray-500" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{hosted.imagesTitle}</h2>
+        {
+          images.map((image) => (
+            <div class="mt-4 flex items-center gap-4" data-image={image.kind}>
+              <div
+                class:list={[
+                  "flex shrink-0 items-center justify-center overflow-hidden border border-gray-200 bg-gray-100",
+                  image.preview,
+                ]}
+              >
+                <img data-image-preview alt="" class="hidden size-full object-cover" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class={labelClass}>{image.label}</div>
+                <p class={hintClass}>{image.hint}</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <label class={`${secondaryButtonClass} cursor-pointer`}>
+                    <span data-image-upload-label>{hosted.upload}</span>
+                    <input
+                      data-image-input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      class="sr-only"
+                    />
+                  </label>
+                  <button data-image-remove type="button" class={secondaryButtonClass} hidden>
+                    {hosted.remove}
+                  </button>
+                </div>
+                <p data-image-status class="mt-1 text-xs text-gray-500" role="status" aria-live="polite" />
+              </div>
+            </div>
+          ))
+        }
+      </section>
+
+      <section class={cardClass}>
+        <h2 class="text-base font-semibold text-gray-800">{hosted.colorTitle}</h2>
+        <p class={hintClass}>{hosted.colorHint}</p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          {
+            presetColors.map((preset) => (
+              <button
+                type="button"
+                data-color={preset.hex}
+                aria-pressed="false"
+                aria-label={preset.hex}
+                class:list={[
+                  "size-8 rounded-full ring-offset-2 transition focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 aria-pressed:ring-2 aria-pressed:ring-gray-800",
+                  preset.swatch,
+                ]}
+              />
+            ))
+          }
+        </div>
+        <div class="mt-3 flex items-end gap-3">
+          <div>
+            <label for="qj-hosted-color-picker" class="block text-xs text-gray-500">{hosted.customColor}</label>
+            <input
+              id="qj-hosted-color-picker"
+              type="color"
+              value={DEFAULT_COLOR}
+              class="mt-2 h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1"
+            />
+          </div>
+          <div class="flex-1">
+            <label for="qj-hosted-color-hex" class="block text-xs text-gray-500">{hosted.hexValue}</label>
+            <input
+              id="qj-hosted-color-hex"
+              type="text"
+              spellcheck="false"
+              maxlength="7"
+              value={DEFAULT_COLOR}
+              class={`${fieldClass} font-mono`}
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+  </Container>
+</DashboardLayout>
+
+<script>
+  import { API_ORIGIN, api } from "@/lib/api";
+  import { IMAGE_TARGETS, resizeImage } from "@/lib/resize-image";
+
+  interface HostedPage {
+    handle: string;
+    url: string;
+    displayName: string;
+    title: string | null;
+    description: string | null;
+    avatarUrl: string | null;
+    coverUrl: string | null;
+    color: string | null;
+    goalId: string | null;
+  }
+
+  type ImageKind = "avatar" | "cover";
+  type HandleStatus = "current" | "available" | "taken" | "reserved" | "invalid";
+
+  const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+  const HANDLE_CHECK_DELAY_MS = 300;
+  const SAVE_DELAY_MS = 600;
+
+  const root = document.getElementById("qj-hosted");
+  const noticeEl = document.getElementById("qj-hosted-notice");
+  const urlEl = document.getElementById("qj-hosted-url") as HTMLInputElement | null;
+  const copyEl = document.getElementById("qj-hosted-copy") as HTMLButtonElement | null;
+  const openEl = document.getElementById("qj-hosted-open") as HTMLAnchorElement | null;
+  const prefixEl = document.getElementById("qj-hosted-prefix");
+  const handleEl = document.getElementById("qj-hosted-handle") as HTMLInputElement | null;
+  const handleSaveEl = document.getElementById("qj-hosted-handle-save") as HTMLButtonElement | null;
+  const handleStatusEl = document.getElementById("qj-hosted-handle-status");
+  const nameEl = document.getElementById("qj-hosted-name") as HTMLInputElement | null;
+  const titleEl = document.getElementById("qj-hosted-title") as HTMLInputElement | null;
+  const descriptionEl = document.getElementById("qj-hosted-description") as HTMLTextAreaElement | null;
+  const goalEl = document.getElementById("qj-hosted-goal") as HTMLSelectElement | null;
+  const goalEmptyEl = document.getElementById("qj-hosted-goal-empty");
+  const statusEl = document.getElementById("qj-hosted-status");
+  const pickerEl = document.getElementById("qj-hosted-color-picker") as HTMLInputElement | null;
+  const hexEl = document.getElementById("qj-hosted-color-hex") as HTMLInputElement | null;
+
+  if (
+    root &&
+    noticeEl &&
+    urlEl &&
+    copyEl &&
+    openEl &&
+    prefixEl &&
+    handleEl &&
+    handleSaveEl &&
+    handleStatusEl &&
+    nameEl &&
+    titleEl &&
+    descriptionEl &&
+    goalEl &&
+    goalEmptyEl &&
+    statusEl &&
+    pickerEl &&
+    hexEl
+  ) {
+    // Re-bound inside the guard so the null checks above narrow them for the
+    // helpers below, which are hoisted past the check.
+    const notice = noticeEl;
+    const urlField = urlEl;
+    const copyButton = copyEl;
+    const openLink = openEl;
+    const prefix = prefixEl;
+    const handleInput = handleEl;
+    const handleSave = handleSaveEl;
+    const handleStatus = handleStatusEl;
+    const nameInput = nameEl;
+    const titleInput = titleEl;
+    const descriptionInput = descriptionEl;
+    const goalSelect = goalEl;
+    const goalEmpty = goalEmptyEl;
+    const status = statusEl;
+    const picker = pickerEl;
+    const hexInput = hexEl;
+    const defaultColor = root.dataset.defaultColor ?? "#0369a1";
+    const copy = JSON.parse(root.dataset.i18n ?? "{}") as {
+      copy: string;
+      copied: string;
+      copyFailed: string;
+      handleStatus: Record<HandleStatus | "checking", string>;
+      handleConfirm: string;
+      handleSaved: string;
+      upload: string;
+      replace: string;
+      uploading: string;
+      imageTooLarge: string;
+      imageUnsupported: string;
+      imageFailed: string;
+      saving: string;
+      saved: string;
+      saveFailed: string;
+      loadFailed: string;
+    };
+
+    let page: HostedPage | null = null;
+    let handleState: HandleStatus = "current";
+
+    function showNotice(text: string): void {
+      notice.textContent = text;
+      notice.classList.remove("hidden");
+    }
+
+    /** The colour to store: null while it matches the default, so the default can move later. */
+    function chosenColor(): string | null {
+      const value = hexInput.value.trim().toLowerCase();
+      if (!HEX_COLOR.test(value)) return page?.color ?? null;
+      return value === defaultColor.toLowerCase() ? null : value;
+    }
+
+    function syncColor(color: string): void {
+      if (HEX_COLOR.test(color)) picker.value = color;
+      for (const swatch of root?.querySelectorAll<HTMLButtonElement>("[data-color]") ?? []) {
+        swatch.setAttribute("aria-pressed", String(swatch.dataset.color?.toLowerCase() === color.toLowerCase()));
+      }
+    }
+
+    function renderShare(current: HostedPage): void {
+      urlField.value = current.url;
+      openLink.href = current.url;
+      prefix.textContent = current.url.slice(0, current.url.length - current.handle.length).replace(/^https?:\/\//, "");
+    }
+
+    function renderImage(kind: ImageKind, path: string | null): void {
+      const row = root?.querySelector<HTMLElement>(`[data-image="${kind}"]`);
+      const preview = row?.querySelector<HTMLImageElement>("[data-image-preview]");
+      const remove = row?.querySelector<HTMLButtonElement>("[data-image-remove]");
+      const label = row?.querySelector<HTMLElement>("[data-image-upload-label]");
+      if (!preview || !remove || !label) return;
+      if (path) preview.src = `${API_ORIGIN}${path}`;
+      preview.classList.toggle("hidden", path === null);
+      remove.hidden = path === null;
+      label.textContent = path === null ? copy.upload : copy.replace;
+    }
+
+    function render(current: HostedPage): void {
+      renderShare(current);
+      handleInput.value = current.handle;
+      nameInput.value = current.displayName;
+      titleInput.value = current.title ?? "";
+      descriptionInput.value = current.description ?? "";
+      goalSelect.value = current.goalId ?? "";
+      const color = current.color ?? defaultColor;
+      hexInput.value = color;
+      syncColor(color);
+      renderImage("avatar", current.avatarUrl);
+      renderImage("cover", current.coverUrl);
+      setHandleState("current");
+    }
+
+    async function loadGoals(): Promise<void> {
+      const { data, error } = await api.api.goals.get();
+      const goals = error ? undefined : data?.goals;
+      if (!goals || goals.length === 0) {
+        goalEmpty.classList.remove("hidden");
+        return;
+      }
+      for (const goal of goals) {
+        const option = document.createElement("option");
+        option.value = goal.id;
+        option.textContent = goal.name;
+        goalSelect.append(option);
+      }
+    }
+
+    // The same check the widget editor gates its snippet on: without a
+    // verified identity the public page shows no payment form.
+    async function loadPaymentsStatus(): Promise<void> {
+      const { data, error } = await api.api.stripe.connection.get();
+      if (error) return;
+      const body = data as { connection?: { onboarding?: { identity?: string } | null } | null };
+      const ready = body?.connection?.onboarding?.identity === "done";
+      document.getElementById("qj-hosted-payments")?.classList.toggle("hidden", ready);
+    }
+
+    async function load(): Promise<void> {
+      // The page and the goals are loaded together because the goal select
+      // needs its options before the saved goal can be selected in it.
+      const [{ data, error }] = await Promise.all([api.api.hosted.current.get(), loadGoals()]);
+      const loaded = error ? undefined : data?.page;
+      if (!loaded) {
+        showNotice(copy.loadFailed);
+        return;
+      }
+      page = loaded;
+      render(loaded);
+    }
+
+    async function save(handle: string): Promise<boolean> {
+      if (!page) return false;
+      status.textContent = copy.saving;
+      const { data, error } = await api.api.hosted.current.put({
+        handle,
+        displayName: nameInput.value,
+        title: titleInput.value,
+        description: descriptionInput.value,
+        color: chosenColor(),
+        goalId: goalSelect.value === "" ? null : goalSelect.value,
+      });
+      const saved = error ? undefined : data?.page;
+      if (!saved) {
+        status.textContent = copy.saveFailed;
+        return false;
+      }
+      page = saved;
+      status.textContent = copy.saved;
+      return true;
+    }
+
+    let saveTimer: ReturnType<typeof setTimeout> | undefined;
+    function scheduleSave(): void {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        // Content saves never move the handle; only the confirmed button does.
+        if (page) void save(page.handle);
+      }, SAVE_DELAY_MS);
+    }
+
+    function setHandleState(state: HandleStatus | "checking"): void {
+      if (state !== "checking") handleState = state;
+      handleStatus.textContent = state === "current" ? "" : copy.handleStatus[state];
+      handleStatus.className = `mt-2 text-xs ${
+        state === "taken" || state === "reserved" || state === "invalid" ? "text-red-700" : "text-gray-500"
+      }`;
+      handleSave.disabled = state !== "available";
+    }
+
+    let handleTimer: ReturnType<typeof setTimeout> | undefined;
+    // Answers can arrive out of order while typing; only the latest counts.
+    let handleRequest = 0;
+    handleInput.addEventListener("input", () => {
+      clearTimeout(handleTimer);
+      const value = handleInput.value.trim().toLowerCase();
+      if (value === page?.handle) {
+        setHandleState("current");
+        return;
+      }
+      setHandleState("checking");
+      handleTimer = setTimeout(async () => {
+        const request = ++handleRequest;
+        const { data, error } = await api.api.hosted.handle.get({ query: { value } });
+        if (request !== handleRequest) return;
+        const answer = error ? undefined : data;
+        setHandleState((answer && "status" in answer && answer.status) || "invalid");
+      }, HANDLE_CHECK_DELAY_MS);
+    });
+
+    handleSave.addEventListener("click", async () => {
+      const handle = handleInput.value.trim().toLowerCase();
+      if (handleState !== "available") return;
+      if (!window.confirm(copy.handleConfirm.replace("{handle}", handle))) return;
+      clearTimeout(saveTimer);
+      handleSave.disabled = true;
+      if (!(await save(handle))) {
+        // Most likely someone claimed it between the check and the save.
+        setHandleState("taken");
+        return;
+      }
+      if (page) renderShare(page);
+      setHandleState("current");
+      handleStatus.textContent = copy.handleSaved;
+    });
+
+    for (const input of [nameInput, titleInput, descriptionInput]) {
+      input.addEventListener("input", scheduleSave);
+    }
+    goalSelect.addEventListener("change", scheduleSave);
+
+    function setColor(value: string, syncHex: boolean): void {
+      if (syncHex) hexInput.value = value;
+      syncColor(value);
+      if (HEX_COLOR.test(value)) scheduleSave();
+    }
+
+    picker.addEventListener("input", () => setColor(picker.value, true));
+    hexInput.addEventListener("input", () => setColor(hexInput.value.trim(), false));
+    for (const swatch of root.querySelectorAll<HTMLButtonElement>("[data-color]")) {
+      swatch.addEventListener("click", () => setColor(swatch.dataset.color ?? defaultColor, true));
+    }
+
+    const imageErrors: Record<string, string> = {
+      image_too_large: copy.imageTooLarge,
+      unsupported_image: copy.imageUnsupported,
+    };
+
+    for (const row of root.querySelectorAll<HTMLElement>("[data-image]")) {
+      const kind = row.dataset.image as ImageKind;
+      const input = row.querySelector<HTMLInputElement>("[data-image-input]");
+      const remove = row.querySelector<HTMLButtonElement>("[data-image-remove]");
+      const imageStatus = row.querySelector<HTMLElement>("[data-image-status]");
+      if (!input || !remove || !imageStatus) continue;
+
+      input.addEventListener("change", async () => {
+        const original = input.files?.[0];
+        input.value = "";
+        if (!original) return;
+        imageStatus.textContent = copy.uploading;
+        const file = await resizeImage(original, IMAGE_TARGETS[kind]);
+        const { data, error } = await api.api.hosted.current.image({ kind }).post({ file });
+        const saved = error ? undefined : data?.page;
+        if (!saved) {
+          const code = (error?.value as { error?: string } | undefined)?.error ?? "";
+          imageStatus.textContent = imageErrors[code] ?? copy.imageFailed;
+          return;
+        }
+        page = saved;
+        imageStatus.textContent = "";
+        renderImage(kind, kind === "avatar" ? saved.avatarUrl : saved.coverUrl);
+      });
+
+      remove.addEventListener("click", async () => {
+        const { data, error } = await api.api.hosted.current.image({ kind }).delete();
+        const saved = error ? undefined : data?.page;
+        if (!saved) {
+          imageStatus.textContent = copy.saveFailed;
+          return;
+        }
+        page = saved;
+        renderImage(kind, null);
+      });
+    }
+
+    const copyTimers = new Map<HTMLButtonElement, ReturnType<typeof setTimeout>>();
+    copyButton.addEventListener("click", async () => {
+      clearTimeout(copyTimers.get(copyButton));
+      try {
+        await navigator.clipboard.writeText(urlField.value);
+        copyButton.textContent = copy.copied;
+      } catch {
+        copyButton.textContent = copy.copyFailed;
+      }
+      copyTimers.set(
+        copyButton,
+        setTimeout(() => {
+          copyButton.textContent = copy.copy;
+        }, 2000),
+      );
+    });
+
+    void load();
+    void loadPaymentsStatus();
+  }
+</script>

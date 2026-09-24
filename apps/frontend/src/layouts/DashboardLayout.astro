@@ -27,6 +27,7 @@ const dashboardPath = localizedPath("/dashboard/", locale);
 const payoutPath = localizedPath("/dashboard/payout/", locale);
 const widgetPath = localizedPath("/dashboard/widget/", locale);
 const goalsPath = localizedPath("/dashboard/goals/", locale);
+const pagePath = localizedPath("/dashboard/page/", locale);
 const profilePath = localizedPath("/dashboard/profile/", locale);
 
 const navLinkClass = (href: string, exact = false) => {
@@ -345,6 +346,31 @@ const navLinkClass = (href: string, exact = false) => {
                     <path d="M9 21V9"></path>
                   </svg>
                   {copy.dashboard.widget}
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class={navLinkClass("/dashboard/page")}
+                  href={pagePath}
+                >
+                  <svg
+                    class="shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 3h6v6"></path>
+                    <path d="M10 14 21 3"></path>
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  </svg>
+                  {copy.dashboard.page}
                 </a>
               </li>
             </ul>

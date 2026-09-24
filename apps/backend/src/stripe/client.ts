@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { hostedPageOrigin } from "../hosted/url";
 import { returnUrlWithMarker, walletDomains } from "../pay/origin";
 
 export interface StripeConfig {
@@ -44,7 +45,8 @@ export interface CreateAccountInput {
   email: string;
   entityType: "individual" | "company";
   currency: string;
-  businessUrl: string;
+  /** Null leaves Stripe to ask for a website during onboarding. */
+  businessUrl: string | null;
 }
 
 /**
@@ -85,7 +87,7 @@ export async function createConnectedAccount(
       currency: input.currency,
       responsibilities: { fees_collector: "application", losses_collector: "application" },
       profile: {
-        business_url: input.businessUrl,
+        ...(input.businessUrl ? { business_url: input.businessUrl } : {}),
         product_description: "Tips from supporters, collected with QuietJar.",
       },
     },
@@ -115,6 +117,27 @@ export function requestLocalPaymentCapabilities(
     configuration: { merchant: { capabilities: requested } },
     include: [...INCLUDE],
   });
+}
+
+/**
+ * Keeps the website Stripe shows supporters in step with the creator's
+ * settings: it is only sent once at account creation otherwise, and a creator
+ * who starts on their hosted page and adds a site later would keep showing the
+ * hosted page. Best-effort, like the wallet registration: a failure only
+ * leaves the old URL in place.
+ */
+export async function updateBusinessUrl(
+  config: StripeConfig,
+  accountId: string,
+  businessUrl: string,
+): Promise<void> {
+  try {
+    await stripeClient(config).v2.core.accounts.update(accountId, {
+      defaults: { profile: { business_url: businessUrl } },
+    });
+  } catch (err) {
+    console.error(`[stripe/profile] could not update business URL for ${accountId}:`, err);
+  }
 }
 
 /**
@@ -271,7 +294,8 @@ export async function retrieveDonationSession(
 /**
  * Registers the creator's site with Stripe so wallets can appear in the
  * payment sheet. Without this Apple Pay, Google Pay and Link are hidden and
- * the supporter only ever sees cards and iDEAL.
+ * the supporter only ever sees cards and iDEAL. The hosted page origin is
+ * registered for every account, since every creator has a hosted page.
  *
  * The registration belongs to the connected account, because a direct charge
  * makes the creator the merchant of record. Creating a domain that already
@@ -285,7 +309,8 @@ export async function registerWalletDomains(
   siteUrl: string | null,
 ): Promise<void> {
   const client = stripeClient(config);
-  for (const domain of walletDomains(siteUrl)) {
+  const domains = new Set([...walletDomains(siteUrl), ...walletDomains(hostedPageOrigin())]);
+  for (const domain of domains) {
     try {
       await client.paymentMethodDomains.create(
         { domain_name: domain },
