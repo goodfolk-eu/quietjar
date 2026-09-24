@@ -4,6 +4,7 @@ import { emailOTP } from "better-auth/plugins";
 import { libsqlDialect } from "./db";
 import { sendEmail } from "./email";
 import { pushSubscriber } from "./keila";
+import { trackEvent } from "./umami";
 
 /**
  * Non-httpOnly marker cookie used by the static homepage to decide whether to
@@ -116,6 +117,16 @@ export const auth = betterAuth({
       allowedAttempts: 3,
     }),
   ],
+
+  databaseHooks: {
+    user: {
+      create: {
+        after: async () => {
+          trackEvent("signup");
+        },
+      },
+    },
+  },
 
   // Toggle the readable marker cookie so the static homepage can show the right
   // button without a backend call. Validated server-side on the dashboard.
