@@ -75,6 +75,11 @@ export function meterRatio(progress: GoalProgress): number {
   return Math.min(1, Math.max(0, progress.raised / progress.target));
 }
 
+/** The bar's fill as a whole percentage, capped at 100 like the bar itself. */
+export function meterPercent(progress: GoalProgress): string {
+  return `${Math.round(meterRatio(progress) * 100)}%`;
+}
+
 /**
  * A met goal reports what came in rather than restating the target, so an
  * overshoot stays honest instead of reading as exactly the target.

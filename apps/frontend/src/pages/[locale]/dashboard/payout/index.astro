@@ -35,6 +35,7 @@ const fieldClass =
 const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 const buttonClass =
   "rounded-lg bg-qj-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50";
+const skeletonSteps = [1, 2, 3, 4];
 const stepClass = "rounded-lg border border-gray-200 p-4";
 const labelClass = "block text-sm font-medium text-gray-700";
 const hintClass = "mt-1 text-xs text-gray-500";
@@ -66,9 +67,22 @@ const hintClass = "mt-1 text-xs text-gray-500";
         <p id="qj-balance-pending" class="mt-2 hidden text-xs text-gray-500"></p>
       </section>
 
-      <section id="qj-pay-steps" class={cardClass}>
+      <section id="qj-pay-steps" class={cardClass} aria-busy="true">
         <h2 class="text-base font-semibold text-gray-800">{payout.stepsTitle}</h2>
-        <ol class="mt-5 space-y-4">
+        <div id="qj-pay-loading" class="mt-5 space-y-4" aria-hidden="true">
+          {
+            skeletonSteps.map(() => (
+              <div class={`${stepClass} animate-pulse`}>
+                <div class="flex items-start justify-between gap-3">
+                  <div class="h-4 w-40 rounded-md bg-gray-200" />
+                  <div class="h-6 w-16 rounded-full bg-gray-100" />
+                </div>
+                <div class="mt-2 h-3.5 w-3/4 rounded-md bg-gray-100" />
+              </div>
+            ))
+          }
+        </div>
+        <ol id="qj-pay-list" class="mt-5 hidden space-y-4">
           <li class={stepClass} data-step="details">
             <div class="flex items-start justify-between gap-3">
               <h3 class="text-sm font-semibold text-gray-800">{payout.steps.details.title}</h3>
@@ -436,6 +450,9 @@ const hintClass = "mt-1 text-xs text-gray-500";
     let balanceRequested = false;
 
     function renderSteps(status: Onboarding | null): void {
+      show(document.getElementById("qj-pay-loading"), false);
+      show(document.getElementById("qj-pay-list"), true);
+      stepsCard?.setAttribute("aria-busy", "false");
       const onboarding = status ?? { identity: "todo", localMethods: "todo", payouts: "todo", issues: {} };
 
       for (const key of ["identity", "localMethods", "payouts"] as StepKey[]) {

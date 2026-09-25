@@ -4,14 +4,14 @@ Fees checked against public sources in the first week of September 2026. They ch
 
 ## The map
 
-Two axes: quality of the on-page experience, and who is allowed to use it.
+Two axes: quality of the on-page experience, and who is allowed to use it. On top of the map, one feature nobody else has: a button that shows up for a goal and disappears once the goal is met. Every tool below either has no goals or shows a goal bar next to a button that is always on.
 
 - High on-page quality, nonprofits only: Fundraise Up, Givebutter, Donorbox, Zeffy
 - Low on-page quality, open to anyone: Buy Me a Coffee, Ko-fi, Liberapay, PayPal
 - High on-page quality, developers only: Polar, Stripe direct
 - High on-page quality, open to anyone: empty. That is our quadrant
 
-The threat is not a direct competitor. It is Ko-fi or Buy Me a Coffee shipping a real embed, or Stripe making embedded checkout trivial for non-developers.
+The threat is not a direct competitor. It is Ko-fi or Buy Me a Coffee tying their widget to their goals (hide when met, monthly reset), adding wallets, or Stripe making embedded checkout trivial for non-developers.
 
 ## Hosted creator tip platforms
 
@@ -19,18 +19,20 @@ The threat is not a direct competitor. It is Ko-fi or Buy Me a Coffee shipping a
 
 - 5% platform fee on tips, memberships, and shop. No monthly plan. Processing on top
 - Creators connect their own Stripe account. PayPal in some regions
-- Button and floating widget open a Buy Me a Coffee flow, not the host site's
+- Button links to the hosted page. The floating widget takes payment on the host site, in a Buy Me a Coffee panel (buymeacoffee.com and WordPress plugin docs, checked September 2026)
+- Goals since July 2024: a target and progress bar on the profile page. The button stays up whether the goal is met or not
 - Strength: friendly brand, strong casual conversion, huge installed base on blogs and READMEs
-- Gap: no local EU methods, redirect flow, the coffee metaphor
+- Gap: no local EU methods, limited wallets, a button that always asks, the coffee metaphor
 
 ### Ko-fi
 
 - Free plan: 0% on one-off donations, 5% on shop and memberships. A "Contributor" status charging 5% on everything is on by default for new accounts (artcurator.org, January 2026)
 - Ko-fi Gold removes platform fees. Price reported as $12/month (cartmango.com, August 2026); older sources say $6 or $8. Verify
 - Pays out instantly to the creator's own Stripe or PayPal
-- Buttons, floating widget, and a WordPress plugin, all handing off to a Ko-fi-hosted flow
+- Buttons, floating button with an on-page tip panel, and a WordPress plugin (help.ko-fi.com, checked September 2026)
+- Goals: one active goal at a time, shown on the profile and in an embeddable goal bar widget. The creator starts a new goal by hand. The button stays up whether the goal is met or not
 - Strength: fee-free tips are one Gold subscription away, and free-plan tips can be too if Contributor status is turned off. Ko-fi self-reports over 1 million creators
-- Gap: PayPal-heavy, no wallets or iDEAL, English-only interface, the button is an afterthought
+- Gap: PayPal-heavy, no wallets or iDEAL, English-only interface, a button that always asks
 
 ### Liberapay
 
@@ -95,7 +97,7 @@ The threat is not a direct competitor. It is Ko-fi or Buy Me a Coffee shipping a
 
 ### thanks.dev, IssueHunt, Tidelift
 
-Niche. Not relevant to the on-page wedge.
+Niche. Not relevant to the goals wedge.
 
 ## DIY payment rails
 
@@ -103,7 +105,7 @@ Niche. Not relevant to the on-page wedge.
 
 - EU domestic cards 1.5% + €0.25. iDEAL €0.29 flat. SEPA 0.35% capped at €5. International cards +1.5%, currency conversion +1% (checkoutpage.com, payrequest.io, 2026)
 - Payment Links redirect to a Stripe-hosted page. Embedded Checkout and Elements stay on-page but need code
-- This is our real price anchor. A technical creator can build a "good enough" on-page button for processing cost alone. Our fee has to buy what they cannot easily build: suppression, goals, design matching, wallets and local methods pre-wired, zero upkeep
+- This is our real price anchor. A technical creator can build a "good enough" on-page button for processing cost alone. Our fee has to buy what they cannot easily build: goals that hide the button when met, suppression, design matching, wallets and local methods pre-wired, zero upkeep
 
 ### PayPal donate button
 
@@ -115,19 +117,19 @@ Niche. Not relevant to the on-page wedge.
 
 ## Comparison table
 
-| | Platform fee | Monthly | On-page checkout | Wallets | EU local methods | Steps back after giving | Who can use it |
-|---|---|---|---|---|---|---|---|
-| QuietJar | 5%, no cap | none | yes | yes | yes | yes, server-side | anyone with a site |
-| Buy Me a Coffee | 5% | none | no | limited | no | no | anyone |
-| Ko-fi | 5% tips by default, 0% on Gold | Gold optional | no | no | no | no | anyone |
-| Liberapay | 0% | none | no | no | no | n/a | anyone |
-| Fundraise Up | 4% | none | yes | yes | partial | no | nonprofits |
-| Givebutter | 0% (tips on) / 3% | none | partial | yes | no | no | nonprofits |
-| Donorbox | 1.75% to 3.95% | some plans | yes (forms) | yes | partial | no | nonprofits |
-| GitHub Sponsors | 0% | none | no | no | no | n/a | GitHub users |
-| Open Collective | 0% + host 4% to 10% | for orgs | no | no | partial | no | projects |
-| Polar | 5% + $0.50 | optional | yes | yes | yes | no | developers |
-| Stripe direct | 0% | none | if you code it | yes | yes | no | anyone technical |
+| | Platform fee | Monthly | On-page checkout | Wallets | EU local methods | Goals | Button hides when goal is met | Steps back after giving | Who can use it |
+|---|---|---|---|---|---|---|---|---|---|
+| QuietJar | 5%, no cap | none | yes | yes | yes | yes, monthly or one-off | yes, by default | yes, in the browser | anyone |
+| Buy Me a Coffee | 5% | none | yes, widget | limited | no | yes, on profile | no | no | anyone |
+| Ko-fi | 5% tips by default, 0% on Gold | Gold optional | yes, tip panel | no | no | yes, profile and goal bar widget | no | no | anyone |
+| Liberapay | 0% | none | no | no | no | yes, on profile | no | n/a | anyone |
+| Fundraise Up | 4% | none | yes | yes | partial | yes | no | no | nonprofits |
+| Givebutter | 0% (tips on) / 3% | none | partial | yes | no | yes | no | no | nonprofits |
+| Donorbox | 1.75% to 3.95% | some plans | yes (forms) | yes | partial | yes | no | no | nonprofits |
+| GitHub Sponsors | 0% | none | no | no | no | yes, on profile | no | n/a | GitHub users |
+| Open Collective | 0% + host 4% to 10% | for orgs | no | no | partial | yes | no | no | projects |
+| Polar | 5% + $0.50 | optional | yes | yes | yes | no | no | no | developers |
+| Stripe direct | 0% | none | if you code it | yes | yes | if you code it | if you code it | no | anyone technical |
 
 Processing fees apply on top for every row.
 
@@ -135,7 +137,9 @@ Processing fees apply on top for every row.
 
 Acknowledge the strength first, then ask the question that exposes the gap. Never trash-talk.
 
-- Ko-fi: "5% on tips by default, free only on a paid Gold plan. How many of your visitors finish the payment after the redirect?"
+- Ko-fi: "5% on tips by default, free only on a paid Gold plan. Its button asks every visitor, every day. What if it only asked while a real cost was open?"
+- Goals, any incumbent: "Goal bars are everywhere. Does your button know when the goal is met?"
+- Never write that Ko-fi or Buy Me a Coffee redirect to pay. Both have on-page widgets
 - Buy Me a Coffee: "The friendliest brand in the space. Does a coffee cup fit your site?"
 - Stripe direct: "You can build this yourself. How many weekends, and who maintains it?"
 - GitHub Sponsors: "The right default for maintainers. How many of your users ever open the repo?"
@@ -144,6 +148,7 @@ Acknowledge the strength first, then ask the question that exposes the gap. Neve
 
 - Ko-fi Gold price and whether Contributor is still on by default
 - Whether Buy Me a Coffee's widget now supports Apple Pay
+- Whether Ko-fi or Buy Me a Coffee can hide their widget or button when a goal is met, or reset goals monthly. Not found in September 2026; recheck before every compare page change
 - Fundraise Up and Donorbox EU payment method coverage
 - Polar roadmap for donations or pay-what-you-want
 - Any 2026 widget launches from Mollie or Payrequest

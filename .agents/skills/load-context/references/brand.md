@@ -6,19 +6,19 @@ Voice rules live in SKILL.md and the writing style guide. This file covers what 
 
 QuietJar is infrastructure that happens to be pleasant. A good pen, a clean API, a door that closes softly. Not a startup, not a charity, not a coffee shop.
 
-The name carries this already. "Quiet" is the promise: it does not nag, it fits in. "Jar" is the function. Keep "quiet" in the foreground and stop "jar" from sliding into tip-jar cuteness.
+The name carries this already. "Quiet" is the promise: it does not nag, it fits in, and the jar goes quiet once it is full. "Jar" is the function. Keep "quiet" in the foreground and stop "jar" from sliding into tip-jar cuteness.
 
 ## Purpose
 
-People who make things on their own websites lose most of their willing supporters in the gap between wanting to give and giving. QuietJar closes that gap on the page where the wanting happens.
+People who make things on their own websites put up a support button and watch it turn into wallpaper. Visitors stop seeing an ask that never ends. QuietJar only asks when there is a real cost to cover, then goes quiet.
 
-About-page sentence: QuietJar lets people support the sites they love without leaving them.
+About-page sentence: QuietJar lets the sites people love ask for support only when they need it.
 
 ## Values, in order
 
 When two conflict, the higher one wins.
 
-1. **Respect for the supporter.** Ask once. Say thank you. Step back. No guilt, no chasing, no dark patterns. The suppression feature is this value made into code.
+1. **Respect for the supporter.** Ask once. Say thank you. Step back. No guilt, no chasing, no dark patterns. Goals that hide the button when met, and stepping back after someone gives, are this value made into code.
 2. **Craft.** Fast, precise, invisible when it should be. Every detail engineered. This is the moat and the personality.
 3. **Alignment.** No monthly fee. A share only when the creator gets paid. Payment processing is passed through at cost on top of that share, never surcharged onto the supporter.
 4. **Restraint.** Say less. Show more. Cut the second adjective.
@@ -45,6 +45,7 @@ A senior engineer who is also a good host. Competent, calm, a little dry, warm w
 | support | tip, donate, contribute, give |
 | steps back | suppression (developer page only) |
 | goals | campaigns, drives, fundraisers |
+| goes quiet, steps aside (when a goal is met) | hides, disappears (fine in developer docs) |
 
 "Donation" may appear in title tags and one FAQ answer because people search for it. Nowhere else.
 
@@ -55,7 +56,7 @@ A senior engineer who is also a good host. Competent, calm, a little dry, warm w
 ## Before and after
 
 - Before: "Supercharge your creator revenue with our seamless donation widget!"
-  After: "A support button that lives on your site. Your supporters stay on your page."
+  After: "Set a goal for a real cost. Once your supporters cover it, the button goes quiet."
 - Before: "Say goodbye to annoying popups that harass your loyal fans!"
   After: "Once someone has supported you, QuietJar steps back. Your best supporters get thanked, not asked again."
 - Before: "Affordable pricing with no hidden fees"
@@ -76,14 +77,14 @@ Principles for the redesign, whatever the final design looks like.
 - **The button is the hero.** Live, working, styled to look native in two or three very different mock sites. This proves "matches your design" better than any copy.
 - **Whitespace is a feature.** The product does not clutter. Neither does the site. One idea per screen, no stacked feature grids.
 - **Type does the work.** Text-led. No stock photos. No illustrations of people, coins, or jars.
-- **Motion, sparingly.** The button tap, the thank-you state, the progress bar filling. Nothing decorative, nothing that loops.
+- **Motion, sparingly.** The button tap, the thank-you state, the progress bar filling, the button stepping aside once the goal is met. Nothing decorative, nothing that loops.
 - **Colour follows the logo.** One accent for interactive elements, otherwise neutral. The demo button visibly takes on the host site's colours.
 - **Proof looks like proof.** Numbers, snippets, real screenshots. No badges, no testimonial carousels. Performance numbers set in body type, not in a coloured blob.
 
 ## One glance
 
-- Promise: your supporters stay on your page
+- Promise: it only asks when it matters
 - Personality: senior engineer, good host
 - Values: respect, craft, alignment, restraint
-- Vocabulary: support, supporters, button, steps back, goals
+- Vocabulary: support, supporters, button, steps back, goals, goes quiet
 - Never: coffee, charity language, hype, cute

@@ -7,7 +7,14 @@ import {
 } from "./config";
 import { createPaymentContainer, type PaymentContainer } from "./container";
 import { persistDismissal } from "./dismiss";
-import { barVisible, fetchGoalProgress, type GoalProgress, meterLabel, meterRatio } from "./goal";
+import {
+  barVisible,
+  fetchGoalProgress,
+  type GoalProgress,
+  meterLabel,
+  meterPercent,
+  meterRatio,
+} from "./goal";
 import { pendingSessionId, resolveReturn } from "./return";
 import { widgetStyles } from "./styles";
 
@@ -199,9 +206,12 @@ function pillButton(config: ResolvedConfig): HTMLButtonElement {
 // pill: bold headline, multi-line body, and an action button on the right.
 function cardPanel(config: ResolvedConfig, bar: boolean): HTMLElement {
   const panel = document.createElement("div");
-  panel.className = "quietjar-widget__panel";
+  panel.className = bar
+    ? "quietjar-widget__panel quietjar-widget__panel--goal"
+    : "quietjar-widget__panel";
 
-  const iconEl = iconElement(config);
+  // The stacked goal layout has no row beside the text for the icon.
+  const iconEl = bar ? null : iconElement(config);
   if (iconEl) {
     panel.append(iconEl);
   }
@@ -254,10 +264,16 @@ function meterRow(): HTMLElement {
   fill.className = "quietjar-widget__meter-fill";
   track.append(fill);
 
-  const label = document.createElement("div");
+  const foot = document.createElement("div");
+  foot.className = "quietjar-widget__meter-foot";
+  const label = document.createElement("span");
   label.className = "quietjar-widget__meter-label";
+  const percent = document.createElement("span");
+  percent.className = "quietjar-widget__meter-percent";
+  percent.setAttribute("aria-hidden", "true");
+  foot.append(label, percent);
 
-  meter.append(track, label);
+  meter.append(track, foot);
   return meter;
 }
 
@@ -273,8 +289,10 @@ async function fillMeter(meter: HTMLElement, config: ResolvedConfig): Promise<vo
 function paintMeter(meter: HTMLElement, progress: GoalProgress): void {
   const fill = meter.querySelector<HTMLElement>(".quietjar-widget__meter-fill");
   const label = meter.querySelector<HTMLElement>(".quietjar-widget__meter-label");
+  const percent = meter.querySelector<HTMLElement>(".quietjar-widget__meter-percent");
   if (fill) fill.style.width = `${meterRatio(progress) * 100}%`;
   if (label) label.textContent = meterLabel(progress);
+  if (percent) percent.textContent = meterPercent(progress);
 }
 
 function iconElement(config: ResolvedConfig): HTMLSpanElement | null {

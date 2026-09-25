@@ -85,6 +85,18 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       color: ${text};
       box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
     }
+    /* With a goal the card stacks like a small panel: text, then the bar at
+       full width, then the action underneath. */
+    .quietjar-widget__panel--goal {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 16px 18px;
+      border-radius: 6px;
+    }
+    .quietjar-widget__panel--goal .quietjar-widget__action {
+      align-self: flex-start;
+      border-radius: 4px;
+    }
     .quietjar-widget__text {
       display: flex;
       flex-direction: column;
@@ -112,8 +124,8 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
     .quietjar-widget__meter {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      margin-top: 2px;
+      gap: 6px;
+      margin-top: 10px;
     }
     /* Track and fill are both the panel's own text colour, the track faded, so
        the bar reads on a light brand colour as well as a dark one. The fade is
@@ -121,7 +133,7 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
        it. */
     .quietjar-widget__meter-track {
       position: relative;
-      height: 6px;
+      height: 8px;
       border-radius: 999px;
       overflow: hidden;
     }
@@ -145,12 +157,20 @@ export function widgetStyles(color: string, labelFontFamily: string): string {
       background: ${text};
       transition: width 0.3s ease;
     }
-    .quietjar-widget__meter-label {
+    .quietjar-widget__meter-foot {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
       font-family: ${labelFontFamily};
       font-size: 12px;
       font-weight: 500;
       line-height: 1.3;
+      font-variant-numeric: tabular-nums;
       opacity: 0.85;
+    }
+    .quietjar-widget__meter-percent {
+      flex: none;
     }
     .quietjar-widget__action {
       flex: none;

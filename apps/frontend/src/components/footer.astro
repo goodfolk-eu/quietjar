@@ -32,9 +32,6 @@ const legalDocs = (await getCollection("legal", ({ id }) => id.startsWith(`${loc
         <a href="/" aria-label="QuietJar" class="flex items-center gap-0.5">
           <Logo class="h-11 w-auto" mark="#ffffff" quiet="#86C4A3" jar="#ffffff" />
         </a>
-        <p class="mt-4 text-[13.5px] leading-[1.6] text-white/52">
-          {copy.footer.address.map((line) => <>{line}<br /></>)}
-        </p>
       </div>
 
       <div class="flex flex-wrap gap-16">

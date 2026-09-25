@@ -9,6 +9,8 @@ const checkIcon =
 const chevronIcon =
   '<svg class="shrink-0 size-3.5 text-gray-800" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
 
+const skeletonBars = [45, 70, 30, 85, 55, 65, 40, 90, 50, 75, 35, 60];
+
 const selectOptions = {
   placeholder: home.periodPlaceholder,
   toggleTag: `<button type="button" aria-expanded="false" aria-label="${home.earningsTitle}"></button>`,
@@ -50,7 +52,7 @@ const selectOptions = {
 
   <div class="mt-2 flex items-center gap-2">
     <span id="qj-home-kept" class="block font-medium text-xl text-gray-800 tabular-nums">
-      &hellip;
+      <span class="block h-7 w-28 animate-pulse rounded-md bg-gray-200"></span>
     </span>
     <span id="qj-home-kept-delta" class="flex justify-center items-center gap-x-1 text-sm"></span>
   </div>
@@ -64,8 +66,17 @@ const selectOptions = {
     <label for="qj-home-cumulative" class="ms-2 text-sm text-gray-500">{home.cumulative}</label>
   </div>
 
-  <!-- Apex Bar Chart -->
-  <div id="qj-home-chart" class="mt-2 min-h-81"></div>
+  <div class="relative mt-2" aria-busy="true" id="qj-home-chart-wrap">
+    <div
+      id="qj-home-chart-loading"
+      class="absolute inset-x-0 top-4 bottom-8 flex animate-pulse items-end gap-2 ps-8"
+      aria-hidden="true"
+    >
+      {skeletonBars.map((height) => <div class="flex-1 rounded-sm bg-gray-200" style={`height: ${height}%`}></div>)}
+    </div>
+    <!-- Apex Bar Chart -->
+    <div id="qj-home-chart" class="min-h-81"></div>
+  </div>
 
   <p id="qj-home-chart-error" class="mt-2 text-sm text-gray-600" hidden>{home.error}</p>
 
@@ -124,9 +135,15 @@ const selectOptions = {
     const keptValue = document.getElementById("qj-home-kept");
     const keptDelta = document.getElementById("qj-home-kept-delta");
     const mount = document.getElementById("qj-home-chart");
+    const mountWrap = document.getElementById("qj-home-chart-wrap");
+    const loading = document.getElementById("qj-home-chart-loading");
     const failure = document.getElementById("qj-home-chart-error");
 
-    if (!(periodSelect && cumulative && keptValue && keptDelta && mount && failure)) return;
+    if (
+      !(periodSelect && cumulative && keptValue && keptDelta && mount && mountWrap && loading && failure)
+    ) {
+      return;
+    }
 
     let chart: ApexCharts | null = null;
     let latest: Series | null = null;
@@ -289,10 +306,18 @@ const selectOptions = {
       void chart.render();
     };
 
+    const setLoading = (busy: boolean): void => {
+      loading.hidden = !busy;
+      mount.classList.toggle("invisible", busy);
+      mountWrap.setAttribute("aria-busy", String(busy));
+    };
+
     const load = async (): Promise<void> => {
+      setLoading(true);
       const { data, error } = await api.api.donations.earnings.series.get({
         query: { period: periodSelect.value as Period },
       });
+      setLoading(false);
       // Elysia's inferred type unions the error returns with the success body.
       const body = data as Series | undefined;
 

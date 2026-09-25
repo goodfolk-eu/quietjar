@@ -2,7 +2,7 @@
   "developers": {
     "eyebrow": "For developers",
     "title": "A support button for your docs site.",
-    "sub": "One script tag. No layout shift. It steps back after someone gives.",
+    "sub": "One script tag. No layout shift. Give it a goal and it hides once the goal is met. Fully configurable.",
     "snippet": "<script>\n  window.QuietJar = {\n    \"site\": \"qj_your_site_id\",\n    \"currency\": \"eur\",\n    \"amounts\": [3, 5, 10],\n    \"labels\": {\n      \"headline\": \"Support this site\",\n      \"body\": \"Enjoying the docs? Buy us a coffee.\",\n      \"action\": \"Tip\"\n    },\n    \"style\": { \"color\": \"#0369a1\", \"font\": \"rounded\" },\n    \"close\": { \"enabled\": true, \"after\": \"session\" },\n    \"position\": { \"corner\": \"bottom-right\" }\n  };\n</script>\n<script src=\"https://quietjar.com/js/latest/quietjar.js\" async></script>",
     "install": {
       "title": "Install",
@@ -53,7 +53,21 @@
           "type": "string",
           "required": "no",
           "default": "hide",
-          "description": "What the widget does once the goal is reached. hide: the widget stops rendering, so the page no longer asks. show: the widget stays and keeps taking donations, without the bar. show-with-bar: the widget stays and keeps the filled bar. Ignored without a goal, and anything else falls back to hide."
+          "description": "What the widget does once the goal is reached. Ignored without a goal. Anything else falls back to hide.",
+          "options": [
+            {
+              "value": "hide",
+              "description": "The widget stops rendering, so the page no longer asks."
+            },
+            {
+              "value": "show",
+              "description": "The widget stays and keeps taking donations, without the bar."
+            },
+            {
+              "value": "show-with-bar",
+              "description": "The widget stays and keeps the filled bar."
+            }
+          ]
         },
         {
           "name": "amounts",
@@ -87,7 +101,7 @@
           "name": "labels.action",
           "type": "string",
           "required": "no",
-          "default": "Tip",
+          "default": "Support",
           "description": "The card's action button label."
         },
         {
@@ -130,7 +144,29 @@
           "type": "string",
           "required": "no",
           "default": "rounded",
-          "description": "One of system, serif, rounded, mono or inherit. inherit uses the page's own font stack. Anything else falls back to rounded."
+          "description": "The font stack the widget uses. Anything else falls back to rounded.",
+          "options": [
+            {
+              "value": "system",
+              "description": "The platform's own UI font, such as San Francisco or Segoe UI."
+            },
+            {
+              "value": "serif",
+              "description": "A system serif, such as Georgia or Charter."
+            },
+            {
+              "value": "rounded",
+              "description": "A rounded system font, such as SF Pro Rounded. Falls back to the system font where none is installed."
+            },
+            {
+              "value": "mono",
+              "description": "A system monospace font, such as SF Mono or Cascadia Mono."
+            },
+            {
+              "value": "inherit",
+              "description": "The page's own font stack."
+            }
+          ]
         },
         {
           "name": "style.css",
@@ -151,7 +187,25 @@
           "type": "string",
           "required": "no",
           "default": "session",
-          "description": "What a visitor closing the widget does to its visibility. session: hidden until the next visit. days: hidden for close.days. never: reappears on the next page load. forever: never shown again. Anything else falls back to session."
+          "description": "What a visitor closing the widget does to its visibility. Anything else falls back to session.",
+          "options": [
+            {
+              "value": "session",
+              "description": "Hidden until the next visit."
+            },
+            {
+              "value": "days",
+              "description": "Hidden for close.days."
+            },
+            {
+              "value": "never",
+              "description": "Reappears on the next page load."
+            },
+            {
+              "value": "forever",
+              "description": "Never shown again."
+            }
+          ]
         },
         {
           "name": "close.days",
@@ -172,7 +226,33 @@
           "type": "string",
           "required": "no",
           "default": "bottom-right",
-          "description": "Where the widget floats: bottom-right, bottom-center, bottom-left, top-right, top-center or top-left. Anything else falls back to bottom-right."
+          "description": "Where the widget floats. Anything else falls back to bottom-right.",
+          "options": [
+            {
+              "value": "bottom-right",
+              "description": "Bottom right corner of the viewport."
+            },
+            {
+              "value": "bottom-center",
+              "description": "Bottom center of the viewport."
+            },
+            {
+              "value": "bottom-left",
+              "description": "Bottom left corner of the viewport."
+            },
+            {
+              "value": "top-right",
+              "description": "Top right corner of the viewport."
+            },
+            {
+              "value": "top-center",
+              "description": "Top center of the viewport."
+            },
+            {
+              "value": "top-left",
+              "description": "Top left corner of the viewport."
+            }
+          ]
         },
         {
           "name": "mount.target",
@@ -219,12 +299,30 @@
     "methods": {
       "title": "Payment methods",
       "items": [
-        { "name": "Apple Pay", "line": "Appears on iPhone, iPad, and Mac. One tap with Face ID." },
-        { "name": "Google Pay", "line": "Appears in Chrome and on Android. One tap, no forms." },
-        { "name": "Cards", "line": "Visa, Mastercard, Amex, Cartes Bancaires. The fallback that always works." },
-        { "name": "Link", "line": "Stripe's own wallet. Returning supporters pay without retyping a card." },
-        { "name": "iDEAL", "line": "For visitors with a Dutch bank. They pay in their own banking app." },
-        { "name": "Local methods", "line": "Bancontact, EPS, Revolut Pay, BLIK, Satispay, Pay by Bank, where available." }
+        {
+          "name": "Apple Pay",
+          "line": "Appears on iPhone, iPad, and Mac. One tap with Face ID."
+        },
+        {
+          "name": "Google Pay",
+          "line": "Appears in Chrome and on Android. One tap, no forms."
+        },
+        {
+          "name": "Cards",
+          "line": "Visa, Mastercard, Amex, Cartes Bancaires. The fallback that always works."
+        },
+        {
+          "name": "Link",
+          "line": "Stripe's own wallet. Returning supporters pay without retyping a card."
+        },
+        {
+          "name": "iDEAL",
+          "line": "For visitors with a Dutch bank. They pay in their own banking app."
+        },
+        {
+          "name": "Local methods",
+          "line": "Bancontact, EPS, Revolut Pay, BLIK, Satispay, Pay by Bank, where available."
+        }
       ]
     },
     "goals": {
@@ -237,8 +335,14 @@
     },
     "cta": "Add it to your site",
     "compareLinks": [
-      { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },
-      { "label": "QuietJar vs Buy Me a Coffee", "href": "/compare/buymeacoffee/" }
+      {
+        "label": "QuietJar vs Ko-fi",
+        "href": "/compare/ko-fi/"
+      },
+      {
+        "label": "QuietJar vs Buy Me a Coffee",
+        "href": "/compare/buymeacoffee/"
+      }
     ]
   }
 }

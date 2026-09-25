@@ -3,16 +3,16 @@
   "@id": "https://quietjar.com/#webapplication",
   "name": "QuietJar",
   "url": "https://quietjar.com",
-  "description": "An embeddable donation button that lives directly on your own site, so supporters can give in a couple of taps without a redirect.",
+  "description": "An embeddable donation button built around goals that end. Set a goal for a real cost, supporters cover it in a couple of taps on your own site, and the button steps aside until the next goal.",
   "applicationCategory": "BusinessApplication",
   "applicationSubCategory": "Payments",
   "operatingSystem": "Any",
   "browserRequirements": "Requires JavaScript",
   "featureList": [
-    "On-page checkout with no redirect to a separate donation page",
-    "Wallet payments (Apple Pay, Google Pay), cards, and iDEAL",
-    "Polite, server-side suppression of repeat prompts after a donation",
-    "Goal and progress bars for fundraising targets"
+    "Monthly or one-off goals with a progress bar that hide the button once met",
+    "On-page checkout with wallet payments (Apple Pay, Google Pay), cards, and iDEAL",
+    "Steps back for a while after someone donates, so supporters are not asked again",
+    "Dynamic images for READMEs and newsletters that follow goal progress"
   ],
   "license": "https://quietjar.com/en/legal/terms/"
 }

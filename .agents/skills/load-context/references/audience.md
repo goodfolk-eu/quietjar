@@ -29,7 +29,7 @@ Layout shift, slow loads, third-party branding, redirecting users off the docs, 
 GitHub Sponsors (off-site, needs a GitHub account from the giver). A Ko-fi or Buy Me a Coffee badge. Most often: nothing.
 
 **Why they switch**
-The docs site gets far more traffic than the repo. The "cover a real cost" goal matches how developers think about money. They will read the code, and good engineering spreads by word of mouth in this group.
+The docs site gets far more traffic than the repo. A monthly goal for the server bill matches how developers think about money, and a button that disappears once the bill is covered never nags their users. They will read the code, and good engineering spreads by word of mouth in this group.
 
 **Where**
 Hacker News, Lobsters, dev.to, r/opensource, r/selfhosted, r/webdev. Mastodon (fosstodon.org, hachyderm.io), Bluesky dev circles. Discords for Astro, Hugo, Vite, Svelte. FOSDEM, Open Source Summit Europe (7 to 9 October 2026).
@@ -46,13 +46,13 @@ Highest tolerance for a new tool if the engineering is good. Cheapest to reach. 
 Writer, illustrator, musician, podcaster, or photographer with their own site on WordPress, Ghost, Squarespace, Webflow, Framer, or a static site someone built for them. Can paste a snippet, cannot debug one. Audience already supports them on Ko-fi, Buy Me a Coffee, Patreon, or a PayPal link.
 
 **Wants**
-More readers actually completing a payment. A button that looks like part of the site. To stop sending their audience to a page with someone else's logo.
+More readers actually supporting them. A button that looks like part of the site. An ask their audience does not learn to ignore.
 
 **Hates**
-The coffee metaphor once they have outgrown it. Watching supporters vanish during a redirect. Fees they cannot predict.
+The coffee metaphor once they have outgrown it. A button that sits there for months and brings in a trickle. Fees they cannot predict.
 
 **Why they switch**
-The conversion argument, shown with a number. Design matching. Apple Pay, iDEAL, Bancontact for their European readers.
+Goals that end, shown with a number: the TCG Pocket case study, €97 in 12 hours against €30 a month on Buy Me a Coffee. Design matching. Apple Pay, iDEAL, Bancontact for their European readers.
 
 **Where**
 Ghost and WordPress communities, Substack alumni on owned domains, IndieWeb. Instagram and Threads for artists, Bluesky and Mastodon for writers. Creator-independence newsletters. Theme marketplaces.
@@ -60,7 +60,7 @@ Ghost and WordPress communities, Substack alumni on owned domains, IndieWeb. Ins
 **Asks**
 Will it break my site? Is it safe for my readers to pay on my domain? When and how do I get paid?
 
-**Reach them once you have** a conversion number, a few visible installs, and a WordPress plugin or Ghost integration.
+**Reach them once you have** a second case study, a few visible installs, and a WordPress plugin or Ghost integration.
 
 ## Persona C: the small publisher (third wave)
 
@@ -86,4 +86,4 @@ Does it conflict with our membership? Can we run campaigns? What about VAT on do
 
 ## The one message that works for all three
 
-Your supporters stay on your page. The button looks like you built it. It asks once, then says thank you.
+It only asks when there is a real cost to cover, and goes quiet once it is covered. The button looks like you built it. It says thank you, then steps back.

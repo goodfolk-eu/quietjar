@@ -55,8 +55,8 @@
       "title": "Why it is worth it",
       "items": [
         {
-          "lead": "Stays on your page",
-          "text": "The payment happens right where your supporter already is, so far more of them make it all the way to \"thank you.\""
+          "lead": "Goals that end",
+          "text": "Set a real cost to cover. The button asks until it is covered, then steps aside, so your supporters never learn to ignore it."
         },
         {
           "lead": "Pays the way people already do",
@@ -67,8 +67,8 @@
           "text": "Once someone has supported you, the button steps back and thanks them instead of asking again."
         },
         {
-          "lead": "Goals, and nothing to maintain",
-          "text": "Add a goal with a progress bar, and leave the upkeep to us."
+          "lead": "Nothing to maintain",
+          "text": "Wallets, local methods, goals and updates are all handled. Paste the snippet once and leave the upkeep to us."
         }
       ]
     },
@@ -140,7 +140,7 @@
           "name": "How is this different from a hosted donation page with a free tier?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Most free tiers still send your supporter to someone else's page to pay. The real question is not the fee - it is how many visitors finish the trip after that redirect."
+            "text": "Most free tiers give you a button that asks every visitor, every day, whether you need the money or not. QuietJar asks while there is a real cost to cover, and your supporters pay right on your page with Apple Pay, Google Pay or iDEAL."
           },
           "links": [
             { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },

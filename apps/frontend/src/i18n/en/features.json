@@ -3,7 +3,7 @@
     "intro": {
       "eyebrow": "Features",
       "title": "Everything QuietJar does.",
-      "sub": "A donation button that lives on your site: static, fast, and polite. It loads in 40 ms, pays with the methods people already use, and steps back once someone has given."
+      "sub": "A support button with a finish line. Set a goal, let your supporters cover it, and the button steps aside until the next one. It loads in 40 ms and pays with the methods people already use."
     },
     "widget": {
       "eyebrow": "The widget",
@@ -38,7 +38,7 @@
     "payments": {
       "eyebrow": "Payments",
       "title": "Pay the way people already pay.",
-      "description": "Apple Pay, Google Pay, cards, and local methods like iDEAL, Bancontact, and Revolut Pay, directly on your site. Two taps on desktop, the same on mobile. Nobody gets sent anywhere.",
+      "description": "Apple Pay, Google Pay, cards, and local methods like iDEAL, Bancontact, and Revolut Pay, directly on your site. Two taps on desktop, the same on mobile, and a checkout that never shifts or stalls.",
       "mock": {
         "alt": "The QuietJar checkout on a docs site, offering iDEAL, card, Bancontact, Revolut Pay, and Pay By Bank for a €5 donation",
         "caption": "Apple Pay and Google Pay appear on devices that support them."
@@ -46,11 +46,11 @@
     },
     "goals": {
       "eyebrow": "Goals",
-      "title": "Add a goal for +50% more conversions.",
-      "description": "Give the button a public target and a bar that fills toward it: hosting for the year, the next release, a new microphone. Concrete goals lift the amounts people choose.",
+      "title": "Goals that end, so your ask never turns into wallpaper.",
+      "description": "Give the button a real cost to cover: this month's hosting, the next release, a new microphone. The bar fills as people chip in, and once the goal is met, the button steps aside. TCG Pocket Collection Tracker raised €97 on a €50 goal in 12 hours.",
       "bullets": [
-        "Pick a target and the widget turns into a card with a progress meter",
-        "Choose what happens when the goal is reached: hide the widget, keep the button, or keep the bar",
+        "Monthly goals reset on the 1st, so the button comes back when the next bill is due",
+        "When the goal is met, the button hides by default. Or keep the button, or keep the full bar",
         "The meter updates as donations come in"
       ],
       "mock": {
@@ -91,7 +91,7 @@
     },
     "cta": {
       "title": "Ready in minutes.",
-      "description": "Connect your bank account, copy one script, and your supporters can pay without leaving your page.",
+      "description": "Connect your bank account, copy one script, and set your first goal.",
       "primary": "Add it to your site",
       "secondary": "See the pricing",
       "secondaryHref": "/pricing/"

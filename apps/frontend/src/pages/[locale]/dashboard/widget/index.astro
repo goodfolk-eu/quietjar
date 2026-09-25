@@ -1053,6 +1053,12 @@ const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
         option.textContent = goal.name;
         goalField.append(option);
       }
+      // Goals come oldest first, so the last one is the newest.
+      const newest = loaded.goals[loaded.goals.length - 1];
+      goalField.value = newest.id;
+      state.goal = newest.id;
+      syncGoalControls();
+      render();
     }
 
     void loadSite();

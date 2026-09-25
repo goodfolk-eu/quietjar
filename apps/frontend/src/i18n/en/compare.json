@@ -2,22 +2,22 @@
   "compare": {
     "ko-fi": {
       "meta": {
-        "title": "QuietJar vs Ko-fi - the Ko-fi alternative that lives on your site",
-        "description": "Looking for a Ko-fi alternative? QuietJar keeps payment on your page instead of sending supporters to a hosted profile, with Google Pay, Apple Pay, and iDEAL built in."
+        "title": "QuietJar vs Ko-fi - the Ko-fi alternative with goals that end",
+        "description": "Looking for a Ko-fi alternative? QuietJar asks for a real cost, then hides once your supporters cover it. Google Pay, Apple Pay, and iDEAL built in, right on your site."
       },
       "eyebrow": "Compare",
-      "title": "The Ko-fi alternative that lives on your site.",
-      "intro": "Ko-fi does a lot well: over a million creators, friendly hosted pages, payouts that land instantly. The question is what happens to your visitor after they decide to support you. On Ko-fi, they click your button, leave your site, and pay on Ko-fi's page. This alternative keeps the whole moment on your page, in your design.",
+      "title": "The Ko-fi alternative with goals that end.",
+      "intro": "Ko-fi does a lot well: over a million creators, friendly hosted pages, a floating tip panel for your site, and payouts that land instantly. The question is what your button does all month. Ko-fi's button asks every visitor, every day, whether you need the money or not. QuietJar asks while there is a real cost to cover, then goes quiet.",
       "sections": [
         {
           "name": "What you keep",
           "text": "Ko-fi charges 5% on tips by default, and only drops that to 0% on a paid Gold plan (checked September 2026). Processing comes on top, at your own Stripe or PayPal rate. On a €10 tip that is €0.50 in platform fees plus €0.40 in card fees, so you keep €9.10. On a €100 donation you keep €93.25.",
-          "text2": "QuietJar's rate is 5% with a €0.50 minimum and nothing else: we pay the card fees ourselves, whichever method your supporter reaches for. On €10 you keep €9.50. On €100, €95.00. There is no monthly plan to buy your way out of the percentage, and no redirect to lose people on the way to the checkout."
+          "text2": "QuietJar's rate is 5% with a €0.50 minimum and nothing else: we pay the card fees ourselves, whichever method your supporter reaches for. On €10 you keep €9.50. On €100, €95.00. There is no monthly plan to buy your way out of the percentage."
         },
         {
           "name": "Goals",
-          "text": "Give the button a public target and a bar that fills toward it: hosting for the year, the next release, a new microphone. A concrete goal reframes the ask from a small favour to a shared plan, and lifts the amounts people choose. QuietJar reports +50% more conversions when a goal is set, and the bar sits in the widget on your page, right next to the payment.",
-          "text2": "Ko-fi has goals too, but they live on its hosted page. The visitor has to click away first, and by then some of them are gone."
+          "text": "Give the button a real cost to cover: this month's hosting, the next release, a new microphone. The bar fills as people chip in, right next to the payment. Once the goal is met, the button steps aside, and a monthly goal brings it back on the 1st. Your visitors only see the ask when it is real, so they never learn to scroll past it. TCG Pocket Collection Tracker tried this in September 2026: a €50 goal for its hosting raised €97 in 12 hours. Its Buy Me a Coffee button brought in about €30 a month.",
+          "text2": "Ko-fi has goals too: one at a time, on your profile and in a goal bar widget. But its button keeps asking once the goal is met, and you start the next goal by hand."
         },
         {
           "name": "A dynamic image that keeps up",
@@ -25,35 +25,55 @@
         },
         {
           "name": "Google Pay and Apple Pay, on your site",
-          "text": "QuietJar puts Google Pay, Apple Pay, cards, and local methods like iDEAL and Bancontact directly on your page. Two taps on desktop, the same on mobile, and the checkout never shifts or stalls. Ko-fi's flow is PayPal-heavy, with no wallets or iDEAL, and it happens on Ko-fi's page, not yours."
+          "text": "QuietJar puts Google Pay, Apple Pay, cards, and local methods like iDEAL and Bancontact directly on your page. Two taps on desktop, the same on mobile, and the checkout never shifts or stalls. Ko-fi's tip panel is PayPal-heavy, with no wallets or iDEAL."
         }
       ],
       "table": {
         "rows": [
-          ["QuietJar", "5%, min €0.50, all-in (Sep 2026)", "None", "Yes", "Yes", "Yes", "Yes", "Anyone with a site"],
-          ["Ko-fi", "5% tips by default, 0% on Gold plan (Sep 2026)", "Gold plan optional", "No", "No", "No", "No", "Anyone"]
+          [
+            "QuietJar",
+            "5%, min €0.50, all-in (Sep 2026)",
+            "None",
+            "Yes, by default",
+            "Yes",
+            "Yes",
+            "Yes",
+            "Yes",
+            "Anyone"
+          ],
+          [
+            "Ko-fi",
+            "5% tips by default, 0% on Gold plan (Sep 2026)",
+            "Gold plan optional",
+            "No",
+            "No",
+            "No",
+            "No",
+            "No",
+            "Anyone"
+          ]
         ]
       },
       "cta": "Add it to your site"
     },
     "buymeacoffee": {
       "meta": {
-        "title": "QuietJar vs Buy Me a Coffee - the Buy Me a Coffee alternative that lives on your site",
-        "description": "A Buy Me a Coffee alternative that keeps payment on your page instead of a hosted profile. Same 5%, no redirect, and Google Pay, Apple Pay, and iDEAL built in."
+        "title": "QuietJar vs Buy Me a Coffee - the Buy Me a Coffee alternative with goals that end",
+        "description": "A Buy Me a Coffee alternative that asks for a real cost, then hides once your supporters cover it. Same 5%, and Google Pay, Apple Pay, and iDEAL built in, right on your site."
       },
       "eyebrow": "Compare",
-      "title": "The Buy Me a Coffee alternative that lives on your site.",
-      "intro": "Buy Me a Coffee has the friendliest brand in the space and a huge installed base on blogs and READMEs. The question is what happens to your visitor after they decide to support you. The button opens a hosted page, with a coffee cup that may not fit the rest of your site. This alternative keeps the whole moment on your page, in your design.",
+      "title": "The Buy Me a Coffee alternative with goals that end.",
+      "intro": "Buy Me a Coffee has the friendliest brand in the space, a huge installed base on blogs and READMEs, and a widget that takes payment on your site. The question is what that widget does all month. It asks every visitor, every day, with a coffee cup that may not fit the rest of your site. QuietJar asks while there is a real cost to cover, then goes quiet.",
       "sections": [
         {
           "name": "What you keep",
           "text": "Buy Me a Coffee takes a flat 5% platform fee with no cap (checked September 2026), and processing comes on top at your own Stripe rate. On a €10 tip that is €0.50 plus €0.40 in card fees, so you keep €9.10. On a €100 donation you keep €93.25.",
-          "text2": "QuietJar's rate is 5% with a €0.50 minimum and nothing else: we pay the card fees ourselves, whichever method your supporter reaches for. On €10 you keep €9.50. On €100, €95.00. No cap, no monthly plan, and no redirect between the decision to give and the checkout."
+          "text2": "QuietJar's rate is 5% with a €0.50 minimum and nothing else: we pay the card fees ourselves, whichever method your supporter reaches for. On €10 you keep €9.50. On €100, €95.00. No cap and no monthly plan."
         },
         {
           "name": "Goals",
-          "text": "Give the button a public target and a bar that fills toward it: hosting for the year, the next release, a new microphone. A concrete goal reframes the ask from a small favour to a shared plan, and lifts the amounts people choose. QuietJar reports +50% more conversions when a goal is set, and the bar sits in the widget on your page, right next to the payment.",
-          "text2": "Buy Me a Coffee has goal widgets too, but they sit on its hosted page. Yours would need the visitor to click away first, and by then some of them are gone."
+          "text": "Give the button a real cost to cover: this month's hosting, the next release, a new microphone. The bar fills as people chip in, right next to the payment. Once the goal is met, the button steps aside, and a monthly goal brings it back on the 1st. Your visitors only see the ask when it is real, so they never learn to scroll past it. TCG Pocket Collection Tracker tried this in September 2026: a €50 goal for its hosting raised €97 in 12 hours. Its Buy Me a Coffee button brought in about €30 a month.",
+          "text2": "Buy Me a Coffee has goals too, shown on your profile. But its button keeps asking once the goal is met. What would your regulars do if the ask only showed up when there was a real bill to pay?"
         },
         {
           "name": "A dynamic image that keeps up",
@@ -61,20 +81,50 @@
         },
         {
           "name": "Google Pay and Apple Pay, on your site",
-          "text": "QuietJar puts Google Pay, Apple Pay, cards, and local methods like iDEAL and Bancontact directly on your page. Two taps on desktop, the same on mobile, and the checkout never shifts or stalls. Buy Me a Coffee's checkout happens on its own page, with limited wallet support and no local EU methods."
+          "text": "QuietJar puts Google Pay, Apple Pay, cards, and local methods like iDEAL and Bancontact directly on your page. Two taps on desktop, the same on mobile, and the checkout never shifts or stalls. Buy Me a Coffee's widget has limited wallet support and no local EU methods."
         }
       ],
       "table": {
         "rows": [
-          ["QuietJar", "5%, min €0.50, all-in (Sep 2026)", "None", "Yes", "Yes", "Yes", "Yes", "Anyone with a site"],
-          ["Buy Me a Coffee", "5%, no cap (Sep 2026)", "None", "No", "Limited", "No", "No", "Anyone"]
+          [
+            "QuietJar",
+            "5%, min €0.50, all-in (Sep 2026)",
+            "None",
+            "Yes, by default",
+            "Yes",
+            "Yes",
+            "Yes",
+            "Yes",
+            "Anyone"
+          ],
+          [
+            "Buy Me a Coffee",
+            "5%, no cap (Sep 2026)",
+            "None",
+            "No",
+            "No",
+            "Limited",
+            "No",
+            "No",
+            "Anyone"
+          ]
         ]
       },
       "cta": "Add it to your site"
     },
-    "tableHead": ["", "Platform fee", "Monthly fee", "Payment happens on your page", "Google Pay and Apple Pay", "iDEAL and Bancontact", "Steps back after giving", "Who can use it"],
+    "tableHead": [
+      "",
+      "Platform fee",
+      "Monthly fee",
+      "Button hides when the goal is met",
+      "Monthly goals",
+      "Google Pay and Apple Pay",
+      "iDEAL and Bancontact",
+      "Steps back after giving",
+      "Who can use it"
+    ],
     "notes": [
-      "Fees checked September 2026. Tell us if something changed.",
+      "Fees and features checked September 2026. Tell us if something changed.",
       "QuietJar's rate is all-in: we pay the card fees. On the competitor row, processing comes on top at the creator's own Stripe or PayPal rate (1.5% + €0.25 on EU cards) and varies by method and country."
     ]
   }

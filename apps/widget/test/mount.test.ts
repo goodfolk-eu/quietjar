@@ -336,7 +336,7 @@ describe("mountWidget", () => {
     const panel = host.shadowRoot?.querySelector(".quietjar-widget__panel");
     expect(panel?.querySelector(".quietjar-widget__headline")).toBeNull();
     expect(panel?.querySelector(".quietjar-widget__body")?.textContent).toBe("Every coffee helps");
-    expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Tip");
+    expect(panel?.querySelector(".quietjar-widget__action")?.textContent).toBe("Support");
   });
 
   test("renders the default piggy icon in the card when a body is set", () => {
@@ -417,6 +417,14 @@ describe("mountWidget", () => {
       expect(root?.querySelector(".quietjar-widget__meter-label")?.textContent).toBe("");
     });
 
+    test("the goal card leaves the icon out", () => {
+      respondWith({ raised: 4500, target: 10_000, currency: "eur" });
+      const host = mountWidget(resolveConfig({ goal: "qg_icon", labels: { icon: "\u2615" } }));
+
+      expect(host.shadowRoot?.querySelector(".quietjar-widget__meter")).not.toBeNull();
+      expect(host.shadowRoot?.querySelector(".quietjar-widget__icon")).toBeNull();
+    });
+
     test("fills the bar and labels it once the progress lands", async () => {
       respondWith({ raised: 4500, target: 10_000, currency: "eur" });
       const host = mountWidget(resolveConfig({ goal: "qg_fill" }));
@@ -428,6 +436,7 @@ describe("mountWidget", () => {
       expect(root?.querySelector(".quietjar-widget__meter-label")?.textContent).toBe(
         "\u20ac45 of \u20ac100 raised",
       );
+      expect(root?.querySelector(".quietjar-widget__meter-percent")?.textContent).toBe("45%");
     });
 
     test("keeps the body text above the meter", async () => {

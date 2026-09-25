@@ -103,7 +103,7 @@ export { DEFAULT_ICON, ICON_LIBRARY, ICON_PRESETS, PIGGY_ICON } from "./icon";
 
 /** Used as the accessible name when no headline is configured. */
 export const DEFAULT_HEADLINE = "Support this site";
-export const DEFAULT_ACTION_LABEL = "Tip";
+export const DEFAULT_ACTION_LABEL = "Support";
 export const DEFAULT_CLOSE_LABEL = "Dismiss";
 export const DEFAULT_THANKS_LABEL = "Thank you for your support";
 export const DEFAULT_OTHER_LABEL = "Other";

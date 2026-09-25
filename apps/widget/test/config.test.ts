@@ -262,7 +262,7 @@ describe("resolveConfig", () => {
 
   test("falls back to the default action label when blank", () => {
     expect(resolveConfig({ labels: { action: "  " } }).actionLabel).toBe(DEFAULT_ACTION_LABEL);
-    expect(resolveConfig(undefined).actionLabel).toBe("Tip");
+    expect(resolveConfig(undefined).actionLabel).toBe("Support");
   });
 
   test("falls back to the default close label when blank", () => {

@@ -1,11 +1,11 @@
 {
   "hero": {
-    "eyebrow": "A support button that lives on your site",
-    "title": "Your supporters never have to leave.",
-    "description": "The moment someone wants to give, they can. Two taps, on your page, in your design - nobody gets sent anywhere.",
+    "eyebrow": "A support button with a finish line",
+    "title": "Ask when it matters. Then go quiet.",
+    "description": "Set a goal for a real cost, like this month's hosting. The button shows up on your site, your supporters cover it in two taps, and it steps aside until you need it again.",
     "ctaPrimary": "Add it to your site",
     "trustBar": [
-      "On-page checkout, no redirect",
+      "Hides itself once the goal is met",
       "No monthly fee",
       "EU-hosted, no cookie banner",
       "Wallets, iDEAL & cards"
@@ -50,27 +50,28 @@
   },
   "features": {
     "eyebrow": "Why it works",
-    "title": "The redirect is where you lose them.",
+    "title": "A button that is always there turns into wallpaper.",
     "oldWayTitle": "The old way",
-    "oldWaySubtitle": "Send them away. Lose them on the way.",
+    "oldWaySubtitle": "Always on. Easy to ignore.",
     "oldWaySteps": [
-      "Visitor reads your page",
-      "Clicks your support link",
-      "New tab opens on someone else's site",
-      "Slow load, unfamiliar page, closed tab",
-      "They never make it to \"thank you\""
+      "The button sits on every page, every day",
+      "Your regulars stop noticing it",
+      "Nobody knows what the money is for",
+      "Nobody feels their euro makes a difference",
+      "A trickle of support, month after month"
     ],
-    "withTitle": "With QuietJar",
-    "withSubtitle": "They stay right where they are.",
+    "withTitle": "With a QuietJar goal",
+    "withSubtitle": "A real cost, and a finish line.",
     "withSteps": [
-      "Visitor reads your page",
-      "Tap the button, pay right there",
-      "\"Thank you.\" No redirect, no drop-off."
+      "You set a goal: \"This month's hosting, €50\"",
+      "The button appears, and the bar fills as people chip in",
+      "Goal met. The button steps aside",
+      "Next month, it comes back for the next bill"
     ],
-    "closing": "The supporter never leaves, and far more of them make it all the way to \"thank you.\""
+    "closing": "TCG Pocket Collection Tracker set a €50 goal for its September hosting and raised €97 in 12 hours. Its old Buy Me a Coffee button brought in about €30 a month."
   },
   "logos": {
-    "text": "Pays with the methods people already reach for. Apple Pay, cards, and more. Right where your visitors already pay.",
+    "text": "Two taps, right on your page, with the methods people already reach for. Apple Pay, cards, and more.",
     "methods": [
       "Apple Pay",
       "Google Pay",
@@ -84,7 +85,7 @@
   "polite": {
     "eyebrow": "Built to respect your audience",
     "title": "It knows when to step back.",
-    "description": "Banner fatigue is real. The longer a banner sits on your page, the more your regulars learn to look straight past it, and donations drop. QuietJar asks once, steps back after someone gives, and comes back at the right moment instead of nagging.",
+    "description": "Goals keep the ask rare for everyone. Stepping back keeps it rare for the people who already gave. Once someone supports you, the button takes a break for them, then comes back at the right moment instead of nagging.",
     "note": "Your supporters get thanked, never chased.",
     "feelLabel": "What it feels like to your most loyal supporter",
     "feelSteps": [
@@ -109,8 +110,8 @@
         "description": "Apple Pay, Google Pay, cards, and local methods like iDEAL, right where your visitors already pay."
       },
       {
-        "title": "Goals that lift donations",
-        "description": "Give the button a public target. Goals drive +50% more conversions, and the bar fills as money comes in."
+        "title": "Goals with a finish line",
+        "description": "Monthly or one-off. The bar fills as money comes in, and the button steps aside once the goal is met."
       },
       {
         "title": "Dynamic images",
@@ -147,7 +148,7 @@
         "name": "What is QuietJar?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A small, polished support button you drop onto your own website, so your supporters can pay without leaving your page."
+          "text": "A small, polished support button for your own website. Give it a goal for a real cost, and it only asks until that cost is covered."
         }
       },
       {
@@ -163,7 +164,7 @@
         "name": "How is this different from the donation tools I already know?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both send your visitor to their page to pay. QuietJar keeps them on yours, so more of them finish."
+          "text": "Most tools have earned their place. Ko-fi charges 5% on tips by default (0% only on a paid Gold plan) and Buy Me a Coffee has the friendliest brand around. Both have goals, but their button keeps asking whether the goal is met or not. QuietJar asks while there is a real cost to cover, then goes quiet."
         },
         "links": [
           { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },
@@ -221,6 +222,14 @@
       },
       {
         "@type": "Question",
+        "name": "What happens when my goal is met?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "By default the button steps aside, so your site stops asking. With a monthly goal it comes back when the next month starts. You can also keep the button, or keep the button and the full bar."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "What happens after someone supports me?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -246,8 +255,8 @@
     ]
   },
   "cta": {
-    "title": "Stop losing supporters on the way to the checkout.",
-    "description": "Add the button to your site in minutes. No redirects. Just a quiet, polished way for your people to support you.",
+    "title": "Ask for what you need. Then let it rest.",
+    "description": "Add the button to your site in minutes, set your first goal, and let your people cover it.",
     "primary": "Add it to your site",
     "secondary": "See everything QuietJar does",
     "secondaryHref": "/features/"

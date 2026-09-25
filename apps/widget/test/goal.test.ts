@@ -6,6 +6,7 @@ import {
   type GoalProgress,
   isGoalMet,
   meterLabel,
+  meterPercent,
   meterRatio,
   widgetHidden,
 } from "../src/goal";
@@ -45,6 +46,16 @@ describe("meterLabel", () => {
     expect(meterLabel({ raised: 12_000, target: 10_000, currency: "eur" })).toBe(
       "Goal reached, €120 raised",
     );
+  });
+});
+
+describe("meterPercent", () => {
+  test("rounds to a whole percentage", () => {
+    expect(meterPercent({ raised: 21_400, target: 50_000, currency: "eur" })).toBe("43%");
+  });
+
+  test("stops at 100 when the goal is overshot", () => {
+    expect(meterPercent({ raised: 30_000, target: 10_000, currency: "eur" })).toBe("100%");
   });
 });
 

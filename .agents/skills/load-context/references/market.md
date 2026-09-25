@@ -74,7 +74,7 @@ Net margin depends on the method mix: iDEAL and wallets versus international car
 1. Install count in the open source segment
 2. Proven completion lift
 3. The published fee, relative to Buy Me a Coffee's 5%
-4. Goals adoption and its effect on average amount
+4. Goals adoption and its effect on time to fund and amount raised (first data point: TCG Pocket Collection Tracker, €97 in 12 hours against €30 a month before)
 5. A WordPress plugin, which roughly doubles the reachable creator segment
 
 ## Not in this model
