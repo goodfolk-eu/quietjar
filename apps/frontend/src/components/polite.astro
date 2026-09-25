@@ -1,4 +1,5 @@
 ---
+import SupporterScene from "@/components/scenes/supporterscene.astro";
 import { dictionary } from "@/i18n/t";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
@@ -6,32 +7,20 @@ const polite = copy.polite;
 ---
 
 <section>
-  <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-[72px] border-t border-qj-line px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)]">
+  <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-[72px] border-t border-qj-line px-10 pt-[clamp(72px,9vw,120px)] pb-[clamp(72px,9vw,120px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
     <div class="flex flex-col gap-4">
       <span class="text-[13.5px] font-semibold tracking-[-0.005em] text-qj-accent">{polite.eyebrow}</span>
       <h2 class="font-display text-[clamp(28px,3.4vw,44px)] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
         {polite.title}
       </h2>
-      <p class="max-w-[48ch] text-pretty text-[17px] leading-[1.62] text-qj-body">
-        {polite.description}
-      </p>
-      <p class="mt-1.5 max-w-[34ch] font-display text-[21px] font-bold tracking-[-0.022em] text-qj-ink">
+      <p class="mt-1.5 max-w-[26ch] font-display text-[21px] font-bold tracking-[-0.022em] text-qj-ink">
         {polite.note}
       </p>
     </div>
 
-    <div class="flex flex-col gap-[18px] rounded-lg border-[1.5px] border-qj-accent-pale bg-white px-8 py-[30px] pb-[34px]">
+    <div class="flex flex-col gap-7">
       <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-body">{polite.feelLabel}</span>
-      <ol class="text-[15px] leading-[1.5]">
-        {
-          polite.feelSteps.map((step, i) => (
-            <li class="flex gap-3.5 border-b border-qj-line-soft py-3.5 last:border-none">
-              <span class:list={["mt-[7px] size-2 shrink-0 rounded-full", ["bg-qj-accent", "bg-qj-accent-pale", "bg-qj-line-card", "bg-qj-accent"][i]]} aria-hidden="true"></span>
-              <span class:list={[i === 2 ? "text-qj-body" : "text-qj-ink"]}>{step}</span>
-            </li>
-          ))
-        }
-      </ol>
+      <SupporterScene />
     </div>
   </div>
 </section>

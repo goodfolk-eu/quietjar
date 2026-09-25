@@ -1,0 +1,40 @@
+---
+interface Props {
+  url: string;
+  class?: string;
+}
+
+const { url, class: className } = Astro.props;
+---
+
+<div class="relative">
+  <span class="tape left-7 -rotate-6" aria-hidden="true"></span>
+  <span class="tape right-7 rotate-[5deg]" aria-hidden="true"></span>
+  <div class="overflow-hidden rounded-xl border border-qj-line-card bg-white shadow-[0_28px_56px_-26px_rgba(20,32,28,0.28)]">
+    <div class="flex items-center gap-[7px] border-b border-qj-line-card px-4 py-3">
+      <span class="size-2 rounded-full bg-[#DCE0DA]"></span>
+      <span class="size-2 rounded-full bg-[#DCE0DA]"></span>
+      <span class="size-2 rounded-full bg-[#DCE0DA]"></span>
+      <span class="ml-2.5 font-mono text-[11.5px] text-qj-body">{url}</span>
+    </div>
+    <div class:list={["scene-body relative overflow-hidden", className]}>
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .tape {
+    position: absolute;
+    top: -9px;
+    z-index: 1;
+    width: 64px;
+    height: 20px;
+    background: rgba(226, 206, 146, 0.62);
+  }
+
+  /* Scenes place their cursors and overlays in cqw/cqh units. */
+  .scene-body {
+    container-type: size;
+  }
+</style>

@@ -48,30 +48,41 @@
       ]
     }
   },
+  "scenes": {
+    "url": "yourname.com",
+    "button": "Support this site"
+  },
   "features": {
     "eyebrow": "Why it works",
     "title": "A button that is always there turns into wallpaper.",
-    "oldWayTitle": "The old way",
-    "oldWaySubtitle": "Always on. Easy to ignore.",
-    "oldWaySteps": [
-      "The button sits on every page, every day",
-      "Your regulars stop noticing it",
-      "Nobody knows what the money is for",
-      "Nobody feels their euro makes a difference",
-      "A trickle of support, month after month"
-    ],
-    "withTitle": "With a QuietJar goal",
-    "withSubtitle": "A real cost, and a finish line.",
-    "withSteps": [
-      "You set a goal: \"This month's hosting, €50\"",
-      "The button appears, and the bar fills as people chip in",
-      "Goal met. The button steps aside",
-      "Next month, it comes back for the next bill"
-    ],
-    "closing": "TCG Pocket Collection Tracker set a €50 goal for its September hosting and raised €97 in 12 hours. Its old Buy Me a Coffee button brought in about €30 a month."
+    "oldWay": {
+      "label": "The old way",
+      "caption": "Always on. Easy to ignore.",
+      "alt": "A support button sits on a site from day 1 to day 90 and fades into the background while visitors pass it by.",
+      "days": ["day 1", "day 30", "day 90"]
+    },
+    "withGoal": {
+      "label": "With a QuietJar goal",
+      "caption": "A real cost, and a finish line.",
+      "alt": "A goal for this month's hosting fills as people chip in. Once it is covered, the button steps aside, then comes back next month.",
+      "goalLabel": "Goal",
+      "goalTitle": "This month's hosting",
+      "currency": "€",
+      "ofTarget": " of €50",
+      "stamp": "Covered",
+      "nextMonth": "next month"
+    },
+    "proof": {
+      "amount": "€97",
+      "amountDetail": "raised in 12 hours",
+      "before": "€30 a month",
+      "beforeDetail": "with the old Buy Me a Coffee button",
+      "source": "TCG Pocket Collection Tracker",
+      "sourceDetail": "set a €50 goal for its September hosting."
+    }
   },
   "logos": {
-    "text": "Two taps, right on your page, with the methods people already reach for. Apple Pay, cards, and more.",
+    "text": "Two taps, right on your page, with the methods people already reach for.",
     "methods": [
       "Apple Pay",
       "Google Pay",
@@ -85,15 +96,23 @@
   "polite": {
     "eyebrow": "Built to respect your audience",
     "title": "It knows when to step back.",
-    "description": "Goals keep the ask rare for everyone. Stepping back keeps it rare for the people who already gave. Once someone supports you, the button takes a break for them, then comes back at the right moment instead of nagging.",
     "note": "Your supporters get thanked, never chased.",
-    "feelLabel": "What it feels like to your most loyal supporter",
+    "feelLabel": "A month with your most loyal supporter",
+    "alt": "A visitor supports the site with Apple Pay and gets a thank you. The button then rests for them for 30 days, and comes back next month.",
     "feelSteps": [
       "Supports you once",
       "A quiet \"thank you\"",
       "QuietJar steps back and stops asking",
       "Next month, they support you again"
-    ]
+    ],
+    "scene": {
+      "headline": "Support this site",
+      "amounts": ["€3", "€5", "€10"],
+      "pay": "Apple Pay",
+      "thanks": "Thank you",
+      "resting": "Resting for you, 30 days",
+      "back": "next month"
+    }
   },
   "craft": {
     "eyebrow": "Craft",

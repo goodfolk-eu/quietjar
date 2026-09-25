@@ -1,8 +1,11 @@
 ---
+import GoalScene from "@/components/scenes/goalscene.astro";
+import OldWayScene from "@/components/scenes/oldwayscene.astro";
 import { dictionary } from "@/i18n/t";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const features = copy.features;
+const proof = features.proof;
 const logos = copy.logos;
 ---
 
@@ -15,40 +18,21 @@ const logos = copy.logos;
       </h2>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-2">
-      <div class="flex flex-col gap-5 rounded-lg border border-qj-line-card bg-white px-[34px] py-8 pb-9">
+    <div class="grid gap-x-10 gap-y-14 lg:grid-cols-2">
+      <div class="flex flex-col gap-7">
         <div class="flex flex-col gap-1.5">
-          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-body">{features.oldWayTitle}</span>
-          <span class="font-display text-[22px] font-bold tracking-[-0.022em] text-qj-ink">{features.oldWaySubtitle}</span>
+          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-body">{features.oldWay.label}</span>
+          <span class="font-display text-[22px] font-bold tracking-[-0.022em] text-qj-ink">{features.oldWay.caption}</span>
         </div>
-        <ol class="flex flex-col gap-3 text-[15px] leading-[1.5] text-qj-body">
-          {
-            features.oldWaySteps.map((step, i) => (
-              <li class="flex gap-3">
-                <span class="w-6 shrink-0 pt-[3px] font-mono text-[12.5px] text-qj-body">0{i + 1}</span>
-                <span class:list={[i === features.oldWaySteps.length - 1 && "font-medium text-qj-ink"]}>{step}</span>
-              </li>
-            ))
-          }
-        </ol>
+        <OldWayScene />
       </div>
 
-      <div class="flex flex-col gap-5 rounded-lg border-[1.5px] border-qj-accent-pale bg-white px-[34px] py-8 pb-9">
+      <div class="flex flex-col gap-7">
         <div class="flex flex-col gap-1.5">
-          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-accent">{features.withTitle}</span>
-          <span class="font-display text-[22px] font-bold tracking-[-0.022em] text-qj-ink">{features.withSubtitle}</span>
+          <span class="font-mono text-[11.5px] uppercase tracking-[0.08em] text-qj-accent">{features.withGoal.label}</span>
+          <span class="font-display text-[22px] font-bold tracking-[-0.022em] text-qj-ink">{features.withGoal.caption}</span>
         </div>
-        <ol class="flex flex-col gap-3 text-[15px] leading-[1.5] text-qj-body">
-          {
-            features.withSteps.map((step, i) => (
-              <li class="flex gap-3">
-                <span class="w-6 shrink-0 pt-[3px] font-mono text-[12.5px] text-qj-accent">0{i + 1}</span>
-                <span>{step}</span>
-              </li>
-            ))
-          }
-        </ol>
-        <p class="mt-2 border-t border-qj-line-soft pt-[18px] text-[14.5px] leading-[1.6] text-qj-body">{features.closing}</p>
+        <GoalScene />
       </div>
     </div>
 

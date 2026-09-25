@@ -1,0 +1,224 @@
+---
+import { dictionary } from "@/i18n/t";
+import Scene from "./scene.astro";
+import SceneBrowser from "./scenebrowser.astro";
+import SceneButton from "./scenebutton.astro";
+import ScenePage from "./scenepage.astro";
+
+const copy = dictionary(Astro.currentLocale ?? "en");
+const goal = copy.features.withGoal;
+---
+
+<Scene label={goal.alt}>
+  <SceneBrowser url={copy.scenes.url} class="h-[250px]">
+    <div class="goal h-full">
+      <ScenePage />
+      <div
+        class="absolute top-5 left-5 flex w-[min(290px,calc(100%-40px))] flex-col gap-2.5 rounded-lg border border-qj-line-card bg-white px-5 py-4 shadow-[0_18px_36px_-20px_rgba(20,32,28,0.35)]">
+        <span class="font-mono text-[10.5px] uppercase tracking-[0.08em] text-qj-accent">{goal.goalLabel}</span>
+        <span class="font-display text-[18px] font-bold tracking-[-0.02em] text-qj-ink">{goal.goalTitle}</span>
+        <div class="h-2 overflow-hidden rounded-full bg-qj-line-soft">
+          <div class="meter h-full rounded-full bg-qj-accent"></div>
+        </div>
+        <span class="raised font-mono text-[11.5px] text-qj-body" data-currency={goal.currency} data-suffix={goal.ofTarget}
+        ></span>
+        <span
+          class="stamp absolute top-8 right-4 rounded-sm border-2 border-qj-accent bg-white/85 px-2.5 py-0.5 font-display text-[15px] font-bold uppercase tracking-[0.08em] text-qj-accent"
+          >{goal.stamp}</span
+        >
+      </div>
+      <div class="absolute right-4 bottom-4 flex flex-col items-end gap-2">
+        <span class="next rounded-sm border border-qj-line-card bg-white px-2.5 py-1 font-mono text-[11.5px] text-qj-body"
+          >{goal.nextMonth}</span
+        >
+        <span class="relative">
+          <span class="hearts absolute -top-3 left-1/2 text-[14px] text-qj-accent" aria-hidden="true">♥</span>
+          <span class="leave block">
+            <SceneButton label={copy.scenes.button}>
+              <span class="h-1 overflow-hidden rounded-full bg-white/30">
+                <span class="meter block h-full rounded-full bg-white"></span>
+              </span>
+            </SceneButton>
+          </span>
+        </span>
+      </div>
+    </div>
+  </SceneBrowser>
+</Scene>
+
+<style>
+  @property --raised {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  /* Base styles are the still frame shown with reduced motion: goal covered. */
+  .goal {
+    --raised: 50;
+  }
+
+  .meter {
+    width: calc(var(--raised) * 2%);
+  }
+
+  .raised {
+    counter-reset: raised var(--raised);
+  }
+
+  .raised::before {
+    content: attr(data-currency) counter(raised) attr(data-suffix);
+  }
+
+  .stamp {
+    rotate: -8deg;
+  }
+
+  .next,
+  .hearts {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .goal,
+    .stamp,
+    .leave,
+    .next,
+    .hearts {
+      animation-duration: 11s;
+      animation-timing-function: ease-out;
+      animation-iteration-count: infinite;
+    }
+
+    .goal {
+      animation-name: goal-raise;
+    }
+
+    .stamp {
+      animation-name: goal-stamp;
+    }
+
+    .leave {
+      animation-name: goal-leave;
+    }
+
+    .next {
+      animation-name: goal-next;
+    }
+
+    .hearts {
+      animation-name: goal-hearts;
+    }
+  }
+
+  @keyframes goal-raise {
+    0%,
+    8% {
+      --raised: 0;
+    }
+    13%,
+    21% {
+      --raised: 12;
+    }
+    26%,
+    34% {
+      --raised: 27;
+    }
+    39%,
+    47% {
+      --raised: 38;
+    }
+    52%,
+    80% {
+      --raised: 50;
+    }
+    83%,
+    100% {
+      --raised: 0;
+    }
+  }
+
+  @keyframes goal-hearts {
+    0%,
+    8%,
+    21%,
+    34%,
+    47%,
+    60%,
+    100% {
+      opacity: 0;
+      translate: -50% 0;
+    }
+    9%,
+    22%,
+    35%,
+    48% {
+      opacity: 1;
+      translate: -50% 0;
+    }
+    14%,
+    27%,
+    40%,
+    53% {
+      opacity: 0;
+      translate: -50% -26px;
+    }
+  }
+
+  @keyframes goal-stamp {
+    0%,
+    53% {
+      opacity: 0;
+      scale: 1.8;
+    }
+    56%,
+    78% {
+      opacity: 1;
+      scale: 1;
+    }
+    81%,
+    100% {
+      opacity: 0;
+      scale: 1;
+    }
+  }
+
+  @keyframes goal-leave {
+    0%,
+    62% {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+    66%,
+    80% {
+      opacity: 0;
+      translate: 0 14px;
+      scale: 1;
+    }
+    84% {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1.08;
+    }
+    87%,
+    100% {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes goal-next {
+    0%,
+    82% {
+      opacity: 0;
+    }
+    85%,
+    97% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+</style>

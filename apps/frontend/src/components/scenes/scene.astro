@@ -1,0 +1,29 @@
+---
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div data-scene role="img" aria-label={label} class={className}>
+  <slot />
+</div>
+
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) entry.target.toggleAttribute("data-playing", entry.isIntersecting);
+    },
+    { threshold: 0.35 },
+  );
+  for (const scene of document.querySelectorAll("[data-scene]")) observer.observe(scene);
+</script>
+
+<style is:global>
+  [data-scene]:not([data-playing]),
+  [data-scene]:not([data-playing]) * {
+    animation-play-state: paused !important;
+  }
+</style>
