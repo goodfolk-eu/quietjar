@@ -281,20 +281,38 @@
     }
   };
 
+  function coffeeCup(ctx, x, y) {
+    ctx.save();
+    ctx.translate(x - 16, y - 8);
+    QJ.paper(ctx, QJ.cutRect(28, 26, 904, { r: 7, jag: 0.6 }), { fill: C.ink, shadow: 0, edge: 0 });
+    const handle = [];
+    for (let i = 0; i <= 16; i++) {
+      const a = -Math.PI / 2 + (i / 16) * Math.PI;
+      handle.push([28 + Math.cos(a) * 8, 12 + Math.sin(a) * 7]);
+    }
+    QJ.ink(ctx, handle, { w: 4, seed: 905, taper: false });
+    for (const sx of [8, 19]) {
+      QJ.ink(ctx, [[sx, -4], [sx - 3, -9], [sx + 1, -14], [sx - 2, -19]], { w: 3, seed: 906 + sx, taper: false });
+    }
+    ctx.restore();
+  }
+
   // goal: { p: how far the progress bar has grown in, fill: 0..1 }
-  QJ.supportButton = (ctx, { w = 380, h = 88, label = "Support this site", lift = 0, press = 0, goal = null } = {}) => {
+  // coffee: a generic yellow tip button instead of QuietJar's.
+  QJ.supportButton = (ctx, { w = 380, h = 88, label = "Support this site", lift = 0, press = 0, goal = null, coffee = false } = {}) => {
     const g = goal ? goal.p : 0;
     const hh = h + g * 34;
     ctx.save();
     ctx.scale(1 - press * 0.05, 1 - press * 0.05);
     const path = QJ.cutRect(w, Math.round(hh), 901, { r: h / 2, jag: 1 });
     ctx.translate(-w / 2, -hh / 2);
-    QJ.paper(ctx, path, { fill: C.green, lift, edge: 0.35 });
+    QJ.paper(ctx, path, { fill: coffee ? "#FFDD02" : C.green, lift, edge: 0.35 });
     ctx.restore();
     ctx.save();
     ctx.scale(1 - press * 0.05, 1 - press * 0.05);
-    QJ.pig(ctx, -w / 2 + 58, h * 0.25 - g * 14, h * 0.46, { color: "#fbf8f1", shadow: 0, seed: 902, cut: null });
-    QJ.text(ctx, label, -w / 2 + 98, 11 - g * 14, { size: 30, weight: 700, color: "#fbf8f1" });
+    if (coffee) coffeeCup(ctx, -w / 2 + 58, -g * 14);
+    else QJ.pig(ctx, -w / 2 + 58, h * 0.25 - g * 14, h * 0.46, { color: "#fbf8f1", shadow: 0, seed: 902, cut: null });
+    QJ.text(ctx, label, -w / 2 + 98, 11 - g * 14, { size: 30, weight: 700, color: coffee ? C.ink : "#fbf8f1" });
     if (g > 0) {
       const tw = w - 98 - 40;
       const th = 14;

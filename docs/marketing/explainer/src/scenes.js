@@ -52,7 +52,7 @@
   // ---------- camera ----------
 
   function camera(t) {
-    let z = lerp(1, 1.03, ease.inOut(prog(t, 0, A.pigPop)));
+    let z = lerp(1, 1.03, ease.inOut(prog(t, 0, A.addStart)));
     const lean = ease.inOut(prog(t, A.ghostStart, A.ghostEnd)) * (1 - ease.inOut(prog(t, A.revive, A.revive + 0.8)));
     let x = 960 + lean * 180;
     let y = 540 + lean * 120;
@@ -180,48 +180,13 @@
     QJ.hand(c, "next month", BUTTON.lx, BUTTON.ly + 150, { size: 56, color: C.ink, align: "center", reveal: p, alpha: 1 - out, seed: 98 });
   }
 
-  // The pig, the button and the panel sit in front of the page content.
+  // The button and the panel sit in front of the page content.
   function drawPageFront(c, t) {
     drawGoal(c, t);
-    drawPig(c, t);
     drawButton(c, t);
     drawPanel(c, t);
     drawDays(c, t);
     drawNextMonth(c, t);
-  }
-
-  function drawPig(c, t) {
-    if (t < A.pigPop || t > A.buttonIn + 0.2) return;
-    const pop = prog(t, A.pigPop, A.pigPop + 0.35);
-    const hopT0 = A.hop;
-    const hopDur = (A.buttonIn - 0.08 - hopT0) / 2;
-    let y = 0;
-    let squash = 1;
-    let legs = 0;
-    for (let k = 0; k < 2; k++) {
-      const h0 = hopT0 + k * hopDur;
-      const p = prog(t, h0, h0 + hopDur);
-      if (p > 0 && p < 1) {
-        y -= Math.sin(p * Math.PI) * (k === 1 ? 170 : 70);
-        legs = Math.sin(p * Math.PI) * 0.35;
-        squash = p < 0.12 ? 0.9 : 1.04;
-      }
-    }
-    const start = { x: 700, y: 862 };
-    const end = { x: BUTTON.lx - 150, y: BUTTON.ly + 40 };
-    const hop2 = ease.inOut(prog(t, hopT0 + hopDur, hopT0 + hopDur * 2));
-    const x = lerp(start.x, end.x, hop2);
-    y += lerp(start.y, end.y, hop2);
-    const rise = ease.back(pop, 2.2);
-    const flip = prog(t, A.buttonIn - 0.08, A.buttonIn + 0.04);
-    const blink = Math.floor(t * 8) % 23 === 0 ? 1 : 0;
-    QJ.pig(c, x, y + (1 - rise) * 60, 190 * Math.max(0.01, rise), {
-      pose: { legFront: legs, legBack: -legs, ear: Math.sin(t * 9) * 0.04 + (pop < 1 ? (1 - pop) * 0.3 : 0), tail: Math.sin(t * 7) * 0.2, blink },
-      sx: Math.max(0.02, 1 - flip) * (1 / squash),
-      sy: squash,
-      seed: 94,
-      lift: (1 - rise) * 0.5,
-    });
   }
 
   // In with a flip, gone entirely once the goal is met, back next month.
@@ -240,7 +205,7 @@
       const nextMonth = t >= A.back;
       const goal = { p: nextMonth ? 1 : ease.out(prog(t, A.goalIn + 0.2, A.goalIn + 0.6)), fill: nextMonth ? 0 : goalFill(t) };
       QJ.piece(c, { x: BUTTON.lx, y: BUTTON.ly, sx: presence * (1 + pop), sy: (t >= A.gone && t < A.back ? presence : 1) + pop, seed: 95, alpha: 1 - ghost * 0.8 }, (cc) => {
-        QJ.supportButton(cc, { press, goal });
+        QJ.supportButton(cc, { press, goal, coffee: t < A.revive });
       });
     }
     if (t < A.gone + 0.15) QJ.stamp(c, "Covered", BUTTON.lx + 40, BUTTON.ly - 118, { size: 44, p: prog(t, A.covered, A.covered + 0.5), rot: -0.14, seed: 81 });
@@ -280,8 +245,8 @@
     const f = keyframes(t, [
       [A.cursorsIn, 2050, 1150],
       [A.cursorsIn + 0.8, 1180, 660, "out"],
-      [A.pigPop - 0.2, 1060, 600],
-      [A.pigPop + 0.6, 1560, 760],
+      [A.addStart - 0.2, 1060, 600],
+      [A.addStart + 0.6, 1560, 760],
       [A.ghostStart, 1560, 760],
       [A.ghostStart + 1.1, 2400, 640, "in"],
       [A.goalIn + 0.2, 2400, 900],
@@ -319,12 +284,12 @@
     ];
     for (const v of vs) {
       const tin = A.cursorsIn + v.delay;
-      if (t < tin || t > A.pigPop + 0.8) continue;
+      if (t < tin || t > A.addStart + 0.8) continue;
       const p = keyframes(t, [
         [tin, v.x0, v.y0],
         [tin + 0.8, v.x, v.y, "out"],
-        [A.pigPop, v.x, v.y],
-        [A.pigPop + 0.8, v.x0 < 0 ? -300 : 2300, v.y + 100, "in"],
+        [A.addStart, v.x, v.y],
+        [A.addStart + 0.8, v.x0 < 0 ? -300 : 2300, v.y + 100, "in"],
       ]);
       QJ.cursor(ctx, p.x + QJ.noise1(t * 1.2, v.seed) * 8, p.y + QJ.noise1(t, v.seed + 3) * 6, { seed: v.seed, scale: 1.1 });
     }

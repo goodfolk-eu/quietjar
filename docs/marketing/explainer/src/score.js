@@ -27,7 +27,7 @@
       podcast: W("made", "people") - 0.06,
       tool: W("made", "love") + 0.1,
 
-      pigPop: S("add") - 0.02,
+      addStart: S("add") - 0.02,
       buttonIn: W("add", "button") - 0.05,
 
       ghostStart: S("stays") + 0.2,
@@ -71,7 +71,6 @@
     A.toolDone = A.tool + 0.8;
     A.tap2 = A.tap1 + 0.45;
     A.stamp = A.tap2 + 0.3;
-    A.hop = Math.min(A.pigPop + 0.3, A.buttonIn - 0.9);
 
     // Four visitors chip in from the button, then the on-page payment closes the goal.
     A.chipIns = [];
@@ -91,9 +90,6 @@
       { t: A.podcast, type: "slap", gain: 0.7, pitch: 0.95 },
       { t: A.tool, type: "slap", gain: 0.7, pitch: 1.05 },
       { t: A.toolDone, type: "blip", gain: 0.3 },
-      { t: A.pigPop, type: "pop", gain: 0.7, pitch: 0.85 },
-      { t: A.hop, type: "tap", gain: 0.35 },
-      { t: A.hop + 0.3, type: "tap", gain: 0.35, pitch: 1.1 },
       { t: A.buttonIn, type: "flip", gain: 0.6 },
       ...[A.day1, A.day30, A.day90].map((t, i) => ({ t, type: "pencil", gain: 0.3, dur: 0.35, pitch: 1 + i * 0.06 })),
       ...[0, 1, 2].map((i) => ({ t: A.passers + i * 0.8 + 0.5, type: "drift", gain: 0.2, pitch: 1.2 - i * 0.08 })),

@@ -1,16 +1,37 @@
 ---
 interface Props {
   label: string;
+  variant?: "quietjar" | "coffee";
 }
 
-const { label } = Astro.props;
+const { label, variant = "quietjar" } = Astro.props;
 ---
 
-<span
-  class="flex items-center gap-2 rounded-full bg-qj-accent py-2 pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-white shadow-[0_12px_22px_-12px_rgba(11,107,58,0.7)]">
-  <img src="/brand/mark-white.svg" alt="" width="20" height="15" class="h-[15px] w-5" />
-  <span class="flex flex-col gap-1">
-    {label}
-    <slot />
-  </span>
-</span>
+{
+  variant === "coffee" ? (
+    <span class="flex items-center gap-2 rounded-full bg-[#FFDD02] py-2 pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-qj-ink shadow-[0_12px_22px_-12px_rgba(120,100,0,0.6)]">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" class="h-5 w-5">
+        <path
+          d="M4 9h12v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4Zm12 1.5h1.5a2.5 2.5 0 0 1 0 5H16M7.5 3.5c-.8 1 .8 2-.1 3M11 3.5c-.8 1 .8 2-.1 3"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="flex flex-col gap-1">
+        {label}
+        <slot />
+      </span>
+    </span>
+  ) : (
+    <span class="flex items-center gap-2 rounded-full bg-qj-accent py-2 pr-4 pl-3 text-[13px] font-semibold whitespace-nowrap text-white shadow-[0_12px_22px_-12px_rgba(11,107,58,0.7)]">
+      <img src="/brand/mark-white.svg" alt="" width="20" height="15" class="h-[15px] w-5" />
+      <span class="flex flex-col gap-1">
+        {label}
+        <slot />
+      </span>
+    </span>
+  )
+}
