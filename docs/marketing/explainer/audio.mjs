@@ -1,5 +1,6 @@
 // Builds the soundtrack: an original score and sound effects, synthesised from
 // scratch, mixed under the voiceover. Output: build/soundtrack.wav and .mp3.
+// Pass --music <file> to use a recorded track instead of the synthesised score.
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -8,6 +9,8 @@ const require = createRequire(import.meta.url);
 require("./src/score.js");
 const T = JSON.parse(readFileSync("build/timeline.json", "utf8"));
 const { A, sfx } = globalThis.QJScore.buildScore(T);
+const musicArg = process.argv.indexOf("--music");
+const track = musicArg > -1 ? process.argv[musicArg + 1] : null;
 
 const SR = 48000;
 const LEN = Math.ceil((T.total + 0.5) * SR);
@@ -551,6 +554,22 @@ for (const line of T.lines) {
   for (let i = 0; i < sig.length; i++) voEnv[s + i] = 1;
 }
 
+// ---------- recorded track ----------
+
+if (track) {
+  const raw = execFileSync(
+    "ffmpeg",
+    ["-v", "error", "-i", track, "-af", "silenceremove=start_periods=1:start_threshold=-50dB", "-ar", `${SR}`, "-ac", "2", "-f", "f32le", "-"],
+    { maxBuffer: 1024 * 1024 * 1024 },
+  );
+  const pcm = new Float32Array(raw.buffer, raw.byteOffset, raw.length / 4);
+  for (let i = 0; i < LEN; i++) {
+    music.L[i] = pcm[i * 2] ?? 0;
+    music.R[i] = pcm[i * 2 + 1] ?? 0;
+  }
+  console.log(`music: ${track}`);
+}
+
 // ---------- reverb ----------
 
 function freeverb(bus, { room = 0.82, damp = 0.35, wet = 0.25 } = {}) {
@@ -595,7 +614,7 @@ for (const ch of [fxBus.L, fxBus.R]) {
   filterArr(ch, "hp", 70);
 }
 
-freeverb(music, { room: 0.84, damp: 0.4, wet: 0.3 });
+if (!track) freeverb(music, { room: 0.84, damp: 0.4, wet: 0.3 });
 freeverb(fxBus, { room: 0.6, damp: 0.5, wet: 0.12 });
 freeverb(vo, { room: 0.35, damp: 0.6, wet: 0.035 });
 
@@ -613,7 +632,7 @@ const rms = (bus, mask) => {
 };
 
 const voRms = rms(vo, (i) => voEnv[i] > 0);
-const musicRms = rms(music, (i) => i > b0 * SR);
+const musicRms = rms(music, (i) => i > (track ? 0 : b0) * SR);
 const musicGain = (voRms / musicRms) * 0.3;
 console.log(`vo rms ${voRms.toFixed(4)}, music rms ${musicRms.toFixed(4)}, music gain ${musicGain.toFixed(3)}`);
 

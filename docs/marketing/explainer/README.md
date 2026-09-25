@@ -1,8 +1,11 @@
 # QuietJar explainer
 
-A 44 second hand-drawn collage explainer. Everything is code: the animation is
-plain JavaScript on a canvas, the score and sound effects are synthesised in
-Node, and the voice is Amazon Polly (long-form voice "Danielle").
+A 44 second hand-drawn collage explainer. The animation is plain JavaScript on a
+canvas, the sound effects are synthesised in Node, the music is a recorded track
+from `assets/` (set in the `audio` script in `package.json`), and the voice is
+Google Gemini TTS (voice "Iapetus"). Word timings for the cue sheet come from
+Google Speech-to-Text. Running `node audio.mjs` without `--music` falls back to
+a synthesised score.
 
 ## Files
 
@@ -16,7 +19,9 @@ Node, and the voice is Amazon Polly (long-form voice "Danielle").
 
 ## Rebuild
 
-Needs Node, ffmpeg, Google Chrome and AWS credentials with Polly access.
+Needs Node, ffmpeg, Google Chrome and gcloud application-default credentials for a
+project with the Text-to-Speech and Speech-to-Text APIs enabled (`teletext-io` by
+default, override with `GOOGLE_CLOUD_PROJECT`).
 
 ```sh
 npm install

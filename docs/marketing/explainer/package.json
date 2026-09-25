@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "voice": "./tts.sh Danielle long-form",
-    "prep": "node prep.mjs Danielle",
-    "audio": "node audio.mjs",
+    "voice": "node tts.mjs Iapetus",
+    "prep": "node prep.mjs Iapetus",
+    "audio": "node audio.mjs --music assets/prettyjohn1-fun-fun-music_74sec-599068.mp3",
     "render": "node render.mjs",
     "build": "npm run voice && npm run prep && npm run audio && npm run render",
     "preview": "npx --yes serve -l 4400 ."

@@ -3,7 +3,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
-const voice = process.argv[2] ?? "Danielle";
+const voice = process.argv[2] ?? "Iapetus";
 const lines = JSON.parse(readFileSync("lines.json", "utf8"));
 const src = `build/vo/${voice}`;
 const out = "build/vo-trim";
@@ -25,6 +25,8 @@ const gapBefore = {
   tag: 0.35,
 };
 const TAIL = 3.0;
+// Speeds up the voice without changing its pitch. Gaps scale along with it.
+const TEMPO = 1.15;
 const PAD = 0.03;
 
 function probeSilence(file) {
@@ -54,8 +56,8 @@ for (const line of lines) {
   const from = Math.max(0, lead - PAD);
   const to = end + PAD;
   const wav = `${out}/${line.id}.wav`;
-  execFileSync("ffmpeg", ["-y", "-v", "error", "-i", mp3, "-ss", `${from}`, "-to", `${to}`, "-ar", "48000", "-ac", "1", wav]);
-  const duration = to - from;
+  execFileSync("ffmpeg", ["-y", "-v", "error", "-i", mp3, "-ss", `${from}`, "-to", `${to}`, "-af", `atempo=${TEMPO}`, "-ar", "48000", "-ac", "1", wav]);
+  const duration = (to - from) / TEMPO;
 
   let words = [];
   const marksFile = `${src}/${line.id}.marks.json`;
@@ -66,10 +68,10 @@ for (const line of lines) {
       .filter(Boolean)
       .map((l) => JSON.parse(l))
       .filter((m) => m.type === "word")
-      .map((m) => ({ word: m.value.replace(/[^\w'-]/g, "").toLowerCase(), t: Math.max(0, m.time / 1000 - from) }));
+      .map((m) => ({ word: m.value.replace(/[^\w'-]/g, "").toLowerCase(), t: Math.max(0, (m.time / 1000 - from) / TEMPO) }));
   }
 
-  t += gapBefore[line.id] ?? 0.4;
+  t += (gapBefore[line.id] ?? 0.4) / TEMPO;
   timeline.push({ id: line.id, text: line.text, start: +t.toFixed(3), end: +(t + duration).toFixed(3), words, wav });
   t += duration;
 }
