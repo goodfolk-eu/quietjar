@@ -1,9 +1,16 @@
 {
   "featuresPage": {
-    "intro": {
+    "hero": {
       "eyebrow": "Features",
       "title": "Everything QuietJar does.",
-      "sub": "A support button with a finish line. Set a goal, let your supporters cover it, and the button steps aside until the next one. It loads in 40 ms and pays with the methods people already use."
+      "sub": "A support button with a finish line. Set a goal, let your supporters cover it, and the button steps aside until the next one. It loads in 40 ms and pays with the methods people already use.",
+      "ctaPrimary": "Add it to your site",
+      "trustBar": [
+        "Goals end",
+        "Fast checkout",
+        "Goes quiet after giving",
+        "3-step setup"
+      ]
     },
     "widget": {
       "eyebrow": "The widget",

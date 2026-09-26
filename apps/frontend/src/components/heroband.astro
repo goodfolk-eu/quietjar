@@ -1,0 +1,56 @@
+---
+interface Props {
+  trustBar: string[];
+  padClass?: string;
+}
+
+const { trustBar, padClass = "px-10" } = Astro.props;
+---
+
+<div class="hero-wrap bg-qj-paper">
+  <div class="hero-top">
+    <div class="hero-shade"></div>
+    <section class="relative">
+      <slot />
+    </section>
+  </div>
+
+  <div class="bg-white">
+    <div class:list={["mx-auto max-w-[1180px] pt-[26px] pb-[28px]", padClass]}>
+      <div class="flex flex-wrap gap-x-12 gap-y-3.5">
+        {
+          trustBar.map((item) => (
+            <p class="flex items-center gap-2 text-[14.5px] text-qj-body">
+              <span class="text-qj-accent" aria-hidden="true">✓</span>
+              {item}
+            </p>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero-wrap {
+    position: relative;
+  }
+
+  .hero-top {
+    position: relative;
+    overflow: hidden;
+    margin-top: -88px;
+    padding-top: 88px;
+  }
+
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      102deg,
+      rgba(20, 32, 28, 0) 40%,
+      rgba(20, 32, 28, 0.035) 70%,
+      rgba(20, 32, 28, 0.075) 100%
+    );
+  }
+</style>
