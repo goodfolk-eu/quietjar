@@ -58,8 +58,7 @@
     "oldWay": {
       "label": "The old way",
       "caption": "Always on. Easy to ignore.",
-      "alt": "A support button sits on a site from day 1 to day 90 and fades into the background while visitors pass it by.",
-      "days": ["day 1", "day 30", "day 90"]
+      "alt": "A faded support button sits in the corner of a site, easy to overlook."
     },
     "withGoal": {
       "label": "With a QuietJar goal",
