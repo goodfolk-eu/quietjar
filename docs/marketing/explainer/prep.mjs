@@ -11,7 +11,7 @@ mkdirSync(out, { recursive: true });
 
 // Seconds of silence before each line starts. Pacing lives here.
 const gapBefore = {
-  made: 1.15,
+  made: 2.75,
   add: 0.5,
   stays: 0.4,
   ignore: 0.4,

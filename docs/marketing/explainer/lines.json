@@ -1,14 +1,14 @@
 [
   {"id": "made", "text": "You made something people love."},
   {"id": "add", "text": "So you add a support button."},
-  {"id": "stays", "text": "There it sits. Every page, every day."},
-  {"id": "ignore", "text": "Soon, nobody even sees it."},
-  {"id": "goal", "text": "QuietJar gives it a finish line: this month's hosting."},
-  {"id": "fills", "text": "People chip in, and the bar fills."},
-  {"id": "methods", "text": "Two taps, right on your page. Apple Pay, iDEAL, or card."},
-  {"id": "met", "text": "Goal met. The button disappears."},
-  {"id": "next", "text": "Next month, it's back for the next bill."},
-  {"id": "fee", "text": "No monthly fee. Just five percent of what you receive."},
-  {"id": "name", "text": "QuietJar."},
+  {"id": "stays", "text": "And there it sits, on every page, every day."},
+  {"id": "ignore", "text": "After a while, nobody even sees it anymore."},
+  {"id": "goal", "text": "quietjar gives your button a finish line, like this month's hosting bill."},
+  {"id": "fills", "text": "As people chip in, the bar fills up."},
+  {"id": "methods", "text": "Paying takes just two taps, right on your page, with Apple Pay, iDEAL or a card."},
+  {"id": "met", "text": "And once the goal is met, the button simply disappears."},
+  {"id": "next", "text": "Next month, it comes back for the next bill."},
+  {"id": "fee", "text": "There's no monthly fee, just five percent of what you receive."},
+  {"id": "name", "text": "quietjar."},
   {"id": "tag", "text": "Ask when it matters. Then go quiet."}
 ]

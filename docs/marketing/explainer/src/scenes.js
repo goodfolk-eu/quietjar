@@ -368,6 +368,60 @@
   })();
 
   const TAGLINE = "Ask when it matters. Then go quiet.";
+  const SLOGAN = "A support button with a finish line";
+
+  function drawGlyph(ctx, g, i, fall, alpha) {
+    const L = LOCK;
+    const gx = L.wordX + g.cx * L.wordS;
+    const gy = L.wordY + g.cy * L.wordS;
+    QJ.piece(ctx, { x: gx, y: gy - (1 - fall) * (g.dot ? 260 : 180), rot: (1 - fall) * (QJ.hash(i) - 0.5) * 0.8, scale: lerp(1.25, 1, fall), seed: 410 + i, alpha }, (c) => {
+      c.scale(L.wordS, L.wordS);
+      c.translate(-g.cx, -g.cy);
+      const z = QJ.frame.zoom;
+      c.save();
+      c.shadowColor = `rgba(58,42,22,${0.26 - (1 - fall) * 0.08})`;
+      c.shadowBlur = ((7 + (1 - fall) * 30) * z) / 1;
+      c.shadowOffsetX = (2.5 + (1 - fall) * 14) * z;
+      c.shadowOffsetY = (4.5 + (1 - fall) * 22) * z;
+      c.fillStyle = g.tone === "green" ? C.green : "#1c201e";
+      c.fill(g.path, "evenodd");
+      c.restore();
+      c.save();
+      c.clip(g.path, "evenodd");
+      c.globalCompositeOperation = "soft-light";
+      c.globalAlpha *= 0.5;
+      c.fillStyle = QJ.grain;
+      c.fillRect(g.box.x0 - 10, g.box.y0 - 10, g.box.x1 - g.box.x0 + 20, g.box.y1 - g.box.y0 + 20);
+      c.restore();
+    });
+  }
+
+  // ---------- title card ----------
+
+  function drawIntro(ctx, t) {
+    const out = away(t, A.introOut);
+    if (out >= 1) return;
+    const L = LOCK;
+    ctx.save();
+    ctx.translate(960, 540);
+    ctx.rotate(-out * 0.12);
+    ctx.translate(-960 - out * 300, -540 - out * 1300);
+    QJ.pig(ctx, L.pigX, L.pigY, L.pigH, { pose: { tail: Math.sin(t * 5) * 0.15 }, seed: 400 });
+    QJ.glyphs().forEach((g, i) => drawGlyph(ctx, g, i, 1, 1));
+    QJ.piece(ctx, { x: 960, y: 700, rot: -0.012, seed: 440 }, (c) => {
+      const w = 940;
+      const h = 104;
+      c.translate(-w / 2, -h / 2);
+      QJ.paper(c, QJ.cutRect(w, h, 441, { jag: 1.6 }), { fill: C.paper });
+      QJ.text(c, SLOGAN, w / 2, 68, { size: 50, weight: 700, color: C.ink, align: "center", spacing: -1 });
+    });
+    const full = QJ.measure(ctx, SLOGAN, 50, QJ.FONT.sans, 700);
+    const tail = QJ.measure(ctx, "finish line", 50, QJ.FONT.sans, 700);
+    const x1 = 960 + full / 2;
+    const x0 = x1 - tail;
+    QJ.ink(ctx, QJ.spline([[x0, 772], [lerp(x0, x1, 0.35), 778], [lerp(x0, x1, 0.75), 770], [x1, 775]], 8), { w: 6, color: C.green, seed: 442, rough: 1.5 });
+    ctx.restore();
+  }
 
   function drawLogo(ctx, t) {
     if (t < A.logo) return;
@@ -396,29 +450,7 @@
       const t0 = A.logoWord - 0.05 + (i / (seq.length - 1)) * span + (g.dot ? 0.15 : 0);
       const d = prog(t, t0, t0 + 0.28);
       if (d <= 0) return;
-      const fall = ease.in(d);
-      const gx = L.wordX + g.cx * L.wordS;
-      const gy = L.wordY + g.cy * L.wordS;
-      QJ.piece(ctx, { x: gx, y: gy - (1 - fall) * (g.dot ? 260 : 180), rot: (1 - fall) * (QJ.hash(i) - 0.5) * 0.8, scale: lerp(1.25, 1, fall), seed: 410 + i, alpha: clamp(d * 5) }, (c) => {
-        c.scale(L.wordS, L.wordS);
-        c.translate(-g.cx, -g.cy);
-        const z = QJ.frame.zoom;
-        c.save();
-        c.shadowColor = `rgba(58,42,22,${0.26 - (1 - fall) * 0.08})`;
-        c.shadowBlur = ((7 + (1 - fall) * 30) * z) / 1;
-        c.shadowOffsetX = (2.5 + (1 - fall) * 14) * z;
-        c.shadowOffsetY = (4.5 + (1 - fall) * 22) * z;
-        c.fillStyle = g.tone === "green" ? C.green : "#1c201e";
-        c.fill(g.path, "evenodd");
-        c.restore();
-        c.save();
-        c.clip(g.path, "evenodd");
-        c.globalCompositeOperation = "soft-light";
-        c.globalAlpha = 0.5;
-        c.fillStyle = QJ.grain;
-        c.fillRect(g.box.x0 - 10, g.box.y0 - 10, g.box.x1 - g.box.x0 + 20, g.box.y1 - g.box.y0 + 20);
-        c.restore();
-      });
+      drawGlyph(ctx, g, i, ease.in(d), clamp(d * 5));
     });
 
     const ts = drop(t, A.tagline, 0.3);
@@ -460,6 +492,7 @@
     ctx.translate(-cam.x, -cam.y);
 
     QJ.drawDesk(ctx);
+    drawIntro(ctx, t);
     drawWindow(ctx, t);
     drawHearts(ctx, t);
     drawVisitors(ctx, t);

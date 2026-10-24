@@ -317,7 +317,7 @@
       const tw = w - 98 - 40;
       const th = 14;
       ctx.save();
-      ctx.globalAlpha = clamp(g * 2);
+      ctx.globalAlpha *= clamp(g * 2);
       ctx.translate(-w / 2 + 98, 22);
       const track = QJ.cutRect(tw, th, 903, { r: th / 2, jag: 0.5 });
       ctx.fillStyle = "rgba(251,248,241,0.28)";

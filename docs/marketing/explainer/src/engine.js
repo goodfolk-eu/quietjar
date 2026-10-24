@@ -407,6 +407,7 @@
     });
     QJ.piece(ctx, { x, y, rot, seed, alpha }, (c) => {
       c.save();
+      const base = c.globalAlpha;
       c.shadowColor = "rgba(60,45,20,0.12)";
       c.shadowBlur = 3 * QJ.frame.zoom;
       c.shadowOffsetY = 1.5 * QJ.frame.zoom;
@@ -415,11 +416,11 @@
       c.shadowColor = "transparent";
       c.clip(path);
       c.globalCompositeOperation = "soft-light";
-      c.globalAlpha = 0.8;
+      c.globalAlpha = base * 0.8;
       c.fillStyle = QJ.grainFine;
       c.fillRect(-w, -h, w * 2, h * 2);
       c.globalCompositeOperation = "source-over";
-      c.globalAlpha = 0.18;
+      c.globalAlpha = base * 0.18;
       c.fillStyle = "#fff";
       c.fillRect(-w / 2, -h / 2 + 5, w, 5);
       c.restore();
@@ -480,12 +481,13 @@
       [0.45, 0.4, 1],
     ];
     ctx.save();
+    const base = ctx.globalAlpha;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.strokeStyle = color;
     if (dash) ctx.setLineDash(dash);
     for (const [wf, af, k] of passes) {
-      ctx.globalAlpha = alpha * af;
+      ctx.globalAlpha = base * alpha * af;
       ctx.lineWidth = w * wf;
       ctx.beginPath();
       for (let i = 0; i < n; i++) {
@@ -499,7 +501,7 @@
       ctx.stroke();
     }
     if (taper && !dash) {
-      ctx.globalAlpha = alpha * 0.9;
+      ctx.globalAlpha = base * alpha * 0.9;
       ctx.fillStyle = color;
       const [ex, ey] = rs[n - 1];
       ctx.beginPath();

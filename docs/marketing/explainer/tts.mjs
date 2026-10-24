@@ -92,7 +92,7 @@ function align(script, heard) {
 
 await Promise.all(
   lines.map(async (line) => {
-    const text = line.text.replace(/QuietJar/g, "Quiet Jar");
+    const { text } = line;
     const mp3 = `${out}/${line.id}.mp3`;
     writeFileSync(mp3, await synthesize(text));
     const script = text.split(/\s+/).map(normalize).filter(Boolean);

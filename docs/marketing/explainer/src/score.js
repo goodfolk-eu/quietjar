@@ -13,13 +13,17 @@
       return byId[id].start + hit.t;
     };
 
+    // The title card holds on the first frame so a shared video has a telling thumbnail.
+    const INTRO = 1.4;
+
     const A = {
       total: T.total,
 
-      winDrop: 0.25,
-      winLand: 0.7,
-      tape1: 0.92,
-      tape2: 1.08,
+      introOut: INTRO - 0.4,
+      winDrop: INTRO + 0.25,
+      winLand: INTRO + 0.7,
+      tape1: INTRO + 0.92,
+      tape2: INTRO + 1.08,
       titleWrite: S("made") + 0.05,
       cursorsIn: W("made", "people") - 0.25,
       hearts: W("made", "love"),
@@ -62,7 +66,7 @@
       clearFee: E("fee") + 0.3,
 
       logo: S("name") - 0.45,
-      logoWord: W("name", "quiet") - 0.05,
+      logoWord: W("name", "quietjar") - 0.05,
       tagline: S("tag") - 0.08,
       underline: W("tag", "quiet") - 0.05,
       endHop: E("tag") + 0.55,
@@ -79,6 +83,7 @@
     A.strips = [...A.chipIns, A.stamp + 0.45, A.stamp + 0.65];
 
     const sfx = [
+      { t: A.introOut, type: "whoosh", gain: 0.4, dur: 0.6, pitch: 1.2 },
       { t: A.winDrop, type: "slide", gain: 0.5 },
       { t: A.winLand, type: "thud", gain: 0.9 },
       { t: A.tape1, type: "tape", gain: 0.6 },

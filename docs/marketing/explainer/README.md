@@ -1,6 +1,6 @@
 # QuietJar explainer
 
-A 44 second hand-drawn collage explainer. The animation is plain JavaScript on a
+A 50 second hand-drawn collage explainer. The animation is plain JavaScript on a
 canvas, the sound effects are synthesised in Node, the music is a recorded track
 from `assets/` (set in the `audio` script in `package.json`), and the voice is
 Google Gemini TTS (voice "Iapetus"). Word timings for the cue sheet come from
