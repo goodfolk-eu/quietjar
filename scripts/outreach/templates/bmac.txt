@@ -1,0 +1,19 @@
+Subject: Your Buy Me a Coffee button on {{name}}
+
+Hi,
+
+I came across {{name}}, so I thought this might interest you.
+
+I run TCG Pocket Collection Tracker. For months its Buy Me a Coffee button brought in about €30 a month. In September I swapped it for a goal: €50 to cover that month's hosting. It raised €97 in 12 hours. Then the button disappeared until October.
+
+That is QuietJar, the support button I built. It only asks when there is a real cost to cover, so your visitors never learn to ignore it.
+
+Your supporters pay in two taps, right on your site: Apple Pay, Google Pay, cards, iDEAL. It loads in 40 ms.
+
+And you keep more. No monthly fee. Only 5% of what you receive, card fees included. On a $10 donation you get $9.50 instead of about $8.90 at Buy Me a Coffee rates.
+
+Try it for free. You can have it live in a few minutes: https://quietjar.com
+
+Marcel
+
+P.S. Not interested? Reply "no" and I won't email you again.

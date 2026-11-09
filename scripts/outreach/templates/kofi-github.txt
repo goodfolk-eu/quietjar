@@ -1,0 +1,19 @@
+Subject: Your Ko-fi link on {{name}}
+
+Hi,
+
+I saw that {{name}} takes support through Ko-fi, so I thought this might interest you.
+
+I'm a developer too. I run TCG Pocket Collection Tracker, and its support button brought in about €30 a month. In September I swapped it for a goal: €50 to cover that month's hosting. It raised €97 in 12 hours.
+
+That is QuietJar, the support button I built. You set a goal for a real cost, like hosting or the next release. Supporters see how close you are, and once it's covered, the ask goes quiet.
+
+For your README there is a badge that shows your live goal progress. One click opens the donation form: Apple Pay, Google Pay, cards, iDEAL. Got a docs site or homepage? The same goal runs there as a button.
+
+No monthly fee. Only 5% of what you receive, card fees included.
+
+Try it for free. You can have it live in a few minutes: https://quietjar.com
+
+Marcel
+
+P.S. Not interested? Reply "no" and I won't email you again.
