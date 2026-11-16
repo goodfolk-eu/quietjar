@@ -39,7 +39,8 @@
             "Yes",
             "Yes",
             "Yes",
-            "Anyone"
+            "Anyone",
+            "Yes, AGPL-3.0"
           ],
           [
             "Ko-fi",
@@ -50,7 +51,8 @@
             "No",
             "No",
             "No",
-            "Anyone"
+            "Anyone",
+            "No"
           ]
         ]
       },
@@ -95,7 +97,8 @@
             "Yes",
             "Yes",
             "Yes",
-            "Anyone"
+            "Anyone",
+            "Yes, AGPL-3.0"
           ],
           [
             "Buy Me a Coffee",
@@ -106,7 +109,8 @@
             "Limited",
             "No",
             "No",
-            "Anyone"
+            "Anyone",
+            "No"
           ]
         ]
       },
@@ -121,7 +125,8 @@
       "Google Pay and Apple Pay",
       "iDEAL and Bancontact",
       "Steps back after giving",
-      "Who can use it"
+      "Who can use it",
+      "Open source"
     ],
     "notes": [
       "Fees and features checked September 2026. Tell us if something changed.",

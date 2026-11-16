@@ -117,19 +117,19 @@ Niche. Not relevant to the goals wedge.
 
 ## Comparison table
 
-| | Platform fee | Monthly | On-page checkout | Wallets | EU local methods | Goals | Button hides when goal is met | Steps back after giving | Who can use it |
-|---|---|---|---|---|---|---|---|---|---|
-| QuietJar | 5%, no cap | none | yes | yes | yes | yes, monthly or one-off | yes, by default | yes, in the browser | anyone |
-| Buy Me a Coffee | 5% | none | yes, widget | limited | no | yes, on profile | no | no | anyone |
-| Ko-fi | 5% tips by default, 0% on Gold | Gold optional | yes, tip panel | no | no | yes, profile and goal bar widget | no | no | anyone |
-| Liberapay | 0% | none | no | no | no | yes, on profile | no | n/a | anyone |
-| Fundraise Up | 4% | none | yes | yes | partial | yes | no | no | nonprofits |
-| Givebutter | 0% (tips on) / 3% | none | partial | yes | no | yes | no | no | nonprofits |
-| Donorbox | 1.75% to 3.95% | some plans | yes (forms) | yes | partial | yes | no | no | nonprofits |
-| GitHub Sponsors | 0% | none | no | no | no | yes, on profile | no | n/a | GitHub users |
-| Open Collective | 0% + host 4% to 10% | for orgs | no | no | partial | yes | no | no | projects |
-| Polar | 5% + $0.50 | optional | yes | yes | yes | no | no | no | developers |
-| Stripe direct | 0% | none | if you code it | yes | yes | if you code it | if you code it | no | anyone technical |
+| | Platform fee | Monthly | On-page checkout | Wallets | EU local methods | Goals | Button hides when goal is met | Steps back after giving | Who can use it | Open source |
+|---|---|---|---|---|---|---|---|---|---|---|
+| QuietJar | 5%, no cap | none | yes | yes | yes | yes, monthly or one-off | yes, by default | yes, in the browser | anyone | yes, AGPL-3.0 |
+| Buy Me a Coffee | 5% | none | yes, widget | limited | no | yes, on profile | no | no | anyone | no |
+| Ko-fi | 5% tips by default, 0% on Gold | Gold optional | yes, tip panel | no | no | yes, profile and goal bar widget | no | no | anyone | no |
+| Liberapay | 0% | none | no | no | no | yes, on profile | no | n/a | anyone | yes |
+| Fundraise Up | 4% | none | yes | yes | partial | yes | no | no | nonprofits | no |
+| Givebutter | 0% (tips on) / 3% | none | partial | yes | no | yes | no | no | nonprofits | no |
+| Donorbox | 1.75% to 3.95% | some plans | yes (forms) | yes | partial | yes | no | no | nonprofits | no |
+| GitHub Sponsors | 0% | none | no | no | no | yes, on profile | no | n/a | GitHub users | no |
+| Open Collective | 0% + host 4% to 10% | for orgs | no | no | partial | yes | no | no | projects | yes |
+| Polar | 5% + $0.50 | optional | yes | yes | yes | no | no | no | developers | yes |
+| Stripe direct | 0% | none | if you code it | yes | yes | if you code it | if you code it | no | anyone technical | n/a |
 
 Processing fees apply on top for every row.
 

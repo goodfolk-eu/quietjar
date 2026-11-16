@@ -74,3 +74,8 @@ temp/
 bun.lockb
 
 pnpm-lock.yaml
+
+# Local development database
+*.db
+*.db-shm
+*.db-wal

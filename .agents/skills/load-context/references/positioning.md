@@ -39,6 +39,7 @@ Once someone has given, the button steps back in their browser for a while. With
 
 - Aligned pricing: no monthly fee, a small flat percentage. Only costs you when it earns you something
 - EU-built: one line in the footer or FAQ, a dedicated trust page. Never the lead
+- Open source: the widget, dashboard and API are public under the AGPL-3.0. Use it as proof of trust and craft ("read every line that runs on your page"), strongest with maintainers. One line in the footer, FAQ, developer page and pitches. Never the lead, and never imply the hosted service is free
 
 ## First sentence by persona
 
@@ -61,6 +62,9 @@ You can, and Stripe's embedded checkout is good. How many weekends for goals tha
 
 **Why not GitHub Sponsors?**
 It is the right default for maintainers. How many of your users ever open the repo, and how many have a GitHub account? Use both.
+
+**It is open source. Why not self-host it?**
+You can, under the AGPL-3.0. Then you also run the payments account, payouts, fraud checks, tax and upkeep. Is running payments the work you want to take on?
 
 **What do you take?**
 The exact percentage, on the page. "A small share" loses every developer who reads it.

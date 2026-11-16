@@ -146,6 +146,15 @@
             { "label": "QuietJar vs Ko-fi", "href": "/compare/ko-fi/" },
             { "label": "QuietJar vs Buy Me a Coffee", "href": "/compare/buymeacoffee/" }
           ]
+        },
+        {
+          "@type": "Question",
+          "name": "The code is open source. Why pay?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can run it yourself under the AGPL-3.0 license. You would also run the payments account, payouts, fraud checks, tax and upkeep. The 5% covers all of that, including the card fees."
+          },
+          "links": [{ "label": "Read the source", "href": "https://codefloe.com/Goodfolk.eu/quietjar" }]
         }
       ]
     },

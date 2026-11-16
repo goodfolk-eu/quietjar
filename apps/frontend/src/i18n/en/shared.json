@@ -7,7 +7,8 @@
     "links": [
       { "title": "Features", "path": "/features/" },
       { "title": "Pricing", "path": "/pricing/" },
-      { "title": "Developers", "path": "/developers/" }
+      { "title": "Developers", "path": "/developers/" },
+      { "title": "Source code", "path": "https://codefloe.com/Goodfolk.eu/quietjar" }
     ],
     "login": "Log in",
     "signup": "Add to your site",

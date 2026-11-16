@@ -3,7 +3,7 @@
   "@id": "https://quietjar.com/#organization",
   "name": "QuietJar",
   "url": "https://quietjar.com",
-  "sameAs": ["https://www.linkedin.com/company/quietjar"],
+  "sameAs": ["https://www.linkedin.com/company/quietjar", "https://codefloe.com/Goodfolk.eu/quietjar"],
   "founder": [
     {
       "@type": "Person",

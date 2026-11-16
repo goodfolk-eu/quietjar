@@ -150,6 +150,17 @@ const dev = copy.developers;
         <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.programmatic.text}</p>
       </section>
 
+      <section class="flex flex-col gap-4">
+        <h2 class="font-display text-[26px] font-bold tracking-[-0.028em] text-qj-ink">{dev.openSource.title}</h2>
+        <p class="text-[15.5px] leading-[1.62] text-qj-ink-2">{dev.openSource.text}</p>
+        <a
+          href={dev.openSource.link.href}
+          rel="noopener"
+          class="self-start text-[15px] font-semibold text-qj-accent transition hover:text-qj-ink">
+          {dev.openSource.link.label}
+        </a>
+      </section>
+
       <div class="border-t border-qj-line pt-10">
         <div class="flex flex-col items-start gap-3.5 sm:flex-row sm:items-center">
           <button

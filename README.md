@@ -1,50 +1,55 @@
 # QuietJar
 
-A small, beautifully made tip button you drop straight into your own website. Supporters pay right there, in a couple of taps, without ever leaving your page.
+A support button for your own website that only asks when it matters.
 
-It is the "quiet" tip jar: fast, seamless, and polite. It lives on your site instead of sending people to a profile on someone else's platform, so far more of them actually follow through. It knows when to stop asking people who have already given, and it charges no monthly fee. QuietJar takes a small share of what you actually receive, so it only wins when you do.
+Set a goal for a real cost, like this month's hosting or the next release. The button shows up on your site, your supporters cover it in a couple of taps, and the button goes quiet until the next goal.
 
-## Features
+A button that is always there turns into wallpaper. A goal with a finish line gives people a reason to act now. TCG Pocket Collection Tracker set a €50 goal for its September 2026 hosting and raised €97 in 12 hours. Its Buy Me a Coffee button averaged €30 a month.
 
-- On-page tip button, no redirect to a third-party page
-- Two-tap checkout with familiar payment methods
-- Polite by default: stops asking after someone supports you
-- Matches your site's design
-- No monthly fee, a small share only when you get paid
-- Optional hosted page for people who prefer one
+Use it at [quietjar.com](https://quietjar.com), or read the code here. QuietJar is open source under the [AGPL-3.0](LICENSE) license.
+
+## What it does
+
+- **Goals that end.** Monthly or one-off goals with a progress bar. Once a goal is met, the button steps aside until the next one starts.
+- **Checkout on your page.** Apple Pay, Google Pay, cards, iDEAL and Bancontact, in two taps, with no layout shift.
+- **Polite to supporters.** After someone gives, the button thanks them and stops asking for a while.
+- **Small and fast.** One script tag, 11.7 kB gzipped, around 40 ms to load.
+- **No monthly fee.** The hosted service takes 5% of each donation, minimum €0.50, and pays the card fees.
 
 ## Stack
 
 - **Monorepo:** Bun workspaces
-- **Frontend:** Astro + Tailwind CSS v4 (static), in `apps/frontend`
-- **Backend:** Elysia + BetterAuth with email OTP, in `apps/backend`
+- **Frontend:** Astro and Tailwind CSS v4 (static), in `apps/frontend`
+- **Widget:** the embeddable script, in `apps/widget`
+- **Backend:** Elysia, BetterAuth with email codes, libsql and Stripe, in `apps/backend`
 
 ## Getting started
 
-Requirements: Bun. If `bun` is not on your path, use `/usr/local/bin/bun`.
+You need [Bun](https://bun.sh) and a Stripe account in test mode.
 
 ```bash
-bun install          # install workspace deps
-bun dev              # run backend (3000) + frontend (4321)
+bun install
+cp apps/backend/.env.example apps/backend/.env.development
+# fill in BETTER_AUTH_SECRET and your Stripe test keys
+bun dev
 ```
 
-The frontend dev server proxies `/api` to the backend so auth cookies stay same-origin.
+`bun dev` runs the backend on port 3000 and the frontend on port 4321. The frontend proxies `/api` to the backend, so auth cookies stay on the same origin. Without email settings, sign-in codes show up in the backend console.
 
-## Development
+Useful commands:
 
-- Frontend: `bun --cwd apps/frontend dev` (port 4321), build with `bun --cwd apps/frontend build`
-- Backend: `bun --cwd apps/backend dev` (port 3000)
-- Backend env: copy `apps/backend/.env.example` to `apps/backend/.env`
-- Add a dependency: `bun add <pkg>`
+- `bun run lint` checks formatting and lint rules (Biome)
+- `bun run test` runs every workspace's tests
+- `bun run build` builds the backend, widget and frontend
 
-## Project structure
+## Contributing
 
-```
-apps/
-  frontend/   Astro site, landing page and dashboard
-  backend/    Elysia + BetterAuth API
-```
+Bug reports, ideas and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before you start. To report a security issue, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
 
 ## License
 
-...
+Copyright © Goodfolk B.V.
+
+QuietJar is free software: you can redistribute it and modify it under the terms of the GNU Affero General Public License, version 3. If you run a modified version as a network service, you must offer its source code to the people who use it. See [LICENSE](LICENSE) for the full text.
+
+The QuietJar name and logo are not covered by the license. Please do not use them for a fork or a competing service.
