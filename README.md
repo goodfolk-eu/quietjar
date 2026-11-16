@@ -8,6 +8,8 @@ A button that is always there turns into wallpaper. A goal with a finish line gi
 
 Use it at [quietjar.com](https://quietjar.com), or read the code here. QuietJar is open source under the [AGPL-3.0](LICENSE) license.
 
+<a href="https://quietjar.com?qj_open=1"><img src="https://api.quietjar.com/api/widget/image/eyJzaXRlIjoicWpfOWJkYTAzODU2MTY0ZTkzZjhiNzE1MDMwIiwiY3VycmVuY3kiOiJldXIiLCJsYWJlbHMiOnsiaGVhZGxpbmUiOiJTdXBwb3J0IHRoaXMgcHJvamVjdCIsImJvZHkiOiIiLCJhY3Rpb24iOiJTdXBwb3J0IiwiaWNvbiI6InBpZ2d5In0sInN0eWxlIjp7ImNvbG9yIjoiIzAzNjlhMSIsImZvbnQiOiJyb3VuZGVkIn0sImNsb3NlIjp7ImVuYWJsZWQiOnRydWUsImFmdGVyIjoic2Vzc2lvbiIsImRheXMiOjd9LCJkb25hdGlvbiI6eyJoaWRlRGF5cyI6MzB9LCJwb3NpdGlvbiI6eyJjb3JuZXIiOiJib3R0b20tcmlnaHQifSwiZ29hbCI6InFnXzQ4YTg1NGY4MDYyZjUyZDAiLCJnb2FsUmVhY2hlZCI6ImhpZGUifQ.png" alt="Support this project" width="384"></a>
+
 ## What it does
 
 - **Goals that end.** Monthly or one-off goals with a progress bar. Once a goal is met, the button steps aside until the next one starts.
