@@ -333,6 +333,14 @@
       "title": "Open the panel from your own code",
       "text": "Wire the checkout to your own call to action: the end of an article, a finished download, a tag manager. Call window.QuietJar.open() anywhere on the page and the panel opens right there. It sits next to the widget when that is visible, and centers on the page when it is not. The call always opens, even for visitors the widget stepped back for."
     },
+    "openSource": {
+      "title": "Open source",
+      "text": "Every line that runs on your page is public. The widget, the dashboard and the API are open source under the AGPL-3.0 license, so you can read exactly what you are adding to your site before you add it. Found a bug or want a setting we do not have? Open an issue or send a pull request.",
+      "link": {
+        "label": "Read the source on Codefloe",
+        "href": "https://codefloe.com/Goodfolk.eu/quietjar"
+      }
+    },
     "cta": "Add it to your site",
     "compareLinks": [
       {

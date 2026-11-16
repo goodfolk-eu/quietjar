@@ -11,8 +11,12 @@ import { defaultLocale, locales } from "@/i18n/config";
  * localized, rather than being localized itself — the homepage is a single
  * scrolling page with anchors like /#pricing, and those need to follow the
  * homepage's own locale rule, not be treated as a distinct sub-page.
+ *
+ * Absolute URLs (https://...) are returned unchanged, so copy files can mix
+ * site paths and external links in the same list.
  */
 export function localizedPath(path: string, locale: string = defaultLocale): string {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(path)) return path;
   if (!locales.includes(locale as (typeof locales)[number])) locale = defaultLocale;
 
   const hashIndex = path.indexOf("#");

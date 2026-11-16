@@ -264,6 +264,15 @@
       },
       {
         "@type": "Question",
+        "name": "Is QuietJar open source?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The widget, the dashboard and the API are public under the AGPL-3.0 license. You can read every line that runs on your page, and you are welcome to contribute."
+        },
+        "links": [{ "label": "Read the source", "href": "https://codefloe.com/Goodfolk.eu/quietjar" }]
+      },
+      {
+        "@type": "Question",
         "name": "How do I add it to my site?",
         "acceptedAnswer": {
           "@type": "Answer",

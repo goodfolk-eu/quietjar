@@ -19,7 +19,7 @@ Later: Publishers, WordPress, a showcase of live installs.
 Every piece maps to one. If it does not, do not publish.
 
 1. **Goals that end.** Why an always-on button turns into wallpaper and a goal with a finish line gets covered. The TCG Pocket case study first, then one case study per early install. Invest here most before launch.
-2. **Craft notes.** How it is built and why the details matter. Written by whoever built it. Zero layout shift, how stepping back works in the browser (and what Safari does to it), one button for iDEAL, Bancontact and Apple Pay, what we measure. Marketing that does not look like marketing.
+2. **Craft notes.** The code is open source, so link to the real lines in the repo. How it is built and why the details matter. Written by whoever built it. Zero layout shift, how stepping back works in the browser (and what Safari does to it), one button for iDEAL, Bancontact and Apple Pay, what we measure. Marketing that does not look like marketing.
 3. **Owning your audience.** Plain guides for creators and publishers. Adding a support button to Ghost, WordPress, Astro, Hugo. Tips versus memberships. Setting a monthly goal for your hosting bill. The SEO engine for the second wave.
 4. **Quiet by design.** Rare, short, strongly worded pieces on respecting the people who pay. "Ask once." "The thank-you is the product." "Why we don't surcharge your supporters."
 
@@ -29,7 +29,7 @@ Every piece maps to one. If it does not, do not publish.
 2. **Direct outreach.** A hand-picked list of 50 projects with docs sites and audiences. Personal emails, early install, feedback. Target ten visible installs before public launch.
 3. **Search.** Compare page and platform guides. Queries: "buy me a coffee alternative," "ko-fi alternative," "donation button for website," "add donate button to Ghost," "embed tip button."
 4. **The "powered by" link.** Every install carries one. The real long-term channel. Tasteful, on by default.
-5. **Integrations and directories.** Astro integrations, Hugo modules, Ghost integrations page, WordPress plugin directory when the plugin exists, Framer and Webflow later.
+5. **Integrations and directories.** Open source listings: the Codefloe repo, a read-only GitHub mirror for discovery, opensourcealternative.to next to Ko-fi and Buy Me a Coffee. Astro integrations, Hugo modules, Ghost integrations page, WordPress plugin directory when the plugin exists, Framer and Webflow later.
 6. **Social.** LinkedIn for founders and publishers, X and Bluesky for developers and creators, Mastodon for OSS. Amplification only.
 7. **Newsletters and podcasts.** Creator-independence and indie-web newsletters, developer podcasts. Pitch the goals-that-end angle and the case study, not the product.
 

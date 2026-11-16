@@ -22,6 +22,7 @@ Open source project developers and non-technical website owners who monetise an 
 - **Goals that end.** The main wedge. Monthly or one-off goals with a progress bar. When the goal is met, the button hides by default and comes back when the next period starts. Visitors only see the ask when it is real, so they never get used to ignoring it. Competitors have goal bars, but their button stays up whether the goal is met or not.
 - **Checkout that belongs on your site.** Two taps with Apple Pay, Google Pay, cards, iDEAL and Bancontact, and a checkout that never shifts or stalls. Ko-fi and Buy Me a Coffee also take payment on the page, so never claim they redirect. The difference is quality: wallets, local methods, speed and design matching.
 - **Polite by design.** Once someone has donated, the widget suppresses repeat prompts for a while (in the visitor's browser via localStorage; Safari clears it after 7 days without a site visit). It thanks supporters instead of nagging them. Together with goals that end, this is one story: quiet when funded, quiet after giving.
+- **Open source.** The widget, dashboard and API are public under the AGPL-3.0 at https://codefloe.com/Goodfolk.eu/quietjar. A trust and craft proof, strongest with maintainers. Supporting message, never the lead.
 - **Engineered like a real payments SDK.** Fast, part of the site rather than a clunky bolt-on. This craft is the hardest thing for incumbents to copy.
 
 ## Pricing
