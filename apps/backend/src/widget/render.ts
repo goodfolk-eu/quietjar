@@ -18,6 +18,21 @@ const FACE_SELECTOR = ".quietjar-widget__button, .quietjar-widget__panel";
 const MOUNT_TIMEOUT_ATTEMPTS = 30;
 const MOUNT_POLL_MS = 100;
 
+/**
+ * Pixel density of the capture per image size. Markdown cannot size an image,
+ * so the PNG's own dimensions are what a README shows: small is the button at
+ * its real size, medium half again as large.
+ */
+const SIZE_SCALE = { small: 1, medium: 1.5 } as const;
+
+type ImageSize = keyof typeof SIZE_SCALE;
+
+/** The size a config asks for; anything but "medium" renders small. */
+function imageSizeOf(config: object): ImageSize {
+  const image = (config as { image?: { size?: unknown } }).image;
+  return image?.size === "medium" ? "medium" : "small";
+}
+
 interface FaceRect {
   x: number;
   y: number;
@@ -115,7 +130,11 @@ async function waitUntilReady(view: Bun.WebView): Promise<FaceRect> {
   throw new Error("widget face did not render");
 }
 
-async function captureFace(view: Bun.WebView, face: FaceRect): Promise<Uint8Array<ArrayBuffer>> {
+async function captureFace(
+  view: Bun.WebView,
+  face: FaceRect,
+  size: ImageSize,
+): Promise<Uint8Array<ArrayBuffer>> {
   const usesCdp = resolveBackend() !== "webkit";
   if (usesCdp) {
     // The high-level screenshot always paints the viewport background; the
@@ -130,7 +149,7 @@ async function captureFace(view: Bun.WebView, face: FaceRect): Promise<Uint8Arra
         y: Math.max(0, face.y - CLIP_PADDING),
         width: face.width + CLIP_PADDING * 2,
         height: face.height + CLIP_PADDING * 2,
-        scale: 2,
+        scale: SIZE_SCALE[size],
       },
       captureBeyondViewport: true,
     })) as { data?: string };
@@ -152,7 +171,7 @@ async function renderOnce(config: object): Promise<Uint8Array<ArrayBuffer>> {
   try {
     await view.navigate(renderPageUrl(`http://127.0.0.1:${port}`, config));
     const face = await waitUntilReady(view);
-    return await captureFace(view, face);
+    return await captureFace(view, face, imageSizeOf(config));
   } finally {
     view.close();
   }
