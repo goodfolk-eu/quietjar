@@ -1,0 +1,1142 @@
+{
+ "rows": [
+  {
+   "id": "01",
+   "theme": "alternatives",
+   "prompt": "What's the best alternative to Buy Me a Coffee?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "Liberapay",
+     "Gumroad"
+    ],
+    "sources": [
+     "ecomposer.io",
+     "medium.com",
+     "schoolmaker.com"
+    ],
+    "chars": 1438
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "Liberapay",
+     "Payhip",
+     "Fourthwall"
+    ],
+    "sources": [
+     "Ko-fi Shop | Sell Digital and Physical Products With Just a Link. No Listing Fees.",
+     "Support | Support Rock N Roll Archaeology Today \u2014 Rock N Roll Archaeology",
+     "Payhip  | E-commerce | Plus | month | Thrive Perusahaan IT Terbaik Sejak 2007 di Indonesia",
+     "Fourthwall - Tools for Creators"
+    ],
+    "chars": 2267
+   }
+  },
+  {
+   "id": "02",
+   "theme": "alternatives",
+   "prompt": "Ko-fi vs Buy Me a Coffee, which is better?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee"
+    ],
+    "sources": [
+     "picktheplatform.pages.dev",
+     "schoolmaker.com",
+     "unilink.us"
+    ],
+    "chars": 1565
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "What Is Ko-Fi And Why Is It So Powerful For Writers | by Kristina God | The Shortform | Medium",
+     "Ko-fi vs Buy Me a Coffee \u2014 A Quick Comparison"
+    ],
+    "chars": 3140
+   }
+  },
+  {
+   "id": "03",
+   "theme": "alternatives",
+   "prompt": "Is there a European alternative to Buy Me a Coffee or Patreon?",
+   "claude": {
+    "brands": [
+     "Buy Me a Coffee",
+     "Patreon",
+     "Liberapay",
+     "Open Collective",
+     "Tipeee",
+     "Steady"
+    ],
+    "sources": [
+     "alternativeto.net",
+     "fourweekmba.com",
+     "wmtips.com"
+    ],
+    "chars": 1566
+   },
+   "chatgpt": {
+    "brands": [
+     "Buy Me a Coffee",
+     "Patreon",
+     "Liberapay",
+     "Stripe",
+     "PayPal",
+     "Ghost",
+     "Mollie",
+     "Tipeee",
+     "Steady"
+    ],
+    "sources": [
+     "Podcast Luisteren (PodNL): Petje.af podcast",
+     "Ic\u00f4ne de Tipeee logo",
+     "Steady: Alles, was du zum Abo-Tool f\u00fcr dich und deine Fans wissen musst \u2014 Creatorway",
+     "A new platform to fund work on open source projects | by Liberapay | Liberapay\u2019s Blog | Medium",
+     "The Best Email Newsletter Services - InboxReads",
+     "File:Patronite-logo.svg - Wikimedia Commons"
+    ],
+    "chars": 2916
+   }
+  },
+  {
+   "id": "04",
+   "theme": "alternatives",
+   "prompt": "What are the best PayPal donate button alternatives?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "GitHub Sponsors",
+     "Stripe",
+     "PayPal",
+     "Donorbox",
+     "Givebutter",
+     "GoFundMe",
+     "Square"
+    ],
+    "sources": [
+     "comparepsp.pages.dev",
+     "donorbox.org",
+     "givebutter.com",
+     "jotform.com",
+     "rallyup.com"
+    ],
+    "chars": 2324
+   },
+   "chatgpt": {
+    "brands": [
+     "Stripe",
+     "PayPal",
+     "Donorbox",
+     "Givebutter",
+     "Fundraise Up",
+     "Zeffy",
+     "Mollie"
+    ],
+    "sources": [
+     "Fundraising Platform for Art, Theatre & Dance Studios",
+     "Zeffy | DonationMatch",
+     "File:Givebutter Logo.SVG | SVG Logo Vector free Download",
+     "F\u00fcr Hello Kitty Fans - Mibrix",
+     "Mollie pinautomaat kosten (2026) \u00b7 gratis vergelijken",
+     "Splendid Consulting\u00ae | Fundraising Strategy and Coaching for Modern Nonprofits"
+    ],
+    "chars": 3484
+   }
+  },
+  {
+   "id": "05",
+   "theme": "alternatives",
+   "prompt": "GitHub Sponsors vs Ko-fi vs Open Collective, which should my open source project use?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [],
+    "chars": 2577
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "Explore GitHub Sponsors \u00b7 GitHub",
+     "Como funciona o Ko-fi | Guia Pr\u00e1tico - Canaltech",
+     "Open Collective Logo PNG Vector (SVG) Free Download"
+    ],
+    "chars": 5479
+   }
+  },
+  {
+   "id": "06",
+   "theme": "how-to",
+   "prompt": "How do I add a donate button to my website?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Liberapay",
+     "Stripe",
+     "PayPal",
+     "Donorbox",
+     "Givebutter",
+     "GiveWP",
+     "Zeffy"
+    ],
+    "sources": [
+     "your-donation-link-here\""
+    ],
+    "chars": 2243
+   },
+   "chatgpt": {
+    "brands": [
+     "Stripe",
+     "PayPal",
+     "Donorbox"
+    ],
+    "sources": [
+     "paypal transparent PNG & clipart images | Citypng",
+     "Stripe Icon & Logo (selfh.st) | Dashboard Icons & Logos",
+     "Partner Directory | Nonprofit Learning Lab"
+    ],
+    "chars": 2088
+   }
+  },
+  {
+   "id": "07",
+   "theme": "how-to",
+   "prompt": "How do I add a donate button to my WordPress site without using PayPal?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Liberapay",
+     "Open Collective",
+     "Stripe",
+     "PayPal",
+     "GiveWP",
+     "Zeffy",
+     "Square"
+    ],
+    "sources": [],
+    "chars": 2347
+   },
+   "chatgpt": {
+    "brands": [
+     "Stripe",
+     "PayPal",
+     "GiveWP",
+     "Mollie"
+    ],
+    "sources": [
+     "F\u00fcr Hello Kitty Fans - Mibrix",
+     "Mollie pinautomaat kosten (2026) \u00b7 gratis vergelijken",
+     "GiveWP \u2013 Donation Plugin and Fundraising Platform \u2013 WordPress plugin | WordPress.org",
+     "GiveWP Software Reviews, Demo & Pricing - 2026",
+     "The Ultimate Guide to GiveWP: The WordPress Donation Plugin | Charity Charge"
+    ],
+    "chars": 3028
+   }
+  },
+  {
+   "id": "08",
+   "theme": "how-to",
+   "prompt": "How do I accept tips on my Ghost blog?",
+   "claude": {
+    "brands": [
+     "Stripe",
+     "Ghost"
+    ],
+    "sources": [
+     "alternativeto.net",
+     "ghost.org"
+    ],
+    "chars": 1007
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Stripe",
+     "PayPal",
+     "Ghost"
+    ],
+    "sources": [
+     "How to setup and manage your Stripe account",
+     "Tips & Donations"
+    ],
+    "chars": 2293
+   }
+  },
+  {
+   "id": "09",
+   "theme": "how-to",
+   "prompt": "How do I add a donation button to my Astro or Hugo static site?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Liberapay",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "buy.stripe.com",
+     "buymeacoffee.com",
+     "ko-fi.com"
+    ],
+    "chars": 3225
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "GitHub Sponsors",
+     "Stripe"
+    ],
+    "sources": [
+     "Como funciona o Ko-fi | Guia Pr\u00e1tico - Canaltech",
+     "Zapfolio | LinkedIn to Portfolio in Two Clicks",
+     "Stripe Logo Download (SVG, PNG, EPS, PDF) | PixelBrands",
+     "Explore GitHub Sponsors \u00b7 GitHub"
+    ],
+    "chars": 4018
+   }
+  },
+  {
+   "id": "10",
+   "theme": "how-to",
+   "prompt": "Is there an embeddable donation widget I can put on any website?",
+   "claude": {
+    "brands": [
+     "Stripe",
+     "Donorbox"
+    ],
+    "sources": [
+     "donorbox.org",
+     "embeddable.co",
+     "fundraising.co.uk",
+     "givelively.org",
+     "jotform.com",
+     "success.givsum.com"
+    ],
+    "chars": 1721
+   },
+   "chatgpt": {
+    "brands": [
+     "Donorbox",
+     "Givebutter",
+     "Mollie"
+    ],
+    "sources": [
+     "Fundraising Platform for Art, Theatre & Dance Studios",
+     "File:Givebutter Logo.SVG | SVG Logo Vector free Download",
+     "Whydonate Reviews 2026: Details, Pricing, & Features | G2",
+     "Donaty",
+     "Donation Cute Color icon in PNG, SVG"
+    ],
+    "chars": 2206
+   }
+  },
+  {
+   "id": "11",
+   "theme": "stripe",
+   "prompt": "Can I use Stripe to accept donations on my personal website?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "GitHub Sponsors",
+     "Stripe"
+    ],
+    "sources": [
+     "help.rsvpify.com",
+     "redlib.hbubli.cc",
+     "support.stripe.com"
+    ],
+    "chars": 1695
+   },
+   "chatgpt": {
+    "brands": [
+     "Stripe"
+    ],
+    "sources": [],
+    "chars": 2295
+   }
+  },
+  {
+   "id": "12",
+   "theme": "stripe",
+   "prompt": "Should I use Stripe Payment Links or Ko-fi for small donations?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "activepieces.com",
+     "dodopayments.com",
+     "latuos.com",
+     "payoutmath-uk.pages.dev",
+     "schoolmaker.com"
+    ],
+    "chars": 1811
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "Brand Assets",
+     "Stripe Logo Download (SVG, PNG, EPS, PDF) | PixelBrands"
+    ],
+    "chars": 2549
+   }
+  },
+  {
+   "id": "13",
+   "theme": "fees",
+   "prompt": "How much does Ko-fi take from a donation?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "cartmango.com",
+     "productmint.com",
+     "schoolmaker.com"
+    ],
+    "chars": 797
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [],
+    "chars": 924
+   }
+  },
+  {
+   "id": "14",
+   "theme": "fees",
+   "prompt": "Which donation platform has the lowest fees for small donations?",
+   "claude": {
+    "brands": [
+     "Stripe",
+     "Donorbox",
+     "Zeffy",
+     "GoFundMe"
+    ],
+    "sources": [
+     "betterworld.org",
+     "capterra.com",
+     "comparepsp.pages.dev",
+     "gofundme.com",
+     "hackceleration.com"
+    ],
+    "chars": 1579
+   },
+   "chatgpt": {
+    "brands": [
+     "GoFundMe"
+    ],
+    "sources": [
+     "Whydonate Reviews 2026: Details, Pricing, & Features | G2",
+     "Free download GoFundMe logo | Go fund me, ? logo, Social media toolkit"
+    ],
+    "chars": 1441
+   }
+  },
+  {
+   "id": "15",
+   "theme": "open-source",
+   "prompt": "How can my open source project pay for its hosting costs?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Liberapay",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Polar",
+     "thanks.dev"
+    ],
+    "sources": [],
+    "chars": 3663
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Patreon",
+     "GitHub Sponsors",
+     "Open Collective"
+    ],
+    "sources": [
+     "Support the projects you rely on: GitHub Sponsors - DEV Community",
+     "Open Collective Logo PNG Vector (SVG) Free Download",
+     "Brand Assets",
+     "Support | Support Rock N Roll Archaeology Today \u2014 Rock N Roll Archaeology"
+    ],
+    "chars": 5308
+   }
+  },
+  {
+   "id": "16",
+   "theme": "open-source",
+   "prompt": "Is GitHub Sponsors worth it for a small open source project?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Polar",
+     "Stripe"
+    ],
+    "sources": [
+     "itbrief.com.au",
+     "lenz.io",
+     "steemit.com",
+     "youngju.dev"
+    ],
+    "chars": 2593
+   },
+   "chatgpt": {
+    "brands": [
+     "GitHub Sponsors"
+    ],
+    "sources": [],
+    "chars": 3339
+   }
+  },
+  {
+   "id": "17",
+   "theme": "open-source",
+   "prompt": "What's the best way to accept donations on a documentation site?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Stripe",
+     "Givebutter"
+    ],
+    "sources": [],
+    "chars": 2478
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Liberapay",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Stripe"
+    ],
+    "sources": [],
+    "chars": 4121
+   }
+  },
+  {
+   "id": "18",
+   "theme": "goals",
+   "prompt": "How do I show a donation goal with a progress bar on my website?",
+   "claude": {
+    "brands": [
+     "Stripe",
+     "Donorbox",
+     "Givebutter",
+     "GiveWP",
+     "Zeffy",
+     "GoFundMe",
+     "Classy"
+    ],
+    "sources": [],
+    "chars": 2936
+   },
+   "chatgpt": {
+    "brands": [
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [],
+    "chars": 2468
+   }
+  },
+  {
+   "id": "19",
+   "theme": "goals",
+   "prompt": "How do I cover my website's monthly hosting bill with donations?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "Liberapay",
+     "GitHub Sponsors",
+     "Open Collective",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [],
+    "chars": 2820
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Open Collective",
+     "Stripe"
+    ],
+    "sources": [
+     "Como funciona o Ko-fi | Guia Pr\u00e1tico - Canaltech",
+     "Zapfolio | LinkedIn to Portfolio in Two Clicks",
+     "Stripe Logo Download (SVG, PNG, EPS, PDF) | PixelBrands",
+     "Open Collective Logo PNG Vector (SVG) Free Download"
+    ],
+    "chars": 3361
+   }
+  },
+  {
+   "id": "20",
+   "theme": "goals",
+   "prompt": "Is there a donation widget that hides itself once the goal is reached?",
+   "claude": {
+    "brands": [
+     "GiveWP"
+    ],
+    "sources": [
+     "invisioncommunity.com",
+     "jotform.com",
+     "rallyup.com",
+     "remarpro.com",
+     "wix.com",
+     "xenforo.com"
+    ],
+    "chars": 1382
+   },
+   "chatgpt": {
+    "brands": [
+     "Donorbox",
+     "Givebutter"
+    ],
+    "sources": [],
+    "chars": 966
+   }
+  },
+  {
+   "id": "21",
+   "theme": "effectiveness",
+   "prompt": "Does a donate button on a website actually make money?",
+   "claude": {
+    "brands": [],
+    "sources": [],
+    "chars": 2172
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [],
+    "chars": 1848
+   }
+  },
+  {
+   "id": "22",
+   "theme": "effectiveness",
+   "prompt": "Why does nobody click the donate button on my website?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [],
+    "chars": 2448
+   },
+   "chatgpt": {
+    "brands": [],
+    "sources": [],
+    "chars": 3141
+   }
+  },
+  {
+   "id": "23",
+   "theme": "effectiveness",
+   "prompt": "How do I ask my readers for support without annoying them?",
+   "claude": {
+    "brands": [
+     "Patreon",
+     "Ghost",
+     "Substack"
+    ],
+    "sources": [],
+    "chars": 2564
+   },
+   "chatgpt": {
+    "brands": [
+     "Buy Me a Coffee",
+     "Patreon"
+    ],
+    "sources": [],
+    "chars": 3386
+   }
+  },
+  {
+   "id": "24",
+   "theme": "effectiveness",
+   "prompt": "One-time donations or monthly memberships, which works better for a small creator?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "Substack"
+    ],
+    "sources": [],
+    "chars": 2546
+   },
+   "chatgpt": {
+    "brands": [],
+    "sources": [
+     "\u2018Buy Me a Coffee\u2019 Made Me More Money Than Substack | by Anshul Kumar | Write A Catalyst | Medium",
+     "patreon (Copy) \u2014 erikathegoober"
+    ],
+    "chars": 3311
+   }
+  },
+  {
+   "id": "25",
+   "theme": "payments",
+   "prompt": "Which donation button supports Apple Pay, Google Pay and iDEAL?",
+   "claude": {
+    "brands": [
+     "Stripe",
+     "PayPal",
+     "Donorbox",
+     "Givebutter",
+     "Mollie"
+    ],
+    "sources": [
+     "community.givebutter.com",
+     "help.givingfuel.com",
+     "help.raisedonors.com",
+     "payrequest.io"
+    ],
+    "chars": 1178
+   },
+   "chatgpt": {
+    "brands": [
+     "Donorbox"
+    ],
+    "sources": [],
+    "chars": 554
+   }
+  },
+  {
+   "id": "26",
+   "theme": "payments",
+   "prompt": "What's the fastest way for a visitor to donate on my website without creating an account?",
+   "claude": {
+    "brands": [
+     "Stripe",
+     "PayPal",
+     "Donorbox",
+     "Givebutter",
+     "Zeffy",
+     "Venmo",
+     "Classy"
+    ],
+    "sources": [],
+    "chars": 2112
+   },
+   "chatgpt": {
+    "brands": [
+     "Stripe",
+     "PayPal",
+     "Donorbox"
+    ],
+    "sources": [],
+    "chars": 1655
+   }
+  },
+  {
+   "id": "27",
+   "theme": "creators",
+   "prompt": "How can a musician accept tips on their own website?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "Stripe",
+     "PayPal",
+     "GiveWP",
+     "Bandcamp",
+     "Venmo",
+     "Cash App",
+     "Square"
+    ],
+    "sources": [],
+    "chars": 2814
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Stripe",
+     "PayPal"
+    ],
+    "sources": [
+     "Stripe Logo Download (SVG, PNG, EPS, PDF) | PixelBrands",
+     "Download the PayPal logo in PNG y SVG | LogosDown",
+     "Como funciona o Ko-fi | Guia Pr\u00e1tico - Canaltech",
+     "Zapfolio | LinkedIn to Portfolio in Two Clicks",
+     "Samuel Nicholas Harris after maiden single 'Aiyayo': \u2018I\u2019m not sure about films just yet\u2019"
+    ],
+    "chars": 4013
+   }
+  },
+  {
+   "id": "28",
+   "theme": "creators",
+   "prompt": "What's the best Patreon alternative for a writer with their own website?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Patreon",
+     "Stripe",
+     "Memberful",
+     "Ghost",
+     "Substack"
+    ],
+    "sources": [],
+    "chars": 2487
+   },
+   "chatgpt": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "Stripe",
+     "Memberful",
+     "Ghost"
+    ],
+    "sources": [
+     "The Best Email Newsletter Services - InboxReads",
+     "Memberspace Alternatives 2026 : Exploring the Best Options for Your Website",
+     "Ko-fi Shop | Sell Digital and Physical Products With Just a Link. No Listing Fees.",
+     "Zapfolio | LinkedIn to Portfolio in Two Clicks"
+    ],
+    "chars": 2712
+   }
+  },
+  {
+   "id": "29",
+   "theme": "creators",
+   "prompt": "How do I monetize my blog without ads?",
+   "claude": {
+    "brands": [
+     "Ko-fi",
+     "Buy Me a Coffee",
+     "Patreon",
+     "GitHub Sponsors",
+     "Memberful",
+     "Ghost",
+     "Substack"
+    ],
+    "sources": [],
+    "chars": 2943
+   },
+   "chatgpt": {
+    "brands": [
+     "Patreon",
+     "Gumroad",
+     "Payhip",
+     "Ghost",
+     "Thinkific"
+    ],
+    "sources": [
+     "Weekly Planner, Minimalist Design, Every Week Planner, Digital Download, iPhone Planner, iPad Planner, Instantly Downloadable - Etsy",
+     "Ebook Lead Magnet Template for Coaches and Female Entrepreneurs Editable Canva Workbook Business Owners Minimalist Aesthetic Beige Design - Etsy",
+     "Social Media Templates for Coaches, Coach Instagram Templates, Coach Facebook Templates, Social Media Post, Content Creator Template - Etsy Australia",
+     "Join the Human Fundamentals\u2122 Blueprint"
+    ],
+    "chars": 6129
+   }
+  },
+  {
+   "id": "30",
+   "theme": "brand",
+   "prompt": "What is Quietjar?",
+   "claude": {
+    "brands": [
+     "Quietjar"
+    ],
+    "sources": [
+     "apps.apple.com",
+     "producthunt.com",
+     "rtings.com",
+     "wide-composer-4d6.notion.site"
+    ],
+    "chars": 741
+   },
+   "chatgpt": {
+    "brands": [
+     "Quietjar"
+    ],
+    "sources": [],
+    "chars": 1548
+   }
+  }
+ ],
+ "totals": {
+  "claude": [
+   [
+    "Stripe",
+    20
+   ],
+   [
+    "Ko-fi",
+    19
+   ],
+   [
+    "Buy Me a Coffee",
+    16
+   ],
+   [
+    "PayPal",
+    12
+   ],
+   [
+    "Patreon",
+    10
+   ],
+   [
+    "GitHub Sponsors",
+    9
+   ],
+   [
+    "Open Collective",
+    8
+   ],
+   [
+    "Liberapay",
+    7
+   ],
+   [
+    "Donorbox",
+    7
+   ],
+   [
+    "Givebutter",
+    6
+   ],
+   [
+    "GiveWP",
+    5
+   ],
+   [
+    "Zeffy",
+    5
+   ],
+   [
+    "Ghost",
+    4
+   ],
+   [
+    "Substack",
+    4
+   ],
+   [
+    "GoFundMe",
+    3
+   ],
+   [
+    "Square",
+    3
+   ],
+   [
+    "Polar",
+    2
+   ],
+   [
+    "Classy",
+    2
+   ],
+   [
+    "Venmo",
+    2
+   ],
+   [
+    "Memberful",
+    2
+   ],
+   [
+    "Gumroad",
+    1
+   ],
+   [
+    "Tipeee",
+    1
+   ],
+   [
+    "Steady",
+    1
+   ],
+   [
+    "thanks.dev",
+    1
+   ],
+   [
+    "Mollie",
+    1
+   ],
+   [
+    "Bandcamp",
+    1
+   ],
+   [
+    "Cash App",
+    1
+   ],
+   [
+    "Quietjar",
+    1
+   ]
+  ],
+  "chatgpt": [
+   [
+    "Stripe",
+    18
+   ],
+   [
+    "Ko-fi",
+    13
+   ],
+   [
+    "PayPal",
+    13
+   ],
+   [
+    "Buy Me a Coffee",
+    10
+   ],
+   [
+    "Patreon",
+    6
+   ],
+   [
+    "Donorbox",
+    6
+   ],
+   [
+    "GitHub Sponsors",
+    5
+   ],
+   [
+    "Ghost",
+    4
+   ],
+   [
+    "Mollie",
+    4
+   ],
+   [
+    "Open Collective",
+    4
+   ],
+   [
+    "Liberapay",
+    3
+   ],
+   [
+    "Givebutter",
+    3
+   ],
+   [
+    "Payhip",
+    2
+   ],
+   [
+    "Fourthwall",
+    1
+   ],
+   [
+    "Tipeee",
+    1
+   ],
+   [
+    "Steady",
+    1
+   ],
+   [
+    "Fundraise Up",
+    1
+   ],
+   [
+    "Zeffy",
+    1
+   ],
+   [
+    "GiveWP",
+    1
+   ],
+   [
+    "GoFundMe",
+    1
+   ],
+   [
+    "Memberful",
+    1
+   ],
+   [
+    "Gumroad",
+    1
+   ],
+   [
+    "Thinkific",
+    1
+   ],
+   [
+    "Quietjar",
+    1
+   ]
+  ]
+ }
+}

@@ -1,0 +1,85 @@
+---
+import Container from "@/components/container.astro";
+import Cta from "@/components/cta.astro";
+import Faq from "@/components/faq.astro";
+import organization from "@/i18n/data/en/organization.json";
+import { dictionary } from "@/i18n/t";
+import Layout from "@/layouts/Layout.astro";
+import { type Article, formatArticleDate, lastModified } from "@/lib/articles";
+import { localizedPath } from "@/lib/links";
+
+interface Props {
+  entry: Article;
+}
+
+const { entry } = Astro.props;
+const { title, description, publishedDate, updatedDate, pillar, faq } = entry.data;
+
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+const siteUrl = Astro.site ?? new URL("https://quietjar.com");
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const modified = lastModified(entry);
+
+const faqItems = faq.map((item) => ({
+  "@type": "Question",
+  name: item.question,
+  acceptedAnswer: { "@type": "Answer", text: item.answer },
+}));
+
+const articleNode = {
+  "@type": "Article",
+  "@id": `${canonical}#article`,
+  headline: title,
+  description,
+  datePublished: publishedDate.toISOString().slice(0, 10),
+  dateModified: modified.toISOString().slice(0, 10),
+  inLanguage: locale,
+  author: { "@id": organization["@id"] },
+  publisher: { "@id": organization["@id"] },
+  mainEntityOfPage: { "@id": canonical },
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  webPage={{ datePublished: articleNode.datePublished, dateModified: articleNode.dateModified }}
+  faq={faqItems}
+  additionalSchema={[articleNode]}>
+  <Container class="py-16 lg:py-24">
+    <article class="mx-auto max-w-[720px]">
+      <a href={localizedPath("/articles/", locale)} class="text-[13.5px] font-medium text-qj-green hover:text-qj-blue">
+        {copy.articles.pillars[pillar]}
+      </a>
+      <h1 class="mt-4 text-balance font-display text-[clamp(34px,4.4vw,44px)] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
+        {title}
+      </h1>
+      <p class="mt-5 text-pretty text-[17px] leading-[1.62] text-qj-ink-2">{description}</p>
+      <p class="mt-8 border-b border-qj-line pb-8 font-mono text-[12.5px] text-qj-ink-3">
+        <time datetime={articleNode.datePublished}>
+          {copy.articles.published.replace("{date}", formatArticleDate(publishedDate, locale))}
+        </time>
+        {
+          updatedDate && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <time datetime={articleNode.dateModified}>
+                {copy.articles.updated.replace("{date}", formatArticleDate(updatedDate, locale))}
+              </time>
+            </>
+          )
+        }
+      </p>
+
+      <div
+        class="prose prose-slate mt-10 max-w-none prose-headings:font-display prose-headings:tracking-[-0.022em] prose-a:text-qj-blue hover:prose-a:text-qj-green">
+        <slot />
+      </div>
+    </article>
+  </Container>
+
+  {faqItems.length > 0 && <Faq eyebrow={copy.articles.faqEyebrow} title={copy.articles.faqTitle} items={faqItems} />}
+
+  <Cta />
+</Layout>

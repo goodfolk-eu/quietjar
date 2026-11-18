@@ -53,7 +53,7 @@ These are the product-specific rules. The general house style (rhythm, banned wo
 
 ## Status
 
-Pre-launch, September 2026. Current work: website redesign. The logo is final and out of scope for any advice.
+Live. Content and search are documented in `docs/marketing/content-plan.md` (pillars, clusters, channels) and `docs/marketing/article-ideas.md`. The logo is final and out of scope for any advice.
 
 ## Reference files (load on demand)
 
@@ -65,5 +65,4 @@ Read the file that matches the task. Each one assumes you have read this page an
 - `references/writing.md` — house writing style: rhythm, banned words, formatting, numbers, competitive references. Load for every writing task.
 - `references/brand.md` — values, personality, vocabulary rules, visual behaviour. Load for copywriting and design review.
 - `references/market.md` — TAM, SAM, SOM with sourced anchors and stated assumptions. Internal only, never for the website.
-- `references/go-to-market.md` — site architecture, content pillars, channels, launch phases, metrics. Load for planning content or launch work.
 - `references/open-decisions.md` — the unresolved questions that block copy. Check before writing anything with a number in it.

@@ -1,0 +1,19 @@
+{
+  "articles": {
+    "kicker": "Articles",
+    "title": "Notes on asking for support",
+    "description": "How to fund your site, project or work with support from the people who use it. Guides, comparisons and what we learn building QuietJar.",
+    "published": "Published {date}",
+    "updated": "Updated {date}",
+    "faqEyebrow": "Questions",
+    "faqTitle": "Frequently asked questions",
+    "rssLabel": "RSS feed",
+    "empty": "Nothing here yet.",
+    "pillars": {
+      "goals": "Goals that end",
+      "craft": "Craft notes",
+      "audience": "Guides",
+      "quiet": "Quiet by design"
+    }
+  }
+}
