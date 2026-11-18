@@ -1,0 +1,64 @@
+---
+import Container from "@/components/container.astro";
+import { locales } from "@/i18n/config";
+import { dictionary } from "@/i18n/t";
+import Layout from "@/layouts/Layout.astro";
+import { articleSlug, formatArticleDate, getArticles } from "@/lib/articles";
+import { localizedPath } from "@/lib/links";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.currentLocale ?? "en";
+const copy = dictionary(locale);
+const articles = await getArticles(locale);
+---
+
+<Layout title={copy.articles.title} description={copy.articles.description}>
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/rss+xml"
+    title={copy.articles.title}
+    href={localizedPath("/articles/rss.xml", locale).replace(/\/$/, "")}
+  />
+  <Container class="py-16 lg:py-24">
+    <div class="mx-auto max-w-[720px]">
+      <span class="text-[13.5px] font-medium text-qj-green">{copy.articles.kicker}</span>
+      <h1 class="mt-4 text-balance font-display text-[44px] font-bold leading-[1.05] tracking-[-0.028em] text-qj-ink">
+        {copy.articles.title}
+      </h1>
+      <p class="mt-5 max-w-[52ch] text-pretty text-[17px] leading-[1.62] text-qj-ink-2">{copy.articles.description}</p>
+
+      <div class="mt-14 flex flex-col">
+        {articles.length === 0 && <p class="text-qj-ink-3">{copy.articles.empty}</p>}
+        {
+          articles.map((entry) => (
+            <a
+              href={localizedPath(`/articles/${articleSlug(entry)}/`, locale)}
+              class="group border-t border-qj-line py-8 last:border-b">
+              <p class="font-mono text-[12px] uppercase tracking-[0.08em] text-qj-ink-3">
+                {copy.articles.pillars[entry.data.pillar]}
+                <span aria-hidden="true"> · </span>
+                <time datetime={entry.data.publishedDate.toISOString().slice(0, 10)}>
+                  {formatArticleDate(entry.data.publishedDate, locale)}
+                </time>
+              </p>
+              <h2 class="mt-3 font-display text-[24px] font-bold tracking-[-0.028em] text-qj-ink group-hover:text-qj-blue">
+                {entry.data.title}
+              </h2>
+              <p class="mt-2 text-pretty text-[15.5px] leading-[1.65] text-qj-ink-2">{entry.data.description}</p>
+            </a>
+          ))
+        }
+      </div>
+
+      <a
+        href={localizedPath("/articles/rss.xml", locale).replace(/\/$/, "")}
+        class="mt-10 inline-block font-mono text-[13px] text-qj-ink-3 hover:text-qj-blue">
+        {copy.articles.rssLabel}
+      </a>
+    </div>
+  </Container>
+</Layout>

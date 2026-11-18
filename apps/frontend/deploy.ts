@@ -138,6 +138,51 @@ async function purgeCache(): Promise<void> {
   }
 }
 
+/** Served from the site root as `<key>.txt`; IndexNow fetches it to verify the submitter. */
+const INDEXNOW_KEY = "9db9c3a85e9f4429a8339e31353c070a";
+
+async function sitemapUrls(): Promise<string[]> {
+  const files = (await readdir(DIST_DIR)).filter(
+    (name) => /^sitemap-.*\.xml$/.test(name) && name !== "sitemap-index.xml",
+  );
+  return files.flatMap((name) =>
+    [...readFileSync(join(DIST_DIR, name), "utf8").matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+      (match) => match[1],
+    ),
+  );
+}
+
+/**
+ * Tells Bing (and through it ChatGPT search) and other IndexNow engines that
+ * the site changed. A failure here never fails the deploy: the pages are live
+ * and the crawlers find them anyway, only later.
+ */
+async function submitIndexNow(): Promise<void> {
+  const urls = await sitemapUrls();
+  if (urls.length === 0) {
+    console.warn("Skipping IndexNow: no URLs found in the sitemap.");
+    return;
+  }
+  const host = new URL(urls[0]).host;
+  console.log(`Submitting ${urls.length} URLs to IndexNow...`);
+  try {
+    const res = await fetch("https://api.indexnow.org/IndexNow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        host,
+        key: INDEXNOW_KEY,
+        keyLocation: `https://${host}/${INDEXNOW_KEY}.txt`,
+        urlList: urls,
+      }),
+    });
+    if (res.ok) console.log(`IndexNow accepted the submission (${res.status}).`);
+    else console.warn(`IndexNow submission failed: ${res.status} ${res.statusText}`);
+  } catch (err) {
+    console.warn("IndexNow submission failed:", err instanceof Error ? err.message : err);
+  }
+}
+
 /** Mirror IMAGE_PREFIX in apps/backend/src/widget/storage.ts and HOSTED_IMAGE_PREFIX
     in apps/backend/src/hosted/images.ts: rendered widget images and uploaded
     hosted page images live in the same zone and must survive the deploy's cleanup. */
@@ -207,6 +252,7 @@ async function main(): Promise<void> {
 
   console.log(`Deploy complete: ${uploads.length} uploaded, ${deleted} deleted.`);
   await purgeCache();
+  await submitIndexNow();
 }
 
 main().catch((err) => {

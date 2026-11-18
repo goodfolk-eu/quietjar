@@ -1,3 +1,4 @@
+import enArticles from "./en/articles.json";
 import enCompare from "./en/compare.json";
 import enDashboardFeedback from "./en/dashboard/feedback.json";
 import enDashboardGoals from "./en/dashboard/goals.json";
@@ -33,6 +34,7 @@ const dictionaries = {
     ...enFeatures,
     ...enCompare,
     ...enPricing,
+    ...enArticles,
   },
 } as const;
 

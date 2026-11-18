@@ -16,6 +16,10 @@ import { mock } from "bun:test";
 process.env.BUNNY_DATABASE_URL = ":memory:";
 process.env.STRIPE_SECRET_KEY ??= "sk_test_harness";
 process.env.PUBLIC_FRONTEND_URL ??= "http://localhost:4321";
+// A developer's .env carries real Bunny storage credentials, and Bun loads it
+// into tests. Left set, the widget image route calls Bunny's API on every
+// request and times out locally while passing in CI.
+delete process.env.BUNNY_S3_BUCKET;
 
 /** The user the next request is authenticated as. Null means signed out. */
 export const session: { user: { id: string; email: string } | null } = {
