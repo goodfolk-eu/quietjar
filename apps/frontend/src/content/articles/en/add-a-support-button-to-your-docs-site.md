@@ -3,7 +3,7 @@ title: "Add a support button to your docs site: Docusaurus, VitePress and Starli
 description: Your users read your docs far more often than your repo. Here is where a support button belongs on a docs site, with tested config for three frameworks.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: What is the best way to accept donations on a documentation site?
     answer: Put a small support button on the docs site itself, because that is where your users spend their time. Keep it out of the way, tie it to a real cost like hosting, and let it go quiet when that cost is covered. Keep GitHub Sponsors and FUNDING.yml for the people who do visit the repo.

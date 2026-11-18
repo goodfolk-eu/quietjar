@@ -3,7 +3,7 @@ title: How to add a donation button to an Astro site
 description: Paste two script tags with is:inline into your base layout, just before </body>. Astro ships them as written and the button shows on every page.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: How do I add a donate button to my Astro site?
     answer: Paste the QuietJar snippet into your base layout, just before the closing body tag, and add is:inline to both script tags. Astro then ships them as written, and the button shows on every page that uses the layout.

@@ -3,7 +3,7 @@ title: A European alternative to Buy Me a Coffee and Patreon
 description: Yes, there are European options. Liberapay, Tipeee, Steady, Petje.af and QuietJar compared on fees, payment methods and who can get paid.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: Is there a European alternative to Patreon?
     answer: Yes. Steady (Berlin) is the closest match for paid memberships, at 10% plus payment fees. Petje.af (Netherlands) and Tipeee (France) also offer recurring support with rewards. Liberapay (France) handles recurring donations without membership tiers and takes no platform fee.

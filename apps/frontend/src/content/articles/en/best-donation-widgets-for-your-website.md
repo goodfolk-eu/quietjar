@@ -3,7 +3,7 @@ title: The best donation widgets for your website (if you are not a charity)
 description: Most donation widgets only accept registered nonprofits. These are the ones an individual, creator or small project can use, compared on fees and checkout.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: Is there an embeddable donation widget I can put on any website?
     answer: Yes. QuietJar, Ko-fi, Buy Me a Coffee, Donorbox and Jotform all give you a snippet you paste into your site. The bigger question is whether they accept you. Givebutter, Zeffy and Give Lively only accept organizations, so an individual creator or developer cannot sign up.

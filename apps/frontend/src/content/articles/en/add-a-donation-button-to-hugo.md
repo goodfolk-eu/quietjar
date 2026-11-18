@@ -3,7 +3,7 @@ title: How to add a donation button to a Hugo site
 description: Put the snippet in a partial, read your site id from hugo.toml, and call the partial from baseof.html just before </body>. Here is the full setup.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: How do I add a donate button to my Hugo site?
     answer: Put the QuietJar snippet in a partial, for example layouts/_partials/quietjar.html, and call it from your base template just before the closing body tag with {{ partial "quietjar.html" . }}. The button then shows on every page.

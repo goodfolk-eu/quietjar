@@ -3,7 +3,7 @@ title: The best Buy Me a Coffee alternatives for your own website
 description: Ko-fi is the most common pick, and for good reason. Here is how Ko-fi, QuietJar, Liberapay, GitHub Sponsors, Patreon and Stripe compare on your own site.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: What is the best alternative to Buy Me a Coffee?
     answer: For most creators it is Ko-fi, because one-off tips can be free of platform fees and the money goes straight to your PayPal or Stripe account. If you want support to happen on your own website around a real cost, with a goal that ends, QuietJar is built for that.

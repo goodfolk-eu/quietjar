@@ -21,10 +21,10 @@ The core argument. Every other cluster links back here.
 
 | # | Title | Summary | Persona | Source | Priority | Volume | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | How to add a donation goal with a progress bar to your website | Step by step for any site, why a goal tied to a real cost gets funded, and what to show on the bar. Answers the prompt where ChatGPT wrote DIY HTML and Claude listed charity tools. | M, C, P | P18, Q6 | P1 | 500 | Review |
+| 1 | How to add a donation goal with a progress bar to your website | Step by step for any site, why a goal tied to a real cost gets funded, and what to show on the bar. Answers the prompt where ChatGPT wrote DIY HTML and Claude listed charity tools. | M, C, P | P18, Q6 | P1 | 500 | Done |
 | 2 | A donate button that disappears when the goal is met | What it is, why a button that steps aside gets more support, and how to set one up. No product owns this answer today. | M, C, P | P20 | P1 | 0 | Done |
 | 3 | €97 in 12 hours: how a €50 hosting goal beat a year of Buy Me a Coffee | The TCG Pocket Collection Tracker case study as a long read: the setup, the timeline, the numbers against €30 a month before. | M, C | P21, Q5 | P1 | 10 | To do |
-| 4 | How to cover your website's hosting bill with a monthly goal | A worked example: add up the real costs, set the goal, explain it in one line, and what happens when it is covered. | M, P | P19, Q6 | P1 | 0 | Review |
+| 4 | How to cover your website's hosting bill with a monthly goal | A worked example: add up the real costs, set the goal, explain it in one line, and what happens when it is covered. | M, P | P19, Q6 | P1 | 0 | Done |
 | 5 | Why an always-on donate button turns into wallpaper | The essay behind the product. Visitors learn to ignore an ask that never changes; a finish line gives them a reason to act now. | All | Q5, pillar 1 | P1 | 0 | To do |
 | 6 | How to set a funding goal people trust | Use real costs, show the math, keep it small enough to finish. Why "$53 in costs, $5,800 goal" makes people suspicious. | M, P | Q6 | P2 | 20 | To do |
 | 7 | One-time or monthly support: what works for a small site | Why many visitors will give once but not commit monthly, and how a monthly goal sits between the two. | C, M | P24, Q6 | P2 | 0 | To do |
@@ -37,10 +37,10 @@ The how-to cluster. Each platform guide must be tested on a real install.
 | # | Title | Summary | Persona | Source | Priority | Volume | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 9 | How to add a donate button to your website | The hub. The four ways to do it (PayPal button, payment link, hosted page, embedded widget), the trade-offs, and step-by-step setup. | All | P06, Q1 | P1 | 270 | Next |
-| 10 | The best donation widgets for your website (if you are not a charity) | Most widget lists are written for registered nonprofits. A ranked list for individuals and small projects, judged on wallets, no account, design fit and layout shift. | All | P10 | P1 | 230 | Review |
-| 11 | How to add a donation button to an Astro site | Install, configure a goal, and keep zero layout shift. With the actual snippet. | M | P09 | P1 | 0 | Review |
-| 12 | How to add a donation button to a Hugo site | Partial or shortcode, goal setup, and testing. With the actual snippet. | M | P09 | P1 | 0 | Review |
-| 13 | Add a support button to your docs site: Docusaurus, VitePress, Starlight | Where the ask works on a docs site (not the footer), and setup for the three most common docs frameworks. | M | P17, Q7 | P1 | 0 | Review |
+| 10 | The best donation widgets for your website (if you are not a charity) | Most widget lists are written for registered nonprofits. A ranked list for individuals and small projects, judged on wallets, no account, design fit and layout shift. | All | P10 | P1 | 230 | Done |
+| 11 | How to add a donation button to an Astro site | Install, configure a goal, and keep zero layout shift. With the actual snippet. | M | P09 | P1 | 0 | Done |
+| 12 | How to add a donation button to a Hugo site | Partial or shortcode, goal setup, and testing. With the actual snippet. | M | P09 | P1 | 0 | Done |
+| 13 | Add a support button to your docs site: Docusaurus, VitePress, Starlight | Where the ask works on a docs site (not the footer), and setup for the three most common docs frameworks. | M | P17, Q7 | P1 | 0 | Done |
 | 14 | How to add a donate button to WordPress without PayPal | The options beyond PayPal and GiveWP, and how to add an embedded widget to posts and pages. | C, P | P07, Q9 | P2 | 60 | To do |
 | 15 | Tips on Ghost: native tips or an embedded widget | A fair look at Ghost's built-in tips, where it falls short (pending Stripe payments, one-off supporters shown as free members), and the alternative. | P, C | P08, Q9 | P2 | 0 | To do |
 | 16 | How to add a donate button on Squarespace | Code block setup, placement, and testing on mobile. | C | AC | P2 | 80 | To do |
@@ -57,8 +57,8 @@ The how-to cluster. Each platform guide must be tested on a real install.
 
 | # | Title | Summary | Persona | Source | Priority | Volume | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 23 | A European alternative to Buy Me a Coffee and Patreon | What "European" means in practice: where your data lives, which local payment methods work, which country the company is in. An honest look at Liberapay, Tipeee, Steady and Quietjar. | All | P03, Q3 | P1 | 0 | Review |
-| 24 | The best Buy Me a Coffee alternatives for your own website | Written for site owners, not profile-page users. A ranked list with who each option is best for. | C, M | P01, Q2 | P1 | 940 | Review |
+| 23 | A European alternative to Buy Me a Coffee and Patreon | What "European" means in practice: where your data lives, which local payment methods work, which country the company is in. An honest look at Liberapay, Tipeee, Steady and Quietjar. | All | P03, Q3 | P1 | 0 | Done |
+| 24 | The best Buy Me a Coffee alternatives for your own website | Written for site owners, not profile-page users. A ranked list with who each option is best for. | C, M | P01, Q2 | P1 | 940 | Done |
 | 25 | The best PayPal donate button alternatives | Stripe links, hosted platforms and embedded widgets compared on fees, wallets and setup time. | C, P | P04, Q8 | P1 | 10 | To do |
 | 26 | Stripe Payment Links vs Ko-fi for small donations | Fees on a €5 gift, setup effort, what the donor sees, and Stripe's rules for personal tips. | M, C | P12, Q2 | P1 | 140 | To do |
 | 27 | Ko-fi vs Buy Me a Coffee: fees and features side by side | Neutral comparison with a dated fee table. Quietjar is not in the headline. | C | P02, Q2 | P2 | 1,030 | Next |
@@ -72,8 +72,8 @@ The how-to cluster. Each platform guide must be tested on a real install.
 
 | # | Title | Summary | Persona | Source | Priority | Volume | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 33 | Donate buttons with Apple Pay, Google Pay and iDEAL | Which tools support all three, how wallets show up on a page, and why it matters for mobile visitors. | All | P25 | P1 | 10 | Review |
-| 34 | Can you use Stripe to accept donations on a personal website? | Stripe's rules on tips and donations for individuals, why personal tip links get flagged, and safe ways to do it. The engines currently disagree on this. | M, C | P11, Q8 | P1 | 1,820 | Review |
+| 33 | Donate buttons with Apple Pay, Google Pay and iDEAL | Which tools support all three, how wallets show up on a page, and why it matters for mobile visitors. | All | P25 | P1 | 10 | Done |
+| 34 | Can you use Stripe to accept donations on a personal website? | Stripe's rules on tips and donations for individuals, why personal tip links get flagged, and safe ways to do it. The engines currently disagree on this. | M, C | P11, Q8 | P1 | 1,820 | Done |
 | 35 | What each platform takes from a €5 donation | A dated table: Ko-fi, Buy Me a Coffee, Patreon, GitHub Sponsors, Open Collective, Liberapay, PayPal, Stripe, Quietjar. Sourced from each pricing page. | All | P13, P14, Q4 | P1 | 2,960 | Next |
 | 36 | Why small donations lose so much to fees | The fixed per-transaction fee explained with examples, and what that means for €2 and €5 gifts. | All | Q4 | P2 | 30 | To do |
 | 37 | The fastest way for a visitor to donate: no account, two taps | What slows donors down (forms, accounts, redirects to log in) and what a fast checkout looks like. | All | P26, Q10 | P2 | 0 | To do |

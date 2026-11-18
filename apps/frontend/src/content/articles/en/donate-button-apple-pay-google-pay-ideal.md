@@ -3,7 +3,7 @@ title: Donate buttons with Apple Pay, Google Pay and iDEAL
 description: Donorbox, Ko-fi, PayRequest, Stripe Payment Links and QuietJar support all three. Here is how wallets and iDEAL work, and what to check first.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: Which donation button supports Apple Pay, Google Pay and iDEAL?
     answer: In November 2026, QuietJar, Donorbox, PayRequest, Ko-fi (with a connected Stripe account) and Stripe Payment Links all listed the three methods. Givebutter and Buy Me a Coffee list Apple Pay and Google Pay, but we found no iDEAL on either.

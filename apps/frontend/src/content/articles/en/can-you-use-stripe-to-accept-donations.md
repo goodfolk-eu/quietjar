@@ -3,7 +3,7 @@ title: Can you use Stripe to accept donations on a personal website?
 description: Often yes, but Stripe's rules for individuals are strict and partly unclear. Here is what Stripe says about tips and donations, and your options.
 publishedDate: 2026-11-16
 pillar: audience
-draft: true
+draft: false
 faq:
   - question: Can I accept donations with Stripe without a registered business?
     answer: You can open a Stripe account as a sole proprietor without a separate company. What you may accept is a different question. Stripe's rules say a tip must be for a good or service you provided, and a donation must be tied to a specific charitable purpose.

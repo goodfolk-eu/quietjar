@@ -3,7 +3,7 @@ title: How to add a donation goal with a progress bar to your website
 description: Pick a goal for a real cost, show the amount raised against it, and use a bar that updates by itself. Here are your options and how to set one up.
 publishedDate: 2026-11-16
 pillar: goals
-draft: true
+draft: false
 faq:
   - question: How do I show a donation goal with a progress bar on my website?
     answer: Use a donation tool that ties the bar to real payments, so it fills as people give. With QuietJar you create a goal in the dashboard, attach it to the widget and paste one script tag. You can also write the bar in HTML yourself, but then you update the number by hand.

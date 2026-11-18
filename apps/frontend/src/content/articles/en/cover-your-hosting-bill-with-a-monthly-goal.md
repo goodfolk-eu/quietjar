@@ -3,7 +3,7 @@ title: How to cover your website's hosting bill with a monthly goal
 description: Add up what your site really costs each month, set a goal for that amount, and say what it pays for. Here is a worked example with real settings.
 publishedDate: 2026-11-16
 pillar: goals
-draft: true
+draft: false
 faq:
   - question: How do I cover my website's monthly hosting bill with donations?
     answer: Add up what the site costs each month, set a monthly goal for that amount plus a little for fees, and put it on a donate button with one line that says what it pays for. Once the goal is covered, let the button step aside until next month.
