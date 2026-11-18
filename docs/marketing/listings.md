@@ -10,10 +10,10 @@ Shared assets for every submission live in `docs/marketing/assets/` (logo, og im
 
 ## Must-haves
 
-- [ ] **P1** AlternativeTo - https://alternativeto.net/manage-item/ - add as alternative to Buy Me a Coffee, Ko-fi, Liberapay, Open Collective, GitHub Sponsors, Patreon, Donorbox
-- [ ] **P1** Product Hunt (product page only, no launch) - https://www.producthunt.com/products/new
-- [ ] **P1** Trustpilot business profile - https://business.trustpilot.com/signup
-- [ ] **P1** GitHub mirror of https://codefloe.com/Goodfolk.eu/quietjar (push mirror from Codefloe), with topics, description and website link set. Most directories and awesome lists only crawl GitHub
+- [x] **P1** AlternativeTo - live: https://alternativeto.net/software/quietjar/about/ - open source (AGPL-3.0), alternative to Buy Me a Coffee, Ko-fi, Liberapay, Open Collective, Patreon, Donorbox (GitHub Sponsors is not on AlternativeTo). Later: replace the widget-open.png screenshot (shows a dev test page) with home-desktop.png
+- [ ] **P1** Product Hunt - product pages now only exist through a launch. Draft ready at https://www.producthunt.com/products/quietjar (not scheduled): tagline, description, 3 gallery images, GitHub link, tags Fundraising/Crowdfunding/Payments, pricing Free, maker Marcel Panse, first comment with the TCG Pocket story. Later: add a demo video and other makers, then decide when to launch
+- [ ] **P1** Trustpilot business profile - https://business.trustpilot.com/signup - signup in the Orca browser fails at the personal details step ("Sorry, we couldn't complete your request"). Later: retry in a regular browser
+- [x] **P1** GitHub repo - https://github.com/goodfolk-eu/quietjar (public, auto-mirrored from Codefloe). The empty `quietjar` GitHub org is kept to reserve the name
 - [ ] **P1** Crunchbase company profile - https://www.crunchbase.com/
 - [ ] **P1** LinkedIn company page
 - [ ] **P1** Google Business Profile (for branded search panel)
@@ -23,7 +23,7 @@ Shared assets for every submission live in `docs/marketing/assets/` (logo, og im
 
 - [ ] **P1** G2 - https://sell.g2.com/
 - [ ] **P1** Capterra (Gartner, one submission covers GetApp and Software Advice) - https://www.capterra.com/vendors/sign-up
-- [ ] **P2** SaaSHub - https://www.saashub.com/submit
+- [x] **P2** SaaSHub - https://www.saashub.com/manage/quietjar - submitted and verified 2026-11-18 (free plan, approval 1-12 weeks). Profile complete: description, 5 features, web platform, pricing, open source link, logo, 2 screenshots, startup details (Amsterdam, 1-9 employees). Added as competitor to Coindrop, PeachPay, Tipeee. Later: check approval, optionally answer the Q&A questions and set a release date
 - [ ] **P2** SourceForge (business software directory) - https://sourceforge.net/software/vendors/
 - [ ] **P2** Slashdot software directory (same backend as SourceForge)
 - [ ] **P2** TrustRadius - https://www.trustradius.com/vendors
@@ -40,8 +40,8 @@ Shared assets for every submission live in `docs/marketing/assets/` (logo, og im
 
 Our EU domicile, EU payments and EU hosting qualify us for all of these.
 
-- [ ] **P1** European Alternatives - https://european-alternatives.eu/ - submission review is reportedly slow, also ping via their Mastodon or LinkedIn
-- [ ] **P1** Only-EU - https://only-eu.eu/
+- [x] **P1** European Alternatives - https://european-alternatives.eu/ - suggestion submitted 2026-11-18 via the account dashboard (self-hosted & open source, Netherlands, EU hosted). Review is reportedly slow. Later: check approval, ping via Mastodon or LinkedIn if nothing happens, verify the hosting details text
+- [x] **P1** Only-EU - https://only-eu.eu/ - suggestion submitted 2026-11-18 (category Fintech & Banking), replies go to support@quietjar.com. Later: check approval
 - [ ] **P1** GoEuropean - https://goeuropean.org/
 - [ ] **P2** Buy-European.net
 - [ ] **P2** European Purpose
@@ -62,7 +62,7 @@ Our EU domicile, EU payments and EU hosting qualify us for all of these.
 
 ## Startup and launch directories
 
-- [ ] **P1** BetaList - https://betalist.com/submit
+- [ ] **P1** BetaList - https://betalist.com/submit - drafted via the agent API and claimed 2026-11-18. No free plan: pick Lite, Standard or Premium to enter review. Later: pay, and replace the widget-open.png screenshot with home-desktop.png
 - [ ] **P1** Indie Hackers product page - https://www.indiehackers.com/products
 - [ ] **P2** F6S - https://www.f6s.com/
 - [ ] **P2** FoundrList
@@ -123,9 +123,9 @@ Licensed under AGPL-3.0 (OSI-approved), which OpenAlternative, awesome lists and
   - [ ] `awesome-astro`, `awesome-hugo`, `awesome-eleventy`, `awesome-jamstack`
   - [ ] `awesome-indie` (mezod/awesome-indie)
   - [ ] `awesome-privacy` (EU, no tracking angle)
-- [ ] **P1** nayafia/lemonade-stand (the canonical "how to fund open source" list) - PR to add us
-- [ ] **P1** OpenAlternative - https://openalternative.co/submit - as open source alternative to Buy Me a Coffee and Ko-fi
-- [ ] **P1** AlternativeTo: tag the listing as open source (and self-hosted if applicable), this ranks it alongside Liberapay
+- [ ] **P1** nayafia/lemonade-stand - skipped: it is a guide to funding models with case studies, not a tool directory, and rarely merges. Later: add a QuietJar case study once a maintainer uses it
+- [ ] **P1** OpenAlternative - https://openalternative.co/submit - not eligible yet: repos under 6 months old need 250 GitHub stars (50 after 6 months), and Codefloe URLs are not accepted. Account created via GitHub. Later: submit with the GitHub repo URL once eligible
+- [x] **P1** AlternativeTo: tagged as open source (AGPL-3.0) and self-hosted, see the AlternativeTo entry above
 - [ ] **P2** Open Source Alternative.To - https://www.opensourcealternative.to/
 - [ ] **P2** OPEN_SRC.ME
 - [ ] **P2** awesome-selfhosted (only if self-hosting is documented and supported) - PR to https://github.com/awesome-selfhosted/awesome-selfhosted-data
