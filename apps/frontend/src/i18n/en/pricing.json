@@ -32,7 +32,7 @@
     },
     "methods": {
       "title": "How your supporters can pay",
-      "text": "Whatever they reach for, you receive the same. The cost difference is ours, not yours.",
+      "text": "Whatever they reach for, you receive the same. We absorb the cost difference.",
       "items": [
         "Visa",
         "Mastercard",
@@ -49,14 +49,14 @@
         "Satispay",
         "Pay by Bank"
       ],
-      "note": "Which methods appear depends on where your account is registered and where your supporter is."
+      "note": "Which methods appear depends on your account's country and where your supporter is."
     },
     "why": {
       "title": "Why it is worth it",
       "items": [
         {
           "lead": "Goals that end",
-          "text": "Set a real cost to cover. The button asks until it is covered, then steps aside, so your supporters never learn to ignore it."
+          "text": "Set a real cost to cover. The button asks until supporters cover it and steps aside after that, so they don't learn to ignore it."
         },
         {
           "lead": "Pays the way people already do",

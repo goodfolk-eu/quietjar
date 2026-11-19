@@ -7,8 +7,7 @@
     "links": [
       { "title": "Features", "path": "/features/" },
       { "title": "Pricing", "path": "/pricing/" },
-      { "title": "Developers", "path": "/developers/" },
-      { "title": "Source code", "path": "https://codefloe.com/Goodfolk.eu/quietjar" }
+      { "title": "Developers", "path": "/developers/" }
     ],
     "login": "Log in",
     "signup": "Add to your site",
@@ -33,7 +32,9 @@
       { "title": "Buy Me a Coffee alternative", "path": "/compare/buymeacoffee/" }
     ],
     "copyright": "Copyright © {year} QuietJar · A quiet way to accept support.",
-    "poweredBy": "Powered by"
+    "poweredBy": "Powered by",
+    "sourceCode": "QuietJar source code",
+    "sourceCodeUrl": "https://codefloe.com/Goodfolk.eu/quietjar"
   },
   "auth": {
     "title": "Sign in to QuietJar",

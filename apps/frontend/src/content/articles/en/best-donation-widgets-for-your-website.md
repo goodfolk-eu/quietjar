@@ -50,7 +50,7 @@ Checked in November 2026 on each tool's own site. Fees change often, so check ag
 | Jotform | Anyone | Yes, through Stripe Checkout | iDEAL and others, through Stripe Checkout | None, but plans limit payments per month | On top |
 | Givebutter | Organizations only | Yes | Not that we found | 0% with donor tips on, 3% with tips off | 2.9% + 30¢ with tips off |
 | Zeffy | Registered nonprofits in six countries | Yes | Not that we found | 0%, funded by donor tips | Covered by Zeffy |
-| Give Lively | US 501(c)(3) organizations | Not that we found | Not that we found | 0% | On top |
+| Give Lively | US 501(c)(3) organizations | Unconfirmed | Unconfirmed | 0% | On top |
 
 Sources: [Ko-fi fees](https://help.ko-fi.com/hc/en-us/articles/360002506494-Does-Ko-fi-take-a-fee), [Ko-fi payment methods](https://help.ko-fi.com/hc/en-us/articles/24482435253661-What-payment-methods-are-available-on-Ko-fi), [Buy Me a Coffee FAQ](https://buymeacoffee.com/faq), [Buy Me a Coffee charges](https://help.buymeacoffee.com/en/articles/8105744-how-to-calculate-charges-on-your-payment), [Donorbox pricing](https://donorbox.org/pricing), [Donorbox Europe](https://donorbox.org/europe), [Jotform pricing](https://www.jotform.com/pricing/), [Jotform Stripe FAQ](https://www.jotform.com/stripe/faq/), [Givebutter pricing](https://givebutter.com/pricing), [Givebutter eligibility](https://help.givebutter.com/en/articles/1726576-who-can-use-givebutter-and-what-can-i-raise-money-for), [Zeffy eligibility](https://support.zeffy.com/who-can-use-zeffy), [Give Lively membership](https://www.givelively.org/faqs/what-is-a-give-lively-nonprofit-membership-account).
 

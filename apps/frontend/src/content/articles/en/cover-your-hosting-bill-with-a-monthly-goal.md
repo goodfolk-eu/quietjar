@@ -25,15 +25,15 @@ Below is a worked example, from the cost sheet to the settings, so you can copy 
 
 Start with the bills, not with a number that sounds nice. Open your hosting account, your domain registrar and every service your site depends on, and write down what each one costs.
 
-Turn yearly costs into monthly ones by dividing by 12. Here is an example for a small site. The numbers are made up to show the method, so use your own:
+Turn yearly costs into monthly ones by dividing by 12. Here is an example for a small site. We made up these numbers to show the method, so use your own:
 
-| Cost (example) | Billed | Per month |
-| --- | --- | --- |
-| Virtual server | €9.00 a month | €9.00 |
-| Database backups | €3.00 a month | €3.00 |
-| Domain name | €18.00 a year | €1.50 |
-| Email sending service | €4.00 a month | €4.00 |
-| **Total** | | **€17.50** |
+| Cost (example) | Price | Billing period | Per month |
+| --- | --- | --- | --- |
+| Virtual server | €9.00 | Monthly | €9.00 |
+| Database backups | €3.00 | Monthly | €3.00 |
+| Domain name | €18.00 | Yearly | €1.50 |
+| Email sending service | €4.00 | Monthly | €4.00 |
+| **Total** | | | **€17.50** |
 
 Leave out things you would pay for anyway, like your own laptop. A goal works best when every euro in it maps to a bill your readers can picture.
 
@@ -98,15 +98,15 @@ If you would rather keep taking donations after the goal, you can keep the widge
 
 ## What if the goal is not reached?
 
-Then the button stays up for the whole month. On the first, the count goes back to zero for the new month, and whatever came in is still yours.
+The button stays up for the whole month. On the first, the count goes back to zero for the new month, and whatever came in is still yours.
 
-If you miss the goal month after month, look at the number before you look at the button. Is the goal close to the real bill? Does the one-line ask say what it is for? A smaller, honest goal that gets covered beats a big one that stays half empty.
+If you miss the goal month after month, look at the number before you look at the button. Is the goal close to the real bill? Does the one-line ask say what it is for? A smaller, honest goal that gets covered tells visitors their support worked. A big one that stays half empty does not.
 
 ## Does this actually work?
 
 We have one site with real numbers, so here they are. TCG Pocket Collection Tracker is a fan site for a trading card game. Its Buy Me a Coffee button brought in about €30 a month on average.
 
-In September 2026, the site set a €50 goal for that month's hosting. It raised €97 in 12 hours. Then the button disappeared until October.
+In September 2026, the site set a €50 goal for that month's hosting. It raised €97 in 12 hours. After that, the button stayed hidden until October.
 
 One Hacker News commenter guessed as much: if you [invite donations to cover hosting costs specifically](https://news.ycombinator.com/item?id=45903589), "you'd very quickly get a surplus". It was a guess, but it matches what happened here. A clear bill with a clear end is easy to say yes to.
 

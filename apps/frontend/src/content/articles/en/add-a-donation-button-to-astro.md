@@ -19,7 +19,7 @@ faq:
 
 To add a donation button to an Astro site, paste two script tags into your base layout, just before `</body>`, and add `is:inline` to both. Astro then ships them exactly as written, and the button shows up on every page that uses the layout. Supporters pay right on your page, with Apple Pay, Google Pay, cards or iDEAL.
 
-The usual advice is to link to Ko-fi or a Stripe payment page. That works, but it sends people away from your site, and the button asks forever. This guide shows the QuietJar way, with a goal that ends. We tested every step on a fresh Astro 7.4 site in November 2026.
+The usual advice is to link to Ko-fi or a Stripe payment page. A link like that works, but visitors leave your site to pay, and the button asks forever. This guide shows the QuietJar way, with a goal that ends. We tested every step on a fresh Astro 7.4 site in November 2026.
 
 ## What do you need before you start?
 
@@ -126,7 +126,7 @@ Then add an empty element wherever you want the card, for example at the end of 
 
 Pages without a `#support` element fall back to the floating corner. So one config in your base layout can give you an inline card on blog posts and a corner button everywhere else.
 
-One thing to keep in mind: the corner button sits in a fixed layer and never moves your content, but an inline card takes up space in the page. Put the slot where nothing important sits below it, like the end of an article or a sidebar, so the card does not push text down as it appears.
+The corner button sits in a fixed layer and never moves your content, but an inline card takes up space in the page. Put the slot where nothing important sits below it, like the end of an article or a sidebar, so the card does not push text down as it appears.
 
 ## How do you open the checkout from your own button?
 

@@ -19,7 +19,7 @@ faq:
 
 Often yes, but it depends on what people pay you for. Stripe lets individuals sign up as sole proprietors, and it allows tips for content you provide. A general "support me" link with nothing behind it is a gray area, and some site owners have had their accounts flagged for exactly that.
 
-This article goes through what Stripe's own pages say, why personal tip links get flagged, and what your options are. It is a summary of public rules, not legal advice.
+This article covers what Stripe's own pages say and why personal tip links get flagged. Then it walks through your options. It summarizes public rules and is no substitute for legal advice.
 
 ## Can an individual open a Stripe account?
 
@@ -43,13 +43,13 @@ So for a personal website, "tip" is the closer fit. If your site has articles, a
 
 Stripe's [prohibited and restricted businesses list](https://stripe.com/gb/legal/restricted-businesses) is where it gets less clear. Three entries matter here.
 
-**Peer-to-peer money transmission is prohibited.** It sits in the list of financial services Stripe does not support. Stripe also prohibits "processing where there is no bona fide good or service sold, or donation accepted".
+**Stripe prohibits peer-to-peer money transmission.** Stripe lists it among the financial services it does not support. Stripe also prohibits "processing where there is no bona fide good or service sold, or donation accepted".
 
-**Content creation is restricted, but creators on their own site are named.** Platforms that let creators receive tips need extra review. Then comes a note that matters for you: "Individual content creators on approved platforms (for example, connected accounts of an approved Stripe Connect user) and those directly distributing their own content (for example, on their own website) do not require preapproval." Creators still have to follow the list and "are subject to monitoring by Stripe".
+**Stripe restricts content creation, but names creators on their own site as an exception.** Stripe reviews platforms that let creators receive tips more closely. Then comes a note that matters for you: "Individual content creators on approved platforms (for example, connected accounts of an approved Stripe Connect user) and those directly distributing their own content (for example, on their own website) do not require preapproval." Creators still have to follow the list and "are subject to monitoring by Stripe".
 
-**Crowdfunding and fundraising are restricted.** This covers fundraising by nonprofits, charities and political organizations, and crowdfunding platforms. "Organisations fundraising for a charitable purpose" are, per the list, supported only in Australia, Canada, the United Kingdom and the United States, and "prohibited in all other countries".
+**Stripe restricts crowdfunding and fundraising.** This covers fundraising by nonprofits, charities and political organizations, and crowdfunding platforms. The list supports "organisations fundraising for a charitable purpose" only in Australia, Canada, the United Kingdom and the United States. Everywhere else they are "prohibited in all other countries".
 
-Read together, our understanding is this. Tips for your own content on your own website are allowed without preapproval. A button framed as a "donation" for a cause, or a fundraiser that looks like crowdfunding, falls under stricter rules. For organisations raising money for a charitable purpose, the list rules out every country except four. That is our reading of public pages, not Stripe's ruling on your case.
+Read together, our understanding is this. Tips for your own content on your own website are allowed without preapproval. A button framed as a "donation" for a cause, or a fundraiser that looks like crowdfunding, falls under stricter rules. For organisations raising money for a charitable purpose, the list rules out every country except four. This is our reading of public pages. Only Stripe can rule on your case.
 
 ## Why do personal tip links get flagged?
 
@@ -69,7 +69,7 @@ Stripe's FAQ on the [restricted businesses list](https://support.stripe.com/ques
 
 Someone on Hacker News once asked [how Ko-fi can connect to Stripe](https://news.ycombinator.com/item?id=41465944) when Stripe restricts crowdfunding. The answers there were guesses. The FAQ above is the closest thing to an official answer: the platform goes through Stripe's review, and creators on an approved platform do not each need preapproval.
 
-This does not make you exempt from the rules. Platforms have to "prevent use of their services to facilitate personal or peer-to-peer money transmission", and you still have to follow Stripe's terms. A platform is not a way around the rules. It is a setup the rules already expect.
+This does not make you exempt from the rules. Platforms have to "prevent use of their services to facilitate personal or peer-to-peer money transmission", and you still have to follow Stripe's terms. The rules already expect this setup, so a platform works within them.
 
 How each one works:
 
@@ -111,7 +111,7 @@ QuietJar is smaller and does one thing. You set a goal for a real cost, like thi
 
 ## Which route should you pick?
 
-Pick the one that fits who you are, not the one with the lowest fee on paper.
+Pick the one that fits who you are. The lowest fee on paper matters less.
 
 - **You have a Stripe account already and only need a link:** try Payment Links, and describe the payments as tips for your content.
 - **You are a registered charity:** Stripe's FAQ says "most registered charities may use Stripe to fundraise". Check the country notes on the restricted list first.

@@ -212,14 +212,14 @@
           "type": "number",
           "required": "no",
           "default": "7",
-          "description": "Days hidden after closing. Only used when close.after is days. A whole number of one or more; anything else falls back to 7."
+          "description": "How many days the widget stays hidden after a visitor closes it. Only used when close.after is days. It must be a whole number of one or more; any other value falls back to 7."
         },
         {
           "name": "donation.hideDays",
           "type": "number",
           "required": "no",
           "default": "30",
-          "description": "Days hidden after a completed donation, so the widget does not ask again right away. Same whole-number rule as close.days."
+          "description": "How many days the widget stays hidden after a completed donation, so it does not ask again right away. It follows the same whole-number rule as close.days."
         },
         {
           "name": "position.corner",

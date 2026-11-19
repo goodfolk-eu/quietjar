@@ -17,9 +17,7 @@ faq:
     answer: Often yes, because iDEAL is about where the supporter banks, not where you live. Stripe lists 40 countries whose accounts can accept iDEAL. With QuietJar, local methods are not available for accounts in every country, and need a short request and review.
 ---
 
-Several donate buttons now support Apple Pay, Google Pay and iDEAL together. When we checked in November 2026, QuietJar, Donorbox, PayRequest, Ko-fi (once you connect Stripe) and Stripe Payment Links all listed the three. The bigger differences are where the payment happens, who may use the tool, and what you need to set up first.
-
-This article explains why these methods matter, how they show up for your visitors, and what each tool offers.
+Five tools offered all three when we checked their sites in November 2026: QuietJar, Donorbox, PayRequest, Ko-fi (once you connect Stripe) and Stripe Payment Links. Where they really differ is where the payment happens, who may sign up, and how much setup each one needs.
 
 ## Why do Apple Pay, Google Pay and iDEAL matter for a donate button?
 
@@ -77,7 +75,11 @@ Donorbox has strong forms and lists Apple Pay, Google Pay and iDEAL among its pa
 
 ### PayRequest
 
-PayRequest lists cards, Apple Pay, Google Pay, iDEAL, Bancontact, SEPA and PayPal on one checkout. Its free plan charges 2% per payment, capped at €25, with paid plans at €5 and €20 a month. We could not tell from its pages whether the donation checkout opens on your site or on a PayRequest page, and we found no goal progress.
+PayRequest offers a single checkout with a long list of payment methods: cards, Apple Pay, Google Pay, iDEAL, Bancontact, SEPA and PayPal.
+
+The free plan charges 2% per payment, up to €25. Paid plans cost €5 or €20 a month.
+
+We could not tell from its pages where the donation checkout opens, on your site or on a PayRequest page. We also found no goal progress.
 
 ### Ko-fi
 

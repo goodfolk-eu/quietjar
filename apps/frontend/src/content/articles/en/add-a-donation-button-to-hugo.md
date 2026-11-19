@@ -19,7 +19,7 @@ faq:
 
 To add a donation button to a Hugo site, put the QuietJar snippet in a partial and call that partial from your base template, just before `</body>`. Keep your site id in `hugo.toml` so it is not hardcoded in the template. The button then shows on every page, and supporters pay right there with Apple Pay, Google Pay, cards or iDEAL.
 
-The usual advice is to link to Ko-fi or a Stripe payment page. That works, but it sends people away from your site, and the button asks forever. This guide shows the QuietJar way, with a goal that ends, in the template style the [Hugo docs](https://gohugo.io/templates/types/) use today.
+The usual advice is to link to Ko-fi or a Stripe payment page. A link like that works, but visitors leave your site to pay, and the button asks forever. This guide shows the QuietJar way, with a goal that ends, in the template style the [Hugo docs](https://gohugo.io/templates/types/) use today.
 
 ## What do you need before you start?
 

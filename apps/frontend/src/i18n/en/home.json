@@ -2,7 +2,7 @@
   "hero": {
     "eyebrow": "A support button with a finish line",
     "title": "Ask when it matters. Then go quiet.",
-    "description": "Set a goal for a real cost, like this month's hosting. The button shows up on your site, your supporters cover it in two taps, and it steps aside until you need it again.",
+    "description": "Set a goal for a real cost, like this month's hosting. The button shows up on your site. Your supporters cover it in two taps, and the button steps aside until you need it again.",
     "ctaPrimary": "Add it to your site",
     "trustBar": [
       "Hides itself once the goal is met",
@@ -63,12 +63,7 @@
     "withGoal": {
       "label": "With a QuietJar goal",
       "caption": "A real cost, and a finish line.",
-      "alt": "A goal for this month's hosting fills as people chip in. Once it is covered, the button steps aside, then comes back next month.",
-      "goalLabel": "Goal",
-      "goalTitle": "This month's hosting",
-      "currency": "€",
-      "ofTarget": " of €50",
-      "stamp": "Covered",
+      "alt": "A goal for this month's hosting fills as people chip in. Once it is covered, the button steps aside until next month.",
       "nextMonth": "next month"
     },
     "proof": {
@@ -95,9 +90,9 @@
   "polite": {
     "eyebrow": "Built to respect your audience",
     "title": "It knows when to step back.",
-    "note": "Your supporters get thanked, never chased.",
+    "note": "You thank your supporters instead of chasing them.",
     "feelLabel": "A month with your most loyal supporter",
-    "alt": "A visitor supports the site with Apple Pay and gets a thank you. The button then rests for them for 30 days, and comes back next month.",
+    "alt": "A visitor supports the site with Apple Pay and gets a thank you. After that, the button stays out of their way for 30 days.",
     "feelSteps": [
       "Supports you once",
       "A quiet \"thank you\"",
@@ -153,7 +148,7 @@
     "planPrice": "5%",
     "planMinimum": "minimum €0.50",
     "planPriceNote": "of what you receive",
-    "note": "No monthly fee, no cap. We pay the card fees ourselves, and your supporters are never charged extra.",
+    "note": "No monthly fee, no cap. We pay the card fees ourselves, and your supporters pay no extra fees.",
     "link": "See exactly what you keep",
     "cta": "Add it to your site"
   },
@@ -235,7 +230,7 @@
         "name": "Will my visitors trust paying on my site?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "They pay through the same regulated rails as any checkout. What they see is Apple Pay, Google Pay, or their own bank's iDEAL screen. Nothing unfamiliar, nothing to type."
+          "text": "They pay through the same regulated rails as any checkout. What they see is Apple Pay, Google Pay, or their own bank's iDEAL screen. They have nothing new to learn and nothing to type."
         }
       },
       {
@@ -251,7 +246,7 @@
         "name": "What happens after someone supports me?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "QuietJar steps back. After someone gives, the button takes a break: 30 days by default, and you choose how long. Your biggest supporters get thanked instead of nagged."
+          "text": "QuietJar steps back. After someone gives, the button takes a break: 30 days by default, and you choose how long. Your biggest supporters see a thank-you instead of another ask."
         }
       },
       {
@@ -276,7 +271,7 @@
         "name": "How do I add it to my site?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Paste a small piece of code, pick your design, and it is live. It takes minutes, and it fits the look of your page."
+          "text": "You paste a small piece of code and pick your design, and the button is live. Setup takes minutes, and the button fits the look of your page."
         }
       }
     ]

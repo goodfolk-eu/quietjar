@@ -13,20 +13,6 @@ const goal = copy.features.withGoal;
   <SceneBrowser url={copy.scenes.url} class="h-[250px]">
     <div class="goal h-full">
       <ScenePage />
-      <div
-        class="absolute top-5 left-5 flex w-[min(290px,calc(100%-40px))] flex-col gap-2.5 rounded-lg border border-qj-line-card bg-white px-5 py-4 shadow-[0_18px_36px_-20px_rgba(20,32,28,0.35)]">
-        <span class="font-mono text-[10.5px] uppercase tracking-[0.08em] text-qj-accent">{goal.goalLabel}</span>
-        <span class="font-display text-[18px] font-bold tracking-[-0.02em] text-qj-ink">{goal.goalTitle}</span>
-        <div class="h-2 overflow-hidden rounded-full bg-qj-line-soft">
-          <div class="meter h-full rounded-full bg-qj-accent"></div>
-        </div>
-        <span class="raised font-mono text-[11.5px] text-qj-body" data-currency={goal.currency} data-suffix={goal.ofTarget}
-        ></span>
-        <span
-          class="stamp absolute top-8 right-4 rounded-sm border-2 border-qj-accent bg-white/85 px-2.5 py-0.5 font-display text-[15px] font-bold uppercase tracking-[0.08em] text-qj-accent"
-          >{goal.stamp}</span
-        >
-      </div>
       <div class="absolute right-4 bottom-4 flex flex-col items-end gap-2">
         <span class="next rounded-sm border border-qj-line-card bg-white px-2.5 py-1 font-mono text-[11.5px] text-qj-body"
           >{goal.nextMonth}</span
@@ -62,18 +48,6 @@ const goal = copy.features.withGoal;
     width: calc(var(--raised) * 2%);
   }
 
-  .raised {
-    counter-reset: raised var(--raised);
-  }
-
-  .raised::before {
-    content: attr(data-currency) counter(raised) attr(data-suffix);
-  }
-
-  .stamp {
-    rotate: -8deg;
-  }
-
   .next,
   .hearts {
     opacity: 0;
@@ -81,7 +55,6 @@ const goal = copy.features.withGoal;
 
   @media (prefers-reduced-motion: no-preference) {
     .goal,
-    .stamp,
     .leave,
     .next,
     .hearts {
@@ -92,10 +65,6 @@ const goal = copy.features.withGoal;
 
     .goal {
       animation-name: goal-raise;
-    }
-
-    .stamp {
-      animation-name: goal-stamp;
     }
 
     .leave {
@@ -162,24 +131,6 @@ const goal = copy.features.withGoal;
     53% {
       opacity: 0;
       translate: -50% -26px;
-    }
-  }
-
-  @keyframes goal-stamp {
-    0%,
-    53% {
-      opacity: 0;
-      scale: 1.8;
-    }
-    56%,
-    78% {
-      opacity: 1;
-      scale: 1;
-    }
-    81%,
-    100% {
-      opacity: 0;
-      scale: 1;
     }
   }
 

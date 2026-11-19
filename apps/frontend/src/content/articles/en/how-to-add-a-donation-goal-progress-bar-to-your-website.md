@@ -134,7 +134,7 @@ Pick the one that matches who you are and how often your goal changes.
 - **A registered nonprofit with campaigns and events:** Givebutter, Zeffy, Donorbox or GiveWP give you much more than a bar, like donor management and peer-to-peer pages.
 - **A creator, maintainer or site owner with a cost that comes back:** QuietJar gives you a bar that fills by itself, resets every month and hides once the cost is covered.
 
-QuietJar is not the right tool if you need donor management, events or memberships. It is a donation widget, and it stays small on purpose.
+If you need donor management, events or memberships, pick another tool. QuietJar is a donation widget that stays small on purpose.
 
 ## The short version
 

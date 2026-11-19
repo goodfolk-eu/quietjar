@@ -54,7 +54,7 @@
     "goals": {
       "eyebrow": "Goals",
       "title": "Goals that end, so your ask never turns into wallpaper.",
-      "description": "Give the button a real cost to cover: this month's hosting, the next release, a new microphone. The bar fills as people chip in, and once the goal is met, the button steps aside. TCG Pocket Collection Tracker raised €97 on a €50 goal in 12 hours.",
+      "description": "Give the button a real cost to cover: this month's hosting, the next release, a new microphone. The bar fills as people chip in, and once the goal is met, the button steps aside.",
       "bullets": [
         "Monthly goals reset on the 1st, so the button comes back when the next bill is due",
         "When the goal is met, the button hides by default. Or keep the button, or keep the full bar",
@@ -74,8 +74,8 @@
       "description": "A dynamic image that links straight into your donation panel. Drop it in your GitHub README or a newsletter, and it auto-updates with your goal progress.",
       "bullets": [
         "An img tag for READMEs, newsletters, anywhere a script can't run",
-        "Renders your real widget, so it auto-updates with your goal",
-        "Clicks straight into your donation panel"
+        "It shows your real widget, so it updates with your goal",
+        "A click opens your donation panel"
       ],
       "mock": {
         "file": "README.md",

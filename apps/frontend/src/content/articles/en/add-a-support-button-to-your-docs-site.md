@@ -39,9 +39,9 @@ Places where it does not work:
 
 - **A popup or modal in the middle of a page.** Someone who is debugging at 11 at night will not thank you for it.
 - **Error and troubleshooting pages.** The reader is frustrated. This is the wrong moment.
-- **An ask that never changes.** A button that is always there turns into wallpaper. Readers see it once, decide "not now", and never look again.
+- **A button that is always there turns into wallpaper.** Readers see it once, decide "not now", and after a few visits stop looking.
 
-That last point is why QuietJar works with goals. You set a goal for a real cost, like this month's hosting or the next release. The button shows progress, and when supporters cover it, it hides until the next month. A reader who closes it does not see it again for the rest of their visit. We wrote more about [why a button that disappears works](/articles/donate-button-that-disappears-when-goal-is-met/).
+That last point is why QuietJar works with goals. You set a goal for a real cost, like this month's hosting or the next release. The button shows progress toward it, and once supporters have covered the goal, the widget hides until the next month. A reader who closes the button does not see it again for the rest of their visit. We wrote more about [why a button that disappears works](/articles/donate-button-that-disappears-when-goal-is-met/).
 
 ## The snippet
 

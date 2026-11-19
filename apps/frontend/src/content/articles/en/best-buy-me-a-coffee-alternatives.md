@@ -17,7 +17,7 @@ faq:
     answer: Usually one is better. Two support links side by side force people to choose. Pick the tool that matches what you ask for, and use a second one only for a different job, like GitHub Sponsors in your repo and a donation goal on your docs site.
 ---
 
-Ko-fi is the best Buy Me a Coffee alternative for most people. One-off tips can carry no platform fee, the money lands straight in your own PayPal or Stripe account, and its widget takes payment right on your page. If you own a website and want support to happen there, tied to a real cost, QuietJar is the option built for that.
+Ko-fi is the best Buy Me a Coffee alternative for most creators. One-off tips can carry no platform fee, the money lands straight in your own PayPal or Stripe account, and its widget takes payment right on your page. If you own a website and want support to happen there, tied to a real cost, QuietJar is the option built for that.
 
 The rest depends on what you ask for. GitHub Sponsors suits maintainers, Patreon suits memberships, Liberapay suits recurring donations with no platform cut, and Stripe Payment Links suit people who want to build it themselves. Every fee below was checked on the platform's own site in November 2026.
 
@@ -37,7 +37,7 @@ The coffee metaphor is the other reason. It fits a blog. Does it fit a developer
 
 ## 1. Ko-fi: the best all-round alternative
 
-Ko-fi is the answer most people get, and it earns that spot. In Ko-fi Free mode, one-off tips carry no service fee at all. Everything else, like memberships, monthly tips, commissions and shop sales, costs 5%. Payments go straight into your own PayPal or Stripe account, so there is no waiting for a payout.
+Ko-fi is the answer most creators land on, and it earns that spot. In Ko-fi Free mode, one-off tips carry no service fee at all. Everything else, like memberships, monthly tips, commissions and shop sales, costs 5%. Payments go straight into your own PayPal or Stripe account, so there is no waiting for a payout.
 
 For your website, Ko-fi offers a floating button and a tip panel that let supporters tip or join a membership without leaving the page. On Ko-fi, connecting Stripe adds cards, Apple Pay and Google Pay.
 
@@ -125,7 +125,7 @@ Match the tool to the ask. One clear ask beats three buttons in a row.
 
 - **You want tips, a shop and memberships on a profile page:** Ko-fi.
 - **You want supporters to cover a real cost on your own site:** QuietJar. See [how to add a donation goal progress bar to your website](/articles/how-to-add-a-donation-goal-progress-bar-to-your-website/).
-- **You maintain open source:** GitHub Sponsors in the repo, plus a goal on your docs site if most users never open GitHub.
+- **You maintain open source:** GitHub Sponsors in the repo, plus a goal on your docs site if your users never open GitHub.
 - **You want paying members:** Patreon, or Steady if you prefer a European company.
 - **You want monthly donations with no platform cut:** Liberapay.
 - **You are a developer with spare weekends:** Stripe Payment Links.

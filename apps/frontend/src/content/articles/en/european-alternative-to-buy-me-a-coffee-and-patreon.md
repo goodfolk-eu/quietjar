@@ -15,7 +15,7 @@ faq:
     answer: Not always. A company can be based in Europe and still use payment processors and hosting from elsewhere. Check where the platform says it hosts data and which payment provider handles the money. Liberapay, for example, states that its website is hosted on AWS in Ireland.
 ---
 
-Yes, there are good European alternatives. Liberapay and Tipeee are French, Steady is German, Petje.af is Dutch, and QuietJar is made in Amsterdam. Which one fits depends on one question: do you want to sell memberships, or do you want people to support you on your own website?
+Yes, there are good European alternatives. Liberapay and Tipeee are French, Steady is German, Petje.af is Dutch, and we build QuietJar in Amsterdam. Which one fits depends on one question: do you want to sell memberships, or do you want people to support you on your own website?
 
 For memberships with perks and exclusive posts, Steady is the closest European match to Patreon. For simple support without a profile page in between, QuietJar puts a donation widget on your own site. The details are below, checked on each platform's own site in November 2026.
 
@@ -42,7 +42,7 @@ The other reason is payment methods. A Dutch reader who wants to give €5 reach
 
 ### Liberapay: recurring donations with no platform fee
 
-Liberapay is a non-profit association founded in 2015 in France. It takes no cut of donations and funds itself through donations to its own account. You still pay processing fees: Liberapay reports an average of about 3% through Stripe and 5.1% through PayPal over the past year. Its legal page says the site is hosted on AWS in Ireland.
+Liberapay is a French non-profit association that started in 2015. It takes no cut of donations and funds itself through donations to its own account. You still pay processing fees: Liberapay reports an average of about 3% through Stripe and 5.1% through PayPal over the past year. Its legal page says the site runs on AWS in Ireland.
 
 It is built for recurring donations. One-time donations "aren't properly supported yet", in Liberapay's own words, and there are no membership tiers. European donors can pay by card, PayPal, or SEPA Direct Debit for euro donations. Creators in 33 territories get the full feature set: 32 in Europe, plus the United States.
 
@@ -60,7 +60,7 @@ Supporters can give one-off or recurring tips, by card or PayPal, and you can of
 
 Steady was founded in Berlin in 2016 and describes itself as "made for Europe's media makers". It takes 10%, plus the fees of the payment provider. Members can pay with PayPal, Apple Pay, cards, and SEPA Direct Debit for euro memberships.
 
-This is where Steady beats every tip tool on this page: it is a full membership platform. Monthly or annual plans, exclusive content, paid newsletters, podcasts. You can run it as a standalone page or add it to your own website. One-time donations are not a native feature, though.
+Steady is a full membership platform, which none of the tip tools on this page are. Monthly or annual plans, exclusive content, paid newsletters, podcasts. You can run it as a standalone page or add it to your own website. One-time donations are not a native feature, though.
 
 **Best for:** magazines, newsletters and podcasts that want paying members, not tips.
 

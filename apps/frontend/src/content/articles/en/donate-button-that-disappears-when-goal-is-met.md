@@ -22,7 +22,7 @@ QuietJar works this way by default. Few other tools do, and the reason is worth 
 
 ## Why would you want your donate button to disappear?
 
-A support button that is always there turns into wallpaper. Visitors see it on their first visit, decide "not now", and never look at it again. Nobody feels that their €5 makes a difference to an ask that never changes.
+A support button that sits on every page for months turns into wallpaper. Many visitors see it on their first visit, decide "not now", and stop noticing it. When the ask stays the same, it is hard to feel that €5 makes a difference.
 
 A goal with a finish line works differently. The ask is concrete: this month's server bill, the next release, a new microphone. It only shows up when there is a real cost to cover, so visitors learn that it means something when they see it.
 
