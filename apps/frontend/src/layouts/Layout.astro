@@ -1,4 +1,5 @@
 ---
+import FloatingWidget from "@/components/floatingwidget.astro";
 import Footer from "@/components/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
 import organizationEn from "@/i18n/data/en/organization.json";
@@ -25,6 +26,7 @@ interface Props {
   webApplication?: Record<string, unknown>;
   faq?: Question[];
   additionalSchema?: Record<string, unknown>[];
+  floatingWidget?: boolean;
 }
 
 // One base-node set per locale. Add an entry here (and the matching
@@ -66,6 +68,7 @@ const {
   webApplication: webApplicationOverride,
   faq,
   additionalSchema,
+  floatingWidget = true,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://quietjar.com");
@@ -169,6 +172,7 @@ const structuredData = {
       <slot />
     </main>
     <Footer />
+    {floatingWidget && <FloatingWidget />}
     <style is:global>
       img {
         content-visibility: auto;

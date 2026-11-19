@@ -13,6 +13,7 @@
     "browserMock": {
       "url": "your-site.com",
       "live": "Live, not a picture",
+      "floatingHeadline": "Support QuietJar",
       "presets": [
         {
           "key": "docs",

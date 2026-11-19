@@ -1,17 +1,13 @@
 ---
 import type { QuietJarConfig } from "@quietjar/widget/config";
 import { dictionary } from "@/i18n/t";
+import { WIDGET_SRC } from "@/lib/widget-src";
 
 const copy = dictionary(Astro.currentLocale ?? "en");
 const mock = copy.hero.browserMock;
 
 // The homepage installs the widget the way a customer would, pointing the
-// inline mount at the demo slot. Dev loads the local bundle: the deployed
-// bundle at the customer URL would be older than this checkout. Dev can still
-// target another origin with PUBLIC_WIDGET_URL.
-const widgetSrc =
-  import.meta.env.PUBLIC_WIDGET_URL ??
-  (import.meta.env.DEV ? "/js/latest/quietjar.js" : "https://quietjar.com/js/latest/quietjar.js");
+// inline mount at the demo slot.
 
 // Font strings are validated by the widget itself; an unknown value falls
 // back to its default preset.
@@ -35,6 +31,7 @@ const presetStyles = Object.fromEntries(
   class="flex flex-col"
   data-qj-demo
   data-presets={JSON.stringify(presetStyles)}
+  data-floating-headline={mock.floatingHeadline}
 >
   <div class="mock-card overflow-hidden rounded-xl bg-white" data-qj-mock data-preset="docs">
     <div class="flex items-center gap-5 border-b border-qj-line-card px-[18px]" data-qj-presets>
@@ -167,9 +164,38 @@ const presetStyles = Object.fromEntries(
         );
       });
     }
+
+    // A second, floating copy shows the corner button next to the inline demo.
+    // It gets its own target because mountWidget returns any host already
+    // inside its container, and the body holds the inline one. Dismissal is
+    // not persisted: the widget shares one dismissal key, so closing this copy
+    // would hide the inline demo on the next visit.
+    const mountFloating = () => {
+      if (!window.QuietJar) return;
+      const baseConfig = JSON.parse(JSON.stringify(window.QuietJar)) as QuietJarConfig;
+      const target = document.createElement("div");
+      document.body.append(target);
+      mountWidget(
+        resolveConfig({
+          ...baseConfig,
+          labels: { ...baseConfig.labels, headline: root.dataset.floatingHeadline, body: "" },
+          goal: "",
+          close: { enabled: true },
+          mount: undefined,
+        }),
+        { target },
+      );
+    };
+    // This module runs before the deferred demo-config.js, while readyState is
+    // already "interactive", so wait on the config itself rather than the state.
+    if (window.QuietJar) {
+      mountFloating();
+    } else {
+      document.addEventListener("DOMContentLoaded", mountFloating, { once: true });
+    }
   }
 </script>
 
 <script is:inline src="/demo-config.js" defer></script>
 
-<script is:inline src={widgetSrc} defer></script>
+<script is:inline src={WIDGET_SRC} defer></script>
