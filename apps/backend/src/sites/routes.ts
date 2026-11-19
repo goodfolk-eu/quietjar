@@ -13,7 +13,7 @@ import {
   SUPPORTED_CURRENCIES,
 } from "./currency";
 import { createSite, type EntityType, getSiteByUserId, updateSite } from "./store";
-import { normalizeSiteUrl } from "./url";
+import { MAX_SITE_URLS, normalizeSiteUrls } from "./url";
 
 async function sessionUser(
   request: Request,
@@ -50,7 +50,7 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
       site: {
         publicKey: site.publicKey,
         currency: site.currency,
-        siteUrl: site.siteUrl,
+        siteUrls: site.siteUrls,
         country: site.country,
         entityType: site.entityType,
         connected: connection !== null,
@@ -80,11 +80,16 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
         set.status = 400;
         return { error: "invalid_entity_type" };
       }
-      const siteUrl = normalizeSiteUrl(body.siteUrl);
-      if (body.siteUrl !== null && siteUrl === null) {
+      if (body.siteUrls.length > MAX_SITE_URLS) {
         set.status = 400;
-        return { error: "invalid_site_url" };
+        return { error: "too_many_site_urls" };
       }
+      const normalized = normalizeSiteUrls(body.siteUrls);
+      if (!normalized.ok) {
+        set.status = 400;
+        return { error: "invalid_site_url", index: normalized.invalidIndex };
+      }
+      const { siteUrls } = normalized;
 
       const site = await getSiteByUserId(userId);
       if (!site) {
@@ -100,16 +105,18 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
         : ((body.country?.toUpperCase() ?? null) as Country | null);
       const entityType = connection ? site.entityType : (body.entityType as EntityType | null);
 
-      await updateSite(userId, { currency: body.currency, siteUrl, country, entityType });
+      await updateSite(userId, { currency: body.currency, siteUrls, country, entityType });
 
-      // A creator who moves their widget to another domain would otherwise
-      // keep the old domain's wallets and get none on the new one.
+      // Only the new sites: this runs on every autosave, and the status sync
+      // re-registers the whole list anyway.
       const config = stripeConfigFromEnv();
       if (connection && config) {
-        await registerWalletDomains(config, connection.accountId, siteUrl);
-        if (siteUrl !== site.siteUrl) {
+        const added = siteUrls.filter((siteUrl) => !site.siteUrls.includes(siteUrl));
+        if (added.length > 0) await registerWalletDomains(config, connection.accountId, added);
+        const mainSite = siteUrls[0] ?? null;
+        if (mainSite !== (site.siteUrls[0] ?? null)) {
           const page = await getHostedPageBySiteId(site.id);
-          const businessUrl = businessUrlFor(siteUrl, page?.handle ?? null);
+          const businessUrl = businessUrlFor(mainSite, page?.handle ?? null);
           if (businessUrl) await updateBusinessUrl(config, connection.accountId, businessUrl);
         }
       }
@@ -118,7 +125,7 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
         site: {
           publicKey: site.publicKey,
           currency: body.currency,
-          siteUrl,
+          siteUrls,
           country,
           entityType,
           connected: connection !== null,
@@ -128,7 +135,7 @@ export const siteRoutes = new Elysia({ prefix: "/api/sites" })
     {
       body: t.Object({
         currency: t.String({ minLength: 3, maxLength: 3 }),
-        siteUrl: t.Nullable(t.String({ maxLength: 2048 })),
+        siteUrls: t.Array(t.String({ maxLength: 2048 })),
         country: t.Nullable(t.String({ maxLength: 2 })),
         entityType: t.Nullable(t.String({ maxLength: 16 })),
       }),

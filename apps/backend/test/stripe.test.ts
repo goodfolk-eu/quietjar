@@ -23,7 +23,7 @@ async function completeStepOne(overrides: Record<string, unknown> = {}) {
   await siteRoutes.handle(
     request("PUT", "/api/sites/current", {
       currency: "eur",
-      siteUrl: "example.com",
+      siteUrls: ["example.com"],
       country: "NL",
       entityType: "individual",
       ...overrides,
@@ -83,7 +83,7 @@ describe("POST /api/stripe/connect", () => {
     const frontend = process.env.PUBLIC_FRONTEND_URL;
     process.env.PUBLIC_FRONTEND_URL = "https://quietjar.test";
     try {
-      await completeStepOne({ siteUrl: null });
+      await completeStepOne({ siteUrls: [] });
       const { status } = await post("/connect");
       expect(status).toBe(200);
       expect(calledWith("createConnectedAccount")).toMatchObject({
@@ -100,7 +100,7 @@ describe("POST /api/stripe/connect", () => {
     const frontend = process.env.PUBLIC_FRONTEND_URL;
     process.env.PUBLIC_FRONTEND_URL = "http://localhost:4321";
     try {
-      await completeStepOne({ siteUrl: null });
+      await completeStepOne({ siteUrls: [] });
       const { status } = await post("/connect");
       expect(status).toBe(200);
       expect(calledWith("createConnectedAccount")).toMatchObject({ businessUrl: null });
@@ -256,13 +256,13 @@ describe("POST /api/stripe/refresh-status", () => {
 });
 
 describe("wallet domain registration", () => {
-  test("registers the site's domain when the account is connected", async () => {
-    await completeStepOne();
+  test("registers every site's domain when the account is connected", async () => {
+    await completeStepOne({ siteUrls: ["example.com", "project-b.dev"] });
     await post("/connect");
 
     expect(calledWith("registerWalletDomains")).toEqual({
       accountId: "acct_test",
-      siteUrl: expect.any(String),
+      siteUrls: ["https://example.com", "https://project-b.dev"],
     });
   });
 });

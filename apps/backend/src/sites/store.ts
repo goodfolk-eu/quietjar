@@ -9,7 +9,8 @@ export interface Site {
   userId: string;
   publicKey: string;
   currency: Currency;
-  siteUrl: string | null;
+  /** Origins the widget may take payments from. The first is the creator's main site. */
+  siteUrls: string[];
   /** Null until the creator picks one; frozen on the Stripe account after that. */
   country: Country | null;
   entityType: EntityType | null;
@@ -20,7 +21,7 @@ interface Row {
   user_id: string;
   public_key: string;
   currency: string;
-  site_url: string | null;
+  site_urls: string | null;
   country: string | null;
   entity_type: string | null;
 }
@@ -31,7 +32,7 @@ function toSite(row: Row): Site {
     userId: row.user_id,
     publicKey: row.public_key,
     currency: row.currency as Currency,
-    siteUrl: row.site_url,
+    siteUrls: row.site_urls ? (JSON.parse(row.site_urls) as string[]) : [],
     country: (row.country as Country | null) ?? null,
     entityType: (row.entity_type as EntityType | null) ?? null,
   };
@@ -76,7 +77,7 @@ export async function createSite(input: { userId: string; currency: Currency }):
     userId: input.userId,
     publicKey: newPublicKey(),
     currency: input.currency,
-    siteUrl: null,
+    siteUrls: [],
     country: null,
     entityType: null,
   };
@@ -91,7 +92,7 @@ export async function createSite(input: { userId: string; currency: Currency }):
 
 export interface SiteUpdate {
   currency: Currency;
-  siteUrl: string | null;
+  siteUrls: string[];
   country: Country | null;
   entityType: EntityType | null;
 }
@@ -99,8 +100,15 @@ export interface SiteUpdate {
 export async function updateSite(userId: string, input: SiteUpdate): Promise<void> {
   await libsqlClient.execute({
     sql: `UPDATE sites
-            SET currency = ?, site_url = ?, country = ?, entity_type = ?, updated_at = ?
+            SET currency = ?, site_urls = ?, country = ?, entity_type = ?, updated_at = ?
           WHERE user_id = ?`,
-    args: [input.currency, input.siteUrl, input.country, input.entityType, Date.now(), userId],
+    args: [
+      input.currency,
+      JSON.stringify(input.siteUrls),
+      input.country,
+      input.entityType,
+      Date.now(),
+      userId,
+    ],
   });
 }

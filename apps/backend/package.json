@@ -29,6 +29,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./eden": "./src/index.ts",
-    "./currency": "./src/sites/currency.ts"
+    "./currency": "./src/sites/currency.ts",
+    "./site-urls": "./src/sites/url.ts"
   }
 }

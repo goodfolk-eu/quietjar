@@ -255,7 +255,7 @@ describe("donation attribution", () => {
   async function connectedSite(): Promise<void> {
     await updateSite("user_1", {
       currency: "eur",
-      siteUrl: "https://example.com",
+      siteUrls: ["https://example.com"],
       country: "NL",
       entityType: "individual",
     });

@@ -140,8 +140,8 @@ mock.module("../src/stripe/client", () => ({
     record("retrieveAccount", { accountId });
     return account();
   },
-  registerWalletDomains: async (_config: unknown, accountId: string, siteUrl: string | null) => {
-    record("registerWalletDomains", { accountId, siteUrl });
+  registerWalletDomains: async (_config: unknown, accountId: string, siteUrls: string[]) => {
+    record("registerWalletDomains", { accountId, siteUrls });
   },
   updateBusinessUrl: async (_config: unknown, accountId: string, businessUrl: string) => {
     record("updateBusinessUrl", { accountId, businessUrl });

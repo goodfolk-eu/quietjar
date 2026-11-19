@@ -30,8 +30,9 @@ const steps = [
   { key: "payouts", copy: payout.steps.payouts },
 ];
 
-const fieldClass =
-  "mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:border-gray-600 focus:outline-hidden focus:ring-3 focus:ring-gray-100";
+const inputClass =
+  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:border-gray-600 focus:outline-hidden focus:ring-3 focus:ring-gray-100";
+const fieldClass = `mt-2 ${inputClass}`;
 const cardClass = "rounded-xl border border-gray-200 bg-white p-5";
 const buttonClass =
   "rounded-lg bg-qj-green px-4 py-2.5 text-sm font-medium text-white transition hover:bg-qj-green-press focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-200 disabled:pointer-events-none disabled:opacity-50";
@@ -120,16 +121,21 @@ const hintClass = "mt-1 text-xs text-gray-500";
               </div>
 
               <div class="mt-4">
-                <label for="qj-site-url" class={labelClass}>{payout.siteUrlLabel}</label>
+                <p id="qj-site-urls-label" class={labelClass}>{payout.siteUrlLabel}</p>
                 <p class={hintClass}>{payout.siteUrlHint}</p>
-                <input
-                  id="qj-site-url"
-                  type="text"
-                  inputmode="url"
-                  spellcheck="false"
-                  placeholder="example.com"
-                  class={fieldClass}
-                />
+                <ul
+                  id="qj-site-urls"
+                  class="mt-2 space-y-2"
+                  data-field-class={`${inputClass} aria-[invalid=true]:border-red-400`}
+                >
+                </ul>
+                <button
+                  type="button"
+                  id="qj-site-add"
+                  class="mt-2 text-sm text-qj-blue underline underline-offset-2"
+                >
+                  {payout.addSite}
+                </button>
               </div>
 
               <p id="qj-site-status" class="mt-3 text-xs text-gray-500" role="status" aria-live="polite"></p>
@@ -180,6 +186,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
 
 <script>
   import { currencyForCountry } from "@quietjar/backend/currency";
+  import { MAX_SITE_URLS, normalizeSiteUrls } from "@quietjar/backend/site-urls";
   import { api } from "@/lib/api";
   import { formatMoney } from "@/lib/money";
   import { rememberSiteKey } from "@/lib/session";
@@ -229,6 +236,8 @@ const hintClass = "mt-1 text-xs text-gray-500";
     editHint: string;
     detailsIncomplete: string;
     siteUrlInvalid: string;
+    removeSite: string;
+    moreSites: string;
     saving: string;
     saved: string;
     saveFailed: string;
@@ -254,7 +263,8 @@ const hintClass = "mt-1 text-xs text-gray-500";
     const countryField = document.getElementById("qj-pay-country") as HTMLSelectElement | null;
     const entityField = document.getElementById("qj-pay-entity") as HTMLSelectElement | null;
     const currencyField = document.getElementById("qj-currency") as HTMLSelectElement | null;
-    const siteUrlField = document.getElementById("qj-site-url") as HTMLInputElement | null;
+    const siteUrlListField = document.getElementById("qj-site-urls");
+    const siteAddField = document.getElementById("qj-site-add");
     const siteStatusField = document.getElementById("qj-site-status");
     const connectField = document.getElementById("qj-pay-connect") as HTMLButtonElement | null;
     const gateHint = document.getElementById("qj-pay-gate");
@@ -274,7 +284,8 @@ const hintClass = "mt-1 text-xs text-gray-500";
         countryField &&
         entityField &&
         currencyField &&
-        siteUrlField &&
+        siteUrlListField &&
+        siteAddField &&
         siteStatusField &&
         connectField &&
         detailsFormField &&
@@ -290,7 +301,8 @@ const hintClass = "mt-1 text-xs text-gray-500";
     const countrySelect = countryField;
     const entitySelect = entityField;
     const currencySelect = currencyField;
-    const siteUrlInput = siteUrlField;
+    const siteUrlList = siteUrlListField;
+    const siteAddButton = siteAddField;
     const siteStatus = siteStatusField;
     const connectButton = connectField;
     const detailsForm = detailsFormField;
@@ -315,7 +327,12 @@ const hintClass = "mt-1 text-xs text-gray-500";
     // Sticky: autosave re-renders the step on every keystroke, and without this
     // the summary would snap shut over a creator part-way through an edit.
     let editing = false;
-    const details = { country: "", entityType: "individual", currency: "eur", siteUrl: "" };
+    const details = {
+      country: "",
+      entityType: "individual",
+      currency: "eur",
+      siteUrls: [] as string[],
+    };
 
     function detailsComplete(): boolean {
       return details.country !== "" && details.currency !== "";
@@ -358,11 +375,16 @@ const hintClass = "mt-1 text-xs text-gray-500";
         const country = countrySelect.querySelector<HTMLOptionElement>(
           `option[value="${details.country}"]`,
         );
-        detailsLine.textContent = [
-          country?.textContent?.trim(),
-          details.currency.toUpperCase(),
-          details.siteUrl.replace(/^https?:\/\//, ""),
-        ]
+        const [mainSite, ...otherSites] = details.siteUrls;
+        const sites = mainSite
+          ? [
+              mainSite.replace(/^https?:\/\//, ""),
+              otherSites.length > 0 ? copy.moreSites.replace("{count}", String(otherSites.length)) : "",
+            ]
+              .filter(Boolean)
+              .join(" ")
+          : "";
+        detailsLine.textContent = [country?.textContent?.trim(), details.currency.toUpperCase(), sites]
           .filter(Boolean)
           .join(" · ");
       }
@@ -376,7 +398,7 @@ const hintClass = "mt-1 text-xs text-gray-500";
       siteStatus.textContent = copy.saving;
       const { data, error } = await api.api.sites.current.put({
         currency: details.currency,
-        siteUrl: details.siteUrl === "" ? null : details.siteUrl,
+        siteUrls: details.siteUrls,
         country: details.country === "" ? null : details.country,
         entityType: details.entityType,
       });
@@ -385,10 +407,9 @@ const hintClass = "mt-1 text-xs text-gray-500";
         siteStatus.textContent = copy.saveFailed;
         return;
       }
-      // The server stores a bare origin, so show what it kept rather than what
+      // The server stores bare origins, so show what it kept rather than what
       // was typed: that is what payments are checked against.
-      details.siteUrl = saved.siteUrl ?? "";
-      siteUrlInput.value = details.siteUrl;
+      showSavedSiteUrls(saved.siteUrls);
       siteStatus.textContent = copy.saved;
       renderDetails();
     }
@@ -423,14 +444,93 @@ const hintClass = "mt-1 text-xs text-gray-500";
       void saveDetails();
     });
 
-    siteUrlInput.addEventListener("input", () => {
-      const value = siteUrlInput.value.trim();
-      const usable = value === "" || value.includes(".");
-      siteStatus.textContent = usable ? "" : copy.siteUrlInvalid;
-      if (!usable) return;
-      details.siteUrl = value;
-      renderDetails();
-      scheduleSave();
+    function siteUrlInputs(): HTMLInputElement[] {
+      return [...siteUrlList.querySelectorAll<HTMLInputElement>("input")];
+    }
+
+    /** Marks the first invalid row and returns false, so a half-typed address is never sent. */
+    function readSiteUrls(): boolean {
+      const inputs = siteUrlInputs();
+      const result = normalizeSiteUrls(inputs.map((input) => input.value));
+      for (const [index, input] of inputs.entries()) {
+        input.setAttribute("aria-invalid", String(!result.ok && result.invalidIndex === index));
+      }
+      siteStatus.textContent = result.ok ? "" : copy.siteUrlInvalid;
+      if (!result.ok) return false;
+      details.siteUrls = inputs.map((input) => input.value.trim()).filter((value) => value !== "");
+      return true;
+    }
+
+    function syncSiteAdd(): void {
+      siteAddButton.hidden = siteUrlInputs().length >= MAX_SITE_URLS;
+    }
+
+    function addSiteUrlRow(value: string): HTMLInputElement {
+      const row = document.createElement("li");
+      row.className = "flex items-center gap-2";
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.inputMode = "url";
+      input.spellcheck = false;
+      input.placeholder = "example.com";
+      input.value = value;
+      input.className = siteUrlList.dataset.fieldClass ?? "";
+      input.setAttribute("aria-labelledby", "qj-site-urls-label");
+      input.addEventListener("input", () => {
+        if (!readSiteUrls()) return;
+        renderDetails();
+        scheduleSave();
+      });
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className =
+        "inline-flex size-8 shrink-0 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100 focus:outline-hidden focus-visible:ring-3 focus-visible:ring-gray-100";
+      remove.setAttribute("aria-label", copy.removeSite);
+      const icon = document.createElement("span");
+      icon.ariaHidden = "true";
+      icon.className = "text-xl leading-none";
+      icon.textContent = "\u00d7";
+      remove.append(icon);
+      remove.addEventListener("click", () => {
+        row.remove();
+        if (siteUrlInputs().length === 0) addSiteUrlRow("");
+        syncSiteAdd();
+        if (!readSiteUrls()) return;
+        renderDetails();
+        clearTimeout(saveTimer);
+        void saveDetails();
+      });
+
+      row.append(input, remove);
+      siteUrlList.append(row);
+      syncSiteAdd();
+      return input;
+    }
+
+    function renderSiteUrls(siteUrls: string[]): void {
+      siteUrlList.replaceChildren();
+      for (const siteUrl of siteUrls.length > 0 ? siteUrls : [""]) addSiteUrlRow(siteUrl);
+    }
+
+    /**
+     * Rewrites the rows in place when every filled row survived, so the one
+     * being typed in keeps focus. Merged duplicates change the count, and only
+     * then is the list rebuilt.
+     */
+    function showSavedSiteUrls(siteUrls: string[]): void {
+      details.siteUrls = siteUrls;
+      const filled = siteUrlInputs().filter((input) => input.value.trim() !== "");
+      if (filled.length !== siteUrls.length) {
+        renderSiteUrls(siteUrls);
+        return;
+      }
+      for (const [index, input] of filled.entries()) input.value = siteUrls[index];
+    }
+
+    siteAddButton.addEventListener("click", () => {
+      addSiteUrlRow("").focus();
     });
 
     detailsEdit?.addEventListener("click", () => {
@@ -606,13 +706,13 @@ const hintClass = "mt-1 text-xs text-gray-500";
       details.country = site.country ?? "";
       details.entityType = site.entityType ?? "individual";
       details.currency = site.currency;
-      details.siteUrl = site.siteUrl ?? "";
+      details.siteUrls = site.siteUrls;
       connected = site.connected;
       countrySelect.value = details.country;
       entitySelect.value = details.entityType;
       currencySelect.value = details.currency;
-      siteUrlInput.value = details.siteUrl;
     }
+    renderSiteUrls(details.siteUrls);
     renderDetails();
 
     /**

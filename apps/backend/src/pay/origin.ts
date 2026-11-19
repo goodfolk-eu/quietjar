@@ -27,17 +27,27 @@ function parseOrigin(value: string): URL | null {
 const twinHostname = (hostname: string): string =>
   hostname.startsWith("www.") ? hostname.slice(4) : `www.${hostname}`;
 
-/** The registered origin plus its www/apex twin, which visitors reach interchangeably. */
-export function allowedOrigins(siteUrl: string | null): string[] {
-  if (!siteUrl) return [];
+function originWithTwin(siteUrl: string): string[] {
   const url = parseOrigin(siteUrl);
   if (!url) return [];
-
   const port = url.port === "" ? "" : `:${url.port}`;
   return [
     `${url.protocol}//${url.hostname}${port}`,
     `${url.protocol}//${twinHostname(url.hostname)}${port}`,
   ];
+}
+
+/** Every registered origin plus its www/apex twin, which visitors reach interchangeably. */
+export function allowedOrigins(siteUrls: string[]): string[] {
+  return siteUrls.flatMap(originWithTwin);
+}
+
+/** The registered site an origin belongs to, matching its www/apex twin too. */
+export function listedSiteFor(origin: string | null, siteUrls: string[]): string | null {
+  if (!origin) return null;
+  const url = parseOrigin(origin);
+  if (!url) return null;
+  return siteUrls.find((siteUrl) => originWithTwin(siteUrl).includes(url.origin)) ?? null;
 }
 
 /**
@@ -47,16 +57,16 @@ export function allowedOrigins(siteUrl: string | null): string[] {
  * both the www and apex spellings need registering for the same reason
  * `allowedOrigins` accepts both.
  */
-export function walletDomains(siteUrl: string | null): string[] {
-  if (!siteUrl) return [];
-  const url = parseOrigin(siteUrl);
-  if (!url) return [];
-  return [url.hostname, twinHostname(url.hostname)];
+export function walletDomains(siteUrls: string[]): string[] {
+  return siteUrls.flatMap((siteUrl) => {
+    const url = parseOrigin(siteUrl);
+    return url ? [url.hostname, twinHostname(url.hostname)] : [];
+  });
 }
 
 export function isAllowedOrigin(
   origin: string | null,
-  siteUrl: string | null,
+  siteUrls: string[],
   policy: OriginPolicy,
 ): boolean {
   if (!origin) return false;
@@ -67,7 +77,7 @@ export function isAllowedOrigin(
     const dashboard = parseOrigin(policy.dashboardOrigin);
     if (dashboard && dashboard.origin === url.origin) return true;
   }
-  return allowedOrigins(siteUrl).includes(url.origin);
+  return allowedOrigins(siteUrls).includes(url.origin);
 }
 
 /**
@@ -76,12 +86,12 @@ export function isAllowedOrigin(
  */
 export function isAllowedReturnUrl(
   returnUrl: string,
-  siteUrl: string | null,
+  siteUrls: string[],
   policy: OriginPolicy,
 ): boolean {
   const url = parseOrigin(returnUrl);
   if (!url) return false;
-  return isAllowedOrigin(url.origin, siteUrl, policy);
+  return isAllowedOrigin(url.origin, siteUrls, policy);
 }
 
 /** Placeholder Stripe swaps for the real id; URL-encoding would break it. */

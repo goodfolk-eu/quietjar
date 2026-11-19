@@ -74,7 +74,7 @@ async function syncOnboarding(accountId: string, userId: string) {
   await saveOnboarding(accountId, onboarding);
   // The usual order is site URL first, account second, so this is where most
   // creators get their domain registered for wallets.
-  await registerWalletDomains(config, accountId, site?.siteUrl ?? null);
+  await registerWalletDomains(config, accountId, site?.siteUrls ?? []);
   return onboarding;
 }
 
@@ -120,7 +120,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
           email: user.email,
           entityType: site.entityType,
           currency: site.currency,
-          businessUrl: businessUrlFor(site.siteUrl, page.handle),
+          businessUrl: businessUrlFor(site.siteUrls[0] ?? null, page.handle),
         });
         accountId = account.id;
         await setManualPayouts(config, accountId);
@@ -134,7 +134,7 @@ export const stripeRoutes = new Elysia({ prefix: "/api/stripe" })
         // Registered now, so the wallets are ready before the creator takes
         // their first payment rather than after whichever status refresh
         // happens to come first.
-        await registerWalletDomains(config, accountId, site.siteUrl);
+        await registerWalletDomains(config, accountId, site.siteUrls);
       } catch (err) {
         console.error("[stripe/connect] account creation failed:", err);
         set.status = 502;

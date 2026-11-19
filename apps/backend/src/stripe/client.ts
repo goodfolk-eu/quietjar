@@ -306,10 +306,11 @@ export async function retrieveDonationSession(
 export async function registerWalletDomains(
   config: StripeConfig,
   accountId: string,
-  siteUrl: string | null,
+  siteUrls: string[],
 ): Promise<void> {
   const client = stripeClient(config);
-  const domains = new Set([...walletDomains(siteUrl), ...walletDomains(hostedPageOrigin())]);
+  const hostedOrigin = hostedPageOrigin();
+  const domains = new Set(walletDomains(hostedOrigin ? [...siteUrls, hostedOrigin] : siteUrls));
   for (const domain of domains) {
     try {
       await client.paymentMethodDomains.create(

@@ -71,6 +71,7 @@ const COLUMN_MIGRATIONS = [
   { table: "donations", name: "net", type: "INTEGER" },
   { table: "donations", name: "goal_id", type: "TEXT" },
   { table: "donations", name: "notified_at", type: "INTEGER" },
+  { table: "sites", name: "site_urls", type: "TEXT" },
 ] as const;
 
 /**
@@ -102,5 +103,10 @@ export async function ensureSchema(): Promise<void> {
       if (!(err instanceof Error && /duplicate column name/i.test(err.message))) throw err;
     }
   }
+  // `site_url` is the single-address column `site_urls` replaced. It is no
+  // longer read or written, only copied over once for rows that predate the list.
+  await libsqlClient.execute(
+    "UPDATE sites SET site_urls = json_array(site_url) WHERE site_urls IS NULL AND site_url IS NOT NULL",
+  );
   await dropBetterAuthIssuer();
 }

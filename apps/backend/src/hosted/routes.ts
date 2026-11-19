@@ -160,10 +160,11 @@ export const hostedRoutes = new Elysia({ prefix: "/api/hosted" })
 
       // Without a site of their own the hosted page is the creator's website
       // as far as Stripe knows, so it follows the handle.
-      const businessUrl = handle !== page.handle ? businessUrlFor(site.siteUrl, handle) : null;
+      const followsHandle = handle !== page.handle && site.siteUrls.length === 0;
+      const businessUrl = followsHandle ? businessUrlFor(null, handle) : null;
       const connection = await getConnectionByUserId(site.userId);
       const config = stripeConfigFromEnv();
-      if (businessUrl && !site.siteUrl && connection && config) {
+      if (businessUrl && connection && config) {
         await updateBusinessUrl(config, connection.accountId, businessUrl);
       }
 

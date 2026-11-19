@@ -257,7 +257,7 @@ describe("PUT /api/hosted/current", () => {
     await siteRoutes.handle(
       request("PUT", "/api/sites/current", {
         currency: "eur",
-        siteUrl: "example.com",
+        siteUrls: ["example.com"],
         country: "NL",
         entityType: "individual",
       }),

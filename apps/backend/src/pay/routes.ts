@@ -22,7 +22,7 @@ import {
   sessionsPerSite,
   statusPerIp,
 } from "./limits";
-import { isAllowedOrigin, isAllowedReturnUrl, type OriginPolicy } from "./origin";
+import { isAllowedOrigin, isAllowedReturnUrl, listedSiteFor, type OriginPolicy } from "./origin";
 import { getDonationBySessionId, saveDonationDetails } from "./store";
 
 /** The dashboard serves the widget editor, whose preview is a real widget. */
@@ -30,11 +30,16 @@ function dashboardOrigin(): string {
   return process.env.PUBLIC_FRONTEND_URL ?? "http://localhost:4321";
 }
 
-/** The site's host when it has one, the name on the hosted page otherwise. */
-async function supportedName(site: Site): Promise<string> {
-  if (site.siteUrl) {
+/**
+ * The host of the site the supporter is on, or the main site's host when they
+ * are elsewhere (the hosted page, the editor preview). The hosted page name
+ * when the creator has no site.
+ */
+async function supportedName(site: Site, origin: string | null): Promise<string> {
+  const siteUrl = listedSiteFor(origin, site.siteUrls) ?? site.siteUrls[0];
+  if (siteUrl) {
     try {
-      return new URL(site.siteUrl).hostname;
+      return new URL(siteUrl).hostname;
     } catch {
       // Falls through to the hosted page name.
     }
@@ -68,11 +73,12 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
         allowLocalhost: isTestMode(config),
         dashboardOrigin: dashboardOrigin(),
       };
-      if (!isAllowedOrigin(request.headers.get("origin"), site.siteUrl, policy)) {
+      const origin = request.headers.get("origin");
+      if (!isAllowedOrigin(origin, site.siteUrls, policy)) {
         set.status = 403;
         return { error: "origin_not_allowed" };
       }
-      if (!isAllowedReturnUrl(body.returnUrl, site.siteUrl, policy)) {
+      if (!isAllowedReturnUrl(body.returnUrl, site.siteUrls, policy)) {
         set.status = 400;
         return { error: "invalid_return_url" };
       }
@@ -111,7 +117,7 @@ export const payRoutes = new Elysia({ prefix: "/api/pay" })
           returnUrl: body.returnUrl,
           siteKey: site.publicKey,
           goalId: goal?.id ?? null,
-          productName: `Support for ${await supportedName(site)}`,
+          productName: `Support for ${await supportedName(site, origin)}`,
         });
         return {
           sessionId: session.id,

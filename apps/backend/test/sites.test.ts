@@ -20,7 +20,7 @@ async function put(body: Record<string, unknown>) {
 function payload(overrides: Record<string, unknown> = {}) {
   return {
     currency: "eur",
-    siteUrl: "example.com",
+    siteUrls: ["example.com"],
     country: "NL",
     entityType: "individual",
     ...overrides,
@@ -49,7 +49,7 @@ describe("GET /api/sites/current", () => {
     const site = body.site as Record<string, unknown>;
     expect(site.publicKey).toMatch(/^qj_[0-9a-f]{24}$/);
     expect(site.currency).toBe("eur");
-    expect(site.siteUrl).toBeNull();
+    expect(site.siteUrls).toEqual([]);
     expect(site.country).toBeNull();
     expect(site.entityType).toBeNull();
     expect(site.connected).toBe(false);
@@ -93,12 +93,18 @@ describe("PUT /api/sites/current", () => {
     expect(status).toBe(401);
   });
 
-  test("saves every field and normalises the site URL to an origin", async () => {
+  test("saves every field and normalises the site URLs to origins", async () => {
     await get();
-    const { status, body } = await put(payload({ siteUrl: "https://example.com/tips?a=1" }));
+    const { status, body } = await put(
+      payload({ siteUrls: ["https://example.com/tips?a=1", "project-b.dev", "www.example.com"] }),
+    );
     expect(status).toBe(200);
     const site = body.site as Record<string, unknown>;
-    expect(site.siteUrl).toBe("https://example.com");
+    expect(site.siteUrls).toEqual(["https://example.com", "https://project-b.dev"]);
+    expect(((await get()).body.site as Record<string, unknown>).siteUrls).toEqual([
+      "https://example.com",
+      "https://project-b.dev",
+    ]);
     expect(site.country).toBe("NL");
     expect(site.entityType).toBe("individual");
     expect(((await get()).body.site as Record<string, unknown>).country).toBe("NL");
@@ -132,19 +138,39 @@ describe("PUT /api/sites/current", () => {
     expect(body.error).toBe("invalid_entity_type");
   });
 
-  test("refuses a site URL that is not a host", async () => {
+  test("refuses a site URL that is not a host, pointing at the entry", async () => {
     await get();
-    const { status, body } = await put(payload({ siteUrl: "not a url" }));
+    const { status, body } = await put(payload({ siteUrls: ["example.com", "not a url"] }));
     expect(status).toBe(400);
     expect(body.error).toBe("invalid_site_url");
+    expect(body.index).toBe(1);
   });
 
-  test("accepts a null site URL as clearing it", async () => {
+  test("refuses more than ten site URLs", async () => {
+    await get();
+    const siteUrls = Array.from({ length: 11 }, (_, i) => `site${i}.example`);
+    const { status, body } = await put(payload({ siteUrls }));
+    expect(status).toBe(400);
+    expect(body.error).toBe("too_many_site_urls");
+  });
+
+  test("accepts an empty list as clearing the sites", async () => {
     await get();
     await put(payload());
-    const { status, body } = await put(payload({ siteUrl: null }));
+    const { status, body } = await put(payload({ siteUrls: [] }));
     expect(status).toBe(200);
-    expect((body.site as Record<string, unknown>).siteUrl).toBeNull();
+    expect((body.site as Record<string, unknown>).siteUrls).toEqual([]);
+  });
+
+  test("carries a site saved before the list existed over as the only entry", async () => {
+    await get();
+    await libsqlClient.execute(
+      "UPDATE sites SET site_url = 'https://legacy.example', site_urls = NULL",
+    );
+    await ensureSchema();
+    expect(((await get()).body.site as Record<string, unknown>).siteUrls).toEqual([
+      "https://legacy.example",
+    ]);
   });
 
   test("refuses to write before the site exists", async () => {
@@ -167,22 +193,32 @@ describe("PUT /api/sites/current", () => {
 
   // Stripe hides wallets until the domain showing the Payment Element is
   // registered on the connected account.
-  test("registers the new domain for wallets when the URL changes", async () => {
+  test("registers only the newly added domains for wallets", async () => {
     await get();
+    await put(payload());
     await createConnection({ userId: "user_1", accountId: "acct_test" });
-    await put(payload({ siteUrl: "other.example" }));
+    await put(payload({ siteUrls: ["example.com", "other.example"] }));
 
     expect(calledWith("registerWalletDomains")).toEqual({
       accountId: "acct_test",
-      siteUrl: "https://other.example",
+      siteUrls: ["https://other.example"],
     });
+  });
+
+  test("skips wallet registration when no site was added", async () => {
+    await get();
+    await put(payload({ siteUrls: ["example.com", "other.example"] }));
+    await createConnection({ userId: "user_1", accountId: "acct_test" });
+    await put(payload({ siteUrls: ["example.com"] }));
+
+    expect(calledWith("registerWalletDomains")).toBeUndefined();
   });
 
   test("moves the Stripe business URL to a newly added site", async () => {
     await get();
-    await put(payload({ siteUrl: null }));
+    await put(payload({ siteUrls: [] }));
     await createConnection({ userId: "user_1", accountId: "acct_test" });
-    await put(payload({ siteUrl: "example.com" }));
+    await put(payload({ siteUrls: ["example.com"] }));
 
     expect(calledWith("updateBusinessUrl")).toEqual({
       accountId: "acct_test",
@@ -190,13 +226,25 @@ describe("PUT /api/sites/current", () => {
     });
   });
 
-  test("leaves the Stripe business URL alone when the site is unchanged", async () => {
+  test("leaves the Stripe business URL alone when the main site is unchanged", async () => {
     await get();
     await put(payload());
     await createConnection({ userId: "user_1", accountId: "acct_test" });
-    await put(payload({ currency: "usd" }));
+    await put(payload({ currency: "usd", siteUrls: ["example.com", "other.example"] }));
 
     expect(calledWith("updateBusinessUrl")).toBeUndefined();
+  });
+
+  test("moves the Stripe business URL when another site becomes the main one", async () => {
+    await get();
+    await put(payload({ siteUrls: ["example.com", "other.example"] }));
+    await createConnection({ userId: "user_1", accountId: "acct_test" });
+    await put(payload({ siteUrls: ["other.example"] }));
+
+    expect(calledWith("updateBusinessUrl")).toEqual({
+      accountId: "acct_test",
+      businessUrl: "https://other.example",
+    });
   });
 
   test("does not reach for Stripe before an account exists", async () => {
@@ -210,9 +258,9 @@ describe("PUT /api/sites/current", () => {
     await put(payload());
     await createConnection({ userId: "user_1", accountId: "acct_test" });
 
-    const { body } = await put(payload({ currency: "usd", siteUrl: "other.example" }));
+    const { body } = await put(payload({ currency: "usd", siteUrls: ["other.example"] }));
     const site = body.site as Record<string, unknown>;
     expect(site.currency).toBe("usd");
-    expect(site.siteUrl).toBe("https://other.example");
+    expect(site.siteUrls).toEqual(["https://other.example"]);
   });
 });
