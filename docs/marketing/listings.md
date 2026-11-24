@@ -23,7 +23,7 @@ Shared assets for every submission live in `docs/marketing/assets/` (logo, og im
 
 - [ ] **P1** G2 - https://sell.g2.com/
 - [ ] **P1** Capterra (Gartner, one submission covers GetApp and Software Advice) - https://www.capterra.com/vendors/sign-up
-- [x] **P2** SaaSHub - https://www.saashub.com/manage/quietjar - submitted and verified 2026-11-18 (free plan, approval 1-12 weeks). Profile complete: description, 5 features, web platform, pricing, open source link, logo, 2 screenshots, startup details (Amsterdam, 1-9 employees). Added as competitor to Coindrop, PeachPay, Tipeee. Later: check approval, optionally answer the Q&A questions and set a release date
+- [x] **P2** SaaSHub - live: https://www.saashub.com/quietjar (approved 2026-11, verified). Profile complete: description, 5 features, web platform, pricing, open source link, logo, 2 screenshots, startup details (Amsterdam, 1-9 employees). Listed as competitor to Coindrop, PeachPay, Tipeee. Later: optionally answer the Q&A questions and set a release date
 - [ ] **P2** SourceForge (business software directory) - https://sourceforge.net/software/vendors/
 - [ ] **P2** Slashdot software directory (same backend as SourceForge)
 - [ ] **P2** TrustRadius - https://www.trustradius.com/vendors
