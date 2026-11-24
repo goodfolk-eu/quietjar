@@ -204,7 +204,7 @@ Skipped on purpose: articles written by competitors (Fourthwall, Payhip, Selar, 
 
 ### Email template
 
-Replace the parts in brackets. Keep it short, one email, one follow-up after a week at most.
+Ready-to-send versions per contact are in `outreach-drafts.md`. Replace the parts in brackets. Keep it short, one email, one follow-up after a week at most.
 
 **Subject:** A goal-based alternative for your [Buy Me a Coffee / Ko-fi / donation plugin] list
 
@@ -216,7 +216,7 @@ QuietJar is a support button for your own website, built around goals that end. 
 
 Why it might be worth a line in your list:
 
-- It's the only option where the button itself hides when the goal is met, so visitors don't learn to ignore it
+- Unlike most options, the button itself hides once the goal is met, so visitors don't learn to ignore it
 - One site's Buy Me a Coffee button brought in about €30 a month. A single €50 goal for its hosting raised €97 in 12 hours
 - Open source (AGPL-3.0) and self-hostable, built and hosted in the EU
 - No monthly fee: 5% of what you receive, card fees included
@@ -226,7 +226,7 @@ Happy to set you up with an account to try it, or send screenshots and details f
 Thanks for considering it,
 Marcel Panse
 Founder, QuietJar
-support@quietjar.com
+marcel@quietjar.com
 
 **Follow-up (after a week, only once):**
 
