@@ -235,12 +235,12 @@ Hi [name], a quick follow-up on QuietJar for your [article] list. If it's not a 
 ### Buy Me a Coffee and Ko-fi alternatives articles
 
 - [ ] **P1** WPForms - [8 best Buy Me a Coffee alternatives](https://wpforms.com/best-buy-me-a-coffee-alternatives/) - contact form: https://wpforms.com/contact/ - very high authority (Awesome Motive)
-- [ ] **P1** easy.tools - [20 best Buy Me a Coffee alternatives](https://www.easy.tools/blog/buy-me-a-coffee-alternatives) - hello@easy.tools - author Marta Jagosz. Long list, easiest to get added
-- [ ] **P1** Softwares.com - [Best Buy Me a Coffee alternatives](https://www.softwares.com/alternatives/buy-me-a-coffee) - hello@softwares.com
-- [ ] **P1** eCommerce Platforms - [Best Ko-fi alternatives](https://ecommerce-platforms.com/articles/best-ko-fi-alternatives) - hello@ecommerce-platforms.com
-- [ ] **P2** Ultimate Membership Pro - [Best Buy Me a Coffee alternatives](https://ultimatemembershippro.com/buy-me-a-coffee-alternatives/) - alex@ultimatemembershippro.com
-- [ ] **P2** Foundry - [5 Buy Me a Coffee alternatives for recurring revenue](https://www.builtbyfoundry.io/blog/5-buy-me-a-coffee-alternatives-recurring-revenue) - partners@builtbyfoundry.io - recurring revenue angle, weaker fit
-- [ ] **P2** CodingTarik blog - [Exploring the best alternatives to Buy Me a Coffee](https://codingtarik.github.io/posts/exploring-the-best-alternatives-to-buy-me-a-coffee) - BlogCodingTarik@web.de - personal blog by a German developer, use the EU and open source angle
+- [x] **P1** easy.tools - [20 best Buy Me a Coffee alternatives](https://www.easy.tools/blog/buy-me-a-coffee-alternatives) - hello@easy.tools - author Marta Jagosz. Long list, easiest to get added - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
+- [x] **P1** Softwares.com - [Best Buy Me a Coffee alternatives](https://www.softwares.com/alternatives/buy-me-a-coffee) - hello@softwares.com - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
+- [x] **P1** eCommerce Platforms - [Best Ko-fi alternatives](https://ecommerce-platforms.com/articles/best-ko-fi-alternatives) - hello@ecommerce-platforms.com - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
+- [x] **P2** Ultimate Membership Pro - [Best Buy Me a Coffee alternatives](https://ultimatemembershippro.com/buy-me-a-coffee-alternatives/) - alex@ultimatemembershippro.com - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
+- [x] **P2** Foundry - [5 Buy Me a Coffee alternatives for recurring revenue](https://www.builtbyfoundry.io/blog/5-buy-me-a-coffee-alternatives-recurring-revenue) - partners@builtbyfoundry.io - recurring revenue angle, weaker fit - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
+- [x] **P2** CodingTarik blog - [Exploring the best alternatives to Buy Me a Coffee](https://codingtarik.github.io/posts/exploring-the-best-alternatives-to-buy-me-a-coffee) - BlogCodingTarik@web.de - personal blog by Tarik Azzouzi, a German developer, use the EU and open source angle - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
 - [ ] **P2** AI Stack Picks - [7 best Buy Me a Coffee alternatives](https://aistackpicks.com/reviews/buy-me-a-coffee-alternatives-2026/) - no email found, try the site's contact or social links
 - [ ] **P2** Khaby AI - [Buy Me a Coffee alternatives](https://khaby.ai/alternatives/buymeacoffee/) - no email found
 - [ ] **P2** Talks.co - [11 top Buy Me a Coffee alternatives](https://talks.co/p/buy-me-a-coffee-alternatives/) - no email found
@@ -251,7 +251,7 @@ Hi [name], a quick follow-up on QuietJar for your [article] list. If it's not a 
 
 These matter most once the WordPress plugin exists.
 
-- [ ] **P2** IONOS Digital Guide - [How to add a donate button to your website](https://www.ionos.com/digitalguide/websites/website-creation/create-a-donate-button/) - info@ionos.com (general inbox, look for the Digital Guide editorial team). High authority, European
+- [x] **P2** IONOS Digital Guide - [How to add a donate button to your website](https://www.ionos.com/digitalguide/websites/website-creation/create-a-donate-button/) - info@ionos.com (general inbox, look for the Digital Guide editorial team). High authority, European - emailed 2026-11-24 from marcel@quietjar.com. Later: one follow-up on 2026-12-01 if no reply
 - [ ] **P2** WPKube - [Best WordPress donation plugins](https://www.wpkube.com/donation-plugins-for-wordpress/) - contact form: https://www.wpkube.com/contact/ - author Devesh Sharma
 - [ ] **P2** IsItWP - [Best WordPress donation and fundraising plugins](https://www.isitwp.com/best-wordpress-donation-plugins/) - contact form: https://www.isitwp.com/contact/ - nonprofit focus, pitch the plugin when it exists
 - [ ] **P3** Benzinga - [Best WordPress donation plugins](https://benzinga.com/money/business/best-wordpress-donation-plugins) - contributors@benzinga.com or info@benzinga.com

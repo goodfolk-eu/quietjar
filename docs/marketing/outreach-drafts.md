@@ -169,7 +169,7 @@ marcel@quietjar.com
 - **To:** BlogCodingTarik@web.de
 - **Subject:** A goal-based alternative for your Buy Me a Coffee alternatives list
 - **Article:** https://codingtarik.github.io/posts/exploring-the-best-alternatives-to-buy-me-a-coffee
-- **Note:** Personal blog by a German developer. The greeting assumes the author's name is Tarik, check the blog first.
+- **Note:** Personal blog by Tarik Azzouzi, a German developer.
 
 ```
 Hi Tarik,
@@ -195,7 +195,7 @@ marcel@quietjar.com
 
 ## IONOS Digital Guide
 - **To:** info@ionos.com
-- **Subject:** A goal-based alternative for your donate button guide list
+- **Subject:** A goal-based option for your donate button guide
 - **Article:** https://www.ionos.com/digitalguide/websites/website-creation/create-a-donate-button/
 - **Note:** General inbox. Ask them to forward it to the Digital Guide editors.
 
