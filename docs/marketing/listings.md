@@ -11,7 +11,7 @@ Shared assets for every submission live in `docs/marketing/assets/` (logo, og im
 ## Must-haves
 
 - [x] **P1** AlternativeTo - live: https://alternativeto.net/software/quietjar/about/ - open source (AGPL-3.0), alternative to Buy Me a Coffee, Ko-fi, Liberapay, Open Collective, Patreon, Donorbox (GitHub Sponsors is not on AlternativeTo). Later: replace the widget-open.png screenshot (shows a dev test page) with home-desktop.png
-- [ ] **P1** Product Hunt - product pages now only exist through a launch. Draft ready at https://www.producthunt.com/products/quietjar (not scheduled): tagline, description, 3 gallery images, GitHub link, tags Fundraising/Crowdfunding/Payments, pricing Free, maker Marcel Panse, first comment with the TCG Pocket story. Later: add a demo video and other makers, then decide when to launch
+- [x] **P1** Product Hunt - launch scheduled for 2026-11-24 12:01 AM PST: https://www.producthunt.com/products/quietjar. Shoutouts: Stripe, Astro, Bun, bunny.net, Better Auth. Forum thread: https://www.producthunt.com/p/quietjar/do-always-on-donation-buttons-still-work. Later: reply to forum comments before launch day, add a demo video
 - [ ] **P1** Trustpilot business profile - https://business.trustpilot.com/signup - signup in the Orca browser fails at the personal details step ("Sorry, we couldn't complete your request"). Later: retry in a regular browser
 - [x] **P1** GitHub repo - https://github.com/goodfolk-eu/quietjar (public, auto-mirrored from Codefloe). The empty `quietjar` GitHub org is kept to reserve the name
 - [ ] **P1** Crunchbase company profile - https://www.crunchbase.com/
@@ -181,3 +181,15 @@ Low effort, mostly for branded search and knowledge panels.
 - Quietjar is open source on Codefloe. Mention it in every listing that has an "open source" or "source code" field, and link the Codefloe repo as the canonical source.
 - Use one consistent description everywhere. Lead with goals that end, mention the EU angle second. Keep the TCG Pocket Collection Tracker case study ready for long-form fields.
 - Never describe Buy Me a Coffee or Ko-fi as redirecting, even in comparison fields.
+
+## Product Hunt launch day posts (2026-11-24)
+
+- [x] Product Hunt p/self-promotion - https://www.producthunt.com/p/self-promotion/quietjar-is-live-today-a-support-button-that-goes-quiet-once-the-goal-is-met
+- [x] DEV - https://dev.to/goodfolkeu/i-built-a-donation-button-that-hides-itself-once-the-goal-is-met-1mj4
+- [x] Peerlist Scroll (#show) - https://peerlist.io/marcelpanse/posts (profile and QuietJar project created). Later: add logo and cover image to the project
+- [x] X (@Mr0lc)
+- [x] LinkedIn
+- [x] Hacker News Show HN (links to the GitHub repo, not Product Hunt) - https://news.ycombinator.com/item?id=50625765
+- [x] r/SideProject - https://www.reddit.com/r/SideProject/comments/1y48zw1/i_replaced_my_alwayson_donation_button_with_a/
+- [x] Indie Hackers product page - https://www.indiehackers.com/product/quietjar. Posting is locked for new accounts until they have commented on a few posts. Later: comment, then post a launch story
+- [ ] Bluesky - not signed in
