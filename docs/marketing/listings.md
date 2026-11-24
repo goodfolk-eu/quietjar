@@ -193,3 +193,67 @@ Low effort, mostly for branded search and knowledge panels.
 - [x] r/SideProject - https://www.reddit.com/r/SideProject/comments/1y48zw1/i_replaced_my_alwayson_donation_button_with_a/
 - [x] Indie Hackers product page - https://www.indiehackers.com/product/quietjar. Posting is locked for new accounts until they have commented on a few posts. Later: comment, then post a launch story
 - [ ] Bluesky - not signed in
+
+## Outreach: get added to "alternatives" articles
+
+Articles that rank for "Buy Me a Coffee alternatives", "Ko-fi alternatives" and "donation button for website". Ask the author to add QuietJar. Pitch: one line on goals that end, the TCG Pocket case study (€30 a month vs €97 in 12 hours on a €50 goal), open source and EU, and offer a free account to test. Never say competitors redirect.
+
+Contacts found on 2026-11-24 from each site's article, contact and about pages. Where no email was found, the contact form is listed.
+
+Skipped on purpose: articles written by competitors (Fourthwall, Payhip, Selar, Donorbox, Podia, Pocketsflow, Exclu, Donatr.ee, brandID). They will not add a rival.
+
+### Email template
+
+Replace the parts in brackets. Keep it short, one email, one follow-up after a week at most.
+
+**Subject:** A goal-based alternative for your [Buy Me a Coffee / Ko-fi / donation plugin] list
+
+Hi [name],
+
+I read your article "[article title]". It's one of the clearer comparisons out there, so I wanted to suggest one more option for it.
+
+QuietJar is a support button for your own website, built around goals that end. You set a goal for a real cost, like this month's hosting. Supporters pay in two taps right on the page (Apple Pay, Google Pay, cards, iDEAL), and once the goal is met the button goes quiet until the next one.
+
+Why it might be worth a line in your list:
+
+- It's the only option where the button itself hides when the goal is met, so visitors don't learn to ignore it
+- One site's Buy Me a Coffee button brought in about €30 a month. A single €50 goal for its hosting raised €97 in 12 hours
+- Open source (AGPL-3.0) and self-hostable, built and hosted in the EU
+- No monthly fee: 5% of what you receive, card fees included
+
+Happy to set you up with an account to try it, or send screenshots and details for the article. Everything you need is at https://quietjar.com.
+
+Thanks for considering it,
+Marcel Panse
+Founder, QuietJar
+support@quietjar.com
+
+**Follow-up (after a week, only once):**
+
+Hi [name], a quick follow-up on QuietJar for your [article] list. If it's not a fit, no problem at all. If it helps, I can send a short description and screenshots ready to paste. Thanks, Marcel
+
+### Buy Me a Coffee and Ko-fi alternatives articles
+
+- [ ] **P1** WPForms - [8 best Buy Me a Coffee alternatives](https://wpforms.com/best-buy-me-a-coffee-alternatives/) - contact form: https://wpforms.com/contact/ - very high authority (Awesome Motive)
+- [ ] **P1** easy.tools - [20 best Buy Me a Coffee alternatives](https://www.easy.tools/blog/buy-me-a-coffee-alternatives) - hello@easy.tools - author Marta Jagosz. Long list, easiest to get added
+- [ ] **P1** Softwares.com - [Best Buy Me a Coffee alternatives](https://www.softwares.com/alternatives/buy-me-a-coffee) - hello@softwares.com
+- [ ] **P1** eCommerce Platforms - [Best Ko-fi alternatives](https://ecommerce-platforms.com/articles/best-ko-fi-alternatives) - hello@ecommerce-platforms.com
+- [ ] **P2** Ultimate Membership Pro - [Best Buy Me a Coffee alternatives](https://ultimatemembershippro.com/buy-me-a-coffee-alternatives/) - alex@ultimatemembershippro.com
+- [ ] **P2** Foundry - [5 Buy Me a Coffee alternatives for recurring revenue](https://www.builtbyfoundry.io/blog/5-buy-me-a-coffee-alternatives-recurring-revenue) - partners@builtbyfoundry.io - recurring revenue angle, weaker fit
+- [ ] **P2** CodingTarik blog - [Exploring the best alternatives to Buy Me a Coffee](https://codingtarik.github.io/posts/exploring-the-best-alternatives-to-buy-me-a-coffee) - BlogCodingTarik@web.de - personal blog by a German developer, use the EU and open source angle
+- [ ] **P2** AI Stack Picks - [7 best Buy Me a Coffee alternatives](https://aistackpicks.com/reviews/buy-me-a-coffee-alternatives-2026/) - no email found, try the site's contact or social links
+- [ ] **P2** Khaby AI - [Buy Me a Coffee alternatives](https://khaby.ai/alternatives/buymeacoffee/) - no email found
+- [ ] **P2** Talks.co - [11 top Buy Me a Coffee alternatives](https://talks.co/p/buy-me-a-coffee-alternatives/) - no email found
+- [ ] **P3** Medium (AO Technologies) - [4 best alternatives to Buy Me a Coffee](https://medium.com/ao-technologies/4-best-alternatives-to-buy-me-a-coffee-for-creators-in-2026-ee5dafc33b1b) - respond on Medium or contact the publication
+- [ ] **P3** wmtips - [Buy Me a Coffee vs Ko-fi](https://www.wmtips.com/technologies/compare/buy-me-a-coffee-vs-ko-fi/) - no email found. It's a technology-detection site: QuietJar may show up on its own once installs grow
+
+### Donate button and plugin guides
+
+These matter most once the WordPress plugin exists.
+
+- [ ] **P2** IONOS Digital Guide - [How to add a donate button to your website](https://www.ionos.com/digitalguide/websites/website-creation/create-a-donate-button/) - info@ionos.com (general inbox, look for the Digital Guide editorial team). High authority, European
+- [ ] **P2** WPKube - [Best WordPress donation plugins](https://www.wpkube.com/donation-plugins-for-wordpress/) - contact form: https://www.wpkube.com/contact/ - author Devesh Sharma
+- [ ] **P2** IsItWP - [Best WordPress donation and fundraising plugins](https://www.isitwp.com/best-wordpress-donation-plugins/) - contact form: https://www.isitwp.com/contact/ - nonprofit focus, pitch the plugin when it exists
+- [ ] **P3** Benzinga - [Best WordPress donation plugins](https://benzinga.com/money/business/best-wordpress-donation-plugins) - contributors@benzinga.com or info@benzinga.com
+- [ ] **P3** Payments Plugin - [Best WordPress donation plugins compared](https://paymentsplugin.com/blog/author/harshit/) - contact form: https://paymentsplugin.com/contact/
+- [ ] **P3** SitePoint - donation plugin roundup (the old URL now redirects to another article) - support@sitepoint.com
