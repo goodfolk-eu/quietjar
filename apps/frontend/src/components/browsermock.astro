@@ -170,6 +170,11 @@ const presetStyles = Object.fromEntries(
     // inside its container, and the body holds the inline one. Dismissal is
     // not persisted: the widget shares one dismissal key, so closing this copy
     // would hide the inline demo on the next visit.
+    // Matches the style in floating-config.js, which the other pages load.
+    const FLOATING_STYLE = {
+      color: "#F2B233",
+      css: ".quietjar-widget__button, .quietjar-widget__panel, .quietjar-panel__submit { color: #14201C; }",
+    };
     const mountFloating = () => {
       if (!window.QuietJar) return;
       const baseConfig = JSON.parse(JSON.stringify(window.QuietJar)) as QuietJarConfig;
@@ -180,6 +185,7 @@ const presetStyles = Object.fromEntries(
           ...baseConfig,
           labels: { ...baseConfig.labels, headline: root.dataset.floatingHeadline, body: "" },
           goal: "",
+          style: { ...baseConfig.style, ...FLOATING_STYLE },
           close: { enabled: true },
           mount: undefined,
         }),
