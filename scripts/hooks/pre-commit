@@ -1,5 +1,5 @@
 #!/bin/sh
-# Blocks commits that fail lint or introduce CSP-breaking inline styles.
+# Blocks commits that fail lint or add AI slop to written texts.
 
 command -v bun >/dev/null 2>&1 || PATH="/usr/local/bin:$PATH"
 
@@ -7,6 +7,15 @@ if ! bun run lint; then
   echo ""
   echo "Commit blocked: lint failed."
   echo "  Fix with:   bun run lint:fix"
+  echo "  Bypass with: git commit --no-verify"
+  exit 1
+fi
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -n "$staged" ] && ! ./scripts/slop $staged; then
+  echo ""
+  echo "Commit blocked: AI slop found in the texts above."
+  echo "  Rewrite the flagged passages, then commit again."
   echo "  Bypass with: git commit --no-verify"
   exit 1
 fi

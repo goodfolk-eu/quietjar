@@ -2,6 +2,8 @@
 
 Bun monorepo. Workspaces: `apps/frontend` (Astro) and `apps/backend` (Elysia/BetterAuth).
 
+- Node: 24, pinned in `.nvmrc` (`nvm use`). Astro needs 22.12 or newer; the slopsift
+  Claude Code plugin needs 24.
 - Install: `bun install`
 - Dev: `bun dev` (runs backend + frontend)
 - Frontend: `bun --cwd apps/frontend dev|build` (port 4321)
@@ -12,16 +14,34 @@ Bun monorepo. Workspaces: `apps/frontend` (Astro) and `apps/backend` (Elysia/Bet
 
 ## Git hooks
 
-Hooks live in `scripts/hooks/` and are committed, not generated. `bun install` runs
-`prepare`, which points git at them via `core.hooksPath`, so there is no manual setup.
-Because `core.hooksPath` is set, anything in `.git/hooks` is ignored.
+Hooks live in `scripts/hooks/` and are committed to the repo. `bun install` runs
+`prepare`, which points git at them via `core.hooksPath`, so you do not need any manual
+setup. Git ignores anything in `.git/hooks` while `core.hooksPath` is set.
 
-- **pre-commit**: `bun run lint` (Biome).
+- **pre-commit**: `bun run lint` (Biome), then `scripts/slop` on the staged files.
 - **pre-push**: blocks a dirty working tree, then runs lint, build and test.
 - **post-merge**, **post-rewrite**: run `bun install` when the dependency manifests
   changed, via `scripts/sync-deps`.
 
 Bypass a blocking hook with `git commit --no-verify` or `git push --no-verify`.
+
+## AI slop check
+
+The `bun run slop` command checks the written texts with [slopsift](https://slopsift.dev).
+It fails on any warning. `scripts/slop` defines the scope: articles, Astro files, i18n
+strings, `docs/marketing` (minus `research/` and `explainer/`), the root and app
+`AGENTS.md` files, the other root docs, the skills and the OpenCode commands. Legal
+pages are out of scope on purpose. slopsift cannot read JSON, so `scripts/slop-i18n.ts`
+lints each i18n string on its own and skips two prose rules that misfire on short UI copy.
+
+The pre-commit hook lints the working tree copy of each staged file, so unstaged edits
+in a partly staged file count too.
+
+The slopsift Claude Code plugin, enabled in `.claude/settings.json`, checks each agent
+response. When it finds slop, the plugin asks the agent for a rewrite. The marketplace
+is pinned to the release that matches the `slopsift` dev dependency, and
+`SLOPSIFT_HOOK_CLI` makes the plugin run that locally installed version instead of
+fetching its own through `npx`. To bump slopsift, update both.
 
 ## Use a Reference Implementation
 
@@ -30,7 +50,7 @@ Bypass a blocking hook with `git commit --no-verify` or `git push --no-verify`.
 
 ## Code Comments
 
-- Default to no comment. Only add one when the code cannot be made clear on its own.
+- Default to no comment. Only add one when you cannot make the code clear on its own.
 - Do not mention issue numbers, tickets, or PRs in comments. Do not explain that something was done for a specific issue.
 - Do not comment on WHY something is done unless the reasoning is non-obvious and important for a developer to know. Never restate what the code already says.
 - Prefer making the code self-explanatory (clear names, small functions) over adding a comment to explain unclear code.
@@ -47,8 +67,8 @@ Bypass a blocking hook with `git commit --no-verify` or `git push --no-verify`.
 - Avoid nested ternaries
 
 ## Headings casing
-- For headings and titles always use sentence case. Never use Title Case.
-- Never use em-dashes. Minimize using dashes. If needed, use a regular dash.
+- Use sentence case for headings and titles, not Title Case.
+- Do not use em-dashes. Minimize using dashes. If needed, use a regular dash.
 
 ## How to write good tests
 

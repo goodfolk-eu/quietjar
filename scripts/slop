@@ -1,0 +1,42 @@
+#!/bin/sh
+# Checks written texts for AI slop with slopsift.
+#
+# Without arguments, checks every text in scope. With file arguments (the
+# pre-commit hook passes staged files), checks only those that are in scope.
+# slopsift cannot read JSON, so i18n strings go through slop-i18n.ts instead.
+
+command -v bun >/dev/null 2>&1 || PATH="/usr/local/bin:$PATH"
+
+# File lists are word-split on purpose; without this, paths like [locale] would glob.
+set -f
+
+root=$(git rev-parse --show-toplevel) || exit 2
+cd "$root" || exit 2
+
+if [ $# -eq 0 ]; then
+  set -- $(git ls-files)
+fi
+
+texts=""
+i18n=""
+for file in "$@"; do
+  [ -f "$file" ] || continue
+  case "$file" in
+    docs/marketing/research/* | docs/marketing/explainer/*) ;;
+    apps/frontend/src/i18n/*.json) i18n="$i18n $file" ;;
+    apps/frontend/src/content/articles/*.md | apps/frontend/src/*.astro) texts="$texts $file" ;;
+    docs/marketing/*.md | .agents/skills/*.md) texts="$texts $file" ;;
+    .opencode/commands/*.md | apps/*/AGENTS.md) texts="$texts $file" ;;
+    README.md | AGENTS.md | CONTRIBUTING.md | SECURITY.md) texts="$texts $file" ;;
+  esac
+done
+
+status=0
+if [ -n "$texts" ]; then
+  bunx --bun slopsift $texts --max-warnings 0 || status=1
+fi
+if [ -n "$i18n" ]; then
+  bun scripts/slop-i18n.ts $i18n || status=1
+fi
+
+exit $status

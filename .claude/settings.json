@@ -1,0 +1,17 @@
+{
+  "env": {
+    "SLOPSIFT_HOOK_CLI": "node_modules/slopsift/dist/cli.js"
+  },
+  "extraKnownMarketplaces": {
+    "slopsift": {
+      "source": {
+        "source": "github",
+        "repo": "NikhilVerma/writinglint",
+        "ref": "slopsift@0.12.0"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "slopsift@slopsift": true
+  }
+}

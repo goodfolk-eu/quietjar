@@ -26,6 +26,7 @@
     "lint:fix": "bunx --bun biome check --write .",
     "format": "bunx --bun biome format --write .",
     "format:check": "bunx --bun biome format .",
+    "slop": "./scripts/slop",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath scripts/hooks || true"
   },
   "overrides": {
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
+    "slopsift": "^0.12.0",
     "typescript": "^6.0.0"
   }
 }
